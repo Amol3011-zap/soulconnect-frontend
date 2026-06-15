@@ -4,6 +4,7 @@ import { useAuthStore } from './store/auth';
 
 import Landing from './pages/Landing';
 import Signup from './pages/Signup';
+import Login from './pages/Login';
 import Matches from './pages/Matches';
 import Chat from './pages/Chat';
 import Healers from './pages/Healers';
@@ -29,6 +30,7 @@ function App() {
           {!token ? (
             <>
               <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </>
           ) : (
