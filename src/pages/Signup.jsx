@@ -267,7 +267,12 @@ export default function Signup() {
       setAuth(response.data, response.data.access_token);
       navigate(role === 'healer' ? '/healers' : '/matches');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Signup failed. Please try again.');
+      const detail = err.response?.data?.detail;
+      if (Array.isArray(detail)) {
+        setError(detail.map((e) => `${e.loc?.slice(-1)[0]}: ${e.msg}`).join(' | '));
+      } else {
+        setError(detail || err.message || 'Signup failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
