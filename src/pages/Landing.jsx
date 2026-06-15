@@ -95,7 +95,7 @@ export default function Landing() {
               <span className="text-3xl">🌟</span>
               <span className="text-xl font-bold text-white tracking-tight">SoulConnect</span>
             </div>
-            <p className="text-xs text-white/50 ml-10 -mt-0.5 tracking-wide">Find Your People. Heal Together.</p>
+            <p className="text-xs text-white/50 ml-10 -mt-0.5 tracking-wide">Find Your People. See The Path. Feel Better Today.</p>
           </div>
           <div className="flex items-center gap-4">
             <Link to="/signup" className="text-white/80 hover:text-white font-medium text-sm transition">
