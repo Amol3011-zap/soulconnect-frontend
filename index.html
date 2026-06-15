@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SoulConnect — Match with someone dealing with your exact problem. Free peer support + verified healers. You are not alone." />
+    <meta property="og:title" content="SoulConnect — You Are Not Alone" />
+    <meta property="og:description" content="Match with someone who truly understands what you're going through. 25 specific problems. Real people. Real healing." />
+
+    <title>SoulConnect — You Are Not Alone</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+      * { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+      /* Smooth scroll */
+      html { scroll-behavior: smooth; }
+
+      /* Animated gradient blobs */
+      @keyframes blob {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33%       { transform: translate(30px, -50px) scale(1.1); }
+        66%       { transform: translate(-20px, 20px) scale(0.9); }
+      }
+      .animate-blob { animation: blob 7s infinite; }
+      .animation-delay-2000 { animation-delay: 2s; }
+      .animation-delay-4000 { animation-delay: 4s; }
+
+      /* Fade-in up */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .fade-in-up { animation: fadeInUp 0.7s ease forwards; }
+      .delay-100  { animation-delay: 0.1s; opacity: 0; }
+      .delay-200  { animation-delay: 0.2s; opacity: 0; }
+      .delay-300  { animation-delay: 0.3s; opacity: 0; }
+      .delay-400  { animation-delay: 0.4s; opacity: 0; }
+      .delay-500  { animation-delay: 0.5s; opacity: 0; }
+
+      /* Pulse glow on CTA */
+      @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.4); }
+        50%       { box-shadow: 0 0 0 12px rgba(251,191,36,0); }
+      }
+      .pulse-glow { animation: pulse-glow 2s infinite; }
+
+      /* Gradient text */
+      .gradient-text {
+        background: linear-gradient(135deg, #fbbf24, #f472b6, #c084fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
