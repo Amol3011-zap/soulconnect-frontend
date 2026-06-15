@@ -31,11 +31,11 @@ export default function Navbar() {
           <Link to="/matches" className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
               style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>
-              🌿
+              🌟
             </div>
             <div>
               <span className="text-gray-900 font-bold text-lg tracking-tight">SoulConnect</span>
-              <p className="text-gray-400 text-xs -mt-0.5 leading-none">Find Your People</p>
+              <p className="text-gray-400 text-xs -mt-0.5 leading-none">Find Your People. Feel Better Today.</p>
             </div>
           </Link>
 
