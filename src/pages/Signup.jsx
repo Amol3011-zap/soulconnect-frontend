@@ -167,7 +167,7 @@ export default function Signup() {
   const [city, setCity] = useState('');
 
   // User-only
-  const [primaryProblem, setPrimaryProblem] = useState('');
+  const [selectedProblems, setSelectedProblems] = useState([]);
 
   // Healer-only
   const [healerType, setHealerType] = useState('');
@@ -210,7 +210,7 @@ export default function Signup() {
       if (!state.trim()) return 'Please enter your state';
       if (!city.trim()) return 'Please enter your city';
     }
-    if (step === 3 && role === 'user' && !primaryProblem) return 'Please select what you are going through';
+    if (step === 3 && role === 'user' && selectedProblems.length < 2) return 'Please select at least 2 things you are going through';
     if (step === 3 && role === 'healer') {
       if (!healerType) return 'Please select your profession type';
       if (!experience) return 'Please enter your years of experience';
@@ -248,8 +248,8 @@ export default function Signup() {
         distance_preference: 10,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
         ...(role === 'user' && {
-          primary_problem: primaryProblem,
-          secondary_problems: [],
+          primary_problem: selectedProblems[0],
+          secondary_problems: selectedProblems.slice(1),
         }),
         ...(role === 'healer' && {
           healer_type: healerType,
@@ -273,7 +273,9 @@ export default function Signup() {
     }
   };
 
-  const selectedProblem = PROBLEMS.find((p) => p.value === primaryProblem);
+  const toggleProblem = (val) => setSelectedProblems((prev) =>
+    prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
+  );
   const selectedHealerType = HEALER_TYPES.find((h) => h.value === healerType);
   const accentColor = role === 'healer' ? '#0891b2' : '#7c3aed';
   const accentGrad = role === 'healer'
@@ -536,23 +538,42 @@ export default function Signup() {
           {step === 3 && role === 'user' && (
             <div>
               <p className="text-sm font-semibold text-gray-700 mb-1">What are you going through?</p>
-              <p className="text-xs text-gray-400 mb-4">Select what resonates most</p>
+              <p className="text-xs text-gray-400 mb-1">Select at least 2 — your first pick is your primary focus</p>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-1.5 flex-1 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="h-full rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min((selectedProblems.length / 2) * 100, 100)}%`, background: accentGrad }} />
+                </div>
+                <span className="text-xs font-semibold shrink-0" style={{ color: selectedProblems.length >= 2 ? accentColor : '#9ca3af' }}>
+                  {selectedProblems.length} selected{selectedProblems.length >= 2 ? ' ✓' : ' (min 2)'}
+                </span>
+              </div>
               <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1 mb-5"
                 style={{ scrollbarWidth: 'thin', scrollbarColor: `${accentColor} #f3f4f6` }}>
-                {PROBLEMS.map((prob) => (
-                  <button key={prob.value + prob.label} onClick={() => setPrimaryProblem(prob.value)}
-                    className={`p-3 rounded-xl text-left transition-all border-2 ${
-                      primaryProblem === prob.value ? 'border-purple-500 bg-purple-50' : 'border-gray-100 bg-white hover:border-purple-200'
-                    }`}>
-                    <div className="text-xl mb-1">{prob.icon}</div>
-                    <div className="text-xs font-medium text-gray-700 leading-tight">{prob.label}</div>
-                  </button>
-                ))}
+                {PROBLEMS.map((prob) => {
+                  const isSelected = selectedProblems.includes(prob.value);
+                  const order = selectedProblems.indexOf(prob.value);
+                  return (
+                    <button key={prob.value} onClick={() => toggleProblem(prob.value)}
+                      className={`p-3 rounded-xl text-left transition-all border-2 relative ${
+                        isSelected ? 'border-purple-500 bg-purple-50' : 'border-gray-100 bg-white hover:border-purple-200'
+                      }`}>
+                      {isSelected && (
+                        <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full text-white text-xs flex items-center justify-center font-bold"
+                          style={{ background: accentGrad }}>
+                          {order === 0 ? '★' : order + 1}
+                        </span>
+                      )}
+                      <div className="text-xl mb-1">{prob.icon}</div>
+                      <div className="text-xs font-medium text-gray-700 leading-tight">{prob.label}</div>
+                    </button>
+                  );
+                })}
               </div>
               {error && <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2 mb-3">{error}</p>}
               <div className="flex gap-3">
                 <button onClick={back} className="flex-1 py-3 rounded-xl font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200">Back</button>
-                <button onClick={next} disabled={!primaryProblem} className="flex-1 py-3 rounded-xl font-semibold text-white disabled:opacity-40"
+                <button onClick={next} disabled={selectedProblems.length < 2} className="flex-1 py-3 rounded-xl font-semibold text-white disabled:opacity-40"
                   style={{ background: accentGrad }}>Continue →</button>
               </div>
             </div>
@@ -653,7 +674,8 @@ export default function Signup() {
                   { label: 'Gender', value: gender.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) },
                   { label: 'Location', value: `${city}, ${state}, ${country}` },
                   ...(role === 'user' ? [
-                    { label: 'Going through', value: selectedProblem ? `${selectedProblem.icon} ${selectedProblem.label}` : '' },
+                    { label: 'Primary focus', value: selectedProblems[0] ? `${PROBLEMS.find(p=>p.value===selectedProblems[0])?.icon} ${PROBLEMS.find(p=>p.value===selectedProblems[0])?.label}` : '' },
+                    ...(selectedProblems.length > 1 ? [{ label: 'Also going through', value: selectedProblems.slice(1).map(v => PROBLEMS.find(p=>p.value===v)?.label).join(', ') }] : []),
                   ] : [
                     { label: 'Profession', value: selectedHealerType ? `${selectedHealerType.icon} ${selectedHealerType.label}` : '' },
                     { label: 'Experience', value: `${experience} years` },
