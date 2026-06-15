@@ -38,7 +38,7 @@ const GRAD_COLORS = [
 function HealerCard({ healer, index }) {
   const grad = GRAD_COLORS[index % GRAD_COLORS.length];
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
+    <div className="rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
       {/* Top gradient bar */}
       <div className="h-1.5" style={{ background: grad }} />
 
@@ -137,7 +137,7 @@ export default function Healers() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-8">
+    <div className="min-h-screen pb-8" style={{ background: 'var(--bg)' }}>
       {/* Hero */}
       <div className="relative overflow-hidden mb-8"
         style={{ background: 'linear-gradient(135deg, #1a0533 0%, #2d1b69 50%, #0f3460 100%)' }}>

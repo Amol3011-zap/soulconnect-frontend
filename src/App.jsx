@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/auth';
+import { useThemeStore } from './store/theme';
 
 import Landing from './pages/Landing';
 import Signup from './pages/Signup';
@@ -17,10 +18,12 @@ import CrisisResources from './components/CrisisResources';
 
 function App() {
   const { token } = useAuthStore();
+  const { init } = useThemeStore();
+  useEffect(() => { init(); }, []);
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
         {token && <Navbar />}
         <CrisisResources />
 

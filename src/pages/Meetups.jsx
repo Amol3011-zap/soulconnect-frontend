@@ -81,7 +81,7 @@ export default function Meetups() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-8">
+    <div className="min-h-screen pb-8" style={{ background: 'var(--bg)' }}>
       {/* Hero */}
       <div className="relative overflow-hidden mb-8"
         style={{ background: 'linear-gradient(135deg, #052533 0%, #1b4d69 50%, #0f3460 100%)' }}>
@@ -133,7 +133,7 @@ export default function Meetups() {
         ) : (
           <div className="space-y-4">
             {meetups.map((meetup) => (
-              <div key={meetup.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+              <div key={meetup.id} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
                 <div className="h-1.5" style={{ background: meetup.color || 'linear-gradient(135deg, #7c3aed, #2563eb)' }} />
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-4 mb-3">

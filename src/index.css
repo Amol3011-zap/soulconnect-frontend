@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Light mode variables ── */
+:root {
+  --bg: #f9fafb;
+  --bg-card: #ffffff;
+  --bg-subtle: #f3f4f6;
+  --border: #e5e7eb;
+  --border-subtle: #f3f4f6;
+  --text: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --nav-bg: rgba(255,255,255,0.92);
+  --input-bg: #f9fafb;
+  --input-border: #e5e7eb;
+}
+
+/* ── Dark mode variables ── */
+.dark {
+  --bg: #0f0f13;
+  --bg-card: #1a1a24;
+  --bg-subtle: #22222e;
+  --border: #2a2a38;
+  --border-subtle: #1e1e2a;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --nav-bg: rgba(15,15,19,0.92);
+  --input-bg: #22222e;
+  --input-border: #2a2a38;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 99px; }
+.dark ::-webkit-scrollbar-thumb { background: #4c1d95; }

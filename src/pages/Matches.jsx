@@ -64,8 +64,8 @@ function MatchCard({ match, index, onAccept, onSkip, accepting }) {
   const initial = match.name ? match.name[0].toUpperCase() : '?';
 
   return (
-    <div className="group relative bg-white rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
-      style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+    <div className="group relative rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+      style={{ background: 'var(--bg-card)', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
 
       {/* Gradient accent bar */}
       <div className="h-1" style={{ background: grad }} />
@@ -90,7 +90,7 @@ function MatchCard({ match, index, onAccept, onSkip, accepting }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="font-bold text-gray-900 text-base">{match.name || 'Anonymous'}</h3>
+                <h3 className="font-bold text-base" style={{ color: 'var(--text)' }}>{match.name || 'Anonymous'}</h3>
                 <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                   {match.age && <span className="text-xs text-gray-400">{match.age} yrs</span>}
                   {match.city && (
@@ -246,7 +246,7 @@ export default function Matches() {
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Toast */}
       {toast && (
         <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl shadow-2xl text-sm font-semibold text-white transition-all"
@@ -301,7 +301,7 @@ export default function Matches() {
         {loading ? (
           <div className="space-y-4 pt-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-3xl p-5 animate-pulse" style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+              <div key={i} className="rounded-3xl p-5 animate-pulse" style={{ background: 'var(--bg-card)', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
                 <div className="flex gap-3 mb-4">
                   <div className="w-14 h-14 rounded-2xl bg-gray-100" />
                   <div className="flex-1 space-y-2 pt-1">
@@ -315,7 +315,7 @@ export default function Matches() {
             ))}
           </div>
         ) : matches.length === 0 ? (
-          <div className="bg-white rounded-3xl mt-2" style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+          <div className="rounded-3xl mt-2" style={{ background: 'var(--bg-card)', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
             <EmptyState onRefresh={fetchMatches} />
           </div>
         ) : (
