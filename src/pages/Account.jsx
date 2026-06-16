@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
-import { userAPI } from '../services/api';
+import { userAPI, authAPI } from '../services/api';
 import ThemeToggle from '../components/ThemeToggle';
 
 const PROBLEM_LABELS = {
@@ -21,6 +21,13 @@ export default function Account() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showChangePw, setShowChangePw] = useState(false);
+  const [currentPw, setCurrentPw] = useState('');
+  const [newPw, setNewPw] = useState('');
+  const [confirmPw, setConfirmPw] = useState('');
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwError, setPwError] = useState('');
+  const [pwSuccess, setPwSuccess] = useState('');
 
   useEffect(() => { fetchProfile(); }, []);
 
@@ -38,6 +45,24 @@ export default function Account() {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setPwError(''); setPwSuccess('');
+    if (newPw.length < 6) { setPwError('New password must be at least 6 characters'); return; }
+    if (newPw !== confirmPw) { setPwError('Passwords do not match'); return; }
+    setPwLoading(true);
+    try {
+      await authAPI.changePassword(currentPw, newPw);
+      setPwSuccess('Password changed successfully!');
+      setCurrentPw(''); setNewPw(''); setConfirmPw('');
+      setTimeout(() => { setShowChangePw(false); setPwSuccess(''); }, 2000);
+    } catch (err) {
+      setPwError(err.response?.data?.detail || 'Failed to change password.');
+    } finally {
+      setPwLoading(false);
+    }
   };
 
   if (loading) {
@@ -157,12 +182,13 @@ export default function Account() {
         {/* Quick links */}
         <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
           {[
-            { icon: '🔒', label: 'Privacy & Safety', sub: 'Control who sees your info' },
-            { icon: '🔔', label: 'Notifications', sub: 'Manage alerts' },
-            { icon: '🆘', label: 'Crisis Resources', sub: '24/7 helplines & support' },
-            { icon: '💬', label: 'Help & Support', sub: 'Contact the team' },
-          ].map(({ icon, label, sub }, i, arr) => (
-            <button key={label}
+            { icon: '🔑', label: 'Change Password', sub: 'Update your login password', action: () => setShowChangePw(v => !v) },
+            { icon: '🔒', label: 'Privacy & Safety', sub: 'Control who sees your info', action: () => {} },
+            { icon: '🔔', label: 'Notifications', sub: 'Manage alerts', action: () => {} },
+            { icon: '🆘', label: 'Crisis Resources', sub: '24/7 helplines & support', action: () => {} },
+            { icon: '💬', label: 'Help & Support', sub: 'Contact the team', action: () => {} },
+          ].map(({ icon, label, sub, action }, i, arr) => (
+            <button key={label} onClick={action}
               className="w-full flex items-center gap-4 px-5 py-4 text-left transition-colors hover:opacity-80"
               style={{ borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
               <span className="text-xl shrink-0">{icon}</span>
@@ -174,6 +200,42 @@ export default function Account() {
             </button>
           ))}
         </div>
+
+        {/* Change Password form */}
+        {showChangePw && (
+          <div className="rounded-2xl p-5" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+            <h3 className="font-bold text-sm mb-4" style={{ color: 'var(--text)' }}>Change Password</h3>
+            <form onSubmit={handleChangePassword} className="space-y-3">
+              {['Current Password', 'New Password', 'Confirm New Password'].map((label, i) => {
+                const val = i === 0 ? currentPw : i === 1 ? newPw : confirmPw;
+                const setter = i === 0 ? setCurrentPw : i === 1 ? setNewPw : setConfirmPw;
+                return (
+                  <div key={label}>
+                    <label className="text-xs font-semibold block mb-1" style={{ color: 'var(--text-secondary)' }}>{label}</label>
+                    <input type="password" value={val} onChange={e => setter(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none"
+                      style={{ background: 'var(--bg-subtle)', color: 'var(--text)', border: '1.5px solid var(--border)' }} />
+                  </div>
+                );
+              })}
+              {pwError && <p className="text-xs text-red-500">⚠️ {pwError}</p>}
+              {pwSuccess && <p className="text-xs text-green-600">✅ {pwSuccess}</p>}
+              <div className="flex gap-2 pt-1">
+                <button type="submit" disabled={pwLoading}
+                  className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-60"
+                  style={{ background: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>
+                  {pwLoading ? 'Saving...' : 'Save Password'}
+                </button>
+                <button type="button" onClick={() => { setShowChangePw(false); setPwError(''); }}
+                  className="px-4 py-2.5 rounded-xl text-sm font-semibold"
+                  style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)' }}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
 
         {/* Logout */}
         <button onClick={handleLogout}

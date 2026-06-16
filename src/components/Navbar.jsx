@@ -38,11 +38,12 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-5 py-2.5 flex items-center justify-between w-full">
 
           {/* Logo — left */}
-          <Link to="/matches" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
-              style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>
-              🌟
-            </div>
+          <Link to="/dashboard" className="flex items-center gap-2.5 shrink-0">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="16" fill="#2d6a4f" />
+              <path d="M16 8 C10 8 7 12 7 15.5 C7 20 11 23 16 26 C21 23 25 20 25 15.5 C25 12 22 8 16 8Z" fill="#f59e0b" />
+              <circle cx="16" cy="15" r="4" fill="white" opacity="0.3" />
+            </svg>
             <div className="hidden lg:block">
               <span className="font-bold text-base tracking-tight" style={{ color: 'var(--text)' }}>SoulConnect</span>
               <p className="text-xs -mt-0.5 leading-none" style={{ color: 'var(--text-muted)' }}>Find Your People. Feel Better Today.</p>

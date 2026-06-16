@@ -8,6 +8,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Matches from './pages/Matches';
+import ForgotPassword from './pages/ForgotPassword';
 import Chat from './pages/Chat';
 import Healers from './pages/Healers';
 import Meetups from './pages/Meetups';
@@ -25,7 +26,7 @@ function AppInner() {
   const isHealer = role === 'healer' || user?.role === 'healer';
 
   // Pages that manage their own header/nav
-  const hideNav = location.pathname === '/chat' || location.pathname === '/groups' || isHealer;
+  const hideNav = location.pathname === '/chat' || location.pathname === '/groups' || location.pathname === '/' || isHealer;
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
@@ -38,6 +39,7 @@ function AppInner() {
           <>
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         ) : isHealer ? (

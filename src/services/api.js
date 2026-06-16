@@ -21,6 +21,10 @@ api.interceptors.request.use((config) => {
 export const authAPI = {
   signup: (data) => api.post('/auth/signup', data),
   login: (phone, password) => api.post('/auth/login', { phone, password }),
+  forgotPassword: (phone) => api.post('/auth/forgot-password', { phone }),
+  verifyResetOTP: (phone, otp) => api.post('/auth/verify-reset-otp', { phone, otp }),
+  resetPassword: (phone, otp, password) => api.post('/auth/reset-password', { phone, otp, password }),
+  changePassword: (currentPassword, newPassword) => api.post('/auth/change-password', { current_password: currentPassword, new_password: newPassword }),
 };
 
 export const userAPI = {

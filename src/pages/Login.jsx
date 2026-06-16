@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { authAPI } from '../services/api';
 
@@ -12,6 +12,8 @@ export default function Login() {
 
   const { setAuth } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [successMsg] = useState(location.state?.message || '');
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -115,9 +117,9 @@ export default function Login() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-semibold text-gray-700">Password</label>
-                <button type="button" className="text-xs font-semibold hover:underline" style={{ color: '#1a3d2e' }}>
+                <Link to="/forgot-password" className="text-xs font-semibold hover:underline" style={{ color: '#1a3d2e' }}>
                   Forgot password?
-                </button>
+                </Link>
               </div>
               <div className="relative">
                 <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
@@ -131,6 +133,12 @@ export default function Login() {
                 </button>
               </div>
             </div>
+
+            {successMsg && (
+              <div className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-xl text-sm flex items-center gap-2">
+                <span>✅</span> {successMsg}
+              </div>
+            )}
 
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-sm flex items-center gap-2">

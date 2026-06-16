@@ -117,7 +117,7 @@ function MoodChart({ entries }) {
         return (
           <g key={v}>
             <line x1={padX} y1={y} x2={W - padX} y2={y}
-              stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+              stroke="var(--border)" strokeWidth="1" />
             <text x={W - padX + 4} y={y + 3} fontSize="8" fill="rgba(255,255,255,0.2)">{v}</text>
           </g>
         );
@@ -212,7 +212,7 @@ export default function MoodTracker() {
   const selectedMoodMeta = selectedMood ? MOODS.find(m => m.score === selectedMood) : null;
 
   return (
-    <div className="min-h-screen pb-10" style={{ background: 'linear-gradient(160deg, #09000f 0%, #1a0533 30%, #0d1b4b 65%, #050a1f 100%)' }}>
+    <div className="min-h-screen pb-10" style={{ background: 'var(--bg)' }}>
 
       {/* Glow orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -225,7 +225,7 @@ export default function MoodTracker() {
         {/* Header */}
         <div className="text-center mb-6">
           <p className="text-sm font-medium mb-1" style={{ color: 'rgba(196,181,253,0.6)' }}>{greeting} ✦</p>
-          <h1 className="text-2xl font-bold text-white mb-1">Mood & Progress</h1>
+          <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--text)' }}>Mood & Progress</h1>
           <p className="text-xs" style={{ color: 'rgba(196,181,253,0.5)' }}>Track how you feel. See how far you've come.</p>
         </div>
 
@@ -237,17 +237,17 @@ export default function MoodTracker() {
             { label: "Today's Mood", value: todayMeta ? todayMeta.emoji : '—', icon: null, color: todayEntry ? moodColor(todayEntry.mood) : '#64748b' },
           ].map(({ label, value, icon, color }) => (
             <div key={label} className="rounded-2xl p-3 text-center"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               <p className="text-lg mb-0.5">{icon}</p>
               <p className="text-base font-bold" style={{ color }}>{value}</p>
-              <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>{label}</p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{label}</p>
             </div>
           ))}
         </div>
 
         {/* Tabs */}
         <div className="flex gap-1 p-1 rounded-2xl mb-5"
-          style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}>
           {[
             { id: 'checkin', label: "Today's Check-in", icon: '✦' },
             { id: 'progress', label: '7-Day Progress', icon: '📈' },
@@ -257,7 +257,7 @@ export default function MoodTracker() {
               className="flex-1 py-2 rounded-xl text-xs font-semibold transition-all"
               style={activeTab === id
                 ? { background: 'linear-gradient(135deg,#7c3aed,#2563eb)', color: 'white' }
-                : { color: 'rgba(255,255,255,0.4)' }
+                : { color: 'var(--text-muted)' }
               }>
               {icon} {label}
             </button>
@@ -270,10 +270,10 @@ export default function MoodTracker() {
             {submitted && todayEntry ? (
               /* Already submitted today */
               <div className="rounded-3xl p-6 text-center"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(168,85,247,0.2)' }}>
+                style={{ background: 'var(--bg-card)', border: '1px solid rgba(168,85,247,0.3)' }}>
                 <div className="text-6xl mb-3">{todayMeta?.emoji}</div>
-                <h3 className="text-xl font-bold text-white mb-1">Logged for today ✓</h3>
-                <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <h3 className="text-xl font-bold mb-1" style={{ color: 'var(--text)' }}>Logged for today ✓</h3>
+                <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>
                   You're feeling <span style={{ color: moodColor(todayEntry.mood) }}>{todayMeta?.label}</span> · {ENERGY.find(e => e.value === todayEntry.energy)?.icon} {ENERGY.find(e => e.value === todayEntry.energy)?.label}
                 </p>
                 {todayEntry.note && (
@@ -281,7 +281,7 @@ export default function MoodTracker() {
                 )}
                 <button onClick={resetToday}
                   className="mt-4 text-xs px-4 py-1.5 rounded-full transition-colors"
-                  style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}>
+                  style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)' }}>
                   Update today's entry
                 </button>
               </div>
@@ -289,7 +289,7 @@ export default function MoodTracker() {
               <>
                 {/* Mood selector */}
                 <div className="rounded-3xl p-5"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                   <p className="text-sm font-semibold text-white mb-4 text-center">
                     How are you feeling right now?
                   </p>
@@ -299,7 +299,7 @@ export default function MoodTracker() {
                         className="flex flex-col items-center gap-1 py-2.5 rounded-2xl transition-all active:scale-90"
                         style={selectedMood === score
                           ? { background: `${color}25`, border: `1.5px solid ${color}`, boxShadow: `0 0 12px ${color}40` }
-                          : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }
+                          : { background: 'var(--bg-subtle)', border: '1px solid var(--border)' }
                         }>
                         <span className={`transition-transform duration-150 ${selectedMood === score ? 'text-3xl scale-110' : 'text-2xl'}`}>
                           {emoji}
@@ -323,7 +323,7 @@ export default function MoodTracker() {
 
                 {/* Energy */}
                 <div className="rounded-3xl p-5"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                   <p className="text-sm font-semibold text-white mb-3">Energy level?</p>
                   <div className="flex gap-2">
                     {ENERGY.map(({ value, label, icon, color }) => (
@@ -331,7 +331,7 @@ export default function MoodTracker() {
                         className="flex-1 py-3 rounded-2xl text-sm font-semibold transition-all flex flex-col items-center gap-1 active:scale-95"
                         style={selectedEnergy === value
                           ? { background: `${color}20`, border: `1.5px solid ${color}`, color }
-                          : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)' }
+                          : { background: 'var(--bg-subtle)', border: '1px solid var(--border)', color: 'var(--text-muted)' }
                         }>
                         <span className="text-xl">{icon}</span>
                         <span className="text-xs">{label}</span>
@@ -342,8 +342,8 @@ export default function MoodTracker() {
 
                 {/* Journal note */}
                 <div className="rounded-3xl p-5"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  <p className="text-sm font-semibold text-white mb-1">Quick reflection</p>
+                  style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                  <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text)' }}>Quick reflection</p>
                   <p className="text-xs mb-3" style={{ color: 'rgba(196,181,253,0.5)' }}>{prompt}</p>
                   <textarea
                     value={note}
@@ -352,9 +352,9 @@ export default function MoodTracker() {
                     rows={3}
                     className="w-full rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none"
                     style={{
-                      background: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      color: 'white',
+                      background: 'var(--bg-subtle)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
                     }}
                   />
                 </div>
@@ -362,7 +362,7 @@ export default function MoodTracker() {
                 {/* Submit */}
                 <button onClick={handleSubmit} disabled={!selectedMood}
                   className="w-full py-4 rounded-2xl font-bold text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-30"
-                  style={{ background: selectedMood ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.05)', boxShadow: selectedMood ? '0 4px 20px rgba(124,58,237,0.4)' : 'none' }}>
+                  style={{ background: selectedMood ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'var(--bg-subtle)', boxShadow: selectedMood ? '0 4px 20px rgba(124,58,237,0.4)' : 'none' }}>
                   Save Today's Check-in ✦
                 </button>
               </>
@@ -375,15 +375,15 @@ export default function MoodTracker() {
           <div className="space-y-4">
             {/* Chart */}
             <div className="rounded-3xl p-5"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <p className="text-sm font-semibold text-white mb-1">Last 7 Days</p>
-              <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.3)' }}>Mood score 1–10</p>
+              style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+              <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text)' }}>Last 7 Days</p>
+              <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>Mood score 1–10</p>
               {entries.length >= 1 ? (
                 <MoodChart entries={entries} />
               ) : (
                 <div className="text-center py-8">
                   <p className="text-4xl mb-3">📊</p>
-                  <p className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>Log your mood for a few days to see your chart</p>
+                  <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Log your mood for a few days to see your chart</p>
                 </div>
               )}
             </div>
@@ -399,7 +399,7 @@ export default function MoodTracker() {
                   </div>
                   <div>
                     <p className="text-xs font-bold mb-1.5" style={{ color: insight.color }}>✦ AI Insight</p>
-                    <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text)' }}>
                       {insight.text}
                     </p>
                   </div>
@@ -410,8 +410,8 @@ export default function MoodTracker() {
             {/* Mood history list */}
             {entries.length > 0 && (
               <div className="rounded-3xl overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                <div className="px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
                   <p className="text-sm font-semibold text-white">Recent Check-ins</p>
                 </div>
                 {[...entries].reverse().slice(0, 7).map((entry, i, arr) => {
@@ -420,20 +420,20 @@ export default function MoodTracker() {
                   const dateStr = new Date(entry.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
                   return (
                     <div key={entry.date} className="flex items-center gap-3 px-5 py-3.5"
-                      style={{ borderBottom: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                      style={{ borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
                       <span className="text-2xl shrink-0">{meta?.emoji}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
                           <span className="text-xs font-bold" style={{ color: moodColor(entry.mood) }}>
                             {meta?.label}
                           </span>
-                          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>{eng?.icon} {eng?.label}</span>
+                          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{eng?.icon} {eng?.label}</span>
                         </div>
                         {entry.note && (
-                          <p className="text-xs truncate italic" style={{ color: 'rgba(255,255,255,0.35)' }}>"{entry.note}"</p>
+                          <p className="text-xs truncate italic" style={{ color: 'var(--text-muted)' }}>"{entry.note}"</p>
                         )}
                       </div>
-                      <span className="text-xs shrink-0" style={{ color: 'rgba(255,255,255,0.25)' }}>{dateStr}</span>
+                      <span className="text-xs shrink-0" style={{ color: 'var(--text-muted)' }}>{dateStr}</span>
                     </div>
                   );
                 })}
@@ -447,10 +447,10 @@ export default function MoodTracker() {
           <div className="space-y-4">
             {entries.filter(e => e.note).length === 0 ? (
               <div className="rounded-3xl p-8 text-center"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                 <p className="text-4xl mb-3">📝</p>
-                <p className="text-sm font-semibold text-white mb-1">Your journal is empty</p>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text)' }}>Your journal is empty</p>
+                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                   Add a reflection when you log your mood — it'll appear here.
                 </p>
               </div>
@@ -461,12 +461,12 @@ export default function MoodTracker() {
                   const dateStr = new Date(entry.date).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
                   return (
                     <div key={entry.date} className="rounded-3xl p-5"
-                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                      style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                       <div className="flex items-center gap-2 mb-3">
                         <span className="text-2xl">{meta?.emoji}</span>
                         <div>
                           <p className="text-xs font-bold" style={{ color: moodColor(entry.mood) }}>{meta?.label}</p>
-                          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>{dateStr}</p>
+                          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{dateStr}</p>
                         </div>
                       </div>
                       <p className="text-sm leading-relaxed italic" style={{ color: 'rgba(221,214,254,0.7)' }}>
@@ -481,7 +481,7 @@ export default function MoodTracker() {
         )}
 
         {/* Affirmation footer */}
-        <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.18)' }}>
+        <p className="text-center text-xs mt-8" style={{ color: 'var(--text-muted)' }}>
           ✦ &nbsp;Every check-in is an act of self-love&nbsp; ✦
         </p>
       </div>

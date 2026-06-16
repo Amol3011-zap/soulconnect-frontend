@@ -27,7 +27,7 @@ const PREMIUM_FEATURES = [
 function Check({ included }) {
   return included
     ? <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: 'linear-gradient(135deg,#a855f7,#3b82f6)' }}>✓</span>
-    : <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.25)' }}>✕</span>;
+    : <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs" style={{ background: 'var(--bg-subtle)', color: 'var(--text-muted)' }}>✕</span>;
 }
 
 export default function Premium() {
@@ -39,7 +39,7 @@ export default function Premium() {
   const saving = billing === 'annual' ? Math.round((1 - 0.67) * 100) : 0;
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(160deg, #09000f 0%, #1a0533 30%, #0d1b4b 65%, #050a1f 100%)' }}>
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
 
       {/* Background glow orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -56,22 +56,22 @@ export default function Premium() {
             style={{ background: 'rgba(168,85,247,0.15)', border: '1px solid rgba(168,85,247,0.3)', color: '#c084fc' }}>
             ✦ Invest in your healing journey
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">Choose Your Plan</h1>
-          <p className="text-base" style={{ color: 'rgba(196,181,253,0.7)' }}>
+          <h1 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight" style={{ color: 'var(--text)' }}>Choose Your Plan</h1>
+          <p className="text-base" style={{ color: 'var(--text-secondary)' }}>
             Healing is not a luxury. Neither should support be.
           </p>
 
           {/* Billing toggle */}
           <div className="flex items-center justify-center gap-3 mt-8">
-            <span className="text-sm font-semibold" style={{ color: billing === 'monthly' ? 'white' : 'rgba(255,255,255,0.4)' }}>Monthly</span>
+            <span className="text-sm font-semibold" style={{ color: billing === 'monthly' ? 'var(--text)' : 'var(--text-muted)' }}>Monthly</span>
             <button
               onClick={() => setBilling(b => b === 'monthly' ? 'annual' : 'monthly')}
               className="relative w-14 h-7 rounded-full transition-all duration-300"
-              style={{ background: billing === 'annual' ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.15)' }}>
-              <div className="absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-all duration-300"
-                style={{ left: billing === 'annual' ? '2rem' : '0.25rem' }} />
+              style={{ background: billing === 'annual' ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'var(--bg-subtle)' }}>
+              <div className="absolute top-1 w-5 h-5 rounded-full shadow transition-all duration-300"
+                style={{ left: billing === 'annual' ? '2rem' : '0.25rem', background: 'var(--bg-card)' }} />
             </button>
-            <span className="text-sm font-semibold" style={{ color: billing === 'annual' ? 'white' : 'rgba(255,255,255,0.4)' }}>Annual</span>
+            <span className="text-sm font-semibold" style={{ color: billing === 'annual' ? 'var(--text)' : 'var(--text-muted)' }}>Annual</span>
             {billing === 'annual' && (
               <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: 'linear-gradient(135deg,#fbbf24,#f59e0b)', color: '#1a0533' }}>
                 Save 33%
@@ -86,30 +86,29 @@ export default function Premium() {
           {/* ── FREE ── */}
           <div className="rounded-3xl overflow-hidden"
             style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              backdropFilter: 'blur(12px)',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
             }}>
             <div className="p-7">
               <div className="flex items-center justify-between mb-5">
                 <div>
-                  <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Current</p>
-                  <h2 className="text-2xl font-bold text-white">Free</h2>
+                  <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: 'var(--text-muted)' }}>Current</p>
+                  <h2 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>Free</h2>
                 </div>
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-                  style={{ background: 'rgba(255,255,255,0.08)' }}>🌱</div>
+                  style={{ background: 'var(--bg-subtle)' }}>🌱</div>
               </div>
 
               <div className="mb-6">
-                <span className="text-5xl font-bold text-white">₹0</span>
-                <span className="text-base ml-1" style={{ color: 'rgba(255,255,255,0.4)' }}>/month</span>
+                <span className="text-5xl font-bold" style={{ color: 'var(--text)' }}>₹0</span>
+                <span className="text-base ml-1" style={{ color: 'var(--text-muted)' }}>/month</span>
               </div>
 
               <ul className="space-y-3 mb-7">
                 {FREE_FEATURES.map(({ text, included }) => (
                   <li key={text} className="flex items-center gap-3">
                     <Check included={included} />
-                    <span className="text-sm" style={{ color: included ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.28)' }}>
+                    <span className="text-sm" style={{ color: included ? 'var(--text)' : 'var(--text-muted)' }}>
                       {text}
                     </span>
                   </li>
@@ -118,7 +117,7 @@ export default function Premium() {
 
               <button disabled
                 className="w-full py-3.5 rounded-2xl font-semibold text-sm"
-                style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                style={{ background: 'var(--bg-subtle)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                 Current Plan
               </button>
             </div>
@@ -206,13 +205,13 @@ export default function Premium() {
           ].map(([icon, label]) => (
             <div key={label} className="flex items-center gap-2">
               <span className="text-lg">{icon}</span>
-              <span className="text-sm" style={{ color: 'rgba(196,181,253,0.55)' }}>{label}</span>
+              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{label}</span>
             </div>
           ))}
         </div>
 
         {/* Bottom note */}
-        <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.2)' }}>
+        <p className="text-center text-xs mt-8" style={{ color: 'var(--text-muted)' }}>
           ✦ &nbsp; Your healing journey is sacred. We are here to support it. &nbsp; ✦
         </p>
       </div>
