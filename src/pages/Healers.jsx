@@ -370,9 +370,16 @@ function BookingModal({ healer, grad, onClose, onConfirm }) {
           <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4"
             style={{ background: grad }}>✅</div>
           <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text)' }}>Session Requested!</h2>
-          <p className="text-sm leading-relaxed mb-2" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--text-secondary)' }}>
             Your booking request has been sent to <strong>{healer.name}</strong>.
           </p>
+
+          {/* Breathing prompt */}
+          <div className="rounded-2xl px-5 py-4 mb-4 text-sm font-medium leading-relaxed"
+            style={{ background: 'linear-gradient(135deg,rgba(45,106,79,0.12),rgba(26,61,46,0.08))', border: '1px solid rgba(45,106,79,0.25)', color: '#1a3d2e' }}>
+            🌿 While we prepare your session, take a deep breath and relax.
+          </div>
+
           <div className="rounded-2xl px-4 py-3 mb-5 text-sm font-semibold" style={{ background: 'var(--bg-subtle)', color: 'var(--text)' }}>
             📅 {selectedSlot.day} at {selectedSlot.time}
           </div>

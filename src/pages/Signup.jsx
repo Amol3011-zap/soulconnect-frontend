@@ -194,6 +194,8 @@ export default function Signup() {
   const [languages, setLanguages] = useState('');
 
   const [gpsLocation, setGpsLocation] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [pendingNav, setPendingNav] = useState('');
   const { setAuth } = useAuthStore();
   const navigate = useNavigate();
 
@@ -282,7 +284,9 @@ export default function Signup() {
       };
       const response = await authAPI.signup(payload);
       setAuth(response.data, response.data.access_token, role);
-      navigate(role === 'healer' ? '/healer-dashboard' : '/dashboard');
+      const dest = role === 'healer' ? '/healer-dashboard' : '/dashboard';
+      setPendingNav(dest);
+      setShowWelcome(true);
     } catch (err) {
       const detail = err.response?.data?.detail;
       if (Array.isArray(detail)) {
@@ -405,6 +409,31 @@ export default function Signup() {
   // ── Steps 1–4 ──
   return (
     <div className="min-h-screen flex">
+
+      {/* Welcome dialogue after signup */}
+      {showWelcome && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6"
+          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}>
+          <div className="w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl"
+            style={{ background: 'white' }}>
+            <div className="text-5xl mb-5">🤗</div>
+            <h2 className="text-lg font-bold mb-3" style={{ color: '#1a3d2e' }}>
+              Welcome to SoulConnect
+            </h2>
+            <p className="text-base leading-relaxed mb-6 font-medium"
+              style={{ color: '#374151', fontStyle: 'italic' }}>
+              "Kabhi kabhi ek jadoo ki jhappi aur dil se baat kar lena hi kaafi hota hai"
+            </p>
+            <button
+              onClick={() => { setShowWelcome(false); navigate(pendingNav); }}
+              className="w-full py-3 rounded-xl font-bold text-white text-sm"
+              style={{ background: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>
+              Let's Begin →
+            </button>
+          </div>
+        </div>
+      )}
+
       <LeftPanel role={role} />
 
       <div className="flex-1 flex items-center justify-center p-6 overflow-y-auto" style={{ background: '#f5f5f0' }}>
