@@ -607,24 +607,84 @@ export default function Landing() {
       {/* ═══════════════════════════════════════
           FOOTER
       ═══════════════════════════════════════ */}
-      <footer style={{ background: '#0f2419', padding: '40px 24px' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="16" r="16" fill="#2d6a4f" />
-              <path d="M16 8 C10 8 7 12 7 15.5 C7 20 11 23 16 26 C21 23 25 20 25 15.5 C25 12 22 8 16 8Z" fill="#f59e0b" />
-              <circle cx="16" cy="15" r="4" fill="white" opacity="0.3" />
-            </svg>
-            <span style={{ color: 'white', fontWeight: 700, fontSize: 18 }}>SoulConnect</span>
+      <footer style={{ background: '#f5f0eb' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 28px 0' }}>
+
+          {/* Top row: nav links + social icons */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, paddingBottom: 24 }}>
+
+            {/* Nav links */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 24px' }}>
+              {[
+                { label: 'Home', href: '#' },
+                { label: 'About', href: '#' },
+                { label: 'FAQ', href: '#' },
+                { label: 'How it Works', href: '#how-it-works' },
+                { label: 'Find a Match', to: '/signup' },
+                { label: 'Talk to a Healer', to: '/signup' },
+                { label: 'Contact', href: '#' },
+                { label: 'For Healers', to: '/signup' },
+              ].map(({ label, href, to }) =>
+                to ? (
+                  <Link key={label} to={to}
+                    style={{ color: '#3d5a4a', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}
+                    onMouseEnter={e => e.target.style.color = '#1a3d2e'}
+                    onMouseLeave={e => e.target.style.color = '#3d5a4a'}>
+                    {label}
+                  </Link>
+                ) : (
+                  <a key={label} href={href}
+                    style={{ color: '#3d5a4a', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}
+                    onMouseEnter={e => e.target.style.color = '#1a3d2e'}
+                    onMouseLeave={e => e.target.style.color = '#3d5a4a'}>
+                    {label}
+                  </a>
+                )
+              )}
+            </div>
+
+            {/* Social icons */}
+            <div style={{ display: 'flex', gap: 10 }}>
+              {[
+                /* Facebook */
+                <svg key="fb" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>,
+                /* Instagram */
+                <svg key="ig" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/></svg>,
+                /* TikTok */
+                <svg key="tt" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.54V6.79a4.85 4.85 0 01-1.02-.1z"/></svg>,
+                /* X / Twitter */
+                <svg key="x" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>,
+                /* LinkedIn */
+                <svg key="li" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2" fill="white"/></svg>,
+              ].map((icon, i) => (
+                <a key={i} href="#"
+                  style={{ width: 38, height: 38, borderRadius: '50%', background: '#1a3d2e', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.2s' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#2d6a4f'}
+                  onMouseLeave={e => e.currentTarget.style.background = '#1a3d2e'}>
+                  {icon}
+                </a>
+              ))}
+            </div>
           </div>
 
-          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 13 }}>© 2026 SoulConnect. Made for every soul.</p>
+          {/* Divider */}
+          <div style={{ height: 1, background: '#ddd5cc' }} />
 
-          <div style={{ display: 'flex', gap: 28 }}>
-            <a href="#" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, textDecoration: 'none' }}>Privacy</a>
-            <a href="#" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, textDecoration: 'none' }}>Terms</a>
-            <Link to="/signup" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, textDecoration: 'none' }}>Sign Up</Link>
+          {/* Bottom row: legal links + copyright */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '18px 0 28px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px' }}>
+              {['Terms & Conditions', 'Privacy Policy', 'Cookie Settings', 'Web Accessibility'].map(label => (
+                <a key={label} href="#"
+                  style={{ color: '#5a7a6a', fontSize: 13, textDecoration: 'none' }}
+                  onMouseEnter={e => e.target.style.color = '#1a3d2e'}
+                  onMouseLeave={e => e.target.style.color = '#5a7a6a'}>
+                  {label}
+                </a>
+              ))}
+            </div>
+            <p style={{ color: '#8a9e94', fontSize: 13, margin: 0 }}>© 2026 SoulConnect</p>
           </div>
+
         </div>
       </footer>
 
