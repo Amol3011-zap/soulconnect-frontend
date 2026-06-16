@@ -172,6 +172,10 @@ function getBotResponse(userText, problem, state, matchName) {
 
 // ── Keyframe CSS ──────────────────────────────────────────────────────────────
 const DASH_STYLES = `
+  @media (max-width: 640px) {
+    .dash-page-bg { padding: 0 !important; align-items: stretch !important; }
+    .dash-box { border-radius: 0 !important; height: 100dvh !important; box-shadow: none !important; }
+  }
   @keyframes dashStarPulse {
     0%, 100% { opacity: 0.1; transform: scale(1); }
     50% { opacity: 0.45; transform: scale(1.7); }
@@ -412,11 +416,28 @@ export default function Dashboard() {
     <>
       <style>{DASH_STYLES}</style>
 
-      <div style={{
+      {/* Page background */}
+      <div className="dash-page-bg" style={{
+        minHeight: '100dvh',
+        background: 'linear-gradient(135deg, #03000d 0%, #0a0320 50%, #040112 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        boxSizing: 'border-box',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+      }}>
+
+      {/* Chat box container */}
+      <div className="dash-box" style={{
         display: 'flex',
         overflow: 'hidden',
-        height: '100dvh',
+        width: '100%',
+        maxWidth: 1100,
+        height: 'calc(100dvh - 32px)',
         background: '#06010f',
+        borderRadius: 20,
+        boxShadow: '0 0 0 1px rgba(124,58,237,0.2), 0 40px 80px rgba(0,0,0,0.8), 0 0 60px rgba(124,58,237,0.08)',
         fontFamily: 'system-ui, -apple-system, sans-serif',
       }}>
 
@@ -1160,6 +1181,7 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+      </div>
       </div>
     </>
   );
