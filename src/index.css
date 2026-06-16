@@ -119,3 +119,12 @@ html, body, #root {
   position: fixed;
   overflow: hidden;
 }
+
+/* ── Matches page: cosmic bg in dark mode, clean in light ── */
+.matches-cosmic-bg {
+  background: #f9fafb;
+}
+.dark .matches-cosmic-bg {
+  background: linear-gradient(160deg, #09000f 0%, #1a0533 25%, #0d1b4b 65%, #050a1f 100%);
+  background-attachment: fixed;
+}

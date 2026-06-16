@@ -15,7 +15,6 @@ import Premium from './pages/Premium';
 import Account from './pages/Account';
 
 import Navbar from './components/Navbar';
-import CrisisResources from './components/CrisisResources';
 
 function AppInner() {
   const { token } = useAuthStore();
@@ -25,7 +24,6 @@ function AppInner() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       {token && !hideNav && <Navbar />}
-      <CrisisResources />
 
       <Routes>
         <Route path="/" element={<Landing />} />

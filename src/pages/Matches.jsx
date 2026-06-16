@@ -219,11 +219,13 @@ function MatchCard({ match, index, onConnect, connecting }) {
   const isConnecting = connecting === match.id;
 
   return (
-    <div className="group relative rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+    <div className="group relative rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 match-card"
       style={{
-        background: 'var(--bg-card)',
-        border: '1px solid rgba(124,58,237,0.18)',
-        boxShadow: '0 4px 30px rgba(124,58,237,0.08)',
+        background: 'rgba(255,255,255,0.05)',
+        border: '1px solid rgba(168,85,247,0.2)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        boxShadow: '0 4px 30px rgba(0,0,0,0.3)',
       }}>
 
       {/* Top gradient stripe */}
@@ -250,15 +252,15 @@ function MatchCard({ match, index, onConnect, connecting }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="font-bold text-base" style={{ color: 'var(--text)' }}>
+                <h3 className="font-bold text-base text-white">
                   {match.name || 'Anonymous'}
                 </h3>
                 <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                  {match.age && <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{match.age} yrs</span>}
+                  {match.age && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{match.age} yrs</span>}
                   {match.city && (
                     <>
-                      <span style={{ color: 'var(--border)' }}>·</span>
-                      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>📍 {match.city}</span>
+                      <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
+                      <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>📍 {match.city}</span>
                     </>
                   )}
                 </div>
@@ -278,7 +280,7 @@ function MatchCard({ match, index, onConnect, connecting }) {
             const info = PROBLEM_META[p];
             return info ? (
               <span key={p} className="text-xs px-2.5 py-1 rounded-full font-medium"
-                style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+                style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.12)' }}>
                 {info.icon} {info.label}
               </span>
             ) : null;
@@ -290,7 +292,7 @@ function MatchCard({ match, index, onConnect, connecting }) {
           <div className="rounded-2xl px-4 py-3 mb-4 relative"
             style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.07), rgba(37,99,235,0.05))', border: '1px solid rgba(124,58,237,0.12)' }}>
             <span className="text-sm absolute left-3 top-2.5 opacity-40">✨</span>
-            <p className="text-xs italic pl-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-xs italic pl-5 leading-relaxed" style={{ color: 'rgba(216,180,254,0.75)' }}>
               "{match.match_reason}"
             </p>
           </div>
@@ -381,7 +383,7 @@ export default function Matches() {
   const greetingIcon = hour < 5 ? '🌙' : hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen matches-cosmic-bg">
 
       {/* Toast */}
       {toast && (
@@ -392,11 +394,7 @@ export default function Matches() {
       )}
 
       {/* ── SPIRITUAL HERO ── */}
-      <div className="relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(160deg, #09000f 0%, #1a0533 25%, #0d1b4b 60%, #050a1f 100%)',
-          minHeight: 280,
-        }}>
+      <div className="relative overflow-hidden" style={{ minHeight: 280 }}>
 
         {/* Mandala sacred geometry */}
         <Mandala />
@@ -466,16 +464,16 @@ export default function Matches() {
       {!loading && (
         <div className="flex justify-center -mt-5 mb-4 relative z-10">
           <div className="flex items-center gap-2.5 px-4 py-2 rounded-full shadow-lg"
-            style={{ background: 'var(--bg-card)', border: '1px solid rgba(124,58,237,0.25)' }}>
+            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(168,85,247,0.3)', backdropFilter: 'blur(12px)' }}>
             <div className="flex -space-x-2">
               {matches.slice(0, 4).map((m, i) => (
                 <div key={m.id} className="w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold text-white"
-                  style={{ background: GRAD_COLORS[i % GRAD_COLORS.length], borderColor: 'var(--bg-card)' }}>
+                  style={{ background: GRAD_COLORS[i % GRAD_COLORS.length], borderColor: 'rgba(0,0,0,0.3)' }}>
                   {m.name?.[0]?.toUpperCase() || '?'}
                 </div>
               ))}
             </div>
-            <span className="text-xs font-semibold" style={{ color: 'var(--text)' }}>
+            <span className="text-xs font-semibold text-white">
               {matches.length} soul{matches.length !== 1 ? 's' : ''} matched to you
             </span>
             <span className="text-purple-400 text-base">✨</span>
@@ -489,16 +487,16 @@ export default function Matches() {
           <div className="space-y-4">
             {[1, 2, 3].map(i => (
               <div key={i} className="rounded-3xl p-5 animate-pulse"
-                style={{ background: 'var(--bg-card)', border: '1px solid rgba(124,58,237,0.1)' }}>
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
                 <div className="flex gap-3 mb-4">
-                  <div className="w-14 h-14 rounded-2xl" style={{ background: 'var(--bg-subtle)' }} />
+                  <div className="w-14 h-14 rounded-2xl" style={{ background: 'rgba(255,255,255,0.08)' }} />
                   <div className="flex-1 space-y-2 pt-1">
-                    <div className="h-4 rounded-full w-1/2" style={{ background: 'var(--bg-subtle)' }} />
-                    <div className="h-3 rounded-full w-1/3" style={{ background: 'var(--bg-subtle)' }} />
+                    <div className="h-4 rounded-full w-1/2" style={{ background: 'rgba(255,255,255,0.08)' }} />
+                    <div className="h-3 rounded-full w-1/3" style={{ background: 'rgba(255,255,255,0.06)' }} />
                   </div>
                 </div>
-                <div className="h-3 rounded-full mb-2" style={{ background: 'var(--bg-subtle)' }} />
-                <div className="h-3 rounded-full w-3/4" style={{ background: 'var(--bg-subtle)' }} />
+                <div className="h-3 rounded-full mb-2" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                <div className="h-3 rounded-full w-3/4" style={{ background: 'rgba(255,255,255,0.06)' }} />
               </div>
             ))}
           </div>
@@ -511,9 +509,9 @@ export default function Matches() {
 
             {/* Safety note */}
             <div className="flex items-start gap-3 rounded-2xl p-4"
-              style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)' }}>
               <span className="text-lg shrink-0">🔒</span>
-              <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
                 All matches are anonymous. Your personal details are never shared without your consent. You are always in control of your story.
               </p>
             </div>
