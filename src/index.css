@@ -12,9 +12,14 @@
   --text: #111827;
   --text-secondary: #6b7280;
   --text-muted: #9ca3af;
-  --nav-bg: rgba(255,255,255,0.92);
+  --nav-bg: rgba(255,255,255,0.95);
   --input-bg: #f9fafb;
   --input-border: #e5e7eb;
+  /* Safe area insets (for iPhone notch / home bar) */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
 /* ── Dark mode variables ── */
@@ -27,7 +32,7 @@
   --text: #f1f5f9;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  --nav-bg: rgba(15,15,19,0.92);
+  --nav-bg: rgba(15,15,19,0.96);
   --input-bg: #22222e;
   --input-border: #2a2a38;
 }
@@ -38,8 +43,79 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+/* ── Mobile scrolling ── */
+.overflow-y-auto,
+.overflow-y-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Prevent overscroll bounce on the whole page (feels more app-like) ── */
+html, body, #root {
+  overscroll-behavior: none;
+  height: 100%;
+}
+
+/* ── Scrollbar (desktop) ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 99px; }
 .dark ::-webkit-scrollbar-thumb { background: #4c1d95; }
+/* Hide scrollbar on mobile but keep scrollable */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
+}
+
+/* ── Safe area utility classes ── */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+.mb-safe { margin-bottom: env(safe-area-inset-bottom, 16px); }
+
+/* ── Bottom nav safe area ── */
+.nav-bottom-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
+}
+
+/* ── Chat input bar safe area ── */
+.input-bar-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
+}
+
+/* ── Active press feedback (native app feel) ── */
+.tap-scale {
+  transition: transform 0.1s ease;
+}
+.tap-scale:active {
+  transform: scale(0.96);
+}
+
+/* ── Smooth page transitions ── */
+.page-enter {
+  animation: pageSlideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Chat slide transitions ── */
+.chat-slide-in {
+  animation: chatSlideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.chat-slide-out {
+  animation: chatSlideOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes chatSlideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes chatSlideOut {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-30%); opacity: 0; }
+}
+
+/* ── Prevent iOS rubber-band on fixed elements ── */
+.fixed-no-bounce {
+  position: fixed;
+  overflow: hidden;
+}

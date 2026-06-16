@@ -1,0 +1,43 @@
+{
+  "name": "SoulConnect",
+  "short_name": "SoulConnect",
+  "description": "Find Your People. Feel Better Today.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1a0533",
+  "theme_color": "#7c3aed",
+  "categories": ["health", "lifestyle", "social"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "My Matches",
+      "short_name": "Matches",
+      "description": "See your soul matches",
+      "url": "/matches",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Find a Healer",
+      "short_name": "Healers",
+      "description": "Connect with a therapist",
+      "url": "/healers",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    }
+  ]
+}

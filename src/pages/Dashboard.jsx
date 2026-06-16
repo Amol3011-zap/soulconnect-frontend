@@ -339,14 +339,14 @@ export default function Dashboard() {
   const fmt = (d) => d?.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+    <div className="flex overflow-hidden" style={{ background: 'var(--bg)', height: '100dvh' }}>
 
       {/* ── LEFT SIDEBAR ── */}
       <div className={`flex-col w-full md:w-80 shrink-0 border-r ${mobileView === 'chat' ? 'hidden md:flex' : 'flex'}`}
         style={{ borderColor: 'var(--border)', background: 'var(--bg-card)' }}>
 
-        {/* Logo */}
-        <div className="px-5 pt-5 pb-3">
+        {/* Logo — padded for iOS status bar */}
+        <div className="px-5 pb-3" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 20px)' }}>
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
@@ -412,8 +412,12 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Bottom actions */}
-        <div className="p-4 space-y-2" style={{ borderTop: '1px solid var(--border)' }}>
+        {/* Bottom actions — safe area for iPhone home indicator */}
+        <div className="px-4 pt-4 space-y-2"
+          style={{
+            borderTop: '1px solid var(--border)',
+            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)',
+          }}>
           <button onClick={() => navigate('/healers')}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all hover:opacity-90"
             style={{ background: 'linear-gradient(135deg, #0891b2, #2563eb)' }}>
@@ -433,15 +437,19 @@ export default function Dashboard() {
       </div>
 
       {/* ── MAIN CHAT AREA ── */}
-      <div className={`flex-1 flex flex-col min-w-0 ${mobileView === 'list' ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`flex-1 flex flex-col min-w-0 ${mobileView === 'list' ? 'hidden md:flex' : 'flex chat-slide-in'}`}>
 
-        {/* Chat header */}
-        <div className="shrink-0 flex items-center gap-3 px-5 py-3.5"
-          style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-card)' }}>
+        {/* Chat header — padded for iOS status bar on mobile */}
+        <div className="shrink-0 flex items-center gap-3 px-4 py-3"
+          style={{
+            borderBottom: '1px solid var(--border)',
+            background: 'var(--bg-card)',
+            paddingTop: 'max(env(safe-area-inset-top, 0px), 12px)',
+          }}>
           <button onClick={() => setMobileView('list')}
-            className="md:hidden w-8 h-8 rounded-xl flex items-center justify-center transition-colors mr-1"
-            style={{ background: 'var(--bg-subtle)', color: 'var(--text)' }}>
-            ←
+            className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center transition-all active:scale-90 mr-1"
+            style={{ background: 'var(--bg-subtle)', color: 'var(--text)', fontSize: 18 }}>
+            ‹
           </button>
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0"
             style={{ background: activeMatch?.grad }}>
@@ -529,9 +537,13 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Input bar */}
-        <div className="shrink-0 px-4 py-3"
-          style={{ borderTop: '1px solid var(--border)', background: 'var(--bg-card)' }}>
+        {/* Input bar — safe area for iPhone home indicator */}
+        <div className="shrink-0 px-4 pt-3"
+          style={{
+            borderTop: '1px solid var(--border)',
+            background: 'var(--bg-card)',
+            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 12px)',
+          }}>
           <div className="flex items-center gap-2">
             <button className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0 hover:opacity-70 transition-opacity"
               style={{ background: 'var(--bg-subtle)' }}>
