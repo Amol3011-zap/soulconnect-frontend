@@ -4,6 +4,7 @@ import ThemeToggle from './ThemeToggle';
 
 const NAV_ITEMS = [
   { to: '/matches',  label: 'Matches',  icon: '💫' },
+  { to: '/groups',   label: 'Groups',   icon: '🫂' },
   { to: '/healers',  label: 'Healers',  icon: '🧘' },
   { to: '/meetups',  label: 'Meetups',  icon: '👥' },
   { to: '/mood',     label: 'Mood',     icon: '📊' },
@@ -11,11 +12,11 @@ const NAV_ITEMS = [
   { to: '/account',  label: 'Account',  icon: '👤' },
 ];
 
-// Mobile shows 5 key items (no Premium on mobile — accessible via Account)
+// Mobile shows 5 key items
 const MOBILE_ITEMS = [
   { to: '/matches',  label: 'Matches',  icon: '💫' },
+  { to: '/groups',   label: 'Groups',   icon: '🫂' },
   { to: '/healers',  label: 'Healers',  icon: '🧘' },
-  { to: '/meetups',  label: 'Meetups',  icon: '👥' },
   { to: '/mood',     label: 'Mood',     icon: '📊' },
   { to: '/account',  label: 'Account',  icon: '👤' },
 ];

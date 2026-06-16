@@ -14,6 +14,7 @@ import Premium from './pages/Premium';
 import Account from './pages/Account';
 import MoodTracker from './pages/MoodTracker';
 import HealerDashboard from './pages/HealerDashboard';
+import GroupChat from './pages/GroupChat';
 
 import Navbar from './components/Navbar';
 
@@ -23,7 +24,7 @@ function AppInner() {
   const isHealer = role === 'healer' || user?.role === 'healer';
 
   // Pages that manage their own header/nav
-  const hideNav = location.pathname === '/matches' || isHealer;
+  const hideNav = location.pathname === '/matches' || location.pathname === '/groups' || isHealer;
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
@@ -48,6 +49,7 @@ function AppInner() {
           <>
             {/* Regular user routes */}
             <Route path="/matches" element={<Dashboard />} />
+            <Route path="/groups" element={<GroupChat />} />
             <Route path="/chat/:matchId" element={<Chat />} />
             <Route path="/healers" element={<Healers />} />
             <Route path="/meetups" element={<Meetups />} />
