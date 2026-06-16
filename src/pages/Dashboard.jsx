@@ -239,7 +239,7 @@ function TypingIndicator() {
 
 // ── Main Dashboard ────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const { clearAuth } = useAuthStore();
+  const { logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [matches] = useState(DEMO_MATCHES);
@@ -428,7 +428,7 @@ export default function Dashboard() {
             </div>
           </button>
           <button
-            onClick={() => { clearAuth(); navigate('/'); }}
+            onClick={() => { logout(); navigate('/'); }}
             className="w-full text-xs py-2 rounded-xl font-medium transition-colors hover:opacity-70"
             style={{ color: 'var(--text-muted)' }}>
             Sign out

@@ -13,6 +13,7 @@ import Healers from './pages/Healers';
 import Meetups from './pages/Meetups';
 import Premium from './pages/Premium';
 import Account from './pages/Account';
+import MoodTracker from './pages/MoodTracker';
 
 import Navbar from './components/Navbar';
 
@@ -42,6 +43,7 @@ function AppInner() {
             <Route path="/healers" element={<Healers />} />
             <Route path="/meetups" element={<Meetups />} />
             <Route path="/premium" element={<Premium />} />
+            <Route path="/mood" element={<MoodTracker />} />
             <Route path="/account" element={<Account />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </>

@@ -17,7 +17,7 @@ const PROBLEM_LABELS = {
 };
 
 export default function Account() {
-  const { clearAuth } = useAuthStore();
+  const { logout } = useAuthStore();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ export default function Account() {
   };
 
   const handleLogout = () => {
-    clearAuth();
+    logout();
     navigate('/');
   };
 
