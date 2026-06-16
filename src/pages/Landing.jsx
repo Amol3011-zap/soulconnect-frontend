@@ -203,45 +203,31 @@ export default function Landing() {
           NAVBAR
       ═══════════════════════════════════════ */}
       <nav style={{ background: '#1a3d2e' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 68 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
           {/* Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <circle cx="16" cy="16" r="16" fill="#2d6a4f" />
               <path d="M16 8 C10 8 7 12 7 15.5 C7 20 11 23 16 26 C21 23 25 20 25 15.5 C25 12 22 8 16 8Z" fill="#f59e0b" />
               <circle cx="16" cy="15" r="4" fill="white" opacity="0.3" />
             </svg>
-            <span style={{ color: 'white', fontWeight: 700, fontSize: 20, letterSpacing: '-0.3px' }}>SoulConnect</span>
-          </div>
+            <span style={{ color: 'white', fontWeight: 700, fontSize: 18, letterSpacing: '-0.3px' }}>SoulConnect</span>
+          </Link>
 
-          {/* Nav links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-            <a href="#how-it-works" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 15, textDecoration: 'none' }}>How it Works</a>
-            <a href="#features" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 15, textDecoration: 'none' }}>Features</a>
-            <a href="#healers" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 15, textDecoration: 'none' }}>Healers</a>
-            <a href="#faq" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 15, textDecoration: 'none' }}>FAQ</a>
+          {/* Nav links — hidden on mobile */}
+          <div className="hidden md:flex" style={{ alignItems: 'center', gap: 28 }}>
+            <a href="#how-it-works" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>How it Works</a>
+            <a href="#features" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>Features</a>
+            <a href="#healers" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>Healers</a>
+            <a href="#faq" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>FAQ</a>
           </div>
 
           {/* Auth buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Link
-              to="/signup"
-              style={{
-                color: 'white', fontWeight: 600, fontSize: 14, textDecoration: 'none',
-                border: '1.5px solid rgba(255,255,255,0.45)', borderRadius: 6,
-                padding: '8px 20px', transition: 'all 0.2s',
-              }}
-            >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Link to="/login" style={{ color: 'white', fontWeight: 600, fontSize: 14, textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.4)', borderRadius: 8, padding: '7px 16px' }}>
               Log in
             </Link>
-            <Link
-              to="/signup"
-              style={{
-                background: '#f59e0b', color: '#1a1a1a', fontWeight: 700, fontSize: 14,
-                textDecoration: 'none', borderRadius: 6, padding: '9px 22px',
-                boxShadow: '0 2px 8px rgba(245,158,11,0.35)',
-              }}
-            >
+            <Link to="/signup" style={{ background: '#f59e0b', color: '#1a1a1a', fontWeight: 700, fontSize: 14, textDecoration: 'none', borderRadius: 8, padding: '8px 18px', boxShadow: '0 2px 8px rgba(245,158,11,0.35)' }}>
               Get started
             </Link>
           </div>
@@ -252,24 +238,31 @@ export default function Landing() {
           HERO SECTION
       ═══════════════════════════════════════ */}
       <section style={{ background: '#1a3d2e', paddingBottom: 0 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '72px 24px 0' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(36px,6vw,72px) 20px 0' }}>
 
           {/* Hero text */}
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <p style={{ color: '#86efac', fontWeight: 600, fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(32px,5vw,56px)' }}>
+            <p style={{ color: '#86efac', fontWeight: 600, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>
               Peer Support for Real Life Struggles
             </p>
-            <h1 style={{ color: 'white', fontSize: 'clamp(2.4rem, 5vw, 3.75rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: 20, letterSpacing: '-1px' }}>
+            <h1 style={{ color: 'white', fontSize: 'clamp(2rem,7vw,3.75rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: 16, letterSpacing: '-0.5px' }}>
               You Are Not Alone in This.
             </h1>
-            <p style={{ color: 'rgba(255,255,255,0.72)', fontSize: 18, maxWidth: 560, margin: '0 auto 32px', lineHeight: 1.7 }}>
+            <p style={{ color: 'rgba(255,255,255,0.72)', fontSize: 'clamp(15px,2vw,18px)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.65 }}>
               Connect with someone dealing with your exact struggle — breakup, anxiety, grief, or any of&nbsp;
-              <strong style={{ color: 'white' }}>25 specific challenges</strong>. Real peer support that truly understands you.
+              <strong style={{ color: 'white' }}>25 specific challenges</strong>. Peer support that truly understands you.
             </p>
+            {/* Mobile CTA buttons */}
+            <div className="flex md:hidden" style={{ justifyContent: 'center', gap: 10, marginBottom: 28 }}>
+              <Link to="/signup" style={{ background: '#f59e0b', color: '#1a1a1a', fontWeight: 700, fontSize: 15, textDecoration: 'none', borderRadius: 50, padding: '12px 28px', boxShadow: '0 4px 16px rgba(245,158,11,0.4)' }}>
+                Find My Match →
+              </Link>
+            </div>
           </div>
 
           {/* THREE SOULCONNECT CATEGORY CARDS */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 48 }}>
+          {/* Desktop: 3-col grid | Mobile: horizontal scroll */}
+          <div className="hidden md:grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 48 }}>
 
             {/* Card 1 — Heal My Mind — deep indigo */}
             <Link
@@ -372,8 +365,37 @@ export default function Landing() {
 
           </div>
 
+          {/* Mobile cards — horizontal scroll */}
+          <div className="md:hidden" style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, marginBottom: 28, scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
+            {[
+              { to: '/signup', bg: 'linear-gradient(160deg,#312e81 0%,#4338ca 100%)', tag: 'Anxiety · Depression', title: 'Heal my mind', sub: 'Find your calm →', illustration: <LotusIllustration /> },
+              { to: '/signup', bg: 'linear-gradient(160deg,#881337 0%,#be185d 100%)', tag: 'Breakup · Grief', title: 'Mend my heart', sub: 'Feel less alone →', illustration: <ConnectionIllustration /> },
+              { to: '/signup', bg: 'linear-gradient(160deg,#134e4a 0%,#0f766e 100%)', tag: 'Career · Purpose', title: 'Find my path', sub: 'Discover direction →', illustration: <CompassIllustration /> },
+            ].map(card => (
+              <Link key={card.title} to={card.to} style={{
+                flexShrink: 0, width: '72vw', maxWidth: 260, minHeight: 280,
+                background: card.bg, borderRadius: 20, padding: '24px 22px',
+                textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+                scrollSnapAlign: 'start',
+              }}>
+                <div>
+                  <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>{card.tag}</p>
+                  <p style={{ color: 'white', fontSize: 20, fontWeight: 800, lineHeight: 1.2 }}>{card.title}</p>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0' }}>{card.illustration}</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: 12 }}>{card.sub}</span>
+                  <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.15)" />
+                    <path d="M13 16h7M18 13l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              </Link>
+            ))}
+          </div>
+
           {/* Problem pills row */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10, paddingBottom: 52 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, paddingBottom: 48 }}>
             {problems.map((p) => (
               <span
                 key={p}

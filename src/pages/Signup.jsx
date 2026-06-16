@@ -172,6 +172,8 @@ export default function Signup() {
 
   // Shared fields
   const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
@@ -214,6 +216,7 @@ export default function Signup() {
   const validate = () => {
     if (step === 1) {
       if (!phone.trim() || phone.replace(/\D/g, '').length < 10) return 'Enter a valid phone number';
+      if (!password || password.length < 6) return 'Password must be at least 6 characters';
       if (!name.trim()) return 'Your name is required';
       if (!age || isNaN(age) || +age < 13 || +age > 100) return 'Enter a valid age (13–100)';
       if (!gender) return 'Please select your gender';
@@ -248,6 +251,7 @@ export default function Signup() {
     try {
       const payload = {
         phone: phone.replace(/\D/g, ''),
+        password,
         name: name.trim(),
         age: parseInt(age),
         gender,
@@ -468,6 +472,21 @@ export default function Signup() {
                     onBlur={(e) => e.target.style.borderColor = '#e5e7eb'} />
                 </div>
                 <p className="text-xs text-gray-400 mt-1">Used to log in — never shared</p>
+              </div>
+              <div>
+                <label className={labelClass}>Password</label>
+                <div className="relative">
+                  <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)}
+                    placeholder="At least 6 characters"
+                    className="w-full pl-4 pr-12 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none transition-colors bg-white"
+                    onFocus={(e) => e.target.style.borderColor = accentColor}
+                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm select-none">
+                    {showPassword ? '🙈' : '👁️'}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">Keep your account secure</p>
               </div>
               <div>
                 <label className={labelClass}>{role === 'healer' ? 'Full Name' : 'Your Name'}</label>
