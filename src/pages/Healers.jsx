@@ -241,8 +241,7 @@ function ConsentModal({ healer, onClose, onAgree }) {
             <div className="relative mt-0.5 shrink-0">
               <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
                 className="sr-only" />
-              <div onClick={() => setAgreed(!agreed)}
-                className="w-5 h-5 rounded-md flex items-center justify-center transition-all cursor-pointer"
+              <div className="w-5 h-5 rounded-md flex items-center justify-center transition-all cursor-pointer"
                 style={{
                   background: agreed ? '#1a3d2e' : 'var(--bg-subtle)',
                   border: `2px solid ${agreed ? '#1a3d2e' : 'var(--border)'}`,
