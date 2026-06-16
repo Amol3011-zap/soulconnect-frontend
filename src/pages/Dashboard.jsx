@@ -410,7 +410,7 @@ export default function Dashboard() {
   const SIDEBAR_BG   = 'rgba(8, 2, 20, 0.97)';
   const CHAT_BG      = 'linear-gradient(180deg, #06010f 0%, #0d0425 50%, #080215 100%)';
   const BORDER_COLOR = 'rgba(124,58,237,0.15)';
-  const GOLD         = '#d4af37';
+  const GOLD         = '#a78bfa';
 
   return (
     <>
@@ -814,10 +814,10 @@ export default function Dashboard() {
                     : 'rgba(124,58,237,0.2)'
                   : 'rgba(255,255,255,0.04)',
                 color: mainTab === t.key
-                  ? t.key === 'healing' ? '#d4af37' : '#c4b5fd'
+                  ? '#c4b5fd'
                   : 'rgba(196,181,253,0.4)',
                 borderBottom: mainTab === t.key
-                  ? `2px solid ${t.key === 'healing' ? '#d4af37' : '#7c3aed'}`
+                  ? `2px solid #7c3aed`
                   : '2px solid transparent',
                 boxShadow: mainTab === t.key
                   ? t.key === 'healing'
@@ -1019,7 +1019,7 @@ export default function Dashboard() {
                 disabled={!input.trim() || typing}
                 style={{
                   width: 42, height: 42, borderRadius: 14, flexShrink: 0,
-                  background: 'linear-gradient(135deg, #d4af37 0%, #a855f7 100%)',
+                  background: 'linear-gradient(135deg, #6d5acd 0%, #8b5cf6 100%)',
                   border: 'none', cursor: input.trim() && !typing ? 'pointer' : 'default',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   boxShadow: input.trim() && !typing ? '0 0 20px rgba(212,175,55,0.35)' : 'none',

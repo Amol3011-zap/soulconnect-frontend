@@ -674,9 +674,9 @@ function HealerCard({ healer, index, onBook }) {
             )}
             {/* Rating */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
-              <span style={{ color: '#d4af37', fontSize: 14 }}>★</span>
-              <span style={{ fontSize: 16, fontWeight: 900, color: '#d4af37' }}>{healer.total_rating?.toFixed(1)}</span>
-              <span style={{ fontSize: 10, color: 'rgba(212,175,55,0.45)', letterSpacing: '0.08em' }}>
+              <span style={{ color: '#a78bfa', fontSize: 14 }}>★</span>
+              <span style={{ fontSize: 16, fontWeight: 900, color: '#a78bfa' }}>{healer.total_rating?.toFixed(1)}</span>
+              <span style={{ fontSize: 10, color: 'rgba(139,92,246,0.45)', letterSpacing: '0.08em' }}>
                 ({healer.review_count})
               </span>
             </div>
@@ -702,7 +702,7 @@ function HealerCard({ healer, index, onBook }) {
 
         {/* Soul Reading label */}
         <div style={{ marginBottom: 8 }}>
-          <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.4)' }}>◆ Healer Bio</span>
+          <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(139,92,246,0.4)' }}>◆ Healer Bio</span>
         </div>
 
         {/* Bio as hero italic */}
@@ -747,12 +747,12 @@ function HealerCard({ healer, index, onBook }) {
         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
       >
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <span style={{ fontSize: 22, fontWeight: 900, color: '#d4af37' }}>₹{healer.hourly_rate}</span>
-          <span style={{ fontSize: 10, color: 'rgba(212,175,55,0.45)', letterSpacing: '0.1em' }}>/session</span>
+          <span style={{ fontSize: 22, fontWeight: 900, color: '#a78bfa' }}>₹{healer.hourly_rate}</span>
+          <span style={{ fontSize: 10, color: 'rgba(139,92,246,0.45)', letterSpacing: '0.1em' }}>/session</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(235,228,255,0.6)' }}>Book Session</span>
-          <span style={{ fontSize: 20, color: '#d4af37', lineHeight: 1 }}>→</span>
+          <span style={{ fontSize: 20, color: '#a78bfa', lineHeight: 1 }}>→</span>
         </div>
       </button>
     </div>
@@ -799,7 +799,7 @@ export default function Healers() {
 
   const STARS = Array.from({ length: 20 }, (_, i) => ({
     l: `${(i * 17 + 5) % 100}%`, t: `${(i * 23 + 8) % 100}%`,
-    s: [1, 1.5, 2][i % 3], c: ['#d4af37','#c4b5fd','#ffffff'][i % 3], d: (i * 0.3) % 3,
+    s: [1, 1.5, 2][i % 3], c: ['#a78bfa','#c4b5fd','#ffffff'][i % 3], d: (i * 0.3) % 3,
   }));
 
   return (
@@ -812,7 +812,7 @@ export default function Healers() {
         <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
           <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%)', animation: 'healAurora1 18s ease-in-out infinite', filter: 'blur(60px)' }} />
           <div style={{ position: 'absolute', top: '30%', right: '-10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(8,145,178,0.14) 0%, transparent 70%)', animation: 'healAurora2 22s ease-in-out infinite', filter: 'blur(70px)' }} />
-          <div style={{ position: 'absolute', bottom: '10%', left: '30%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%)', animation: 'healAurora3 26s ease-in-out infinite', filter: 'blur(80px)' }} />
+          <div style={{ position: 'absolute', bottom: '10%', left: '30%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', animation: 'healAurora3 26s ease-in-out infinite', filter: 'blur(80px)' }} />
           {STARS.map((p, i) => (
             <div key={i} style={{ position: 'absolute', left: p.l, top: p.t, width: p.s, height: p.s, borderRadius: '50%', background: p.c, animation: `healStarPulse ${2.5 + i % 3 * 0.5}s ease-in-out ${p.d}s infinite` }} />
           ))}
@@ -821,19 +821,19 @@ export default function Healers() {
         {/* ── HERO ── */}
         <div style={{ position: 'relative', zIndex: 1, padding: '60px 24px 50px', textAlign: 'center', borderBottom: '1px solid rgba(124,58,237,0.12)' }}>
           {/* Ornamental divider top */}
-          <div style={{ fontSize: 13, letterSpacing: '0.5em', color: 'rgba(212,175,55,0.3)', marginBottom: 28 }}>◆ ✦ ◆</div>
+          <div style={{ fontSize: 13, letterSpacing: '0.5em', color: 'rgba(139,92,246,0.3)', marginBottom: 28 }}>◆ ✦ ◆</div>
 
           {/* Badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 40, marginBottom: 20, background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#d4af37', boxShadow: '0 0 8px #d4af37', display: 'inline-block' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#d4af37' }}>Verified Professionals</span>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 40, marginBottom: 20, background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.25)' }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#a78bfa', boxShadow: '0 0 8px #a78bfa', display: 'inline-block' }} />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#a78bfa' }}>Verified Professionals</span>
           </div>
 
           {/* Heading */}
           <h1 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 16px', color: '#ebe4ff' }}>
             Find Your{' '}
             <span style={{
-              background: 'linear-gradient(135deg, #d4af37 0%, #f0d060 40%, #d4af37 100%)',
+              background: 'linear-gradient(135deg, #a78bfa 0%, #e9d5ff 40%, #a78bfa 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             }}>Healer</span>
           </h1>
@@ -846,7 +846,7 @@ export default function Healers() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 48 }}>
             {[['500+', 'Healers'], ['4.8★', 'Avg Rating'], ['10K+', 'Sessions']].map(([val, label]) => (
               <div key={label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 900, color: '#d4af37', lineHeight: 1 }}>{val}</div>
+                <div style={{ fontSize: 24, fontWeight: 900, color: '#a78bfa', lineHeight: 1 }}>{val}</div>
                 <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.4)', marginTop: 4 }}>{label}</div>
               </div>
             ))}
@@ -894,7 +894,7 @@ export default function Healers() {
             boxShadow: '0 0 60px rgba(124,58,237,0.08)',
           }}>
             <div>
-              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.5)', marginBottom: 8 }}>◆ For Practitioners</div>
+              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(139,92,246,0.5)', marginBottom: 8 }}>◆ For Practitioners</div>
               <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ebe4ff', margin: '0 0 6px' }}>Are you a healer or therapist?</h3>
               <p style={{ fontSize: 13, color: 'rgba(196,181,253,0.5)', margin: 0 }}>Join our verified network and reach thousands who need your guidance.</p>
             </div>

@@ -30,7 +30,7 @@ const MEETUP_STYLES = `
   @keyframes meetAurora2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-40px,50px) scale(1.1)} }
   @keyframes meetAurora3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30px,20px) scale(1.08)} }
   @keyframes meetStar { 0%,100%{opacity:0.08;transform:scale(1)} 50%{opacity:0.45;transform:scale(1.8)} }
-  @keyframes meetPulse { 0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0)} 50%{box-shadow:0 0 0 5px rgba(212,175,55,0.12)} }
+  @keyframes meetPulse { 0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,0)} 50%{box-shadow:0 0 0 5px rgba(139,92,246,0.12)} }
   .meet-card { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease; }
   .meet-card:hover { transform: translateY(-5px); }
 `;
@@ -136,8 +136,8 @@ function MeetupCard({ meetup, joining, onJoin }) {
           {/* Rating */}
           {meetup.avg_rating > 0 && (
             <div style={{ textAlign: 'right', flexShrink: 0 }}>
-              <div style={{ fontSize: 18, fontWeight: 900, color: '#d4af37', lineHeight: 1 }}>{meetup.avg_rating?.toFixed(1)}</div>
-              <div style={{ fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.4)', marginTop: 2 }}>★ rated</div>
+              <div style={{ fontSize: 18, fontWeight: 900, color: '#a78bfa', lineHeight: 1 }}>{meetup.avg_rating?.toFixed(1)}</div>
+              <div style={{ fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(139,92,246,0.4)', marginTop: 2 }}>★ rated</div>
             </div>
           )}
         </div>
@@ -157,7 +157,7 @@ function MeetupCard({ meetup, joining, onJoin }) {
 
         {/* Soul reading label */}
         <div style={{ marginBottom: 8 }}>
-          <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.4)' }}>◆ About this circle</span>
+          <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(139,92,246,0.4)' }}>◆ About this circle</span>
         </div>
 
         {/* Description as hero italic */}
@@ -203,7 +203,7 @@ function MeetupCard({ meetup, joining, onJoin }) {
         <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(235,228,255,0.55)' }}>
           {joining === meetup.id ? 'Joining...' : isFull ? 'Full — Join Waitlist' : 'Reserve My Spot'}
         </span>
-        <span style={{ fontSize: 20, color: '#d4af37', lineHeight: 1 }}>
+        <span style={{ fontSize: 20, color: '#a78bfa', lineHeight: 1 }}>
           {joining === meetup.id ? '⋯' : '→'}
         </span>
       </button>
@@ -221,7 +221,7 @@ export default function Meetups() {
 
   const STARS = Array.from({ length: 22 }, (_, i) => ({
     l: `${(i * 19 + 3) % 100}%`, t: `${(i * 27 + 5) % 100}%`,
-    s: [1, 1.5, 2][i % 3], c: ['#d4af37','#c4b5fd','#ffffff'][i % 3], d: (i * 0.28) % 3,
+    s: [1, 1.5, 2][i % 3], c: ['#a78bfa','#c4b5fd','#ffffff'][i % 3], d: (i * 0.28) % 3,
   }));
 
   useEffect(() => { fetchMeetups(); }, []);
@@ -264,7 +264,7 @@ export default function Meetups() {
         <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
           <div style={{ position: 'absolute', top: '-15%', right: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(8,145,178,0.16) 0%, transparent 70%)', animation: 'meetAurora1 20s ease-in-out infinite', filter: 'blur(70px)' }} />
           <div style={{ position: 'absolute', top: '35%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.14) 0%, transparent 70%)', animation: 'meetAurora2 24s ease-in-out infinite', filter: 'blur(60px)' }} />
-          <div style={{ position: 'absolute', bottom: '5%', right: '25%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,175,55,0.09) 0%, transparent 70%)', animation: 'meetAurora3 28s ease-in-out infinite', filter: 'blur(80px)' }} />
+          <div style={{ position: 'absolute', bottom: '5%', right: '25%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(139,92,246,0.09) 0%, transparent 70%)', animation: 'meetAurora3 28s ease-in-out infinite', filter: 'blur(80px)' }} />
           {STARS.map((p, i) => (
             <div key={i} style={{ position: 'absolute', left: p.l, top: p.t, width: p.s, height: p.s, borderRadius: '50%', background: p.c, animation: `meetStar ${2.5 + i % 3 * 0.5}s ease-in-out ${p.d}s infinite` }} />
           ))}
@@ -272,7 +272,7 @@ export default function Meetups() {
 
         {/* ── HERO ── */}
         <div style={{ position: 'relative', zIndex: 1, padding: '60px 24px 50px', textAlign: 'center', borderBottom: '1px solid rgba(124,58,237,0.12)' }}>
-          <div style={{ fontSize: 13, letterSpacing: '0.5em', color: 'rgba(212,175,55,0.3)', marginBottom: 28 }}>◆ ✦ ◆</div>
+          <div style={{ fontSize: 13, letterSpacing: '0.5em', color: 'rgba(139,92,246,0.3)', marginBottom: 28 }}>◆ ✦ ◆</div>
 
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 40, marginBottom: 20, background: 'rgba(8,145,178,0.1)', border: '1px solid rgba(8,145,178,0.3)' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#0891b2', boxShadow: '0 0 8px #0891b2', display: 'inline-block' }} />
@@ -282,7 +282,7 @@ export default function Meetups() {
           <h1 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 16px', color: '#ebe4ff' }}>
             Peer Support{' '}
             <span style={{
-              background: 'linear-gradient(135deg, #d4af37 0%, #f0d060 40%, #d4af37 100%)',
+              background: 'linear-gradient(135deg, #a78bfa 0%, #e9d5ff 40%, #a78bfa 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             }}>Circles</span>
           </h1>
@@ -294,7 +294,7 @@ export default function Meetups() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 48 }}>
             {[['8 max', 'Per Group'], ['Anonymous', 'Always'], ['Free', 'To Join']].map(([val, label]) => (
               <div key={label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 22, fontWeight: 900, color: '#d4af37', lineHeight: 1 }}>{val}</div>
+                <div style={{ fontSize: 22, fontWeight: 900, color: '#a78bfa', lineHeight: 1 }}>{val}</div>
                 <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.4)', marginTop: 4 }}>{label}</div>
               </div>
             ))}
@@ -348,7 +348,7 @@ export default function Meetups() {
             boxShadow: '0 0 60px rgba(8,145,178,0.08)',
           }}>
             <div>
-              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.5)', marginBottom: 8 }}>◆ For Facilitators</div>
+              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(139,92,246,0.5)', marginBottom: 8 }}>◆ For Facilitators</div>
               <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ebe4ff', margin: '0 0 6px' }}>Want to host a circle?</h3>
               <p style={{ fontSize: 13, color: 'rgba(196,181,253,0.5)', margin: 0 }}>Become a certified SoulConnect facilitator and create healing spaces in your community.</p>
             </div>

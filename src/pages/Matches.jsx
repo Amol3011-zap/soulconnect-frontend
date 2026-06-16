@@ -74,7 +74,7 @@ const AFFIRMATIONS = [
 // ── Soul Ring ─────────────────────────────────────────────────────────────────
 function SoulRing({ score, color }) {
   const r = 22, circ = 2 * Math.PI * r;
-  const ringColor = score >= 85 ? '#d4af37' : score >= 70 ? (color || '#a78bfa') : '#475569';
+  const ringColor = score >= 85 ? '#a78bfa' : score >= 70 ? (color || '#a78bfa') : '#475569';
   return (
     <div style={{ position: 'relative', width: 54, height: 54, flexShrink: 0 }}>
       <svg style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }} viewBox="0 0 54 54">
@@ -100,138 +100,130 @@ function MatchCard({ match, index, onConnect, connecting }) {
   const prob = PROBLEM_META[match.primary_problem] || { label: 'Peer Support', icon: '🤝', color: '#a78bfa' };
   const initial = match.name?.[0]?.toUpperCase() || '?';
   const isConnecting = connecting === match.id;
-  const accentColor = prob.color;
+  const avatarGrad = AVATAR_GRADS[index % AVATAR_GRADS.length];
+  const circ = 2 * Math.PI * 20;
 
   return (
     <div
       style={{
-        position: 'relative', borderRadius: 20, overflow: 'hidden',
-        background: 'rgba(6, 1, 18, 0.94)',
-        backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
-        border: '1px solid rgba(255,255,255,0.055)',
-        boxShadow: `0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px ${accentColor}10`,
-        transition: 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease',
+        position: 'relative', borderRadius: 24, overflow: 'hidden',
+        background: 'rgba(12,8,30,0.88)',
+        backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)',
+        border: '1px solid rgba(139,92,246,0.18)',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.08)',
+        transition: 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease',
       }}
       onMouseEnter={e => {
         e.currentTarget.style.transform = 'translateY(-5px)';
-        e.currentTarget.style.boxShadow = `0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px ${accentColor}28, 0 0 60px ${accentColor}08`;
+        e.currentTarget.style.boxShadow = '0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(139,92,246,0.3)';
       }}
       onMouseLeave={e => {
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = `0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px ${accentColor}10`;
+        e.currentTarget.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.08)';
       }}
     >
-      {/* Accent top line */}
-      <div style={{ height: 1.5, background: `linear-gradient(90deg, transparent 0%, ${accentColor}90 30%, #d4af37 50%, ${accentColor}90 70%, transparent 100%)` }} />
+      {/* Subtle top glow */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 100, background: 'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-      {/* Subtle top inner glow */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 80, background: `linear-gradient(to bottom, ${accentColor}07, transparent)`, pointerEvents: 'none' }} />
+      <div style={{ padding: '24px 24px 0', position: 'relative' }}>
+        {/* Avatar + name + soft compatibility ring */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+          {/* Moon-like soft avatar */}
+          <div style={{ position: 'relative', flexShrink: 0 }}>
+            <div style={{ position: 'absolute', inset: -5, borderRadius: '50%', background: avatarGrad, opacity: 0.2, filter: 'blur(10px)' }} />
+            <div style={{
+              width: 52, height: 52, borderRadius: '50%',
+              background: avatarGrad,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 20, fontWeight: 700, color: '#fff',
+              border: '1.5px solid rgba(139,92,246,0.35)',
+              position: 'relative',
+            }}>{initial}</div>
+            <div style={{ position: 'absolute', bottom: 1, right: 1, width: 10, height: 10, borderRadius: '50%', background: '#34d399', border: '2px solid rgba(12,8,30,0.9)', boxShadow: '0 0 8px rgba(52,211,153,0.8)' }} />
+          </div>
 
-      {/* ── HEADER: Large monogram + name + score ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 18, padding: '26px 26px 0' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h3 style={{ margin: '0 0 5px', fontSize: 18, fontWeight: 700, color: '#ede9fe', letterSpacing: '-0.01em', lineHeight: 1 }}>
+              {match.name}
+            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              {match.age && <span style={{ fontSize: 11, color: 'rgba(196,181,253,0.45)' }}>{match.age} yrs</span>}
+              {match.city && <>
+                <span style={{ fontSize: 6, color: 'rgba(196,181,253,0.2)' }}>•</span>
+                <span style={{ fontSize: 11, color: 'rgba(196,181,253,0.45)' }}>{match.city}</span>
+              </>}
+            </div>
+          </div>
 
-        {/* Large italic monogram — the signature */}
-        <div style={{
-          fontSize: 72, fontWeight: 900, fontStyle: 'italic',
-          lineHeight: 0.85, letterSpacing: '-0.04em', flexShrink: 0,
-          background: `linear-gradient(160deg, ${accentColor} 0%, rgba(255,255,255,0.95) 55%, ${accentColor}70 100%)`,
-          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-          filter: `drop-shadow(0 0 24px ${accentColor}45)`,
-          userSelect: 'none',
-        }}>
-          {initial}
-        </div>
-
-        {/* Name + meta */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h3 style={{ margin: '0 0 6px', fontSize: 19, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1 }}>
-            {match.name}
-          </h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {match.age && <span style={{ fontSize: 11, color: 'rgba(196,181,253,0.4)' }}>{match.age} yrs</span>}
-            {match.city && <>
-              <span style={{ fontSize: 6, color: 'rgba(196,181,253,0.2)' }}>◆</span>
-              <span style={{ fontSize: 11, color: 'rgba(196,181,253,0.4)' }}>{match.city}</span>
-            </>}
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', display: 'inline-block', boxShadow: '0 0 8px rgba(52,211,153,0.9)', marginLeft: 2 }} />
+          {/* Soft amethyst compatibility ring */}
+          <div style={{ textAlign: 'center', flexShrink: 0 }}>
+            <div style={{ position: 'relative', width: 52, height: 52 }}>
+              <svg style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }} viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(139,92,246,0.12)" strokeWidth="3" />
+                <circle cx="26" cy="26" r="20" fill="none" stroke="#8b5cf6" strokeWidth="3"
+                  strokeDasharray={`${circ * Math.min(match.match_score / 100, 1)} ${circ}`}
+                  strokeLinecap="round"
+                  style={{ filter: 'drop-shadow(0 0 5px rgba(139,92,246,0.5))' }}
+                />
+              </svg>
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: '#a78bfa', lineHeight: 1 }}>{match.match_score}%</span>
+              </div>
+            </div>
+            <div style={{ fontSize: 8, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(167,139,250,0.4)', marginTop: 3 }}>aligned</div>
           </div>
         </div>
 
-        {/* Score — large number, no ring */}
-        <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <div style={{ fontSize: 30, fontWeight: 900, color: '#d4af37', lineHeight: 1, letterSpacing: '-0.03em', filter: 'drop-shadow(0 0 12px rgba(212,175,55,0.4))' }}>
-            {match.match_score}
-          </div>
-          <div style={{ fontSize: 8, color: 'rgba(212,175,55,0.45)', letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: 3 }}>
-            % aligned
-          </div>
+        {/* Soft divider */}
+        <div style={{ height: 1, background: 'rgba(139,92,246,0.1)', marginBottom: 18 }} />
+
+        {/* Why matched label */}
+        <div style={{ marginBottom: 8 }}>
+          <span style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(167,139,250,0.45)', fontWeight: 600 }}>✦ Why you're matched</span>
+        </div>
+
+        {/* Match reason — gentle italic */}
+        {match.match_reason && (
+          <p style={{ fontSize: 14, fontStyle: 'italic', color: 'rgba(221,214,254,0.72)', lineHeight: 1.75, margin: '0 0 18px', letterSpacing: '0.01em' }}>
+            "{match.match_reason}"
+          </p>
+        )}
+
+        {/* Problem tags — nature-icon soft pills */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 11px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: `${prob.color}18`, color: prob.color, border: `1px solid ${prob.color}28` }}>
+            {prob.icon} {prob.label}
+          </span>
+          {(match.secondary_problems || []).slice(0, 2).map(p => {
+            const info = PROBLEM_META[p];
+            return info ? (
+              <span key={p} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 11px', borderRadius: 20, fontSize: 11, background: 'rgba(139,92,246,0.06)', color: 'rgba(196,181,253,0.55)', border: '1px solid rgba(139,92,246,0.14)' }}>
+                {info.icon} {info.label}
+              </span>
+            ) : null;
+          })}
         </div>
       </div>
 
-      {/* Divider */}
-      <div style={{ margin: '22px 26px 18px', height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07) 30%, rgba(255,255,255,0.07) 70%, transparent)' }} />
-
-      {/* Soul Reading label */}
-      <div style={{ padding: '0 26px', marginBottom: 10 }}>
-        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.45)' }}>◆ Soul Reading</span>
+      {/* Gentle amethyst connect button */}
+      <div style={{ padding: '0 24px 24px' }}>
+        <button
+          onClick={() => onConnect(match)}
+          disabled={isConnecting}
+          style={{
+            width: '100%', padding: '13px 20px', borderRadius: 14,
+            fontSize: 13, fontWeight: 600, letterSpacing: '0.02em',
+            background: isConnecting ? 'rgba(139,92,246,0.08)' : 'linear-gradient(135deg, rgba(99,66,199,0.85), rgba(139,92,246,0.85))',
+            color: isConnecting ? 'rgba(167,139,250,0.4)' : '#fff',
+            border: isConnecting ? '1px solid rgba(139,92,246,0.18)' : 'none',
+            cursor: isConnecting ? 'default' : 'pointer',
+            boxShadow: isConnecting ? 'none' : '0 6px 20px rgba(99,66,199,0.3)',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          {isConnecting ? 'Opening connection…' : '🌙  Begin Conversation'}
+        </button>
       </div>
-
-      {/* Match reason — THE HERO of the card */}
-      {match.match_reason && (
-        <p style={{ margin: '0', padding: '0 26px 22px', fontSize: 16, fontStyle: 'italic', color: 'rgba(235,228,255,0.82)', lineHeight: 1.8, letterSpacing: '-0.01em' }}>
-          "{match.match_reason}"
-        </p>
-      )}
-
-      {/* Divider */}
-      <div style={{ margin: '0 26px 18px', height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.05) 70%, transparent)' }} />
-
-      {/* Problem indicators — dots only, no pill boxes */}
-      <div style={{ padding: '0 26px', marginBottom: 0, display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 600, color: accentColor }}>
-          <span style={{ width: 5, height: 5, borderRadius: '50%', background: accentColor, display: 'inline-block', boxShadow: `0 0 8px ${accentColor}` }} />
-          {prob.label}
-        </span>
-        {(match.secondary_problems || []).slice(0, 2).map(p => {
-          const info = PROBLEM_META[p];
-          return info ? (
-            <span key={p} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'rgba(196,181,253,0.45)', fontWeight: 500 }}>
-              <span style={{ width: 4, height: 4, borderRadius: '50%', background: info.color, display: 'inline-block', opacity: 0.6 }} />
-              {info.label}
-            </span>
-          ) : null;
-        })}
-      </div>
-
-      {/* CTA — editorial bar, NOT a rounded button */}
-      <button
-        onClick={() => onConnect(match)}
-        disabled={isConnecting}
-        style={{
-          width: '100%', padding: '18px 26px', marginTop: 20,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          background: isConnecting ? 'rgba(255,255,255,0.02)' : 'rgba(124,58,237,0.1)',
-          border: 'none',
-          borderTop: `1px solid ${isConnecting ? 'rgba(255,255,255,0.04)' : 'rgba(124,58,237,0.2)'}`,
-          cursor: isConnecting ? 'default' : 'pointer',
-          transition: 'background 0.2s ease, border-color 0.2s ease',
-        }}
-        onMouseEnter={e => {
-          if (!isConnecting) {
-            e.currentTarget.style.background = 'rgba(124,58,237,0.2)';
-            e.currentTarget.style.borderTopColor = 'rgba(168,85,247,0.4)';
-          }
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background = 'rgba(124,58,237,0.1)';
-          e.currentTarget.style.borderTopColor = 'rgba(124,58,237,0.2)';
-        }}
-      >
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: isConnecting ? 'rgba(196,181,253,0.3)' : 'rgba(196,181,253,0.85)' }}>
-          {isConnecting ? 'Opening sanctuary...' : 'Begin Conversation'}
-        </span>
-        <span style={{ fontSize: 22, color: isConnecting ? 'rgba(255,255,255,0.15)' : '#d4af37', lineHeight: 1 }}>→</span>
-      </button>
     </div>
   );
 }
@@ -330,8 +322,8 @@ export default function Matches() {
           50% { transform: scale(1.08); opacity: 0.3; }
         }
         @keyframes heroGlow {
-          0%, 100% { text-shadow: 0 0 40px rgba(212,175,55,0.2), 0 0 80px rgba(168,85,247,0.1); }
-          50% { text-shadow: 0 0 60px rgba(212,175,55,0.35), 0 0 120px rgba(168,85,247,0.2); }
+          0%, 100% { text-shadow: 0 0 40px rgba(139,92,246,0.2), 0 0 80px rgba(168,85,247,0.1); }
+          50% { text-shadow: 0 0 60px rgba(139,92,246,0.35), 0 0 120px rgba(168,85,247,0.2); }
         }
         @keyframes lightRay {
           0%, 100% { opacity: 0.04; }
@@ -343,7 +335,7 @@ export default function Matches() {
         }
       `}</style>
 
-      <div style={{ minHeight: '100vh', background: '#030009', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ minHeight: '100vh', background: '#09061a', position: 'relative', overflow: 'hidden' }}>
 
         {/* ── BACKGROUND SYSTEM ───────────────────────────────────────────── */}
 
@@ -374,7 +366,7 @@ export default function Matches() {
           position: 'absolute', bottom: '5%', left: '20%',
           width: '45vw', height: '35vw',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(212,175,55,0.12) 0%, rgba(180,83,9,0.06) 50%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, rgba(180,83,9,0.06) 50%, transparent 70%)',
           filter: 'blur(80px)',
           animation: 'auroraFloat3 30s ease-in-out infinite',
           pointerEvents: 'none',
@@ -385,7 +377,7 @@ export default function Matches() {
           position: 'absolute', top: 0, left: '50%',
           transform: 'translateX(-50%)',
           width: '120%', height: '70%',
-          background: 'conic-gradient(from 260deg at 50% 0%, transparent 0deg, rgba(212,175,55,0.06) 5deg, transparent 10deg, transparent 20deg, rgba(168,85,247,0.04) 25deg, transparent 30deg, transparent 50deg, rgba(212,175,55,0.05) 55deg, transparent 60deg)',
+          background: 'conic-gradient(from 260deg at 50% 0%, transparent 0deg, rgba(139,92,246,0.06) 5deg, transparent 10deg, transparent 20deg, rgba(168,85,247,0.04) 25deg, transparent 30deg, transparent 50deg, rgba(139,92,246,0.05) 55deg, transparent 60deg)',
           animation: 'lightRay 8s ease-in-out infinite',
           pointerEvents: 'none',
         }} />
@@ -403,10 +395,10 @@ export default function Matches() {
             <g style={{ animation: 'mandalaRotate 120s linear infinite', transformOrigin: '300px 300px' }}>
               {Array.from({ length: 12 }, (_, i) => {
                 const angle = (i * 30) * Math.PI / 180;
-                return <circle key={i} cx={300 + 240 * Math.cos(angle)} cy={300 + 240 * Math.sin(angle)} r="60" fill="none" stroke="#d4af37" strokeWidth="0.5" opacity="0.7" />;
+                return <circle key={i} cx={300 + 240 * Math.cos(angle)} cy={300 + 240 * Math.sin(angle)} r="60" fill="none" stroke="#a78bfa" strokeWidth="0.5" opacity="0.7" />;
               })}
-              <circle cx="300" cy="300" r="240" fill="none" stroke="#d4af37" strokeWidth="0.3" opacity="0.4" />
-              <circle cx="300" cy="300" r="180" fill="none" stroke="#d4af37" strokeWidth="0.3" opacity="0.3" />
+              <circle cx="300" cy="300" r="240" fill="none" stroke="#a78bfa" strokeWidth="0.3" opacity="0.4" />
+              <circle cx="300" cy="300" r="180" fill="none" stroke="#a78bfa" strokeWidth="0.3" opacity="0.3" />
             </g>
             {/* Middle counter-rotating flower of life */}
             <g style={{ animation: 'mandalaCounterRotate 80s linear infinite', transformOrigin: '300px 300px' }}>
@@ -421,25 +413,25 @@ export default function Matches() {
               {Array.from({ length: 6 }, (_, i) => {
                 const a1 = (i * 60) * Math.PI / 180;
                 const a2 = ((i * 60) + 180) * Math.PI / 180;
-                return <line key={i} x1={300 + 80 * Math.cos(a1)} y1={300 + 80 * Math.sin(a1)} x2={300 + 80 * Math.cos(a2)} y2={300 + 80 * Math.sin(a2)} stroke="#d4af37" strokeWidth="0.4" opacity="0.8" />;
+                return <line key={i} x1={300 + 80 * Math.cos(a1)} y1={300 + 80 * Math.sin(a1)} x2={300 + 80 * Math.cos(a2)} y2={300 + 80 * Math.sin(a2)} stroke="#a78bfa" strokeWidth="0.4" opacity="0.8" />;
               })}
-              {[20, 40, 60, 80].map(r => <circle key={r} cx="300" cy="300" r={r} fill="none" stroke="#d4af37" strokeWidth="0.3" opacity="0.5" />)}
+              {[20, 40, 60, 80].map(r => <circle key={r} cx="300" cy="300" r={r} fill="none" stroke="#a78bfa" strokeWidth="0.3" opacity="0.5" />)}
               {Array.from({ length: 12 }, (_, i) => {
                 const a = (i * 30) * Math.PI / 180;
-                return <line key={i} x1={300 + 10 * Math.cos(a)} y1={300 + 10 * Math.sin(a)} x2={300 + 80 * Math.cos(a)} y2={300 + 80 * Math.sin(a)} stroke="#d4af37" strokeWidth="0.25" opacity="0.6" />;
+                return <line key={i} x1={300 + 10 * Math.cos(a)} y1={300 + 10 * Math.sin(a)} x2={300 + 80 * Math.cos(a)} y2={300 + 80 * Math.sin(a)} stroke="#a78bfa" strokeWidth="0.25" opacity="0.6" />;
               })}
             </g>
             {/* Outermost decorative rings */}
-            <circle cx="300" cy="300" r="280" fill="none" stroke="#d4af37" strokeWidth="0.2" strokeDasharray="4 8" opacity="0.4" />
+            <circle cx="300" cy="300" r="280" fill="none" stroke="#a78bfa" strokeWidth="0.2" strokeDasharray="4 8" opacity="0.4" />
             <circle cx="300" cy="300" r="295" fill="none" stroke="#a78bfa" strokeWidth="0.15" strokeDasharray="2 12" opacity="0.3" />
             {/* 24 diamond dots on outer ring */}
             {Array.from({ length: 24 }, (_, i) => {
               const a = (i * 15) * Math.PI / 180;
-              return <circle key={i} cx={300 + 278 * Math.cos(a)} cy={300 + 278 * Math.sin(a)} r="1.5" fill="#d4af37" opacity="0.8" />;
+              return <circle key={i} cx={300 + 278 * Math.cos(a)} cy={300 + 278 * Math.sin(a)} r="1.5" fill="#a78bfa" opacity="0.8" />;
             })}
             {/* Center jewel */}
-            <circle cx="300" cy="300" r="8" fill="none" stroke="#d4af37" strokeWidth="1" opacity="0.9" />
-            <circle cx="300" cy="300" r="3" fill="#d4af37" opacity="0.7" />
+            <circle cx="300" cy="300" r="8" fill="none" stroke="#a78bfa" strokeWidth="1" opacity="0.9" />
+            <circle cx="300" cy="300" r="3" fill="#a78bfa" opacity="0.7" />
           </svg>
         </div>
 
@@ -458,7 +450,7 @@ export default function Matches() {
           <div key={i} style={{
             position: 'absolute', left: s.l, top: s.t,
             width: s.s, height: s.s, borderRadius: '50%',
-            background: i % 3 === 0 ? '#d4af37' : i % 3 === 1 ? '#c4b5fd' : '#fff',
+            background: i % 3 === 0 ? '#a78bfa' : i % 3 === 1 ? '#c4b5fd' : '#fff',
             animation: `starTwinkle ${2.5 + (i % 4) * 0.8}s ease-in-out infinite`,
             animationDelay: s.d,
             pointerEvents: 'none',
@@ -473,7 +465,7 @@ export default function Matches() {
             bottom: '-5%',
             width: i % 2 === 0 ? 2 : 3, height: i % 2 === 0 ? 2 : 3,
             borderRadius: '50%',
-            background: i % 3 === 0 ? '#d4af37' : '#a78bfa',
+            background: i % 3 === 0 ? '#a78bfa' : '#a78bfa',
             animation: `dustFloat ${12 + i * 3}s linear infinite`,
             animationDelay: `${i * 1.5}s`,
             pointerEvents: 'none',
@@ -503,12 +495,12 @@ export default function Matches() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '8px 20px', borderRadius: 99, marginBottom: 28,
-            background: 'rgba(212,175,55,0.08)',
-            border: '1px solid rgba(212,175,55,0.3)',
+            background: 'rgba(139,92,246,0.08)',
+            border: '1px solid rgba(139,92,246,0.3)',
             backdropFilter: 'blur(12px)',
           }}>
             <span style={{ fontSize: 14 }}>{greetingIcon}</span>
-            <span style={{ fontSize: 11, fontWeight: 700, color: '#d4af37', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{greeting}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: '#a78bfa', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{greeting}</span>
           </div>
 
           {/* Main heading with glow */}
@@ -523,7 +515,7 @@ export default function Matches() {
           }}>
             Your Soul<br />
             <span style={{
-              background: 'linear-gradient(135deg, #d4af37 0%, #fff9e0 40%, #d4af37 100%)',
+              background: 'linear-gradient(135deg, #a78bfa 0%, #e9d5ff 40%, #a78bfa 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
             }}>Matches</span>
@@ -535,15 +527,15 @@ export default function Matches() {
 
           {/* Elaborate ornamental divider */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 24 }}>
-            <div style={{ width: 40, height: 1, background: 'linear-gradient(to right, transparent, rgba(212,175,55,0.4))' }} />
-            <span style={{ color: 'rgba(212,175,55,0.5)', fontSize: 10 }}>◆</span>
-            <div style={{ width: 20, height: 1, background: 'rgba(212,175,55,0.3)' }} />
-            <span style={{ color: 'rgba(212,175,55,0.9)', fontSize: 22 }}>✦</span>
-            <span style={{ color: 'rgba(212,175,55,0.5)', fontSize: 14 }}>⊹</span>
-            <span style={{ color: 'rgba(212,175,55,0.9)', fontSize: 22 }}>✦</span>
-            <div style={{ width: 20, height: 1, background: 'rgba(212,175,55,0.3)' }} />
-            <span style={{ color: 'rgba(212,175,55,0.5)', fontSize: 10 }}>◆</span>
-            <div style={{ width: 40, height: 1, background: 'linear-gradient(to left, transparent, rgba(212,175,55,0.4))' }} />
+            <div style={{ width: 40, height: 1, background: 'linear-gradient(to right, transparent, rgba(139,92,246,0.4))' }} />
+            <span style={{ color: 'rgba(139,92,246,0.5)', fontSize: 10 }}>◆</span>
+            <div style={{ width: 20, height: 1, background: 'rgba(139,92,246,0.3)' }} />
+            <span style={{ color: 'rgba(139,92,246,0.9)', fontSize: 22 }}>✦</span>
+            <span style={{ color: 'rgba(139,92,246,0.5)', fontSize: 14 }}>⊹</span>
+            <span style={{ color: 'rgba(139,92,246,0.9)', fontSize: 22 }}>✦</span>
+            <div style={{ width: 20, height: 1, background: 'rgba(139,92,246,0.3)' }} />
+            <span style={{ color: 'rgba(139,92,246,0.5)', fontSize: 10 }}>◆</span>
+            <div style={{ width: 40, height: 1, background: 'linear-gradient(to left, transparent, rgba(139,92,246,0.4))' }} />
           </div>
 
           {/* Affirmation */}
@@ -559,9 +551,9 @@ export default function Matches() {
               display: 'inline-flex', alignItems: 'center', gap: 12,
               padding: '10px 22px', borderRadius: 99,
               background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(212,175,55,0.35)',
+              border: '1px solid rgba(139,92,246,0.35)',
               backdropFilter: 'blur(20px)',
-              boxShadow: '0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,175,55,0.1)',
+              boxShadow: '0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(139,92,246,0.1)',
             }}>
               {/* Overlapping avatars */}
               <div style={{ display: 'flex' }}>
@@ -571,7 +563,7 @@ export default function Matches() {
                     background: AVATAR_GRADS[i % AVATAR_GRADS.length],
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 11, fontWeight: 700, color: '#fff',
-                    border: '2px solid #030009',
+                    border: '2px solid #09061a',
                     marginLeft: i > 0 ? -8 : 0,
                     boxShadow: '0 0 8px rgba(0,0,0,0.4)',
                   }}>{m.name?.[0]}</div>
@@ -580,7 +572,7 @@ export default function Matches() {
               <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(221,214,254,0.9)' }}>
                 {matches.length} soul{matches.length !== 1 ? 's' : ''} matched to you
               </span>
-              <span style={{ color: '#d4af37', fontSize: 16 }}>✦</span>
+              <span style={{ color: '#a78bfa', fontSize: 16 }}>✦</span>
             </div>
           </div>
         )}
@@ -593,7 +585,7 @@ export default function Matches() {
                 <div key={i} style={{
                   padding: 24, borderRadius: 28,
                   background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(212,175,55,0.08)',
+                  border: '1px solid rgba(139,92,246,0.08)',
                 }}>
                   <div style={{ display: 'flex', gap: 16, marginBottom: 18 }}>
                     <div style={{ width: 60, height: 60, borderRadius: 18, background: 'rgba(255,255,255,0.07)' }} />
@@ -636,11 +628,11 @@ export default function Matches() {
                 </div>
                 {/* Ornamental closer */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 10 }}>
-                  <div style={{ width: 40, height: 1, background: 'rgba(212,175,55,0.25)' }} />
+                  <div style={{ width: 40, height: 1, background: 'rgba(139,92,246,0.25)' }} />
                   <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(196,181,253,0.35)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Every connection here is sacred</span>
-                  <div style={{ width: 40, height: 1, background: 'rgba(212,175,55,0.25)' }} />
+                  <div style={{ width: 40, height: 1, background: 'rgba(139,92,246,0.25)' }} />
                 </div>
-                <p style={{ fontSize: 12, color: 'rgba(212,175,55,0.45)', letterSpacing: '0.06em' }}>
+                <p style={{ fontSize: 12, color: 'rgba(139,92,246,0.45)', letterSpacing: '0.06em' }}>
                   You are loved · You matter · You will heal
                 </p>
               </div>
