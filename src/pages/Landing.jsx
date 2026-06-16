@@ -259,13 +259,8 @@ export default function Landing() {
       <nav style={{ background: '#1a3d2e' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
           {/* Logo */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="16" r="16" fill="#2d6a4f" />
-              <path d="M16 8 C10 8 7 12 7 15.5 C7 20 11 23 16 26 C21 23 25 20 25 15.5 C25 12 22 8 16 8Z" fill="#f59e0b" />
-              <circle cx="16" cy="15" r="4" fill="white" opacity="0.3" />
-            </svg>
-            <span style={{ color: 'white', fontWeight: 700, fontSize: 18, letterSpacing: '-0.3px' }}>SoulConnect</span>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 42, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
           </Link>
 
           {/* Nav links — hidden on mobile */}
@@ -780,8 +775,12 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Divider */}
-          <div style={{ height: 1, background: '#ddd5cc' }} />
+          {/* Footer logo */}
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 0 16px' }}>
+            <img src="/logo-footer-monochrome.png" alt="SoulConnect" style={{ height: 56, width: 'auto', objectFit: 'contain', opacity: 0.85 }} />
+          </div>
+
+          <div style={{ height: 1, background: '#ddd5cc', marginBottom: 0 }} />
 
           {/* Bottom row: legal links + copyright */}
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '18px 0 28px' }}>
