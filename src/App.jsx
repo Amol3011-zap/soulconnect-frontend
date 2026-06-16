@@ -7,7 +7,6 @@ import Landing from './pages/Landing';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import Matches from './pages/Matches';
 import Chat from './pages/Chat';
 import Healers from './pages/Healers';
 import Meetups from './pages/Meetups';
@@ -20,7 +19,8 @@ import Navbar from './components/Navbar';
 function AppInner() {
   const { token } = useAuthStore();
   const location = useLocation();
-  const hideNav = location.pathname === '/dashboard';
+  // Dashboard lives at /matches — it has its own sidebar, hide the global Navbar
+  const hideNav = location.pathname === '/matches';
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
@@ -37,15 +37,17 @@ function AppInner() {
           </>
         ) : (
           <>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/matches" element={<Matches />} />
+            {/* Dashboard is now the /matches page */}
+            <Route path="/matches" element={<Dashboard />} />
             <Route path="/chat/:matchId" element={<Chat />} />
             <Route path="/healers" element={<Healers />} />
             <Route path="/meetups" element={<Meetups />} />
             <Route path="/premium" element={<Premium />} />
             <Route path="/mood" element={<MoodTracker />} />
             <Route path="/account" element={<Account />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            {/* Old /dashboard URL redirects to /matches */}
+            <Route path="/dashboard" element={<Navigate to="/matches" replace />} />
+            <Route path="*" element={<Navigate to="/matches" replace />} />
           </>
         )}
       </Routes>
