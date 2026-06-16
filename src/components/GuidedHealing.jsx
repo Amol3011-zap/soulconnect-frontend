@@ -31,8 +31,8 @@ const PROBLEM_OPTIONS = [
 export default function GuidedHealing({ problemType, matchName, userId }) {
   const [stage, setStage] = useState(0);
   const [results, setResults] = useState([]);
-  const [selectedProblem, setSelectedProblem] = useState(problemType || null);
-  const [problemConfirmed, setProblemConfirmed] = useState(!!problemType && problemType !== 'anxiety');
+  const [selectedProblem, setSelectedProblem] = useState(null);
+  const [problemConfirmed, setProblemConfirmed] = useState(false);
 
   const handleComplete = (data) => {
     setResults(prev => [...prev, data]);

@@ -328,6 +328,7 @@ export default function Dashboard() {
   const [safetyDismissed, setSafetyDismissed] = useState({});
   const [showActivity, setShowActivity]       = useState(false);
   const [rightTab, setRightTab]               = useState('activities');
+  const [mainTab, setMainTab]                 = useState('chat'); // 'chat' | 'relief' | 'healing'
   const [mobileView, setMobileView]           = useState('list');
   const [searchQuery, setSearchQuery]         = useState('');
   const [searchFocused, setSearchFocused]     = useState(false);
@@ -763,10 +764,62 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* ── TAB BAR ── */}
+          <div style={{
+            flexShrink: 0,
+            display: 'flex',
+            gap: 6,
+            padding: '10px 14px',
+            borderBottom: '1px solid rgba(255,255,255,0.07)',
+            background: 'rgba(6,1,15,0.8)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            position: 'relative', zIndex: 10,
+          }}>
+            {[
+              { key: 'chat',    icon: '💬', label: 'Chat' },
+              { key: 'relief',  icon: '⚡', label: 'Quick Relief' },
+              { key: 'healing', icon: '🌟', label: 'Guided Healing' },
+            ].map(t => (
+              <button key={t.key} onClick={() => setMainTab(t.key)} style={{
+                flex: 1,
+                padding: '8px 4px',
+                borderRadius: 12,
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: 'pointer',
+                border: 'none',
+                letterSpacing: '0.02em',
+                transition: 'all 0.2s ease',
+                background: mainTab === t.key
+                  ? t.key === 'healing'
+                    ? 'linear-gradient(135deg, rgba(212,175,55,0.25), rgba(168,85,247,0.25))'
+                    : t.key === 'relief'
+                    ? 'linear-gradient(135deg, rgba(124,58,237,0.2), rgba(37,99,235,0.2))'
+                    : 'rgba(124,58,237,0.2)'
+                  : 'rgba(255,255,255,0.04)',
+                color: mainTab === t.key
+                  ? t.key === 'healing' ? '#d4af37' : '#c4b5fd'
+                  : 'rgba(196,181,253,0.4)',
+                borderBottom: mainTab === t.key
+                  ? `2px solid ${t.key === 'healing' ? '#d4af37' : '#7c3aed'}`
+                  : '2px solid transparent',
+                boxShadow: mainTab === t.key
+                  ? t.key === 'healing'
+                    ? '0 0 16px rgba(212,175,55,0.15)'
+                    : '0 0 16px rgba(124,58,237,0.15)'
+                  : 'none',
+              }}>
+                {t.icon} {t.label}
+              </button>
+            ))}
+          </div>
+
           {/* Messages scroll area */}
           <div
             className="dash-scroll"
             style={{
+              display: mainTab === 'chat' ? undefined : 'none',
               flex: 1, overflowY: 'auto',
               position: 'relative', zIndex: 1,
             }}
@@ -874,8 +927,30 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Input bar */}
-          <div style={{
+          {/* Relief tab content */}
+          {mainTab === 'relief' && (
+            <div className="dash-scroll" style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+              <ActivitySuggestions
+                problemType={activeMatch?.primary_problem || 'anxiety'}
+                matchName={activeMatch?.name}
+                onActivityComplete={() => {}}
+              />
+            </div>
+          )}
+
+          {/* Healing tab content */}
+          {mainTab === 'healing' && (
+            <div className="dash-scroll" style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+              <GuidedHealing
+                problemType={activeMatch?.primary_problem || 'anxiety'}
+                matchName={activeMatch?.name || 'Your Match'}
+                userId={activeMatch?.id}
+              />
+            </div>
+          )}
+
+          {/* Input bar — only in chat tab */}
+          {mainTab === 'chat' && <div style={{
             flexShrink: 0,
             padding: `12px 16px max(env(safe-area-inset-bottom,0px),12px)`,
             borderTop: `1px solid ${BORDER_COLOR}`,
@@ -952,7 +1027,7 @@ export default function Dashboard() {
               🔒 Anonymous &amp; encrypted ·{' '}
               <span style={{ textDecoration: 'underline', cursor: 'pointer' }}>Report</span>
             </p>
-          </div>
+          </div>}
         </div>
 
         {/* ── RIGHT PANEL ─────────────────────────────────────────────────── */}
