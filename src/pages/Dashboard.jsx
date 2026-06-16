@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { useThemeStore } from '../store/theme';
 import ThemeToggle from '../components/ThemeToggle';
@@ -241,6 +241,7 @@ function TypingIndicator() {
 export default function Dashboard() {
   const { clearAuth } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const [matches] = useState(DEMO_MATCHES);
   const [activeMatch, setActiveMatch] = useState(DEMO_MATCHES[0]);
   const [chatHistory, setChatHistory] = useState({});
@@ -252,6 +253,17 @@ export default function Dashboard() {
   const [mobileView, setMobileView] = useState('list');
   const [searchQuery, setSearchQuery] = useState('');
   const bottomRef = useRef(null);
+
+  // Pre-select match passed from Matches page
+  useEffect(() => {
+    if (location.state?.matchId) {
+      const found = DEMO_MATCHES.find(m => m.id === location.state.matchId);
+      if (found) {
+        setActiveMatch(found);
+        setMobileView('chat');
+      }
+    }
+  }, [location.state]);
 
   // Init chat with warm human greeting for each match
   useEffect(() => {
