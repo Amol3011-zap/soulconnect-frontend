@@ -280,7 +280,7 @@ export default function Signup() {
       };
       const response = await authAPI.signup(payload);
       setAuth(response.data, response.data.access_token, role);
-      const dest = role === 'healer' ? '/healer-dashboard' : '/dashboard';
+      const dest = role === 'healer' ? '/healer-dashboard' : '/onboarding';
       setPendingNav(dest);
       setShowWelcome(true);
     } catch (err) {

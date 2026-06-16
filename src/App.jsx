@@ -18,6 +18,7 @@ import Account from './pages/Account';
 import MoodTracker from './pages/MoodTracker';
 import HealerDashboard from './pages/HealerDashboard';
 import GroupChat from './pages/GroupChat';
+import Onboarding from './pages/Onboarding';
 
 import Navbar from './components/Navbar';
 
@@ -64,6 +65,7 @@ function AppInner() {
             <Route path="/premium" element={<Premium />} />
             <Route path="/mood" element={<MoodTracker />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/onboarding" element={<Onboarding />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </>
         )}

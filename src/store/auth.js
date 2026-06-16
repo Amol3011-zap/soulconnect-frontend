@@ -6,12 +6,12 @@ export const useAuthStore = create(
     (set) => ({
       user: null,
       token: null,
-      role: null, // 'user' | 'healer' — stored explicitly so API response doesn't need to include it
+      role: null,
+      primaryProblem: null,
       setAuth: (user, token, role) => set({ user, token, role: role || user?.role || null }),
-      logout: () => set({ user: null, token: null, role: null }),
+      setPrimaryProblem: (problem) => set({ primaryProblem: problem }),
+      logout: () => set({ user: null, token: null, role: null, primaryProblem: null }),
     }),
-    {
-      name: 'auth-store',
-    }
+    { name: 'auth-store' }
   )
 );

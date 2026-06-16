@@ -763,7 +763,7 @@ export default function Dashboard() {
             flexShrink: 0,
             display: 'flex',
             gap: 6,
-            padding: '10px 14px',
+            padding: '8px 12px',
             borderBottom: '1px solid rgba(255,255,255,0.07)',
             background: 'rgba(6,1,15,0.8)',
             backdropFilter: 'blur(20px)',
@@ -777,9 +777,9 @@ export default function Dashboard() {
             ].map(t => (
               <button key={t.key} onClick={() => setMainTab(t.key)} style={{
                 flex: 1,
-                padding: '8px 4px',
+                padding: '10px 6px',
                 borderRadius: 12,
-                fontSize: 11,
+                fontSize: 13,
                 fontWeight: 700,
                 cursor: 'pointer',
                 border: 'none',
