@@ -89,46 +89,109 @@ const problems = [
   'Career Stress', 'Grief', 'Financial', 'Sleep Issues', 'Anger',
 ];
 
-/* ── SVG Illustrations for the 3 hero cards ── */
-const IndividualIllustration = () => (
-  <svg width="120" height="140" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="60" cy="130" rx="36" ry="6" fill="rgba(255,255,255,0.15)" />
-    <circle cx="60" cy="36" r="22" fill="rgba(255,255,255,0.25)" />
-    <circle cx="60" cy="32" r="14" fill="rgba(255,255,255,0.35)" />
-    <ellipse cx="60" cy="26" rx="6" ry="7" fill="rgba(255,255,255,0.6)" />
-    <path d="M38 90 Q60 70 82 90 L84 124 Q60 130 36 124 Z" fill="rgba(255,255,255,0.25)" />
-    <path d="M42 94 Q60 78 78 94" stroke="rgba(255,255,255,0.5)" strokeWidth="2" fill="none" strokeLinecap="round" />
-    <circle cx="60" cy="58" r="3" fill="rgba(255,255,255,0.5)" />
-    <path d="M52 68 Q60 62 68 68" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+/* ── Unique SVG illustrations — abstract & spiritual, not person silhouettes ── */
+
+// Card 1: Lotus mandala — inner peace / healing mind
+const LotusIllustration = () => (
+  <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Outer glow ring */}
+    <circle cx="75" cy="75" r="60" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+    <circle cx="75" cy="75" r="48" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+    {/* 8 petals */}
+    {[0,45,90,135,180,225,270,315].map((deg, i) => {
+      const rad = (deg * Math.PI) / 180;
+      const cx = 75 + Math.cos(rad) * 28;
+      const cy = 75 + Math.sin(rad) * 28;
+      return (
+        <ellipse key={i} cx={cx} cy={cy} rx="11" ry="18"
+          transform={`rotate(${deg}, ${cx}, ${cy})`}
+          fill={`rgba(255,255,255,${0.18 + (i % 2) * 0.08})`} />
+      );
+    })}
+    {/* Inner petals */}
+    {[22,67,112,157,202,247].map((deg, i) => {
+      const rad = (deg * Math.PI) / 180;
+      const cx = 75 + Math.cos(rad) * 16;
+      const cy = 75 + Math.sin(rad) * 16;
+      return (
+        <ellipse key={i} cx={cx} cy={cy} rx="7" ry="12"
+          transform={`rotate(${deg}, ${cx}, ${cy})`}
+          fill="rgba(255,255,255,0.3)" />
+      );
+    })}
+    {/* Center */}
+    <circle cx="75" cy="75" r="10" fill="rgba(255,255,255,0.55)" />
+    <circle cx="75" cy="75" r="5" fill="rgba(255,255,255,0.9)" />
+    {/* Radiating dots */}
+    {[0,60,120,180,240,300].map((deg, i) => {
+      const rad = (deg * Math.PI) / 180;
+      return <circle key={i} cx={75 + Math.cos(rad) * 42} cy={75 + Math.sin(rad) * 42} r="2" fill="rgba(255,255,255,0.4)" />;
+    })}
   </svg>
 );
 
-const CouplesIllustration = () => (
-  <svg width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="70" cy="132" rx="44" ry="6" fill="rgba(255,255,255,0.15)" />
-    <circle cx="46" cy="34" r="16" fill="rgba(255,255,255,0.25)" />
-    <ellipse cx="46" cy="28" rx="8" ry="9" fill="rgba(255,255,255,0.5)" />
-    <path d="M28 88 Q46 72 64 88 L66 122 Q46 128 26 122 Z" fill="rgba(255,255,255,0.2)" />
-    <circle cx="94" cy="34" r="16" fill="rgba(255,255,255,0.25)" />
-    <ellipse cx="94" cy="28" rx="8" ry="9" fill="rgba(255,255,255,0.5)" />
-    <path d="M76 88 Q94 72 112 88 L114 122 Q94 128 74 122 Z" fill="rgba(255,255,255,0.2)" />
-    <path d="M62 78 Q70 70 78 78" stroke="rgba(255,255,255,0.6)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-    <path d="M70 74 L70 62" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" />
-    <circle cx="70" cy="59" r="4" fill="rgba(255,255,255,0.5)" />
+// Card 2: Intertwined hearts / vines — connection & relationships
+const ConnectionIllustration = () => (
+  <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Background ring */}
+    <circle cx="75" cy="75" r="55" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" strokeDasharray="4 6" />
+    {/* Left heart */}
+    <path d="M50 58 C50 50 38 46 34 54 C30 62 34 70 50 82 C50 82 50 82 50 82"
+      stroke="rgba(255,255,255,0.6)" strokeWidth="3" strokeLinecap="round" fill="none" />
+    <path d="M50 58 C50 50 62 46 66 54 C70 62 66 70 50 82"
+      stroke="rgba(255,255,255,0.6)" strokeWidth="3" strokeLinecap="round" fill="none" />
+    {/* Right heart */}
+    <path d="M100 58 C100 50 88 46 84 54 C80 62 84 70 100 82"
+      stroke="rgba(255,255,255,0.5)" strokeWidth="3" strokeLinecap="round" fill="none" />
+    <path d="M100 58 C100 50 112 46 116 54 C120 62 116 70 100 82"
+      stroke="rgba(255,255,255,0.5)" strokeWidth="3" strokeLinecap="round" fill="none" />
+    {/* Connecting vine/thread */}
+    <path d="M50 82 C55 90 65 85 75 90 C85 95 95 88 100 82"
+      stroke="rgba(255,255,255,0.45)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+    {/* Small sparkles */}
+    <circle cx="75" cy="90" r="3.5" fill="rgba(255,255,255,0.7)" />
+    <circle cx="60" cy="100" r="2" fill="rgba(255,255,255,0.4)" />
+    <circle cx="90" cy="100" r="2" fill="rgba(255,255,255,0.4)" />
+    <circle cx="75" cy="108" r="2.5" fill="rgba(255,255,255,0.3)" />
+    {/* Stars */}
+    {[[40,42],[110,42],[75,38],[30,72],[120,72]].map(([x,y],i) => (
+      <circle key={i} cx={x} cy={y} r="1.5" fill="rgba(255,255,255,0.5)" />
+    ))}
+    {/* Inner glow fill on hearts */}
+    <path d="M50 58 C50 50 38 46 34 54 C30 62 34 70 50 82 C66 70 70 62 66 54 C62 46 50 50 50 58Z"
+      fill="rgba(255,255,255,0.08)" />
+    <path d="M100 58 C100 50 88 46 84 54 C80 62 84 70 100 82 C116 70 120 62 116 54 C112 46 100 50 100 58Z"
+      fill="rgba(255,255,255,0.08)" />
   </svg>
 );
 
-const HealerIllustration = () => (
-  <svg width="120" height="140" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="60" cy="132" rx="36" ry="6" fill="rgba(255,255,255,0.15)" />
-    <circle cx="60" cy="32" r="20" fill="rgba(255,255,255,0.25)" />
-    <ellipse cx="60" cy="27" rx="10" ry="11" fill="rgba(255,255,255,0.5)" />
-    <path d="M36 90 Q60 70 84 90 L86 124 Q60 132 34 124 Z" fill="rgba(255,255,255,0.2)" />
-    <rect x="50" y="56" width="20" height="28" rx="4" fill="rgba(255,255,255,0.3)" />
-    <path d="M56 64h8M60 60v8" stroke="rgba(255,255,255,0.8)" strokeWidth="2.5" strokeLinecap="round" />
-    <circle cx="88" cy="44" r="14" fill="rgba(255,255,255,0.2)" />
-    <path d="M83 44h10M88 39v10" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-    <circle cx="88" cy="44" r="8" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" fill="none" />
+// Card 3: Compass star / north star — finding your path
+const CompassIllustration = () => (
+  <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Outer rings */}
+    <circle cx="75" cy="75" r="58" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+    <circle cx="75" cy="75" r="44" stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="3 5" />
+    {/* 4 large compass points */}
+    <path d="M75 20 L68 68 L75 75 L82 68 Z" fill="rgba(255,255,255,0.55)" />
+    <path d="M75 130 L68 82 L75 75 L82 82 Z" fill="rgba(255,255,255,0.35)" />
+    <path d="M20 75 L68 68 L75 75 L68 82 Z" fill="rgba(255,255,255,0.35)" />
+    <path d="M130 75 L82 68 L75 75 L82 82 Z" fill="rgba(255,255,255,0.55)" />
+    {/* 4 diagonal smaller points */}
+    <path d="M75 75 L47 47 L68 68 Z" fill="rgba(255,255,255,0.2)" />
+    <path d="M75 75 L103 47 L82 68 Z" fill="rgba(255,255,255,0.2)" />
+    <path d="M75 75 L47 103 L68 82 Z" fill="rgba(255,255,255,0.2)" />
+    <path d="M75 75 L103 103 L82 82 Z" fill="rgba(255,255,255,0.2)" />
+    {/* Concentric detail rings */}
+    <circle cx="75" cy="75" r="28" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+    <circle cx="75" cy="75" r="16" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" />
+    {/* Center dot */}
+    <circle cx="75" cy="75" r="7" fill="rgba(255,255,255,0.7)" />
+    <circle cx="75" cy="75" r="3" fill="white" />
+    {/* Cardinal label dots */}
+    <circle cx="75" cy="30" r="2.5" fill="rgba(255,255,255,0.8)" />
+    <circle cx="75" cy="120" r="2" fill="rgba(255,255,255,0.4)" />
+    <circle cx="30" cy="75" r="2" fill="rgba(255,255,255,0.4)" />
+    <circle cx="120" cy="75" r="2.5" fill="rgba(255,255,255,0.8)" />
   </svg>
 );
 
@@ -205,111 +268,105 @@ export default function Landing() {
             </p>
           </div>
 
-          {/* THREE BIG CATEGORY CARDS */}
+          {/* THREE SOULCONNECT CATEGORY CARDS */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 48 }}>
 
-            {/* Card 1 — Individual Support */}
+            {/* Card 1 — Heal My Mind — deep indigo */}
             <Link
               to="/signup"
               style={{
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                background: '#2d6a4f', borderRadius: 20, padding: 32, minHeight: 320,
+                background: 'linear-gradient(160deg, #312e81 0%, #4338ca 100%)',
+                borderRadius: 20, padding: 32, minHeight: 320,
                 textDecoration: 'none', position: 'relative', overflow: 'hidden',
                 transition: 'transform 0.2s, box-shadow 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 48px rgba(0,0,0,0.3)'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 20px 56px rgba(67,56,202,0.45)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
             >
-              {/* Label top-left */}
               <div>
-                <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>
-                  Individual Support
+                <p style={{ color: 'rgba(199,210,254,0.85)', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
+                  Anxiety · Depression · Stress
                 </p>
-                <p style={{ color: 'white', fontSize: 22, fontWeight: 700, lineHeight: 1.3 }}>For myself</p>
+                <p style={{ color: 'white', fontSize: 22, fontWeight: 800, lineHeight: 1.25 }}>Heal my mind</p>
               </div>
 
-              {/* Illustration center */}
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, padding: '16px 0' }}>
-                <IndividualIllustration />
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, padding: '12px 0' }}>
+                <LotusIllustration />
               </div>
 
-              {/* Arrow bottom-right */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.85)', fontSize: 14, fontWeight: 600 }}>
-                  Get started
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle cx="9" cy="9" r="9" fill="rgba(255,255,255,0.2)" />
-                    <path d="M7 9h5M10 7l2 2-2 2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'rgba(199,210,254,0.7)', fontSize: 12 }}>Find your calm →</span>
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.15)" />
+                  <path d="M13 16h7M18 13l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
             </Link>
 
-            {/* Card 2 — Couples & Marriage */}
+            {/* Card 2 — Mend My Heart — deep rose */}
             <Link
               to="/signup"
               style={{
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                background: '#1a7a8a', borderRadius: 20, padding: 32, minHeight: 320,
+                background: 'linear-gradient(160deg, #881337 0%, #be185d 100%)',
+                borderRadius: 20, padding: 32, minHeight: 320,
                 textDecoration: 'none', position: 'relative', overflow: 'hidden',
                 transition: 'transform 0.2s, box-shadow 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 48px rgba(0,0,0,0.3)'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 20px 56px rgba(190,24,93,0.45)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
             >
               <div>
-                <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>
-                  Couples &amp; Marriage
+                <p style={{ color: 'rgba(254,205,211,0.85)', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
+                  Breakup · Grief · Loneliness
                 </p>
-                <p style={{ color: 'white', fontSize: 22, fontWeight: 700, lineHeight: 1.3 }}>For me &amp; my partner</p>
+                <p style={{ color: 'white', fontSize: 22, fontWeight: 800, lineHeight: 1.25 }}>Mend my heart</p>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, padding: '16px 0' }}>
-                <CouplesIllustration />
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, padding: '12px 0' }}>
+                <ConnectionIllustration />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.85)', fontSize: 14, fontWeight: 600 }}>
-                  Get started
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle cx="9" cy="9" r="9" fill="rgba(255,255,255,0.2)" />
-                    <path d="M7 9h5M10 7l2 2-2 2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'rgba(254,205,211,0.7)', fontSize: 12 }}>Feel less alone →</span>
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.15)" />
+                  <path d="M13 16h7M18 13l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
             </Link>
 
-            {/* Card 3 — Talk to a Healer */}
+            {/* Card 3 — Find My Path — deep teal */}
             <Link
               to="/signup"
               style={{
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                background: '#b5650d', borderRadius: 20, padding: 32, minHeight: 320,
+                background: 'linear-gradient(160deg, #134e4a 0%, #0f766e 100%)',
+                borderRadius: 20, padding: 32, minHeight: 320,
                 textDecoration: 'none', position: 'relative', overflow: 'hidden',
                 transition: 'transform 0.2s, box-shadow 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 48px rgba(0,0,0,0.3)'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 20px 56px rgba(15,118,110,0.45)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
             >
               <div>
-                <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>
-                  Talk to a Healer
+                <p style={{ color: 'rgba(153,246,228,0.85)', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
+                  Career · Identity · Purpose
                 </p>
-                <p style={{ color: 'white', fontSize: 22, fontWeight: 700, lineHeight: 1.3 }}>With a professional</p>
+                <p style={{ color: 'white', fontSize: 22, fontWeight: 800, lineHeight: 1.25 }}>Find my path</p>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, padding: '16px 0' }}>
-                <HealerIllustration />
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, padding: '12px 0' }}>
+                <CompassIllustration />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.85)', fontSize: 14, fontWeight: 600 }}>
-                  Get started
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle cx="9" cy="9" r="9" fill="rgba(255,255,255,0.2)" />
-                    <path d="M7 9h5M10 7l2 2-2 2" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'rgba(153,246,228,0.7)', fontSize: 12 }}>Discover direction →</span>
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.15)" />
+                  <path d="M13 16h7M18 13l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
             </Link>
 
