@@ -214,13 +214,8 @@ export default function TermsPrivacy() {
           </Link>
 
           {/* Logo */}
-          <div className="flex items-center gap-3 mb-5">
-            <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="16" r="16" fill="#2d6a4f" />
-              <path d="M16 8 C10 8 7 12 7 15.5 C7 20 11 23 16 26 C21 23 25 20 25 15.5 C25 12 22 8 16 8Z" fill="#f59e0b" />
-              <circle cx="16" cy="15" r="4" fill="white" opacity="0.3" />
-            </svg>
-            <span style={{ color: 'white', fontWeight: 700, fontSize: 20 }}>SoulConnect</span>
+          <div className="flex items-center mb-5">
+            <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 50, width: 'auto', objectFit: 'contain', mixBlendMode: 'screen' }} />
           </div>
 
           <h1 style={{ color: 'white', fontSize: 28, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.3px' }}>

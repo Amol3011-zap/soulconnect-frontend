@@ -94,12 +94,8 @@ function LeftPanel({ role }) {
 
       <div className="relative z-10 flex flex-col justify-between p-12 w-full">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-            style={{ background: logoGrad }}>
-            {isHealer ? '🧘' : '🌿'}
-          </div>
-          <span className="text-white text-xl font-bold tracking-tight">SoulConnect</span>
+        <div className="flex items-center">
+          <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 52, width: 'auto', objectFit: 'contain', mixBlendMode: 'screen' }} />
         </div>
 
         {/* Hero copy */}
@@ -440,12 +436,8 @@ export default function Signup() {
         <div className="w-full max-w-md py-8">
 
           {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-6 lg:hidden">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
-              style={{ background: accentGrad }}>
-              {role === 'healer' ? '🧘' : '🌿'}
-            </div>
-            <span className="text-gray-800 text-lg font-bold">SoulConnect</span>
+          <div className="flex items-center mb-6 lg:hidden">
+            <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 44, width: 'auto', objectFit: 'contain', maxWidth: 160 }} />
           </div>
 
           {/* Role badge */}
