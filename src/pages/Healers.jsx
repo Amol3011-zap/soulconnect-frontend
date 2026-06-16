@@ -606,78 +606,155 @@ function BookingModal({ healer, grad, onClose, onConfirm }) {
   );
 }
 
+// ── Healer styles ──────────────────────────────────────────────────────────────
+const HEALER_STYLES = `
+  @keyframes healAurora1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(40px,-30px) scale(1.15)} }
+  @keyframes healAurora2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-30px,40px) scale(1.1)} }
+  @keyframes healAurora3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(20px,20px) scale(1.08)} }
+  @keyframes healStarPulse { 0%,100%{opacity:0.1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.8)} }
+  @keyframes healCardHover { from{transform:translateY(0)} to{transform:translateY(-6px)} }
+  @keyframes healFloat { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-8px)} }
+  .healer-card { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease; }
+  .healer-card:hover { transform: translateY(-6px); }
+`;
+
+const CARD_ACCENTS = ['#7c3aed', '#0891b2', '#059669', '#d97706'];
+
 // ── Healer Card ────────────────────────────────────────────────────────────────
 function HealerCard({ healer, index, onBook }) {
   const grad = GRAD_COLORS[index % GRAD_COLORS.length];
+  const accent = CARD_ACCENTS[index % CARD_ACCENTS.length];
+  const initial = healer.initials?.[0] || healer.name?.[0] || '?';
+
   return (
-    <div className="rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
-      style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-      <div className="h-1.5" style={{ background: grad }} />
-      <div className="p-5">
-        <div className="flex items-start gap-4 mb-4">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-lg shrink-0"
-            style={{ background: grad }}>
-            {healer.avatar_url
-              ? <img src={healer.avatar_url} alt={healer.name} className="w-full h-full rounded-2xl object-cover" />
-              : healer.initials || healer.name?.[0]?.toUpperCase()}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <h3 className="font-bold" style={{ color: 'var(--text)' }}>{healer.name}</h3>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-yellow-400 text-sm">★</span>
-                  <span className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>{healer.total_rating?.toFixed(1)}</span>
-                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>({healer.review_count} reviews)</span>
-                </div>
-              </div>
-              {healer.badge && (
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white shrink-0"
-                  style={{ background: healer.badge_color || '#7c3aed' }}>
-                  {healer.badge}
-                </span>
-              )}
+    <div className="healer-card" style={{
+      background: 'rgba(6,1,18,0.92)',
+      backdropFilter: 'blur(30px)',
+      WebkitBackdropFilter: 'blur(30px)',
+      border: `1px solid ${accent}28`,
+      borderRadius: 24,
+      overflow: 'hidden',
+      boxShadow: `0 0 0 1px ${accent}12, 0 20px 60px rgba(0,0,0,0.6)`,
+      position: 'relative',
+    }}>
+      {/* Top accent line */}
+      <div style={{ height: 2, background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
+
+      {/* Inner glow */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 120,
+        background: `radial-gradient(ellipse at 50% 0%, ${accent}12 0%, transparent 70%)`,
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ padding: '24px 24px 0', position: 'relative' }}>
+        {/* Header row */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
+          {/* Monogram */}
+          <div style={{
+            fontSize: 52, fontWeight: 900, fontStyle: 'italic', lineHeight: 0.9,
+            background: `linear-gradient(160deg, ${accent} 0%, rgba(255,255,255,0.9) 55%, ${accent}80 100%)`,
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            filter: `drop-shadow(0 0 20px ${accent}50)`,
+            letterSpacing: '-0.04em',
+          }}>{initial}</div>
+
+          <div style={{ textAlign: 'right' }}>
+            {/* Badge */}
+            {healer.badge && (
+              <div style={{
+                display: 'inline-block',
+                fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                padding: '4px 10px', borderRadius: 20, marginBottom: 8,
+                background: `${healer.badge_color || accent}22`,
+                border: `1px solid ${healer.badge_color || accent}55`,
+                color: healer.badge_color || accent,
+              }}>{healer.badge}</div>
+            )}
+            {/* Rating */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
+              <span style={{ color: '#d4af37', fontSize: 14 }}>★</span>
+              <span style={{ fontSize: 16, fontWeight: 900, color: '#d4af37' }}>{healer.total_rating?.toFixed(1)}</span>
+              <span style={{ fontSize: 10, color: 'rgba(212,175,55,0.45)', letterSpacing: '0.08em' }}>
+                ({healer.review_count})
+              </span>
             </div>
           </div>
         </div>
 
-        <p className="text-sm leading-relaxed mb-4 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>{healer.bio}</p>
+        {/* Name */}
+        <div style={{ marginBottom: 4 }}>
+          <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ebe4ff', letterSpacing: '-0.02em', margin: 0 }}>
+            {healer.name}
+          </h3>
+        </div>
 
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {(healer.specializations || []).slice(0, 3).map(s => (
-            <span key={s} className="text-xs px-2.5 py-1 rounded-full font-medium"
-              style={{ background: 'rgba(124,58,237,0.08)', color: '#7c3aed', border: '1px solid rgba(124,58,237,0.15)' }}>
-              {s}
-            </span>
+        {/* Specialties as dots */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
+          {(healer.specializations || []).slice(0, 3).map((s, i) => (
+            <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{ width: 4, height: 4, borderRadius: '50%', background: accent, boxShadow: `0 0 6px ${accent}`, display: 'inline-block', flexShrink: 0 }} />
+              <span style={{ fontSize: 11, color: 'rgba(235,228,255,0.55)', letterSpacing: '0.04em' }}>{s}</span>
+            </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-3 gap-2 mb-4">
+        {/* Soul Reading label */}
+        <div style={{ marginBottom: 8 }}>
+          <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.4)' }}>◆ Healer Bio</span>
+        </div>
+
+        {/* Bio as hero italic */}
+        <p style={{
+          fontSize: 13, fontStyle: 'italic', color: 'rgba(235,228,255,0.72)',
+          lineHeight: 1.75, margin: '0 0 18px',
+        }}>
+          "{healer.bio?.slice(0, 110)}{healer.bio?.length > 110 ? '…' : ''}"
+        </p>
+
+        {/* Stats row */}
+        <div style={{
+          display: 'flex', gap: 16, paddingBottom: 18,
+          borderBottom: `1px solid ${accent}18`,
+        }}>
           {[
             { label: 'Experience', value: `${healer.experience_years || '?'} yrs` },
-            { label: 'Session', value: healer.session_type || 'Video' },
-            { label: 'Languages', value: (healer.languages || ['English']).slice(0, 2).join(', ') },
+            { label: 'Format', value: healer.session_type || 'Video' },
+            { label: 'Languages', value: (healer.languages || ['En']).slice(0, 2).join(', ') },
           ].map(({ label, value }) => (
-            <div key={label} className="rounded-xl p-2.5 text-center" style={{ background: 'var(--bg-subtle)' }}>
-              <p className="text-xs mb-0.5" style={{ color: 'var(--text-muted)' }}>{label}</p>
-              <p className="text-xs font-semibold leading-tight" style={{ color: 'var(--text-secondary)' }}>{value}</p>
+            <div key={label}>
+              <div style={{ fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.3)', marginBottom: 3 }}>{label}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(235,228,255,0.7)' }}>{value}</div>
             </div>
           ))}
         </div>
-
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-xl font-bold" style={{ color: 'var(--text)' }}>₹{healer.hourly_rate}</span>
-            <span className="text-xs ml-1" style={{ color: 'var(--text-muted)' }}>/session</span>
-          </div>
-          <button
-            onClick={() => onBook(healer, grad)}
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white hover:opacity-90 active:scale-95 transition-all"
-            style={{ background: grad }}>
-            Book Session →
-          </button>
-        </div>
       </div>
+
+      {/* CTA bar */}
+      <button
+        onClick={() => onBook(healer, grad)}
+        style={{
+          width: '100%', padding: '16px 24px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          background: 'transparent',
+          border: 'none',
+          borderTop: `1px solid ${accent}20`,
+          cursor: 'pointer',
+          transition: 'background 0.2s ease',
+        }}
+        onMouseEnter={e => e.currentTarget.style.background = `${accent}14`}
+        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+      >
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+          <span style={{ fontSize: 22, fontWeight: 900, color: '#d4af37' }}>₹{healer.hourly_rate}</span>
+          <span style={{ fontSize: 10, color: 'rgba(212,175,55,0.45)', letterSpacing: '0.1em' }}>/session</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(235,228,255,0.6)' }}>Book Session</span>
+          <span style={{ fontSize: 20, color: '#d4af37', lineHeight: 1 }}>→</span>
+        </div>
+      </button>
     </div>
   );
 }
@@ -720,102 +797,126 @@ export default function Healers() {
     setConsentGrad('');
   };
 
-  return (
-    <div className="min-h-screen pb-8" style={{ background: 'var(--bg)' }}>
-      {/* Hero */}
-      <div className="relative overflow-hidden mb-8"
-        style={{ background: 'linear-gradient(135deg, #1a3d2e 0%, #0f766e 50%, #1a3d2e 100%)' }}>
-        <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, #86efac, transparent)', filter: 'blur(40px)' }} />
-        <div className="max-w-4xl mx-auto px-6 py-10 relative z-10">
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-4"
-            style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
-            <span className="text-xs font-semibold" style={{ color: '#86efac' }}>Verified Professionals</span>
-          </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Find Your Healer</h1>
-          <p className="text-sm max-w-md" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            Connect with verified therapists, counsellors, and wellness practitioners who specialise in your area of need.
-          </p>
-          <div className="flex items-center gap-6 mt-6">
-            {[['500+', 'Healers'], ['4.8★', 'Avg Rating'], ['10K+', 'Sessions']].map(([val, label]) => (
-              <div key={label}>
-                <div className="text-white font-bold text-lg">{val}</div>
-                <div className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+  const STARS = Array.from({ length: 20 }, (_, i) => ({
+    l: `${(i * 17 + 5) % 100}%`, t: `${(i * 23 + 8) % 100}%`,
+    s: [1, 1.5, 2][i % 3], c: ['#d4af37','#c4b5fd','#ffffff'][i % 3], d: (i * 0.3) % 3,
+  }));
 
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Filter pills */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-6" style={{ scrollbarWidth: 'none' }}>
-          {FILTERS.map(f => (
-            <button key={f} onClick={() => setFilter(f)}
-              className="shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all"
-              style={filter === f
-                ? { background: 'linear-gradient(135deg,#7c3aed,#2563eb)', color: 'white' }
-                : { background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }
-              }>
-              {f}
-            </button>
+  return (
+    <>
+      <style>{HEALER_STYLES}</style>
+
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #030009 0%, #0a0225 50%, #040112 100%)', position: 'relative', overflow: 'hidden' }}>
+
+        {/* Aurora blobs */}
+        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+          <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%)', animation: 'healAurora1 18s ease-in-out infinite', filter: 'blur(60px)' }} />
+          <div style={{ position: 'absolute', top: '30%', right: '-10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(8,145,178,0.14) 0%, transparent 70%)', animation: 'healAurora2 22s ease-in-out infinite', filter: 'blur(70px)' }} />
+          <div style={{ position: 'absolute', bottom: '10%', left: '30%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%)', animation: 'healAurora3 26s ease-in-out infinite', filter: 'blur(80px)' }} />
+          {STARS.map((p, i) => (
+            <div key={i} style={{ position: 'absolute', left: p.l, top: p.t, width: p.s, height: p.s, borderRadius: '50%', background: p.c, animation: `healStarPulse ${2.5 + i % 3 * 0.5}s ease-in-out ${p.d}s infinite` }} />
           ))}
         </div>
 
-        {loading ? (
-          <div className="grid md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="rounded-2xl p-5 animate-pulse" style={{ background: 'var(--bg-card)' }}>
-                <div className="flex gap-4 mb-4">
-                  <div className="w-14 h-14 rounded-2xl" style={{ background: 'var(--bg-subtle)' }} />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 rounded w-2/3" style={{ background: 'var(--bg-subtle)' }} />
-                    <div className="h-3 rounded w-1/2" style={{ background: 'var(--bg-subtle)' }} />
-                  </div>
-                </div>
+        {/* ── HERO ── */}
+        <div style={{ position: 'relative', zIndex: 1, padding: '60px 24px 50px', textAlign: 'center', borderBottom: '1px solid rgba(124,58,237,0.12)' }}>
+          {/* Ornamental divider top */}
+          <div style={{ fontSize: 13, letterSpacing: '0.5em', color: 'rgba(212,175,55,0.3)', marginBottom: 28 }}>◆ ✦ ◆</div>
+
+          {/* Badge */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 40, marginBottom: 20, background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)' }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#d4af37', boxShadow: '0 0 8px #d4af37', display: 'inline-block' }} />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#d4af37' }}>Verified Professionals</span>
+          </div>
+
+          {/* Heading */}
+          <h1 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 16px', color: '#ebe4ff' }}>
+            Find Your{' '}
+            <span style={{
+              background: 'linear-gradient(135deg, #d4af37 0%, #f0d060 40%, #d4af37 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            }}>Healer</span>
+          </h1>
+
+          <p style={{ fontSize: 15, color: 'rgba(196,181,253,0.6)', maxWidth: 440, margin: '0 auto 40px', lineHeight: 1.7 }}>
+            Connect with verified therapists, counsellors, and wellness practitioners who specialise in your area of need.
+          </p>
+
+          {/* Stats */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 48 }}>
+            {[['500+', 'Healers'], ['4.8★', 'Avg Rating'], ['10K+', 'Sessions']].map(([val, label]) => (
+              <div key={label} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 24, fontWeight: 900, color: '#d4af37', lineHeight: 1 }}>{val}</div>
+                <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.4)', marginTop: 4 }}>{label}</div>
               </div>
             ))}
           </div>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-4">
-            {healers.map((healer, i) => (
-              <HealerCard key={healer.id} healer={healer} index={i} onBook={openBooking} />
+        </div>
+
+        {/* ── CONTENT ── */}
+        <div style={{ maxWidth: 960, margin: '0 auto', padding: '40px 20px 60px', position: 'relative', zIndex: 1 }}>
+
+          {/* Filter pills */}
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 32, scrollbarWidth: 'none' }}>
+            {FILTERS.map(f => (
+              <button key={f} onClick={() => setFilter(f)} style={{
+                flexShrink: 0, padding: '8px 20px', borderRadius: 40, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: filter === f ? 'linear-gradient(135deg,#7c3aed,#a855f7)' : 'rgba(255,255,255,0.04)',
+                color: filter === f ? '#fff' : 'rgba(196,181,253,0.5)',
+                border: filter === f ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                boxShadow: filter === f ? '0 0 20px rgba(124,58,237,0.35)' : 'none',
+              }}>{f}</button>
             ))}
           </div>
-        )}
 
-        {/* CTA banner */}
-        <div className="mt-8 rounded-2xl p-6 flex items-center justify-between gap-4"
-          style={{ background: 'linear-gradient(135deg,rgba(124,58,237,0.08),rgba(37,99,235,0.06))', border: '1px solid rgba(124,58,237,0.15)' }}>
-          <div>
-            <h3 className="font-bold mb-1" style={{ color: 'var(--text)' }}>Are you a healer or therapist?</h3>
-            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Join our verified network and reach thousands of people who need your help.</p>
+          {/* Cards grid */}
+          {loading ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 20 }}>
+              {[1,2,3,4].map(i => (
+                <div key={i} style={{ borderRadius: 24, height: 280, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', animation: 'pulse 1.5s ease-in-out infinite' }} />
+              ))}
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 20 }}>
+              {healers.map((healer, i) => (
+                <HealerCard key={healer.id} healer={healer} index={i} onBook={openBooking} />
+              ))}
+            </div>
+          )}
+
+          {/* CTA banner */}
+          <div style={{
+            marginTop: 48, borderRadius: 24, padding: '32px 36px',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
+            background: 'rgba(6,1,18,0.85)', backdropFilter: 'blur(30px)',
+            border: '1px solid rgba(124,58,237,0.2)',
+            boxShadow: '0 0 60px rgba(124,58,237,0.08)',
+          }}>
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.5)', marginBottom: 8 }}>◆ For Practitioners</div>
+              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ebe4ff', margin: '0 0 6px' }}>Are you a healer or therapist?</h3>
+              <p style={{ fontSize: 13, color: 'rgba(196,181,253,0.5)', margin: 0 }}>Join our verified network and reach thousands who need your guidance.</p>
+            </div>
+            <button style={{
+              flexShrink: 0, padding: '12px 24px', borderRadius: 14, fontSize: 12, fontWeight: 700,
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              background: 'linear-gradient(135deg, #7c3aed, #a855f7)', color: '#fff', border: 'none',
+              cursor: 'pointer', boxShadow: '0 0 24px rgba(124,58,237,0.4)',
+            }}>Apply Now →</button>
           </div>
-          <button className="shrink-0 px-5 py-2.5 rounded-xl font-semibold text-white text-sm hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
-            Apply Now
-          </button>
         </div>
       </div>
 
-      {/* Consent modal — shown before booking */}
+      {/* Consent modal */}
       {consentHealer && (
-        <ConsentModal
-          healer={consentHealer}
-          onClose={() => setConsentHealer(null)}
-          onAgree={handleConsentAgree}
-        />
+        <ConsentModal healer={consentHealer} onClose={() => setConsentHealer(null)} onAgree={handleConsentAgree} />
       )}
 
       {/* Booking modal */}
       {bookingHealer && (
-        <BookingModal
-          healer={bookingHealer}
-          grad={bookingGrad}
-          onClose={() => setBookingHealer(null)}
-          onConfirm={() => setBookingHealer(null)}
-        />
+        <BookingModal healer={bookingHealer} grad={bookingGrad} onClose={() => setBookingHealer(null)} onConfirm={() => setBookingHealer(null)} />
       )}
-    </div>
+    </>
   );
 }
