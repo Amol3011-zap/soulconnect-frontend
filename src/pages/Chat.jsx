@@ -47,17 +47,17 @@ export default function Chat() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">Chat with {matchName}</h1>
         <p className="text-gray-600">Peer support for {problem}</p>
       </div>
 
-      {/* TAB NAVIGATION - THE MAIN INNOVATION */}
-      <div className="flex gap-3 mb-6 border-b-2 border-gray-200">
+      {/* TAB NAVIGATION */}
+      <div className="flex gap-3 mb-6 border-b-2 border-gray-200 overflow-x-auto">
         <button
           onClick={() => setActiveTab('chat')}
-          className={`px-6 py-3 font-semibold border-b-4 transition-all ${
+          className={`px-6 py-3 font-semibold border-b-4 transition-all whitespace-nowrap ${
             activeTab === 'chat'
               ? 'border-purple-600 text-purple-600'
               : 'border-transparent text-gray-600 hover:text-gray-800'
@@ -68,7 +68,7 @@ export default function Chat() {
 
         <button
           onClick={() => setActiveTab('activities')}
-          className={`px-6 py-3 font-semibold border-b-4 transition-all ${
+          className={`px-6 py-3 font-semibold border-b-4 transition-all whitespace-nowrap ${
             activeTab === 'activities'
               ? 'border-blue-600 text-blue-600'
               : 'border-transparent text-gray-600 hover:text-gray-800'
@@ -79,7 +79,7 @@ export default function Chat() {
 
         <button
           onClick={() => setActiveTab('healing')}
-          className={`px-6 py-3 font-semibold border-b-4 transition-all ${
+          className={`px-6 py-3 font-semibold border-b-4 transition-all whitespace-nowrap ${
             activeTab === 'healing'
               ? 'border-green-600 text-green-600'
               : 'border-transparent text-gray-600 hover:text-gray-800'
@@ -91,11 +91,11 @@ export default function Chat() {
 
       {/* TAB 1: FREE CHAT */}
       {activeTab === 'chat' && (
-        <div className="h-[70vh] flex flex-col">
+        <div className="h-[60vh] flex flex-col">
           <div className="flex-1 overflow-y-auto bg-gray-50 rounded-lg p-4 mb-4 space-y-4">
             {messages.length === 0 ? (
               <div className="text-center text-gray-500 py-8">
-                <p>👋 Start the conversation!</p>
+                <p className="text-xl">👋 Start the conversation!</p>
                 <p className="text-sm mt-2">Be honest. Be real. You're safe here.</p>
               </div>
             ) : (
@@ -139,11 +139,11 @@ export default function Chat() {
 
       {/* TAB 2: QUICK RELIEF ACTIVITIES */}
       {activeTab === 'activities' && (
-        <div>
+        <div className="bg-white rounded-lg p-6">
           <ActivitySuggestions
             problemType={problem}
             matchName={matchName}
-            onActivityComplete={(data) => console.log('Activity:', data)}
+            onActivityComplete={(data) => console.log('Activity completed:', data)}
           />
         </div>
       )}
