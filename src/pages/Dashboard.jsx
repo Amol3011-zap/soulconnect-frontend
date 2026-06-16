@@ -137,7 +137,6 @@ function getBotResponse(userText, problem, state, matchName) {
 
   // ── Ongoing conversation ──
   else {
-    // Specific keyword responses
     if (lower.includes('give up') || lower.includes('no point') || lower.includes('pointless') || lower.includes('end it')) {
       response = `Hey — please hear me. I'm right here. What you're feeling right now is real and it's heavy, and I'm not going to brush it off. But please don't give up. Not today. Will you tell me what's going on right now? I'm not going anywhere. 💙 And if you need immediate support, please reach out to iCall: 9152987821 — they're kind and they listen.`;
     } else if (lower.includes('thank') || lower.includes('thanks') || lower.includes('helped')) {
@@ -162,7 +161,6 @@ function getBotResponse(userText, problem, state, matchName) {
       response = pool[Math.floor(Math.random() * pool.length)];
     }
 
-    // Nudge toward professional help after many messages
     if (userMessageCount === 8 && !newState.askedAboutTherapist) {
       response += ` Also — I want to gently say this: you deserve professional support too, not just peer support. Have you ever considered talking to a therapist? Even just once to try?`;
       newState.askedAboutTherapist = true;
@@ -172,27 +170,104 @@ function getBotResponse(userText, problem, state, matchName) {
   return { response, newState };
 }
 
+// ── Keyframe CSS ──────────────────────────────────────────────────────────────
+const DASH_STYLES = `
+  @keyframes dashStarPulse {
+    0%, 100% { opacity: 0.1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(1.7); }
+  }
+  @keyframes dotBounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+  @keyframes slideInChat {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulseGreen {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.0); }
+    50%       { box-shadow: 0 0 0 4px rgba(52,211,153,0.2); }
+  }
+  .dash-scroll::-webkit-scrollbar { width: 4px; }
+  .dash-scroll::-webkit-scrollbar-track { background: transparent; }
+  .dash-scroll::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.25); border-radius: 4px; }
+  .dash-msg-enter { animation: slideInChat 0.25s ease forwards; }
+`;
+
+// ── Background Particles ──────────────────────────────────────────────────────
+const BG_PARTICLES = [
+  { l: '5%',  t: '10%', s: 1.5, c: '#d4af37', d: 0 },
+  { l: '18%', t: '72%', s: 1,   c: '#c4b5fd', d: 0.9 },
+  { l: '32%', t: '28%', s: 2,   c: '#ffffff', d: 1.8 },
+  { l: '47%', t: '85%', s: 1.5, c: '#d4af37', d: 0.5 },
+  { l: '60%', t: '15%', s: 1,   c: '#c4b5fd', d: 2.3 },
+  { l: '75%', t: '60%', s: 2,   c: '#ffffff', d: 1.1 },
+  { l: '86%', t: '30%', s: 1.5, c: '#d4af37', d: 2.7 },
+  { l: '93%', t: '80%', s: 1,   c: '#c4b5fd', d: 0.3 },
+  { l: '12%', t: '45%', s: 1,   c: '#ffffff', d: 1.5 },
+  { l: '65%', t: '90%', s: 2,   c: '#d4af37', d: 3.2 },
+];
+
+function BgParticles() {
+  return (
+    <>
+      {BG_PARTICLES.map((p, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            left: p.l, top: p.t,
+            width: p.s, height: p.s,
+            borderRadius: '50%',
+            background: p.c,
+            animation: `dashStarPulse ${2.5 + (i % 3) * 0.6}s ease-in-out ${p.d}s infinite`,
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
 // ── Safety Notice ─────────────────────────────────────────────────────────────
 function SafetyNotice({ onDismiss }) {
   return (
-    <div className="mx-4 mt-3 mb-1 rounded-2xl overflow-hidden border"
-      style={{ background: 'linear-gradient(135deg, #fffbeb, #fef3c7)', borderColor: '#fde68a' }}>
-      <div className="px-4 py-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-2">
-            <span className="text-lg shrink-0 mt-0.5">⚠️</span>
+    <div style={{
+      margin: '14px 16px 6px',
+      borderRadius: 18,
+      overflow: 'hidden',
+      background: 'rgba(251,191,36,0.06)',
+      border: '1px solid rgba(251,191,36,0.2)',
+      backdropFilter: 'blur(16px)',
+      WebkitBackdropFilter: 'blur(16px)',
+    }}>
+      <div style={{ padding: '12px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+            <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>⚠️</span>
             <div>
-              <p className="text-xs font-bold text-amber-800 mb-0.5">Safety & Privacy Notice</p>
-              <p className="text-xs text-amber-700 leading-relaxed">
+              <p style={{ margin: '0 0 3px', fontSize: 11, fontWeight: 700, color: '#fbbf24' }}>
+                Safety &amp; Privacy Notice
+              </p>
+              <p style={{ margin: 0, fontSize: 11, color: 'rgba(251,191,36,0.72)', lineHeight: 1.6 }}>
                 Never share your phone number, address, or social media with matches.
                 Your safety is our priority. If you feel unsafe,{' '}
-                <span className="font-semibold underline cursor-pointer">visit our Safety Center</span>.
+                <span style={{ fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
+                  visit our Safety Center
+                </span>.
                 This is a peer support space — not a substitute for professional care.
               </p>
             </div>
           </div>
-          <button onClick={onDismiss}
-            className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-amber-600 hover:bg-amber-200 transition-colors text-xs">
+          <button
+            onClick={onDismiss}
+            style={{
+              flexShrink: 0, width: 22, height: 22, borderRadius: '50%',
+              background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.2)',
+              color: '#fbbf24', fontSize: 10, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
             ✕
           </button>
         </div>
@@ -202,15 +277,35 @@ function SafetyNotice({ onDismiss }) {
 }
 
 // ── Typing indicator ──────────────────────────────────────────────────────────
-function TypingIndicator() {
+function TypingIndicator({ grad }) {
   return (
-    <div className="flex justify-start px-4 py-1">
-      <div className="px-4 py-3 rounded-3xl rounded-bl-lg"
-        style={{ background: 'var(--bg-subtle)' }}>
-        <div className="flex gap-1 items-center h-3">
+    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '4px 16px', alignItems: 'flex-end', gap: 8 }}>
+      <div style={{
+        width: 28, height: 28, borderRadius: '50%',
+        background: grad || 'linear-gradient(135deg,#7c3aed,#6d28d9)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 10, color: '#fff', fontWeight: 700, flexShrink: 0,
+      }}>
+        P
+      </div>
+      <div style={{
+        padding: '10px 16px', borderRadius: '20px 20px 20px 4px',
+        background: 'rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(255,255,255,0.1)',
+      }}>
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 14 }}>
           {[0, 1, 2].map(i => (
-            <div key={i} className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce"
-              style={{ animationDelay: `${i * 0.15}s` }} />
+            <div
+              key={i}
+              style={{
+                width: 7, height: 7, borderRadius: '50%',
+                background: 'rgba(168,85,247,0.8)',
+                animation: `dotBounce 1.2s ease-in-out ${i * 0.2}s infinite`,
+                boxShadow: '0 0 6px rgba(168,85,247,0.5)',
+              }}
+            />
           ))}
         </div>
       </div>
@@ -220,37 +315,36 @@ function TypingIndicator() {
 
 // ── Main Dashboard ────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const { logout } = useAuthStore();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [matches] = useState(DEMO_MATCHES);
-  const [activeMatch, setActiveMatch] = useState(DEMO_MATCHES[0]);
-  const [chatHistory, setChatHistory] = useState({});
+  const { logout }    = useAuthStore();
+  const navigate      = useNavigate();
+  const location      = useLocation();
+
+  const [matches]              = useState(DEMO_MATCHES);
+  const [activeMatch, setActiveMatch]         = useState(DEMO_MATCHES[0]);
+  const [chatHistory, setChatHistory]         = useState({});
   const [conversationState, setConversationState] = useState({});
-  const [input, setInput] = useState('');
-  const [typing, setTyping] = useState(false);
+  const [input, setInput]                     = useState('');
+  const [typing, setTyping]                   = useState(false);
   const [safetyDismissed, setSafetyDismissed] = useState({});
-  const [showActivity, setShowActivity] = useState(false);
-  const [rightTab, setRightTab] = useState('activities'); // 'activities' | 'healing'
-  const [mobileView, setMobileView] = useState('list');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [showActivity, setShowActivity]       = useState(false);
+  const [rightTab, setRightTab]               = useState('activities');
+  const [mobileView, setMobileView]           = useState('list');
+  const [searchQuery, setSearchQuery]         = useState('');
+  const [searchFocused, setSearchFocused]     = useState(false);
   const bottomRef = useRef(null);
 
-  // Pre-select match passed from Matches page
+  // Pre-select match from Matches page
   useEffect(() => {
     if (location.state?.matchId) {
       const found = DEMO_MATCHES.find(m => m.id === location.state.matchId);
-      if (found) {
-        setActiveMatch(found);
-        setMobileView('chat');
-      }
+      if (found) { setActiveMatch(found); setMobileView('chat'); }
     }
   }, [location.state]);
 
-  // Init chat with warm human greeting for each match
+  // Init chat history
   useEffect(() => {
     const initHistory = {};
-    const initState = {};
+    const initState   = {};
     DEMO_MATCHES.forEach(m => {
       initHistory[m.id] = [
         {
@@ -264,12 +358,7 @@ export default function Dashboard() {
           time: new Date(Date.now() - 4 * 60000),
         },
       ];
-      initState[m.id] = {
-        userMessageCount: 0,
-        mood: 'unknown',
-        hasOpenedUp: false,
-        askedAboutTherapist: false,
-      };
+      initState[m.id] = { userMessageCount: 0, mood: 'unknown', hasOpenedUp: false, askedAboutTherapist: false };
     });
     setChatHistory(initHistory);
     setConversationState(initState);
@@ -281,373 +370,728 @@ export default function Dashboard() {
 
   const sendMessage = async () => {
     if (!input.trim() || typing) return;
-    const text = input.trim();
+    const text  = input.trim();
     setInput('');
     const msgId = Date.now();
 
-    // Add user message immediately
     setChatHistory(prev => ({
       ...prev,
       [activeMatch.id]: [...(prev[activeMatch.id] || []), { id: msgId, from: 'me', text, time: new Date() }],
     }));
 
-    // Get bot response with conversation state
     const currentState = conversationState[activeMatch.id] || {
       userMessageCount: 0, mood: 'unknown', hasOpenedUp: false, askedAboutTherapist: false,
     };
     const { response, newState } = getBotResponse(text, activeMatch.primary_problem, currentState, activeMatch.name);
     setConversationState(prev => ({ ...prev, [activeMatch.id]: newState }));
 
-    // Human-like typing delay (longer for more emotional messages)
     const isHeavy = newState.hasOpenedUp || newState.mood === 'struggling';
-    const delay = isHeavy ? 2000 + Math.random() * 1500 : 1200 + Math.random() * 1000;
+    const delay   = isHeavy ? 2000 + Math.random() * 1500 : 1200 + Math.random() * 1000;
     setTyping(true);
     setTimeout(() => {
       setTyping(false);
       setChatHistory(prev => ({
         ...prev,
-        [activeMatch.id]: [...(prev[activeMatch.id] || []), {
-          id: msgId + 1, from: 'bot', text: response, time: new Date(),
-        }],
+        [activeMatch.id]: [...(prev[activeMatch.id] || []), { id: msgId + 1, from: 'bot', text: response, time: new Date() }],
       }));
     }, delay);
   };
 
-  const messages = chatHistory[activeMatch?.id] || [];
-  const filteredMatches = matches.filter(m =>
-    m.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const messages        = chatHistory[activeMatch?.id] || [];
+  const filteredMatches = matches.filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const fmt             = (d) => d?.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
-  const fmt = (d) => d?.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  // ── Colour constants ───────────────────────────────────────────────────────
+  const SIDEBAR_BG   = 'rgba(8, 2, 20, 0.97)';
+  const CHAT_BG      = 'linear-gradient(180deg, #06010f 0%, #0d0425 50%, #080215 100%)';
+  const BORDER_COLOR = 'rgba(124,58,237,0.15)';
+  const GOLD         = '#d4af37';
 
   return (
-    <div className="flex overflow-hidden" style={{ background: 'var(--bg)', height: '100dvh' }}>
+    <>
+      <style>{DASH_STYLES}</style>
 
-      {/* ── LEFT SIDEBAR ── */}
-      <div className={`flex-col w-full md:w-80 shrink-0 border-r ${mobileView === 'chat' ? 'hidden md:flex' : 'flex'}`}
-        style={{ borderColor: 'var(--border)', background: 'var(--bg-card)' }}>
+      <div style={{
+        display: 'flex',
+        overflow: 'hidden',
+        height: '100dvh',
+        background: '#06010f',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+      }}>
 
-        {/* Logo — padded for iOS status bar */}
-        <div className="px-5 pb-3" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 20px)' }}>
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
-                style={{ background: 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>🌟</div>
-              <span className="font-bold text-base" style={{ color: 'var(--text)' }}>SoulConnect</span>
-            </div>
-            <ThemeToggle />
-          </div>
-
-          {/* Search */}
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: 'var(--text-muted)' }}>🔍</span>
-            <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search matches..."
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm focus:outline-none transition-colors"
-              style={{ background: 'var(--bg-subtle)', color: 'var(--text)', border: '1.5px solid var(--border)' }}
-            />
-          </div>
-        </div>
-
-        {/* Demo notice */}
-        <div className="mx-3 mb-3 px-3 py-2.5 rounded-xl flex items-center gap-2"
-          style={{ background: 'linear-gradient(135deg,rgba(124,58,237,0.12),rgba(37,99,235,0.08))', border: '1px solid rgba(124,58,237,0.2)' }}>
-          <span className="text-base">✨</span>
-          <div>
-            <p className="text-xs font-bold" style={{ color: '#a855f7' }}>Demo Match Active</p>
-            <p className="text-xs leading-tight" style={{ color: 'var(--text-muted)' }}>Chat with Priya — a real-feeling AI companion</p>
-          </div>
-        </div>
-
-        {/* Match list */}
-        <div className="flex-1 overflow-y-auto px-3" style={{ scrollbarWidth: 'thin' }}>
-          {filteredMatches.map(m => (
-            <button key={m.id}
-              onClick={() => { setActiveMatch(m); setMobileView('chat'); }}
-              className="w-full flex items-center gap-3 px-3 py-3 rounded-2xl mb-1 text-left transition-all"
-              style={{
-                background: activeMatch?.id === m.id ? 'linear-gradient(135deg,rgba(124,58,237,0.12),rgba(37,99,235,0.08))' : 'transparent',
-                border: activeMatch?.id === m.id ? '1.5px solid rgba(124,58,237,0.2)' : '1.5px solid transparent',
-              }}>
-              <div className="relative shrink-0">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center text-white text-sm font-bold"
-                  style={{ background: m.grad }}>
-                  {m.initials}
-                </div>
-                <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 ${m.online ? 'bg-green-400' : 'bg-gray-300'}`}
-                  style={{ borderColor: 'var(--bg-card)' }} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-center mb-0.5">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-sm font-bold truncate" style={{ color: 'var(--text)' }}>{m.name}</span>
-                    {m.isDemo && (
-                      <span className="shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(168,85,247,0.15)', color: '#a855f7' }}>DEMO</span>
-                    )}
-                  </div>
-                  <span className="text-xs shrink-0 ml-1" style={{ color: 'var(--text-muted)' }}>{m.last_time}</span>
-                </div>
-                <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{m.last_message}</p>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* Bottom actions — safe area for iPhone home indicator */}
-        <div className="px-4 pt-4 space-y-2"
+        {/* ── LEFT SIDEBAR ────────────────────────────────────────────────── */}
+        <div
+          className={mobileView === 'chat' ? 'hidden md:flex' : 'flex'}
           style={{
-            borderTop: '1px solid var(--border)',
-            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)',
+            flexDirection: 'column',
+            width: '100%',
+            maxWidth: 320,
+            flexShrink: 0,
+            borderRight: `1px solid ${BORDER_COLOR}`,
+            background: SIDEBAR_BG,
+            display: mobileView === 'chat' ? 'none' : 'flex',
+          }}
+        >
+          {/* Logo area */}
+          <div style={{ padding: 'max(env(safe-area-inset-top,0px),20px) 20px 12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{
+                  width: 34, height: 34, borderRadius: 12,
+                  background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 16,
+                  boxShadow: '0 0 18px rgba(124,58,237,0.4)',
+                }}>🌟</div>
+                <span style={{
+                  fontWeight: 800, fontSize: 16,
+                  background: `linear-gradient(135deg, ${GOLD}, #fff9e0, ${GOLD})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>SoulConnect</span>
+              </div>
+              <ThemeToggle />
+            </div>
+
+            {/* Search bar */}
+            <div style={{ position: 'relative' }}>
+              <span style={{
+                position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
+                fontSize: 13, color: 'rgba(196,181,253,0.4)',
+              }}>🔍</span>
+              <input
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+                placeholder="Search matches..."
+                style={{
+                  width: '100%', boxSizing: 'border-box',
+                  paddingLeft: 36, paddingRight: 14, paddingTop: 10, paddingBottom: 10,
+                  borderRadius: 14, fontSize: 13,
+                  background: 'rgba(255,255,255,0.04)',
+                  color: 'rgba(221,214,254,0.9)',
+                  border: searchFocused
+                    ? `1.5px solid rgba(212,175,55,0.45)`
+                    : '1.5px solid rgba(255,255,255,0.08)',
+                  outline: 'none',
+                  backdropFilter: 'blur(12px)',
+                  transition: 'border-color 0.2s',
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Demo notice */}
+          <div style={{
+            margin: '0 12px 12px',
+            padding: '10px 14px',
+            borderRadius: 14,
+            background: 'rgba(168,85,247,0.08)',
+            border: '1px solid rgba(168,85,247,0.2)',
+            display: 'flex', alignItems: 'center', gap: 10,
           }}>
-          <button onClick={() => navigate('/healers')}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #0891b2, #2563eb)' }}>
-            <span className="text-xl">🧘</span>
+            <span style={{ fontSize: 14 }}>✨</span>
             <div>
-              <p className="text-xs font-bold text-white">Talk to a Healer</p>
-              <p className="text-xs text-blue-100">Book a professional session</p>
+              <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#a855f7' }}>Demo Active</p>
+              <p style={{ margin: 0, fontSize: 10, color: 'rgba(196,181,253,0.55)', lineHeight: 1.4 }}>
+                Chat with Priya — a real-feeling AI companion
+              </p>
             </div>
-          </button>
-          <button
-            onClick={() => { logout(); navigate('/'); }}
-            className="w-full text-xs py-2 rounded-xl font-medium transition-colors hover:opacity-70"
-            style={{ color: 'var(--text-muted)' }}>
-            Sign out
-          </button>
-        </div>
-      </div>
-
-      {/* ── MAIN CHAT AREA ── */}
-      <div className={`flex-1 flex flex-col min-w-0 ${mobileView === 'list' ? 'hidden md:flex' : 'flex chat-slide-in'}`}>
-
-        {/* Chat header — padded for iOS status bar on mobile */}
-        <div className="shrink-0 flex items-center gap-3 px-4 py-3"
-          style={{
-            borderBottom: '1px solid var(--border)',
-            background: 'var(--bg-card)',
-            paddingTop: 'max(env(safe-area-inset-top, 0px), 12px)',
-          }}>
-          <button onClick={() => setMobileView('list')}
-            className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center transition-all active:scale-90 mr-1"
-            style={{ background: 'var(--bg-subtle)', color: 'var(--text)', fontSize: 18 }}>
-            ‹
-          </button>
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0"
-            style={{ background: activeMatch?.grad }}>
-            {activeMatch?.initials}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-sm" style={{ color: 'var(--text)' }}>{activeMatch?.name}</span>
-              {activeMatch?.online && (
-                <span className="flex items-center gap-1 text-xs text-green-500 font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                  online
-                </span>
-              )}
-              {activeMatch?.isDemo && (
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(168,85,247,0.15)', color: '#a855f7' }}>AI DEMO</span>
-              )}
-            </div>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              {PROBLEM_LABELS[activeMatch?.primary_problem]} · {activeMatch?.match_score}% match
-              {activeMatch?.isDemo && ' · AI companion'}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => { setShowActivity(true); setRightTab('activities'); }}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
-              style={{
-                background: showActivity && rightTab === 'activities' ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'var(--bg-subtle)',
-                color: showActivity && rightTab === 'activities' ? 'white' : 'var(--text-secondary)',
-              }}>
-              💡 Activities
-            </button>
-            <button
-              onClick={() => { setShowActivity(true); setRightTab('healing'); }}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
-              style={{
-                background: showActivity && rightTab === 'healing' ? 'linear-gradient(135deg,#d4af37,#a855f7)' : 'var(--bg-subtle)',
-                color: showActivity && rightTab === 'healing' ? 'white' : 'var(--text-secondary)',
-              }}>
-              🌟 Healing
-            </button>
-            <button className="w-8 h-8 rounded-xl flex items-center justify-center text-sm transition-colors hover:opacity-70"
-              style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)' }}>
-              ⋯
-            </button>
-          </div>
-        </div>
-
-        {/* Messages area */}
-        <div className="flex-1 overflow-y-auto" style={{ background: 'var(--bg)', scrollbarWidth: 'thin' }}>
-          {!safetyDismissed[activeMatch?.id] && (
-            <SafetyNotice onDismiss={() => setSafetyDismissed(prev => ({ ...prev, [activeMatch.id]: true }))} />
-          )}
-
-          {/* Match reason */}
-          <div className="mx-4 my-3 px-4 py-3 rounded-2xl text-center"
-            style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}>
-            <p className="text-xs font-semibold mb-0.5" style={{ color: 'var(--text-secondary)' }}>
-              ✨ Why you were matched
-            </p>
-            <p className="text-xs italic" style={{ color: 'var(--text-muted)' }}>"{activeMatch?.match_reason}"</p>
           </div>
 
-          {/* Messages */}
-          <div className="px-4 pb-4 space-y-1">
-            {messages.map((msg, i) => {
-              const isMe = msg.from === 'me';
-              const showAvatar = !isMe && (i === 0 || messages[i - 1]?.from === 'me');
+          {/* Match list */}
+          <div className="dash-scroll" style={{ flex: 1, overflowY: 'auto', padding: '0 10px' }}>
+            {filteredMatches.map(m => {
+              const isActive = activeMatch?.id === m.id;
               return (
-                <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} items-end gap-2`}>
-                  {!isMe && (
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 ${showAvatar ? 'opacity-100' : 'opacity-0'}`}
-                      style={{ background: activeMatch?.grad }}>
-                      {activeMatch?.initials?.[0]}
+                <button
+                  key={m.id}
+                  onClick={() => { setActiveMatch(m); setMobileView('chat'); }}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '11px 12px', borderRadius: 16, marginBottom: 4,
+                    textAlign: 'left', cursor: 'pointer',
+                    background: isActive
+                      ? 'rgba(124,58,237,0.12)'
+                      : 'transparent',
+                    border: isActive
+                      ? '1.5px solid rgba(124,58,237,0.3)'
+                      : '1.5px solid transparent',
+                    borderLeft: isActive ? '3px solid rgba(124,58,237,0.7)' : '3px solid transparent',
+                    transition: 'all 0.2s ease',
+                    boxShadow: isActive ? '0 0 20px rgba(124,58,237,0.08)' : 'none',
+                  }}
+                >
+                  <div style={{ position: 'relative', flexShrink: 0 }}>
+                    <div style={{
+                      width: 44, height: 44, borderRadius: 14,
+                      background: m.grad,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 13, fontWeight: 700, color: '#fff',
+                      boxShadow: isActive ? '0 0 14px rgba(124,58,237,0.4)' : 'none',
+                    }}>
+                      {m.initials}
                     </div>
-                  )}
-                  <div className="max-w-[70%] group">
-                    <div className={`px-4 py-2.5 text-sm leading-relaxed ${
-                      isMe ? 'rounded-3xl rounded-br-md text-white' : 'rounded-3xl rounded-bl-md'
-                    }`}
-                      style={isMe
-                        ? { background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }
-                        : { background: 'var(--bg-card)', color: 'var(--text)', border: '1px solid var(--border)' }
-                      }>
-                      {msg.text}
-                    </div>
-                    <p className={`text-xs mt-0.5 px-1 opacity-0 group-hover:opacity-100 transition-opacity ${isMe ? 'text-right' : ''}`}
-                      style={{ color: 'var(--text-muted)' }}>
-                      {fmt(msg.time)}
-                    </p>
+                    <div style={{
+                      position: 'absolute', bottom: -1, right: -1,
+                      width: 11, height: 11, borderRadius: '50%',
+                      background: m.online ? '#34d399' : '#6b7280',
+                      border: '2px solid #08020f',
+                      animation: m.online ? 'pulseGreen 2.5s ease-in-out infinite' : 'none',
+                    }} />
                   </div>
-                </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+                        <span style={{
+                          fontSize: 13, fontWeight: 700, color: '#e2d9f3',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>{m.name}</span>
+                        {m.isDemo && (
+                          <span style={{
+                            fontSize: 8, fontWeight: 700, padding: '2px 5px', borderRadius: 6,
+                            background: 'rgba(168,85,247,0.15)', color: '#a855f7',
+                            flexShrink: 0,
+                          }}>DEMO</span>
+                        )}
+                      </div>
+                      <span style={{ fontSize: 10, color: 'rgba(196,181,253,0.35)', flexShrink: 0, marginLeft: 4 }}>
+                        {m.last_time}
+                      </span>
+                    </div>
+                    <p style={{
+                      margin: 0, fontSize: 11,
+                      color: 'rgba(196,181,253,0.45)',
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                    }}>{m.last_message}</p>
+                  </div>
+                </button>
               );
             })}
-            {typing && <TypingIndicator />}
-            <div ref={bottomRef} />
           </div>
-        </div>
 
-        {/* Input bar — safe area for iPhone home indicator */}
-        <div className="shrink-0 px-4 pt-3"
-          style={{
-            borderTop: '1px solid var(--border)',
-            background: 'var(--bg-card)',
-            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 12px)',
+          {/* Bottom actions */}
+          <div style={{
+            padding: `16px 16px max(env(safe-area-inset-bottom,0px),16px)`,
+            borderTop: `1px solid ${BORDER_COLOR}`,
           }}>
-          <div className="flex items-center gap-2">
-            <button className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0 hover:opacity-70 transition-opacity"
-              style={{ background: 'var(--bg-subtle)' }}>
-              😊
-            </button>
-            <input
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyPress={e => e.key === 'Enter' && sendMessage()}
-              placeholder={`Message ${activeMatch?.name}...`}
-              className="flex-1 px-4 py-2.5 rounded-2xl text-sm focus:outline-none transition-colors"
-              style={{ background: 'var(--bg-subtle)', color: 'var(--text)', border: '1.5px solid var(--border)' }}
-            />
             <button
-              onClick={sendMessage}
-              disabled={!input.trim() || typing}
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 transition-all hover:opacity-90 active:scale-95 disabled:opacity-40"
-              style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
-                <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              onClick={() => navigate('/healers')}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+                padding: '12px 16px', borderRadius: 14, cursor: 'pointer',
+                background: 'linear-gradient(135deg, #0891b2, #2563eb)',
+                border: 'none', marginBottom: 8,
+                boxShadow: '0 4px 20px rgba(8,145,178,0.3)',
+              }}
+            >
+              <span style={{ fontSize: 20 }}>🧘</span>
+              <div style={{ textAlign: 'left' }}>
+                <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#fff' }}>Talk to a Healer</p>
+                <p style={{ margin: 0, fontSize: 10, color: 'rgba(186,230,253,0.8)' }}>Book a professional session</p>
+              </div>
+            </button>
+            <button
+              onClick={() => { logout(); navigate('/'); }}
+              style={{
+                width: '100%', padding: '8px', borderRadius: 10,
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: 11, fontWeight: 500,
+                color: 'rgba(196,181,253,0.35)',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = 'rgba(196,181,253,0.65)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(196,181,253,0.35)'}
+            >
+              Sign out
             </button>
           </div>
-          <p className="text-center text-xs mt-2" style={{ color: 'var(--text-muted)' }}>
-            🔒 Anonymous & encrypted · <span className="underline cursor-pointer">Report</span>
-          </p>
         </div>
-      </div>
 
-      {/* ── RIGHT PANEL ── */}
-      {showActivity && (
-        <div className="hidden lg:flex flex-col w-80 shrink-0 border-l overflow-y-auto"
-          style={{ borderColor: 'var(--border)', background: 'var(--bg-card)' }}>
+        {/* ── MAIN CHAT AREA ──────────────────────────────────────────────── */}
+        <div
+          style={{
+            flex: 1,
+            display: mobileView === 'list' ? 'none' : 'flex',
+            flexDirection: 'column',
+            minWidth: 0,
+            position: 'relative',
+            background: CHAT_BG,
+          }}
+        >
+          {/* Background particles */}
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+            <BgParticles />
+          </div>
 
-          {/* Panel header */}
-          <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0"
-            style={{ borderBottom: '1px solid var(--border)' }}>
-            <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--bg-subtle)' }}>
+          {/* Chat header */}
+          <div style={{
+            flexShrink: 0,
+            display: 'flex', alignItems: 'center', gap: 12,
+            padding: `max(env(safe-area-inset-top,0px),12px) 16px 12px`,
+            borderBottom: `1px solid ${BORDER_COLOR}`,
+            background: 'rgba(6,1,15,0.85)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            position: 'relative', zIndex: 10,
+          }}>
+            {/* Mobile back button */}
+            <button
+              onClick={() => setMobileView('list')}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 36, height: 36, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                backdropFilter: 'blur(12px)',
+                color: '#e2d9f3', fontSize: 20,
+                cursor: 'pointer',
+                marginRight: 4,
+              }}
+              className="md:hidden"
+            >
+              ‹
+            </button>
+
+            {/* Match avatar with glow */}
+            <div style={{ position: 'relative', flexShrink: 0 }}>
+              <div style={{
+                position: 'absolute', inset: -3, borderRadius: '50%',
+                background: activeMatch?.grad || '#7c3aed',
+                opacity: 0.3, filter: 'blur(8px)',
+              }} />
+              <div style={{
+                position: 'relative',
+                width: 40, height: 40, borderRadius: '50%',
+                background: activeMatch?.grad,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 13, fontWeight: 700, color: '#fff',
+              }}>
+                {activeMatch?.initials}
+              </div>
+              {activeMatch?.online && (
+                <div style={{
+                  position: 'absolute', bottom: 0, right: 0,
+                  width: 10, height: 10, borderRadius: '50%',
+                  background: '#34d399',
+                  border: '2px solid #06010f',
+                  animation: 'pulseGreen 2.5s ease-in-out infinite',
+                }} />
+              )}
+            </div>
+
+            {/* Name + status */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                <span style={{ fontWeight: 700, fontSize: 14, color: '#ffffff' }}>
+                  {activeMatch?.name}
+                </span>
+                {activeMatch?.online && (
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#34d399', fontWeight: 500 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', display: 'inline-block', animation: 'pulseGreen 2s infinite' }} />
+                    online
+                  </span>
+                )}
+                {activeMatch?.isDemo && (
+                  <span style={{
+                    fontSize: 8, fontWeight: 700, padding: '2px 6px', borderRadius: 6,
+                    background: 'rgba(168,85,247,0.15)', color: '#a855f7',
+                  }}>AI DEMO</span>
+                )}
+              </div>
+              <p style={{ margin: 0, fontSize: 11, color: 'rgba(196,181,253,0.6)' }}>
+                {PROBLEM_LABELS[activeMatch?.primary_problem]} · {activeMatch?.match_score}% match
+                {activeMatch?.isDemo && ' · AI companion'}
+              </p>
+            </div>
+
+            {/* Action buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <button
-                onClick={() => setRightTab('activities')}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+                onClick={() => { setShowActivity(true); setRightTab('activities'); }}
                 style={{
-                  background: rightTab === 'activities' ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'transparent',
-                  color: rightTab === 'activities' ? 'white' : 'var(--text-muted)',
-                }}>
-                ⚡ Relief
+                  display: 'none',
+                  alignItems: 'center', gap: 6,
+                  padding: '7px 12px', borderRadius: 12,
+                  fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                  background: showActivity && rightTab === 'activities'
+                    ? 'linear-gradient(135deg,#7c3aed,#2563eb)'
+                    : 'rgba(255,255,255,0.06)',
+                  color: showActivity && rightTab === 'activities' ? '#fff' : 'rgba(196,181,253,0.7)',
+                  border: showActivity && rightTab === 'activities'
+                    ? 'none'
+                    : '1px solid rgba(255,255,255,0.08)',
+                  boxShadow: showActivity && rightTab === 'activities'
+                    ? '0 0 16px rgba(124,58,237,0.4)'
+                    : 'none',
+                }}
+                className="hidden md:flex"
+              >
+                💡 Activities
               </button>
               <button
-                onClick={() => setRightTab('healing')}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+                onClick={() => { setShowActivity(true); setRightTab('healing'); }}
                 style={{
-                  background: rightTab === 'healing' ? 'linear-gradient(135deg,#d4af37,#a855f7)' : 'transparent',
-                  color: rightTab === 'healing' ? 'white' : 'var(--text-muted)',
-                }}>
+                  display: 'none',
+                  alignItems: 'center', gap: 6,
+                  padding: '7px 12px', borderRadius: 12,
+                  fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                  background: showActivity && rightTab === 'healing'
+                    ? `linear-gradient(135deg,${GOLD},#a855f7)`
+                    : 'rgba(255,255,255,0.06)',
+                  color: showActivity && rightTab === 'healing' ? '#fff' : 'rgba(196,181,253,0.7)',
+                  border: showActivity && rightTab === 'healing'
+                    ? 'none'
+                    : '1px solid rgba(255,255,255,0.08)',
+                  boxShadow: showActivity && rightTab === 'healing'
+                    ? `0 0 16px rgba(212,175,55,0.35)`
+                    : 'none',
+                }}
+                className="hidden md:flex"
+              >
                 🌟 Healing
               </button>
+              <button style={{
+                width: 32, height: 32, borderRadius: 10,
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                color: 'rgba(196,181,253,0.6)', fontSize: 16, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>⋯</button>
             </div>
-            <button onClick={() => setShowActivity(false)}
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-xs hover:opacity-60 transition-opacity"
-              style={{ background: 'var(--bg-subtle)', color: 'var(--text-muted)' }}>✕</button>
           </div>
 
-          {/* Panel content */}
-          <div className="flex-1 overflow-y-auto px-4 py-4">
-            {rightTab === 'activities' && (
-              <>
-                <ActivitySuggestions
-                  problemType={activeMatch?.primary_problem || 'anxiety'}
-                  matchName={activeMatch?.name}
-                  onActivityComplete={() => {}}
-                />
-                <div className="rounded-2xl overflow-hidden mt-3"
-                  style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63)' }}>
-                  <div className="p-4">
-                    <p className="text-xs font-bold text-white mb-1">Need more support?</p>
-                    <p className="text-xs text-purple-200 mb-3">Chat with a verified therapist or counsellor.</p>
-                    <button onClick={() => navigate('/healers')}
-                      className="w-full py-2 rounded-xl text-xs font-bold text-white hover:opacity-90 transition-opacity"
-                      style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
-                      Browse Healers →
-                    </button>
-                  </div>
-                </div>
-                <div className="rounded-2xl overflow-hidden mt-3"
-                  style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}>
-                  <div className="p-4">
-                    <p className="text-xs font-bold mb-1" style={{ color: 'var(--text)' }}>👥 Join a Meetup</p>
-                    <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>Small group sessions for your challenge.</p>
-                    <button onClick={() => navigate('/meetups')}
-                      className="w-full py-2 rounded-xl text-xs font-semibold border transition-colors hover:opacity-80"
-                      style={{ color: 'var(--text)', borderColor: 'var(--border)', background: 'var(--bg-card)' }}>
-                      See Upcoming Meetups
-                    </button>
-                  </div>
-                </div>
-              </>
+          {/* Messages scroll area */}
+          <div
+            className="dash-scroll"
+            style={{
+              flex: 1, overflowY: 'auto',
+              position: 'relative', zIndex: 1,
+            }}
+          >
+            {/* Safety notice */}
+            {!safetyDismissed[activeMatch?.id] && (
+              <SafetyNotice onDismiss={() => setSafetyDismissed(prev => ({ ...prev, [activeMatch.id]: true }))} />
             )}
 
-            {rightTab === 'healing' && (
-              <GuidedHealing
-                problemType={activeMatch?.primary_problem || 'anxiety'}
-                matchName={activeMatch?.name || 'Your Match'}
-                userId={activeMatch?.id}
+            {/* Match reason banner */}
+            <div style={{
+              margin: '12px 16px',
+              padding: '12px 16px',
+              borderRadius: 16,
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+              textAlign: 'center',
+            }}>
+              <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 600, color: 'rgba(196,181,253,0.65)' }}>
+                ✨ Why you were matched
+              </p>
+              <p style={{ margin: 0, fontSize: 11, fontStyle: 'italic', color: 'rgba(196,181,253,0.45)' }}>
+                "{activeMatch?.match_reason}"
+              </p>
+            </div>
+
+            {/* Messages */}
+            <div style={{ padding: '0 16px 16px' }}>
+              {messages.map((msg, i) => {
+                const isMe      = msg.from === 'me';
+                const showAvatar = !isMe && (i === 0 || messages[i - 1]?.from === 'me');
+                return (
+                  <div
+                    key={msg.id}
+                    className="dash-msg-enter"
+                    style={{
+                      display: 'flex',
+                      justifyContent: isMe ? 'flex-end' : 'flex-start',
+                      alignItems: 'flex-end',
+                      gap: 8,
+                      marginBottom: 6,
+                    }}
+                  >
+                    {/* Bot avatar */}
+                    {!isMe && (
+                      <div style={{
+                        width: 28, height: 28, borderRadius: '50%',
+                        background: activeMatch?.grad,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 10, fontWeight: 700, color: '#fff',
+                        flexShrink: 0,
+                        opacity: showAvatar ? 1 : 0,
+                      }}>
+                        {activeMatch?.initials?.[0]}
+                      </div>
+                    )}
+
+                    {/* Bubble */}
+                    <div style={{ maxWidth: '70%', position: 'relative' }} className="group">
+                      <div style={{
+                        padding: '11px 16px',
+                        fontSize: 13,
+                        lineHeight: 1.65,
+                        borderRadius: isMe
+                          ? '20px 20px 4px 20px'
+                          : '20px 20px 20px 4px',
+                        ...(isMe ? {
+                          background: 'linear-gradient(135deg, #4c1d95, #7c3aed)',
+                          color: '#ffffff',
+                          boxShadow: '0 2px 20px rgba(124,58,237,0.35)',
+                        } : {
+                          background: 'rgba(255,255,255,0.06)',
+                          backdropFilter: 'blur(16px)',
+                          WebkitBackdropFilter: 'blur(16px)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          color: '#e2d9f3',
+                        }),
+                      }}>
+                        {msg.text}
+                      </div>
+                      {/* Timestamp on hover */}
+                      <p style={{
+                        margin: '3px 4px 0',
+                        fontSize: 10,
+                        textAlign: isMe ? 'right' : 'left',
+                        color: GOLD,
+                        opacity: 0,
+                        transition: 'opacity 0.2s',
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                        onMouseLeave={e => e.currentTarget.style.opacity = '0'}
+                        className="group-hover-timestamp"
+                      >
+                        {fmt(msg.time)}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {typing && <TypingIndicator grad={activeMatch?.grad} />}
+              <div ref={bottomRef} />
+            </div>
+          </div>
+
+          {/* Input bar */}
+          <div style={{
+            flexShrink: 0,
+            padding: `12px 16px max(env(safe-area-inset-bottom,0px),12px)`,
+            borderTop: `1px solid ${BORDER_COLOR}`,
+            background: 'rgba(6,1,15,0.9)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            position: 'relative', zIndex: 10,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              {/* Emoji button */}
+              <button style={{
+                width: 38, height: 38, borderRadius: 12, flexShrink: 0,
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                backdropFilter: 'blur(12px)',
+                fontSize: 17, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'opacity 0.2s',
+              }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              >
+                😊
+              </button>
+
+              {/* Text input */}
+              <input
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyPress={e => e.key === 'Enter' && sendMessage()}
+                placeholder={`Message ${activeMatch?.name}...`}
+                style={{
+                  flex: 1,
+                  padding: '11px 16px',
+                  borderRadius: 20,
+                  fontSize: 13,
+                  background: 'rgba(255,255,255,0.05)',
+                  color: '#e2d9f3',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(16px)',
+                  outline: 'none',
+                  transition: 'border-color 0.2s',
+                }}
+                onFocus={e => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
+                onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
               />
-            )}
+
+              {/* Send button */}
+              <button
+                onClick={sendMessage}
+                disabled={!input.trim() || typing}
+                style={{
+                  width: 42, height: 42, borderRadius: 14, flexShrink: 0,
+                  background: 'linear-gradient(135deg, #d4af37 0%, #a855f7 100%)',
+                  border: 'none', cursor: input.trim() && !typing ? 'pointer' : 'default',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: input.trim() && !typing ? '0 0 20px rgba(212,175,55,0.35)' : 'none',
+                  opacity: !input.trim() || typing ? 0.4 : 1,
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={e => {
+                  if (input.trim() && !typing) e.currentTarget.style.boxShadow = '0 0 30px rgba(212,175,55,0.5)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.boxShadow = input.trim() && !typing ? '0 0 20px rgba(212,175,55,0.35)' : 'none';
+                }}
+              >
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+                  <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <p style={{ textAlign: 'center', fontSize: 10, marginTop: 8, color: 'rgba(196,181,253,0.3)' }}>
+              🔒 Anonymous &amp; encrypted ·{' '}
+              <span style={{ textDecoration: 'underline', cursor: 'pointer' }}>Report</span>
+            </p>
           </div>
         </div>
-      )}
-    </div>
+
+        {/* ── RIGHT PANEL ─────────────────────────────────────────────────── */}
+        {showActivity && (
+          <div
+            className="hidden lg:flex"
+            style={{
+              flexDirection: 'column',
+              width: 320,
+              flexShrink: 0,
+              borderLeft: `1px solid ${BORDER_COLOR}`,
+              background: SIDEBAR_BG,
+              overflowY: 'auto',
+            }}
+          >
+            {/* Panel header */}
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '16px 16px 14px',
+              borderBottom: `1px solid ${BORDER_COLOR}`,
+              flexShrink: 0,
+            }}>
+              {/* Frosted pill tabs */}
+              <div style={{
+                display: 'flex', gap: 4, padding: 4,
+                borderRadius: 14,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}>
+                <button
+                  onClick={() => setRightTab('activities')}
+                  style={{
+                    padding: '6px 12px', borderRadius: 10,
+                    fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                    border: 'none',
+                    background: rightTab === 'activities'
+                      ? 'linear-gradient(135deg,#7c3aed,#2563eb)'
+                      : 'transparent',
+                    color: rightTab === 'activities' ? '#fff' : 'rgba(196,181,253,0.5)',
+                    boxShadow: rightTab === 'activities' ? '0 0 12px rgba(124,58,237,0.35)' : 'none',
+                    transition: 'all 0.2s',
+                  }}>
+                  ⚡ Relief
+                </button>
+                <button
+                  onClick={() => setRightTab('healing')}
+                  style={{
+                    padding: '6px 12px', borderRadius: 10,
+                    fontSize: 11, fontWeight: 600, cursor: 'pointer',
+                    border: 'none',
+                    background: rightTab === 'healing'
+                      ? `linear-gradient(135deg,${GOLD},#a855f7)`
+                      : 'transparent',
+                    color: rightTab === 'healing' ? '#fff' : 'rgba(196,181,253,0.5)',
+                    boxShadow: rightTab === 'healing' ? `0 0 12px rgba(212,175,55,0.35)` : 'none',
+                    transition: 'all 0.2s',
+                  }}>
+                  🌟 Healing
+                </button>
+              </div>
+              <button
+                onClick={() => setShowActivity(false)}
+                style={{
+                  width: 28, height: 28, borderRadius: 8,
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: 'rgba(196,181,253,0.5)', fontSize: 11,
+                  cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                ✕
+              </button>
+            </div>
+
+            {/* Panel content */}
+            <div className="dash-scroll" style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
+              {rightTab === 'activities' && (
+                <>
+                  <ActivitySuggestions
+                    problemType={activeMatch?.primary_problem || 'anxiety'}
+                    matchName={activeMatch?.name}
+                    onActivityComplete={() => {}}
+                  />
+                  <div style={{
+                    borderRadius: 18, overflow: 'hidden', marginTop: 14,
+                    background: 'linear-gradient(135deg,#0f0c29,#302b63)',
+                    border: '1px solid rgba(124,58,237,0.3)',
+                  }}>
+                    <div style={{ padding: 16 }}>
+                      <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 700, color: '#fff' }}>Need more support?</p>
+                      <p style={{ margin: '0 0 12px', fontSize: 11, color: 'rgba(196,181,253,0.7)' }}>Chat with a verified therapist or counsellor.</p>
+                      <button
+                        onClick={() => navigate('/healers')}
+                        style={{
+                          width: '100%', padding: '9px', borderRadius: 12,
+                          fontSize: 12, fontWeight: 700, color: '#fff',
+                          background: 'linear-gradient(135deg,#7c3aed,#2563eb)',
+                          border: 'none', cursor: 'pointer',
+                          boxShadow: '0 4px 16px rgba(124,58,237,0.4)',
+                        }}>
+                        Browse Healers →
+                      </button>
+                    </div>
+                  </div>
+                  <div style={{
+                    borderRadius: 18, overflow: 'hidden', marginTop: 12,
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}>
+                    <div style={{ padding: 16 }}>
+                      <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 700, color: '#e2d9f3' }}>👥 Join a Meetup</p>
+                      <p style={{ margin: '0 0 12px', fontSize: 11, color: 'rgba(196,181,253,0.5)' }}>Small group sessions for your challenge.</p>
+                      <button
+                        onClick={() => navigate('/meetups')}
+                        style={{
+                          width: '100%', padding: '9px', borderRadius: 12,
+                          fontSize: 12, fontWeight: 600, color: 'rgba(196,181,253,0.8)',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          cursor: 'pointer',
+                        }}>
+                        See Upcoming Meetups
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {rightTab === 'healing' && (
+                <GuidedHealing
+                  problemType={activeMatch?.primary_problem || 'anxiety'}
+                  matchName={activeMatch?.name || 'Your Match'}
+                  userId={activeMatch?.id}
+                />
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
