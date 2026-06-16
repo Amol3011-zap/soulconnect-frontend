@@ -7,6 +7,7 @@ import Landing from './pages/Landing';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Matches from './pages/Matches';
 import Chat from './pages/Chat';
 import Healers from './pages/Healers';
 import Meetups from './pages/Meetups';
@@ -24,7 +25,7 @@ function AppInner() {
   const isHealer = role === 'healer' || user?.role === 'healer';
 
   // Pages that manage their own header/nav
-  const hideNav = location.pathname === '/matches' || location.pathname === '/groups' || isHealer;
+  const hideNav = location.pathname === '/chat' || location.pathname === '/groups' || isHealer;
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
@@ -48,7 +49,9 @@ function AppInner() {
         ) : (
           <>
             {/* Regular user routes */}
-            <Route path="/matches" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Matches />} />
+            <Route path="/chat" element={<Dashboard />} />
+            <Route path="/matches" element={<Navigate to="/dashboard" replace />} />
             <Route path="/groups" element={<GroupChat />} />
             <Route path="/chat/:matchId" element={<Chat />} />
             <Route path="/healers" element={<Healers />} />
@@ -56,8 +59,7 @@ function AppInner() {
             <Route path="/premium" element={<Premium />} />
             <Route path="/mood" element={<MoodTracker />} />
             <Route path="/account" element={<Account />} />
-            <Route path="/dashboard" element={<Navigate to="/matches" replace />} />
-            <Route path="*" element={<Navigate to="/matches" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </>
         )}
       </Routes>

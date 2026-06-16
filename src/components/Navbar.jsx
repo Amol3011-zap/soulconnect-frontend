@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 
 const NAV_ITEMS = [
-  { to: '/matches',  label: 'Matches',  icon: '💫' },
+  { to: '/dashboard', label: 'Matches',  icon: '💫' },
   { to: '/groups',   label: 'Groups',   icon: '🫂' },
   { to: '/healers',  label: 'Healers',  icon: '🧘' },
   { to: '/meetups',  label: 'Meetups',  icon: '👥' },
@@ -14,7 +14,7 @@ const NAV_ITEMS = [
 
 // Mobile shows 5 key items
 const MOBILE_ITEMS = [
-  { to: '/matches',  label: 'Matches',  icon: '💫' },
+  { to: '/dashboard', label: 'Matches',  icon: '💫' },
   { to: '/groups',   label: 'Groups',   icon: '🫂' },
   { to: '/healers',  label: 'Healers',  icon: '🧘' },
   { to: '/mood',     label: 'Mood',     icon: '📊' },

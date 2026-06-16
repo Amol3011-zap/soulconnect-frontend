@@ -358,7 +358,7 @@ export default function Matches() {
     if (match.isDemo) {
       // Demo match → open Dashboard with this match pre-selected
       setTimeout(() => {
-        navigate('/dashboard', { state: { matchId: match.id } });
+        navigate('/chat', { state: { matchId: match.id } });
       }, 500);
       return;
     }
@@ -394,7 +394,7 @@ export default function Matches() {
       )}
 
       {/* ── SPIRITUAL HERO ── */}
-      <div className="relative overflow-hidden" style={{ minHeight: 280 }}>
+      <div className="relative overflow-hidden" style={{ minHeight: 280, background: 'linear-gradient(160deg, #09000f 0%, #1a0533 25%, #0d1b4b 65%, #050a1f 100%)' }}>
 
         {/* Mandala sacred geometry */}
         <Mandala />
@@ -464,7 +464,7 @@ export default function Matches() {
       {!loading && (
         <div className="flex justify-center -mt-5 mb-4 relative z-10">
           <div className="flex items-center gap-2.5 px-4 py-2 rounded-full shadow-lg"
-            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(168,85,247,0.3)', backdropFilter: 'blur(12px)' }}>
+            style={{ background: 'linear-gradient(135deg,#1e1b4b,#312e81)', border: '1px solid rgba(168,85,247,0.4)', backdropFilter: 'blur(12px)' }}>
             <div className="flex -space-x-2">
               {matches.slice(0, 4).map((m, i) => (
                 <div key={m.id} className="w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold text-white"

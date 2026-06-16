@@ -22,7 +22,7 @@ export default function Login() {
     try {
       const response = await authAPI.login(phone, password);
       setAuth(response.data, response.data.access_token, response.data.role);
-      navigate('/matches');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.detail || 'Incorrect phone number or password.');
     } finally {
