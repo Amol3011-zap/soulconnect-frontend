@@ -476,20 +476,6 @@ export default function Landing() {
       </section>
 
       {/* ═══════════════════════════════════════
-          STATS ROW
-      ═══════════════════════════════════════ */}
-      <section style={{ background: 'white', padding: '56px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 32, textAlign: 'center' }}>
-          {stats.map(({ value, label }) => (
-            <div key={label}>
-              <p style={{ fontSize: 40, fontWeight: 800, color: '#1a3d2e', lineHeight: 1.1, marginBottom: 6 }}>{value}</p>
-              <p style={{ color: '#6b7280', fontSize: 14, fontWeight: 500 }}>{label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════
           HOW IT WORKS
       ═══════════════════════════════════════ */}
       <section id="how-it-works" style={{ background: '#f8faf9', padding: '88px 24px' }}>
@@ -582,59 +568,6 @@ export default function Landing() {
               <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, fontWeight: 600 }}>{label}</span>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════
-          TESTIMONIALS
-      ═══════════════════════════════════════ */}
-      <section style={{ background: '#f8faf9', padding: '88px 24px' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Real People, Real Healing</p>
-            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>Stories that give us purpose</h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
-            {testimonials.map(({ initials, name, age, tag, avatarBg, quote, stars }) => (
-              <div
-                key={name}
-                style={{
-                  background: 'white', borderRadius: 16, padding: 32,
-                  border: '1px solid #e5e7eb', boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-                }}
-              >
-                <div style={{ display: 'flex', gap: 3, marginBottom: 16 }}>
-                  {Array.from({ length: stars }).map((_, i) => (
-                    <span key={i} style={{ color: '#f59e0b', fontSize: 15 }}>★</span>
-                  ))}
-                </div>
-                <p style={{ color: '#374151', fontSize: 14, lineHeight: 1.75, marginBottom: 24, fontStyle: 'italic' }}>{quote}</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div
-                    style={{
-                      width: 40, height: 40, borderRadius: '50%', background: avatarBg,
-                      color: 'white', fontWeight: 700, fontSize: 15,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                    }}
-                  >
-                    {initials}
-                  </div>
-                  <div>
-                    <p style={{ fontWeight: 700, fontSize: 14, color: '#111827', marginBottom: 2 }}>{name}, {age}</p>
-                    <span
-                      style={{
-                        background: '#ecfdf5', color: '#065f46', fontSize: 11,
-                        fontWeight: 600, padding: '2px 10px', borderRadius: 999,
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
