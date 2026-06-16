@@ -20,7 +20,7 @@ api.interceptors.request.use((config) => {
 
 export const authAPI = {
   signup: (data) => api.post('/auth/signup', data),
-  login: (phone) => api.post('/auth/login', { phone }),
+  login: (phone, password) => api.post('/auth/login', { phone, password }),
 };
 
 export const userAPI = {
