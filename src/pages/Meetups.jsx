@@ -7,41 +7,206 @@ const DEMO_MEETUPS = [
     description: 'A safe, anonymous group session for people managing anxiety. Share, listen, and heal together in a guided group setting.',
     scheduled_time: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
     duration_minutes: 90, attendees: 5, max_attendees: 8, avg_rating: 4.8, review_count: 24,
-    problem_type: 'anxiety', status: 'upcoming', icon: '😰', color: 'linear-gradient(135deg, #7c3aed, #2563eb)',
+    problem_type: 'anxiety', status: 'upcoming', icon: '🌀', accent: '#7c3aed',
   },
   {
     id: 2, title: 'Grief & Loss — Finding Light', location_name: 'Heal Hub, Koramangala', city: 'Bangalore',
     description: 'A compassionate gathering for those navigating loss. Share memories, find solidarity, and begin the journey back to hope.',
     scheduled_time: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
     duration_minutes: 120, attendees: 3, max_attendees: 6, avg_rating: 4.9, review_count: 18,
-    problem_type: 'grief_loss', status: 'upcoming', icon: '🕯️', color: 'linear-gradient(135deg, #0891b2, #2563eb)',
+    problem_type: 'grief_loss', status: 'upcoming', icon: '🕯️', accent: '#0891b2',
   },
   {
     id: 3, title: 'Confidence & Self-Worth Workshop', location_name: 'Online (Zoom)', city: 'Online',
     description: 'Interactive workshop to rebuild confidence through peer exercises, group sharing, and practical techniques.',
     scheduled_time: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     duration_minutes: 60, attendees: 11, max_attendees: 15, avg_rating: 4.7, review_count: 41,
-    problem_type: 'lack_of_confidence', status: 'upcoming', icon: '💪', color: 'linear-gradient(135deg, #059669, #0891b2)',
+    problem_type: 'lack_of_confidence', status: 'upcoming', icon: '🌱', accent: '#059669',
   },
 ];
+
+const MEETUP_STYLES = `
+  @keyframes meetAurora1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(50px,-40px) scale(1.12)} }
+  @keyframes meetAurora2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-40px,50px) scale(1.1)} }
+  @keyframes meetAurora3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30px,20px) scale(1.08)} }
+  @keyframes meetStar { 0%,100%{opacity:0.08;transform:scale(1)} 50%{opacity:0.45;transform:scale(1.8)} }
+  @keyframes meetPulse { 0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0)} 50%{box-shadow:0 0 0 5px rgba(212,175,55,0.12)} }
+  .meet-card { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease; }
+  .meet-card:hover { transform: translateY(-5px); }
+`;
 
 function formatDate(iso) {
   const d = new Date(iso);
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
-function SpotsBar({ current, max }) {
+function daysUntil(iso) {
+  const diff = new Date(iso) - Date.now();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Tomorrow';
+  return `In ${days} days`;
+}
+
+function SpotsBar({ current, max, accent }) {
   const pct = (current / max) * 100;
   const left = max - current;
+  const isFull = left === 0;
+  const isAlmostFull = left <= 2 && !isFull;
   return (
     <div>
-      <div className="flex justify-between text-xs mb-1">
-        <span className="text-gray-500">{current} joined</span>
-        <span className={left <= 2 ? 'text-red-500 font-semibold' : 'text-gray-500'}>{left} spot{left !== 1 ? 's' : ''} left</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+        <span style={{ fontSize: 10, letterSpacing: '0.1em', color: 'rgba(196,181,253,0.4)', textTransform: 'uppercase' }}>
+          {current} joined
+        </span>
+        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+          color: isFull ? '#ef4444' : isAlmostFull ? '#f59e0b' : 'rgba(196,181,253,0.4)' }}>
+          {isFull ? 'Full' : `${left} spot${left !== 1 ? 's' : ''} left`}
+        </span>
       </div>
-      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-        <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: pct > 80 ? '#ef4444' : 'linear-gradient(90deg, #7c3aed, #2563eb)' }} />
+      <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 4, overflow: 'hidden' }}>
+        <div style={{
+          height: '100%', borderRadius: 4, transition: 'width 0.4s ease',
+          width: `${pct}%`,
+          background: isFull ? '#ef4444' : isAlmostFull ? '#f59e0b' : `linear-gradient(90deg, ${accent}, ${accent}90)`,
+          boxShadow: `0 0 8px ${isFull ? '#ef4444' : accent}60`,
+        }} />
       </div>
+    </div>
+  );
+}
+
+function MeetupCard({ meetup, joining, onJoin }) {
+  const accent = meetup.accent || '#7c3aed';
+  const pct = (meetup.attendees / meetup.max_attendees) * 100;
+  const isFull = meetup.attendees >= meetup.max_attendees;
+  const countdown = daysUntil(meetup.scheduled_time);
+
+  return (
+    <div className="meet-card" style={{
+      background: 'rgba(6,1,18,0.92)',
+      backdropFilter: 'blur(30px)',
+      WebkitBackdropFilter: 'blur(30px)',
+      border: `1px solid ${accent}28`,
+      borderRadius: 24,
+      overflow: 'hidden',
+      boxShadow: `0 0 0 1px ${accent}12, 0 20px 60px rgba(0,0,0,0.6)`,
+      position: 'relative',
+    }}>
+      {/* Top accent line */}
+      <div style={{ height: 2, background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
+
+      {/* Inner glow */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 140,
+        background: `radial-gradient(ellipse at 50% 0%, ${accent}10 0%, transparent 70%)`,
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ padding: '22px 24px 0', position: 'relative' }}>
+        {/* Top row */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16, gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+            {/* Icon */}
+            <div style={{
+              width: 48, height: 48, borderRadius: 16, flexShrink: 0,
+              background: `${accent}18`,
+              border: `1px solid ${accent}35`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 22,
+              boxShadow: `0 0 20px ${accent}20`,
+            }}>{meetup.icon || '👥'}</div>
+
+            <div>
+              {/* Countdown badge */}
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 5,
+                padding: '3px 10px', borderRadius: 20, marginBottom: 6,
+                background: `${accent}18`, border: `1px solid ${accent}35`,
+              }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: accent, boxShadow: `0 0 6px ${accent}`, display: 'inline-block' }} />
+                <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: accent }}>{countdown}</span>
+              </div>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#ebe4ff', margin: 0, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+                {meetup.title}
+              </h3>
+            </div>
+          </div>
+
+          {/* Rating */}
+          {meetup.avg_rating > 0 && (
+            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+              <div style={{ fontSize: 18, fontWeight: 900, color: '#d4af37', lineHeight: 1 }}>{meetup.avg_rating?.toFixed(1)}</div>
+              <div style={{ fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.4)', marginTop: 2 }}>★ rated</div>
+            </div>
+          )}
+        </div>
+
+        {/* Location + duration dots */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14, flexWrap: 'wrap' }}>
+          {[
+            { icon: '📍', text: meetup.location_name || meetup.city },
+            { icon: '⏱', text: `${meetup.duration_minutes} min` },
+          ].map(({ icon, text }) => (
+            <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{ fontSize: 11 }}>{icon}</span>
+              <span style={{ fontSize: 11, color: 'rgba(196,181,253,0.45)', letterSpacing: '0.02em' }}>{text}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Soul reading label */}
+        <div style={{ marginBottom: 8 }}>
+          <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.4)' }}>◆ About this circle</span>
+        </div>
+
+        {/* Description as hero italic */}
+        <p style={{ fontSize: 13, fontStyle: 'italic', color: 'rgba(235,228,255,0.65)', lineHeight: 1.75, margin: '0 0 20px' }}>
+          "{meetup.description}"
+        </p>
+
+        {/* Date/Time stat */}
+        <div style={{ display: 'flex', gap: 20, paddingBottom: 18, borderBottom: `1px solid ${accent}18` }}>
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.3)', marginBottom: 4 }}>Date & Time</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(235,228,255,0.75)' }}>{formatDate(meetup.scheduled_time)}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.3)', marginBottom: 4 }}>Spots</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(235,228,255,0.75)' }}>{meetup.attendees}/{meetup.max_attendees} joined</div>
+          </div>
+        </div>
+
+        {/* Spots bar */}
+        <div style={{ paddingTop: 16, paddingBottom: 4 }}>
+          <SpotsBar current={meetup.attendees || 0} max={meetup.max_attendees || 8} accent={accent} />
+        </div>
+      </div>
+
+      {/* CTA bar */}
+      <button
+        onClick={() => onJoin(meetup.id)}
+        disabled={joining === meetup.id || isFull}
+        style={{
+          width: '100%', padding: '16px 24px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          background: 'transparent',
+          border: 'none',
+          borderTop: `1px solid ${accent}20`,
+          cursor: isFull ? 'default' : 'pointer',
+          transition: 'background 0.2s ease',
+          opacity: isFull ? 0.5 : 1,
+        }}
+        onMouseEnter={e => { if (!isFull) e.currentTarget.style.background = `${accent}14`; }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+      >
+        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(235,228,255,0.55)' }}>
+          {joining === meetup.id ? 'Joining...' : isFull ? 'Full — Join Waitlist' : 'Reserve My Spot'}
+        </span>
+        <span style={{ fontSize: 20, color: '#d4af37', lineHeight: 1 }}>
+          {joining === meetup.id ? '⋯' : '→'}
+        </span>
+      </button>
     </div>
   );
 }
@@ -53,6 +218,11 @@ export default function Meetups() {
   const [filter, setFilter] = useState('All');
 
   const FILTERS = ['All', 'Online', 'Mumbai', 'Delhi', 'Bangalore'];
+
+  const STARS = Array.from({ length: 22 }, (_, i) => ({
+    l: `${(i * 19 + 3) % 100}%`, t: `${(i * 27 + 5) % 100}%`,
+    s: [1, 1.5, 2][i % 3], c: ['#d4af37','#c4b5fd','#ffffff'][i % 3], d: (i * 0.28) % 3,
+  }));
 
   useEffect(() => { fetchMeetups(); }, []);
 
@@ -72,7 +242,7 @@ export default function Meetups() {
     setJoining(meetupId);
     try {
       await meetupAPI.joinMeetup(meetupId);
-      setMeetups((prev) => prev.map((m) => m.id === meetupId ? { ...m, attendees: m.attendees + 1 } : m));
+      setMeetups(prev => prev.map(m => m.id === meetupId ? { ...m, attendees: m.attendees + 1 } : m));
     } catch (err) {
       console.error(err);
     } finally {
@@ -80,113 +250,117 @@ export default function Meetups() {
     }
   };
 
-  return (
-    <div className="min-h-screen pb-8" style={{ background: 'var(--bg)' }}>
-      {/* Hero */}
-      <div className="relative overflow-hidden mb-8"
-        style={{ background: 'linear-gradient(135deg, #052533 0%, #1b4d69 50%, #0f3460 100%)' }}>
-        <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, #22d3ee, transparent)', filter: 'blur(40px)' }} />
-        <div className="max-w-4xl mx-auto px-6 py-10 relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-3 py-1 mb-4">
-            <span className="text-xs font-semibold text-cyan-200">Small Groups · Safe Space</span>
-          </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Peer Support Meetups</h1>
-          <p className="text-cyan-200 text-sm max-w-md">
-            Intimate group sessions of 6–15 people. Anonymous, judgment-free, facilitated by trained hosts.
-          </p>
-          <div className="flex items-center gap-6 mt-6">
-            {[['8 max', 'Per group'], ['Anonymous', 'Always'], ['Free', 'to join']].map(([val, label]) => (
-              <div key={label}>
-                <div className="text-white font-bold text-lg">{val}</div>
-                <div className="text-cyan-300 text-xs">{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+  const filtered = filter === 'All'
+    ? meetups
+    : meetups.filter(m => (m.city || '').toLowerCase().includes(filter.toLowerCase()) || filter === 'Online' && (m.location_name || '').toLowerCase().includes('online'));
 
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Filters */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
-          {FILTERS.map((f) => (
-            <button key={f} onClick={() => setFilter(f)}
-              className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                filter === f ? 'text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-cyan-300'
-              }`}
-              style={filter === f ? { background: 'linear-gradient(135deg, #0891b2, #2563eb)' } : {}}>
-              {f}
-            </button>
+  return (
+    <>
+      <style>{MEETUP_STYLES}</style>
+
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #030009 0%, #0a0225 50%, #040112 100%)', position: 'relative', overflow: 'hidden' }}>
+
+        {/* Aurora + stars background */}
+        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+          <div style={{ position: 'absolute', top: '-15%', right: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(8,145,178,0.16) 0%, transparent 70%)', animation: 'meetAurora1 20s ease-in-out infinite', filter: 'blur(70px)' }} />
+          <div style={{ position: 'absolute', top: '35%', left: '-8%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.14) 0%, transparent 70%)', animation: 'meetAurora2 24s ease-in-out infinite', filter: 'blur(60px)' }} />
+          <div style={{ position: 'absolute', bottom: '5%', right: '25%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(212,175,55,0.09) 0%, transparent 70%)', animation: 'meetAurora3 28s ease-in-out infinite', filter: 'blur(80px)' }} />
+          {STARS.map((p, i) => (
+            <div key={i} style={{ position: 'absolute', left: p.l, top: p.t, width: p.s, height: p.s, borderRadius: '50%', background: p.c, animation: `meetStar ${2.5 + i % 3 * 0.5}s ease-in-out ${p.d}s infinite` }} />
           ))}
         </div>
 
-        {loading ? (
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 animate-pulse">
-                <div className="h-5 bg-gray-200 rounded w-2/3 mb-3" />
-                <div className="h-3 bg-gray-100 rounded w-full mb-2" />
-                <div className="h-3 bg-gray-100 rounded w-4/5" />
+        {/* ── HERO ── */}
+        <div style={{ position: 'relative', zIndex: 1, padding: '60px 24px 50px', textAlign: 'center', borderBottom: '1px solid rgba(124,58,237,0.12)' }}>
+          <div style={{ fontSize: 13, letterSpacing: '0.5em', color: 'rgba(212,175,55,0.3)', marginBottom: 28 }}>◆ ✦ ◆</div>
+
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 40, marginBottom: 20, background: 'rgba(8,145,178,0.1)', border: '1px solid rgba(8,145,178,0.3)' }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#0891b2', boxShadow: '0 0 8px #0891b2', display: 'inline-block' }} />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#0891b2' }}>Small Groups · Safe Space</span>
+          </div>
+
+          <h1 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 16px', color: '#ebe4ff' }}>
+            Peer Support{' '}
+            <span style={{
+              background: 'linear-gradient(135deg, #d4af37 0%, #f0d060 40%, #d4af37 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            }}>Circles</span>
+          </h1>
+
+          <p style={{ fontSize: 15, color: 'rgba(196,181,253,0.6)', maxWidth: 420, margin: '0 auto 40px', lineHeight: 1.7 }}>
+            Intimate group sessions of 6–15 people. Anonymous, judgment-free, facilitated by trained hosts.
+          </p>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 48 }}>
+            {[['8 max', 'Per Group'], ['Anonymous', 'Always'], ['Free', 'To Join']].map(([val, label]) => (
+              <div key={label} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 22, fontWeight: 900, color: '#d4af37', lineHeight: 1 }}>{val}</div>
+                <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.4)', marginTop: 4 }}>{label}</div>
               </div>
             ))}
           </div>
-        ) : (
-          <div className="space-y-4">
-            {meetups.map((meetup) => (
-              <div key={meetup.id} className="rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
-                <div className="h-1.5" style={{ background: meetup.color || 'linear-gradient(135deg, #7c3aed, #2563eb)' }} />
-                <div className="p-5">
-                  <div className="flex items-start justify-between gap-4 mb-3">
-                    <div className="flex items-start gap-3">
-                      <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl shrink-0"
-                        style={{ background: meetup.color ? meetup.color.replace('135deg', '135deg') : '#ede9fe' }}>
-                        {meetup.icon || '👥'}
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-gray-900">{meetup.title}</h3>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs text-gray-500">📍 {meetup.location_name || meetup.city}</span>
-                          {meetup.avg_rating > 0 && (
-                            <span className="text-xs text-yellow-500 font-semibold">★ {meetup.avg_rating?.toFixed(1)}</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <span className="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-100">
-                      Upcoming
-                    </span>
-                  </div>
+        </div>
 
-                  <p className="text-sm text-gray-600 leading-relaxed mb-4">{meetup.description}</p>
+        {/* ── CONTENT ── */}
+        <div style={{ maxWidth: 860, margin: '0 auto', padding: '40px 20px 60px', position: 'relative', zIndex: 1 }}>
 
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    <div className="bg-gray-50 rounded-xl p-3">
-                      <p className="text-xs text-gray-400 mb-0.5">Date & Time</p>
-                      <p className="text-sm font-semibold text-gray-800">{formatDate(meetup.scheduled_time)}</p>
-                    </div>
-                    <div className="bg-gray-50 rounded-xl p-3">
-                      <p className="text-xs text-gray-400 mb-0.5">Duration</p>
-                      <p className="text-sm font-semibold text-gray-800">{meetup.duration_minutes} min</p>
-                    </div>
-                  </div>
+          {/* Filter pills */}
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 32, scrollbarWidth: 'none' }}>
+            {FILTERS.map(f => (
+              <button key={f} onClick={() => setFilter(f)} style={{
+                flexShrink: 0, padding: '8px 20px', borderRadius: 40, fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: filter === f ? 'linear-gradient(135deg, #0891b2, #2563eb)' : 'rgba(255,255,255,0.04)',
+                color: filter === f ? '#fff' : 'rgba(196,181,253,0.5)',
+                border: filter === f ? 'none' : '1px solid rgba(255,255,255,0.08)',
+                boxShadow: filter === f ? '0 0 20px rgba(8,145,178,0.35)' : 'none',
+              }}>{f}</button>
+            ))}
+          </div>
 
-                  <SpotsBar current={meetup.attendees || 0} max={meetup.max_attendees || 8} />
-
-                  <button
-                    onClick={() => handleJoin(meetup.id)}
-                    disabled={joining === meetup.id || (meetup.attendees >= meetup.max_attendees)}
-                    className="mt-4 w-full py-2.5 rounded-xl font-semibold text-white text-sm transition-all hover:opacity-90 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
-                    style={{ background: meetup.color || 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>
-                    {joining === meetup.id
-                      ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Joining...</>
-                      : meetup.attendees >= meetup.max_attendees ? 'Full — Join Waitlist' : 'Reserve My Spot →'}
-                  </button>
+          {/* Cards */}
+          {loading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {[1,2,3].map(i => (
+                <div key={i} style={{ borderRadius: 24, height: 260, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }} />
+              ))}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {filtered.map(meetup => (
+                <MeetupCard key={meetup.id} meetup={meetup} joining={joining} onJoin={handleJoin} />
+              ))}
+              {filtered.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+                  <div style={{ fontSize: 48, marginBottom: 16 }}>🌌</div>
+                  <p style={{ color: 'rgba(196,181,253,0.4)', fontSize: 14 }}>No meetups found for this location yet.</p>
                 </div>
-              </div>
-            ))}
+              )}
+            </div>
+          )}
+
+          {/* Host CTA */}
+          <div style={{
+            marginTop: 48, borderRadius: 24, padding: '32px 36px',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
+            background: 'rgba(6,1,18,0.85)', backdropFilter: 'blur(30px)',
+            border: '1px solid rgba(8,145,178,0.2)',
+            boxShadow: '0 0 60px rgba(8,145,178,0.08)',
+          }}>
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.5)', marginBottom: 8 }}>◆ For Facilitators</div>
+              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ebe4ff', margin: '0 0 6px' }}>Want to host a circle?</h3>
+              <p style={{ fontSize: 13, color: 'rgba(196,181,253,0.5)', margin: 0 }}>Become a certified SoulConnect facilitator and create healing spaces in your community.</p>
+            </div>
+            <button style={{
+              flexShrink: 0, padding: '12px 24px', borderRadius: 14, fontSize: 12, fontWeight: 700,
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              background: 'linear-gradient(135deg, #0891b2, #2563eb)', color: '#fff', border: 'none',
+              cursor: 'pointer', boxShadow: '0 0 24px rgba(8,145,178,0.4)',
+            }}>Apply Now →</button>
           </div>
-        )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
