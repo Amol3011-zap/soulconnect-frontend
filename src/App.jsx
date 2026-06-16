@@ -13,14 +13,17 @@ import Meetups from './pages/Meetups';
 import Premium from './pages/Premium';
 import Account from './pages/Account';
 import MoodTracker from './pages/MoodTracker';
+import HealerDashboard from './pages/HealerDashboard';
 
 import Navbar from './components/Navbar';
 
 function AppInner() {
-  const { token } = useAuthStore();
+  const { token, user } = useAuthStore();
   const location = useLocation();
-  // Dashboard lives at /matches — it has its own sidebar, hide the global Navbar
-  const hideNav = location.pathname === '/matches';
+  const isHealer = user?.role === 'healer';
+
+  // Pages that manage their own header/nav
+  const hideNav = location.pathname === '/matches' || isHealer;
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
@@ -35,9 +38,15 @@ function AppInner() {
             <Route path="/login" element={<Login />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
+        ) : isHealer ? (
+          <>
+            {/* Healers only see their request dashboard */}
+            <Route path="/healer-dashboard" element={<HealerDashboard />} />
+            <Route path="*" element={<Navigate to="/healer-dashboard" replace />} />
+          </>
         ) : (
           <>
-            {/* Dashboard is now the /matches page */}
+            {/* Regular user routes */}
             <Route path="/matches" element={<Dashboard />} />
             <Route path="/chat/:matchId" element={<Chat />} />
             <Route path="/healers" element={<Healers />} />
@@ -45,7 +54,6 @@ function AppInner() {
             <Route path="/premium" element={<Premium />} />
             <Route path="/mood" element={<MoodTracker />} />
             <Route path="/account" element={<Account />} />
-            {/* Old /dashboard URL redirects to /matches */}
             <Route path="/dashboard" element={<Navigate to="/matches" replace />} />
             <Route path="*" element={<Navigate to="/matches" replace />} />
           </>
