@@ -73,38 +73,49 @@ const labelClass = "block text-sm font-semibold text-gray-700 mb-2";
 
 function LeftPanel({ role }) {
   const isHealer = role === 'healer';
+  // Landing page palette: forest green + amber for user, deep teal for healer
+  const bg = isHealer
+    ? 'linear-gradient(160deg, #0f3d2e 0%, #134e3a 50%, #0d3528 100%)'
+    : 'linear-gradient(160deg, #1a3d2e 0%, #1e4d38 50%, #152e23 100%)';
+  const glowColor = isHealer ? '#34d399' : '#86efac';
+  const logoGrad = isHealer
+    ? 'linear-gradient(135deg, #059669, #0d9488)'
+    : 'linear-gradient(135deg, #2d6a4f, #f59e0b)';
+  const highlightColor = isHealer ? '#34d399' : '#f59e0b';
+
   return (
     <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 relative overflow-hidden"
-      style={{ background: isHealer
-        ? 'linear-gradient(135deg, #052533 0%, #1b4d69 40%, #0f3460 100%)'
-        : 'linear-gradient(135deg, #1a0533 0%, #2d1b69 40%, #0f3460 100%)' }}>
-      <div className="absolute top-20 left-10 w-64 h-64 rounded-full opacity-20"
-        style={{ background: `radial-gradient(circle, ${isHealer ? '#22d3ee' : '#a855f7'}, transparent)`, filter: 'blur(40px)' }} />
-      <div className="absolute bottom-32 right-10 w-80 h-80 rounded-full opacity-15"
-        style={{ background: 'radial-gradient(circle, #3b82f6, transparent)', filter: 'blur(50px)' }} />
+      style={{ background: bg }}>
+      {/* Subtle glow orbs */}
+      <div className="absolute top-16 left-8 w-72 h-72 rounded-full opacity-20"
+        style={{ background: `radial-gradient(circle, ${glowColor}, transparent)`, filter: 'blur(50px)' }} />
+      <div className="absolute bottom-24 right-8 w-80 h-80 rounded-full opacity-10"
+        style={{ background: 'radial-gradient(circle, #f59e0b, transparent)', filter: 'blur(60px)' }} />
+
       <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+        {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-            style={{ background: isHealer ? 'linear-gradient(135deg, #22d3ee, #3b82f6)' : 'linear-gradient(135deg, #a855f7, #3b82f6)' }}>
+            style={{ background: logoGrad }}>
             {isHealer ? '🧘' : '🌿'}
           </div>
           <span className="text-white text-xl font-bold tracking-tight">SoulConnect</span>
         </div>
+
+        {/* Hero copy */}
         <div>
           <h2 className="text-4xl font-bold text-white leading-tight mb-4">
             {isHealer ? 'Share your gift.' : "You don't have to"}<br />
-            <span style={{ background: isHealer
-              ? 'linear-gradient(90deg, #22d3ee, #60a5fa)'
-              : 'linear-gradient(90deg, #a855f7, #60a5fa)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <span style={{ color: highlightColor }}>
               {isHealer ? 'Transform lives.' : 'go through this alone.'}
             </span>
           </h2>
-          <p className="text-blue-200 text-lg leading-relaxed mb-8">
+          <p className="text-lg leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.7)' }}>
             {isHealer
               ? 'Join our verified healer network and connect with people who need your expertise and compassion.'
-              : 'Connect with real people who truly understand — because they\'ve been there too.'}
+              : "Connect with real people who truly understand — because they've been there too."}
           </p>
+
           {isHealer ? (
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -113,10 +124,10 @@ function LeftPanel({ role }) {
                 { icon: '📅', label: 'Flexible Schedule' },
                 { icon: '🌍', label: 'Reach Thousands' },
               ].map(({ icon, label }) => (
-                <div key={label} className="rounded-xl p-3 backdrop-blur-sm border border-white/10 flex items-center gap-2"
-                  style={{ background: 'rgba(255,255,255,0.07)' }}>
+                <div key={label} className="rounded-xl p-3 flex items-center gap-2"
+                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}>
                   <span>{icon}</span>
-                  <span className="text-white/80 text-sm font-medium">{label}</span>
+                  <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>{label}</span>
                 </div>
               ))}
             </div>
@@ -126,23 +137,25 @@ function LeftPanel({ role }) {
                 { quote: 'Finally found someone who gets my anxiety without judgment.', name: 'Priya S., Mumbai' },
                 { quote: 'Real connections, real healing. SoulConnect changed my life.', name: 'Rahul M., Delhi' },
               ].map((t, i) => (
-                <div key={i} className="rounded-2xl p-4 backdrop-blur-sm border border-white/10"
-                  style={{ background: 'rgba(255,255,255,0.07)' }}>
-                  <p className="text-white/80 text-sm italic mb-2">"{t.quote}"</p>
-                  <p className="text-purple-300 text-xs font-medium">— {t.name}</p>
+                <div key={i} className="rounded-2xl p-4"
+                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <p className="text-sm italic mb-2" style={{ color: 'rgba(255,255,255,0.8)' }}>"{t.quote}"</p>
+                  <p className="text-xs font-semibold" style={{ color: highlightColor }}>— {t.name}</p>
                 </div>
               ))}
             </div>
           )}
         </div>
+
+        {/* Stats */}
         <div className="flex gap-8">
           {(isHealer
             ? [['500+', 'Healers'], ['10K+', 'Sessions'], ['4.9★', 'Avg Rating']]
             : [['10K+', 'Members'], ['95%', 'Feel Better'], ['Safe', '& Anonymous']]
           ).map(([val, label]) => (
             <div key={label}>
-              <div className="text-white font-bold text-xl">{val}</div>
-              <div className="text-blue-300 text-xs">{label}</div>
+              <div className="font-bold text-xl" style={{ color: highlightColor }}>{val}</div>
+              <div className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</div>
             </div>
           ))}
         </div>
@@ -282,21 +295,21 @@ export default function Signup() {
     prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
   );
   const selectedHealerType = HEALER_TYPES.find((h) => h.value === healerType);
-  const accentColor = role === 'healer' ? '#0891b2' : '#7c3aed';
+  const accentColor = role === 'healer' ? '#059669' : '#1a3d2e';
   const accentGrad = role === 'healer'
-    ? 'linear-gradient(135deg, #0891b2, #2563eb)'
-    : 'linear-gradient(135deg, #7c3aed, #2563eb)';
+    ? 'linear-gradient(135deg, #059669, #0d9488)'
+    : 'linear-gradient(135deg, #1a3d2e, #2d6a4f)';
 
   // ── Role Selection (Step 0) ──
   if (step === 0) {
     return (
       <div className="min-h-screen flex">
         <LeftPanel role={role || 'user'} />
-        <div className="flex-1 flex items-center justify-center p-6 bg-gray-50">
+        <div className="flex-1 flex items-center justify-center p-6" style={{ background: '#f5f5f0' }}>
           <div className="w-full max-w-md">
             <div className="flex items-center gap-2 mb-8 lg:hidden">
               <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
-                style={{ background: 'linear-gradient(135deg, #a855f7, #3b82f6)' }}>🌿</div>
+                style={{ background: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>🌿</div>
               <span className="text-gray-800 text-lg font-bold">SoulConnect</span>
             </div>
 
@@ -311,7 +324,9 @@ export default function Signup() {
                   title: 'I\'m seeking support',
                   desc: 'Connect with peers who understand your struggle and join a community that heals together.',
                   tags: ['Peer matching', 'Anonymous', 'Free to join'],
-                  grad: 'linear-gradient(135deg, #7c3aed, #2563eb)',
+                  grad: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)',
+                  ring: '#2d6a4f',
+                  tagBg: '#dcfce7', tagColor: '#166534',
                 },
                 {
                   value: 'healer',
@@ -319,7 +334,9 @@ export default function Signup() {
                   title: 'I\'m a healer / professional',
                   desc: 'Offer your expertise as a counsellor, therapist, coach, or wellness practitioner.',
                   tags: ['Set your own fee', 'Verified profile', 'Grow your practice'],
-                  grad: 'linear-gradient(135deg, #0891b2, #2563eb)',
+                  grad: 'linear-gradient(135deg, #059669, #0d9488)',
+                  ring: '#059669',
+                  tagBg: '#d1fae5', tagColor: '#065f46',
                 },
               ].map((opt) => (
                 <button
@@ -330,7 +347,7 @@ export default function Signup() {
                       ? 'border-transparent shadow-lg scale-[1.01]'
                       : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
                   }`}
-                  style={role === opt.value ? { background: 'white', boxShadow: `0 0 0 2px ${opt.value === 'healer' ? '#0891b2' : '#7c3aed'}, 0 8px 24px rgba(0,0,0,0.1)` } : {}}
+                  style={role === opt.value ? { background: 'white', boxShadow: `0 0 0 2px ${opt.ring}, 0 8px 24px rgba(0,0,0,0.08)` } : {}}
                 >
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0"
@@ -340,9 +357,8 @@ export default function Signup() {
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <h3 className="font-bold text-gray-900">{opt.title}</h3>
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-                          role === opt.value ? 'border-transparent' : 'border-gray-300'
-                        }`} style={role === opt.value ? { background: opt.grad } : {}}>
+                        <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all"
+                          style={role === opt.value ? { background: opt.grad, borderColor: 'transparent' } : { borderColor: '#d1d5db' }}>
                           {role === opt.value && <span className="text-white text-xs">✓</span>}
                         </div>
                       </div>
@@ -350,8 +366,9 @@ export default function Signup() {
                       <div className="flex flex-wrap gap-2">
                         {opt.tags.map((tag) => (
                           <span key={tag} className="text-xs px-2 py-0.5 rounded-full font-medium"
-                            style={{ background: role === opt.value ? (opt.value === 'healer' ? '#e0f2fe' : '#ede9fe') : '#f3f4f6',
-                              color: role === opt.value ? (opt.value === 'healer' ? '#0891b2' : '#7c3aed') : '#6b7280' }}>
+                            style={role === opt.value
+                              ? { background: opt.tagBg, color: opt.tagColor }
+                              : { background: '#f3f4f6', color: '#6b7280' }}>
                             {tag}
                           </span>
                         ))}
@@ -366,7 +383,7 @@ export default function Signup() {
               onClick={() => { if (!role) { setError('Please select how you\'d like to join'); return; } setError(''); setStep(1); }}
               disabled={!role}
               className="w-full py-3.5 rounded-xl font-semibold text-white transition-all hover:opacity-90 active:scale-95 disabled:opacity-40"
-              style={{ background: role === 'healer' ? 'linear-gradient(135deg, #0891b2, #2563eb)' : 'linear-gradient(135deg, #7c3aed, #2563eb)' }}>
+              style={{ background: role === 'healer' ? 'linear-gradient(135deg, #059669, #0d9488)' : 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>
               Get Started →
             </button>
             {error && <p className="text-red-500 text-sm text-center mt-3">{error}</p>}
@@ -386,7 +403,7 @@ export default function Signup() {
     <div className="min-h-screen flex">
       <LeftPanel role={role} />
 
-      <div className="flex-1 flex items-center justify-center p-6 bg-gray-50 overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center p-6 overflow-y-auto" style={{ background: '#f5f5f0' }}>
         <div className="w-full max-w-md py-8">
 
           {/* Mobile logo */}
@@ -400,7 +417,7 @@ export default function Signup() {
 
           {/* Role badge */}
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-4"
-            style={{ background: role === 'healer' ? '#e0f2fe' : '#ede9fe', color: accentColor }}>
+            style={{ background: role === 'healer' ? '#d1fae5' : '#dcfce7', color: accentColor }}>
             {role === 'healer' ? '🧘 Healer / Professional' : '🌱 Seeking Support'}
             <button onClick={() => { setStep(0); setError(''); }} className="ml-1 hover:opacity-70 text-xs">✕ change</button>
           </div>
