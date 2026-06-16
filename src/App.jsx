@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Matches from './pages/Matches';
 import ForgotPassword from './pages/ForgotPassword';
+import TermsPrivacy from './pages/TermsPrivacy';
 import Chat from './pages/Chat';
 import Healers from './pages/Healers';
 import Meetups from './pages/Meetups';
@@ -40,6 +41,7 @@ function AppInner() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/terms" element={<TermsPrivacy />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         ) : isHealer ? (
@@ -51,6 +53,7 @@ function AppInner() {
         ) : (
           <>
             {/* Regular user routes */}
+            <Route path="/terms" element={<TermsPrivacy />} />
             <Route path="/dashboard" element={<Matches />} />
             <Route path="/chat" element={<Dashboard />} />
             <Route path="/matches" element={<Navigate to="/dashboard" replace />} />

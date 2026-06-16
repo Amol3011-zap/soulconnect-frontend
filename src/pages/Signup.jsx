@@ -762,8 +762,8 @@ export default function Signup() {
 
               <p className="text-xs text-gray-400 text-center mt-4">
                 By joining, you agree to our{' '}
-                <span className="text-purple-500 cursor-pointer hover:underline">Terms</span> &{' '}
-                <span className="text-purple-500 cursor-pointer hover:underline">Privacy Policy</span>
+                <Link to="/terms" target="_blank" className="font-semibold hover:underline" style={{ color: '#2d6a4f' }}>Terms</Link>{' '}&{' '}
+                <Link to="/terms#privacy" target="_blank" className="font-semibold hover:underline" style={{ color: '#2d6a4f' }}>Privacy Policy</Link>
               </p>
             </div>
           )}

@@ -695,8 +695,13 @@ export default function Landing() {
           {/* Bottom row: legal links + copyright */}
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '18px 0 28px' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px' }}>
-              {['Terms & Conditions', 'Privacy Policy', 'Cookie Settings', 'Web Accessibility'].map(label => (
-                <a key={label} href="#"
+              {[
+                { label: 'Terms & Conditions', href: '/terms' },
+                { label: 'Privacy Policy', href: '/terms#privacy' },
+                { label: 'Cookie Settings', href: '#' },
+                { label: 'Web Accessibility', href: '#' },
+              ].map(({ label, href }) => (
+                <a key={label} href={href}
                   style={{ color: '#5a7a6a', fontSize: 13, textDecoration: 'none' }}
                   onMouseEnter={e => e.target.style.color = '#1a3d2e'}
                   onMouseLeave={e => e.target.style.color = '#5a7a6a'}>
