@@ -120,11 +120,14 @@ html, body, #root {
   overflow: hidden;
 }
 
-/* ── Matches page: cosmic bg in dark mode, clean in light ── */
-.matches-cosmic-bg {
-  background: #f9fafb;
+/* ── Luxury nav dark overrides ── */
+.dark {
+  --nav-bg: rgba(8, 2, 20, 0.94);
 }
-.dark .matches-cosmic-bg {
-  background: linear-gradient(160deg, #09000f 0%, #1a0533 25%, #0d1b4b 65%, #050a1f 100%);
-  background-attachment: fixed;
+
+/* ── Gold glow on active nav items ── */
+@keyframes goldPulse {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
 }
+.gold-pulse { animation: goldPulse 2.5s ease-in-out infinite; }

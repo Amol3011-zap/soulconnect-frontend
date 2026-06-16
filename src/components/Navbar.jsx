@@ -4,21 +4,20 @@ import ThemeToggle from './ThemeToggle';
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Matches',  icon: '💫' },
-  { to: '/groups',   label: 'Groups',   icon: '🫂' },
-  { to: '/healers',  label: 'Healers',  icon: '🧘' },
-  { to: '/meetups',  label: 'Meetups',  icon: '👥' },
-  { to: '/mood',     label: 'Mood',     icon: '📊' },
-  { to: '/premium',  label: 'Premium',  icon: '⭐' },
-  { to: '/account',  label: 'Account',  icon: '👤' },
+  { to: '/groups',    label: 'Groups',   icon: '🫂' },
+  { to: '/healers',   label: 'Healers',  icon: '🧘' },
+  { to: '/meetups',   label: 'Meetups',  icon: '👥' },
+  { to: '/mood',      label: 'Mood',     icon: '📊' },
+  { to: '/premium',   label: 'Premium',  icon: '⭐' },
+  { to: '/account',   label: 'Account',  icon: '👤' },
 ];
 
-// Mobile shows 5 key items
 const MOBILE_ITEMS = [
-  { to: '/dashboard', label: 'Matches',  icon: '💫' },
-  { to: '/groups',   label: 'Groups',   icon: '🫂' },
-  { to: '/healers',  label: 'Healers',  icon: '🧘' },
-  { to: '/mood',     label: 'Mood',     icon: '📊' },
-  { to: '/account',  label: 'Account',  icon: '👤' },
+  { to: '/dashboard', label: 'Matches', icon: '💫' },
+  { to: '/groups',    label: 'Groups',  icon: '🫂' },
+  { to: '/healers',   label: 'Healers', icon: '🧘' },
+  { to: '/mood',      label: 'Mood',    icon: '📊' },
+  { to: '/account',   label: 'Account', icon: '👤' },
 ];
 
 export default function Navbar() {
@@ -28,45 +27,46 @@ export default function Navbar() {
   return (
     <>
       {/* ── DESKTOP Navbar ── */}
-      <nav className="hidden md:flex sticky top-0 z-50 border-b"
+      <nav className="hidden md:flex sticky top-0 z-50"
         style={{
-          background: 'var(--nav-bg)',
-          borderColor: 'var(--border)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
+          background: 'rgba(8, 2, 20, 0.94)',
+          borderBottom: '1px solid rgba(212,175,55,0.15)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          boxShadow: '0 1px 30px rgba(0,0,0,0.5)',
         }}>
-        <div className="max-w-7xl mx-auto px-5 py-2.5 flex items-center justify-between w-full">
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', height: 64 }}>
 
-          {/* Logo — icon on mobile, full horizontal on desktop */}
+          {/* Logo */}
           <Link to="/dashboard" className="flex items-center shrink-0">
             <img src="/logo-navbar.png" alt="SoulConnect" className="md:hidden" style={{ height: 40, width: 40, objectFit: 'contain', borderRadius: 8 }} />
             <img src="/logo-footer.png" alt="SoulConnect" className="hidden md:block" style={{ height: 52, width: 'auto', objectFit: 'contain', maxWidth: 220 }} />
           </Link>
 
-          {/* ── Right side: pill nav + theme toggle ── */}
-          <div className="flex items-center gap-3">
-            {/* Pill nav group */}
-            <div className="flex items-center p-1 rounded-2xl gap-0.5"
-              style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}>
-              {NAV_ITEMS.map(({ to, label, icon }) => {
-                const active = isActive(to);
-                return (
-                  <Link key={to} to={to}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200"
-                    style={active
-                      ? { background: 'linear-gradient(135deg,#7c3aed,#2563eb)', color: 'white', boxShadow: '0 2px 12px rgba(124,58,237,0.35)' }
-                      : { color: 'var(--text-secondary)' }
-                    }>
-                    <span className={`text-base transition-transform duration-200 ${active ? 'scale-110' : 'scale-100'}`}>
-                      {icon}
-                    </span>
-                    <span>{label}</span>
-                  </Link>
-                );
-              })}
-            </div>
+          {/* Nav links */}
+          <div className="flex items-center gap-1">
+            {NAV_ITEMS.map(({ to, label, icon }) => {
+              const active = isActive(to);
+              return (
+                <Link key={to} to={to}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 relative"
+                  style={active
+                    ? { color: '#d4af37', background: 'rgba(212,175,55,0.1)' }
+                    : { color: 'rgba(196,181,253,0.6)' }
+                  }>
+                  <span style={{ fontSize: 14 }}>{icon}</span>
+                  <span style={{ letterSpacing: '0.01em' }}>{label}</span>
+                  {active && (
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
+                      style={{ background: '#d4af37' }} />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
 
-            {/* Theme toggle */}
+          {/* Right — theme toggle */}
+          <div className="flex items-center">
             <ThemeToggle />
           </div>
         </div>
@@ -75,10 +75,10 @@ export default function Navbar() {
       {/* ── MOBILE Bottom Tab Bar ── */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50"
         style={{
-          background: 'var(--nav-bg)',
-          borderTop: '1px solid var(--border)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
+          background: 'rgba(8, 2, 20, 0.97)',
+          borderTop: '1px solid rgba(212,175,55,0.15)',
+          backdropFilter: 'blur(28px)',
+          WebkitBackdropFilter: 'blur(28px)',
           paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 4px)',
         }}>
         <div className="flex justify-around items-stretch pt-1.5 pb-0.5 px-1">
@@ -88,23 +88,23 @@ export default function Navbar() {
               <Link key={to} to={to}
                 className="flex flex-col items-center justify-center flex-1 min-h-[52px] gap-0.5 relative transition-all duration-150 active:scale-90">
 
-                {/* Active pill bg */}
                 {active && (
-                  <div className="absolute inset-x-0.5 top-0.5 h-8 rounded-2xl"
-                    style={{ background: 'linear-gradient(135deg, rgba(124,58,237,0.18), rgba(37,99,235,0.12))' }} />
+                  <div className="absolute inset-x-1 top-1 h-7 rounded-xl"
+                    style={{ background: 'rgba(212,175,55,0.08)' }} />
                 )}
 
-                <span className={`relative z-10 transition-all duration-200 ${active ? 'text-2xl' : 'text-xl opacity-55'}`}>
+                <span className={`relative z-10 transition-all duration-200 ${active ? 'text-2xl' : 'text-xl'}`}
+                  style={{ opacity: active ? 1 : 0.45 }}>
                   {icon}
                 </span>
-                <span className={`relative z-10 text-[10px] font-bold leading-none`}
-                  style={{ color: active ? '#a855f7' : 'var(--text-muted)' }}>
+                <span className="relative z-10 font-semibold leading-none"
+                  style={{ fontSize: 10, color: active ? '#d4af37' : 'rgba(196,181,253,0.4)', letterSpacing: '0.03em' }}>
                   {label}
                 </span>
 
                 {active && (
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
-                    style={{ background: 'linear-gradient(to right, #7c3aed, #2563eb)' }} />
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full"
+                    style={{ background: 'linear-gradient(to right, transparent, #d4af37, transparent)' }} />
                 )}
               </Link>
             );
