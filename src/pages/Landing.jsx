@@ -1,5 +1,59 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+function FAQSection({ faqs }) {
+  const [open, setOpen] = useState(null);
+  return (
+    <section id="faq" style={{ background: '#f5f0eb', padding: '96px 24px' }}>
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12, textAlign: 'center' }}>
+          Got Questions?
+        </p>
+        <h2 style={{ color: '#111827', fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 800, textAlign: 'center', marginBottom: 12, letterSpacing: '-0.4px' }}>
+          Frequently Asked Questions
+        </h2>
+        <p style={{ color: '#6b7280', fontSize: 16, textAlign: 'center', marginBottom: 52 }}>
+          Everything you need to know about SoulConnect and how healing works.
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {faqs.map((faq, i) => (
+            <div key={i}
+              style={{
+                background: 'white', borderRadius: 12,
+                border: open === i ? '1.5px solid #2d6a4f' : '1.5px solid #e5e7eb',
+                overflow: 'hidden', transition: 'border-color 0.2s',
+              }}>
+              <button
+                onClick={() => setOpen(open === i ? null : i)}
+                style={{
+                  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '18px 22px', background: 'none', border: 'none', cursor: 'pointer',
+                  textAlign: 'left', gap: 16,
+                }}>
+                <span style={{ fontWeight: 600, fontSize: 15, color: '#111827', lineHeight: 1.4 }}>{faq.q}</span>
+                <span style={{
+                  flexShrink: 0, width: 24, height: 24, borderRadius: '50%',
+                  background: open === i ? '#1a3d2e' : '#f3f4f6',
+                  color: open === i ? 'white' : '#6b7280',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 16, fontWeight: 700, lineHeight: 1,
+                  transition: 'all 0.2s',
+                }}>
+                  {open === i ? '−' : '+'}
+                </span>
+              </button>
+              {open === i && (
+                <div style={{ padding: '0 22px 18px', color: '#4b5563', fontSize: 14, lineHeight: 1.75 }}>
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const stats = [
   { value: '12,000+', label: 'People Helped' },
@@ -589,6 +643,43 @@ export default function Landing() {
       </section>
 
       {/* ═══════════════════════════════════════
+          FAQ
+      ═══════════════════════════════════════ */}
+      {(() => {
+        const faqs = [
+          { q: 'What is SoulConnect?', a: 'SoulConnect is a professional wellness and personal development platform dedicated to supporting emotional well-being, self-awareness, inner growth, stress reduction, and holistic healing. Our sessions are designed to help individuals reconnect with themselves, gain clarity, and create positive change in their lives.' },
+          { q: 'What is Healing?', a: 'Healing is a holistic process that supports emotional, mental, energetic, and spiritual well-being. It focuses on helping individuals release stress, restore balance, improve self-awareness, and promote overall wellness.' },
+          { q: 'How can Healing help me?', a: 'Healing sessions may help support stress reduction, emotional balance, relaxation, personal growth, self-awareness, inner peace, relationship challenges, life transitions, and spiritual exploration. Every individual\'s experience is unique, and results may vary.' },
+          { q: 'What happens during a Healing session?', a: 'Each session is conducted in a safe and supportive environment. Depending on your needs, the session may include guided conversation, energy-based practices, relaxation techniques, mindfulness exercises, and personal development guidance.' },
+          { q: 'Do I need any prior experience?', a: 'No. Our services are suitable for both beginners and individuals who have previously explored wellness or healing practices.' },
+          { q: 'How long does a session last?', a: 'Session lengths vary depending on the service selected. Details regarding session duration are provided at the time of booking.' },
+          { q: 'How many sessions will I need?', a: 'The number of sessions varies from person to person and depends on individual goals, circumstances, and preferences. Some clients benefit from a single session, while others choose ongoing support.' },
+          { q: 'Are sessions available online?', a: 'Yes. SoulConnect offers online sessions that can be accessed from the comfort of your home, allowing clients from different locations to participate.' },
+          { q: 'Can healing sessions be conducted remotely?', a: 'Yes. Many clients choose remote sessions and find them to be a convenient and effective way to receive support and guidance.' },
+          { q: 'What should I do before a session?', a: 'We recommend choosing a quiet and comfortable space, ensuring a stable internet connection for online sessions, and approaching the experience with an open and relaxed mindset.' },
+          { q: 'What should I do after a session?', a: 'Allow yourself time to reflect, rest if needed, stay hydrated, and observe any insights or changes that may emerge following your session.' },
+          { q: 'Will I feel something during the session?', a: 'Experiences vary for every individual. Some people report feeling deeply relaxed, peaceful, emotional, energized, or reflective, while others may notice subtle changes over time.' },
+          { q: 'What if I do not feel anything during the session?', a: 'Every person\'s experience is different. Not feeling immediate sensations does not mean the session was ineffective. Many clients notice benefits gradually over time.' },
+          { q: 'Is everything discussed during sessions confidential?', a: 'We respect your privacy and handle personal information with care. Information is managed in accordance with our Privacy Policy and applicable laws.' },
+          { q: 'Are your services medical treatment?', a: 'No. SoulConnect does not provide medical diagnosis, medical treatment, healthcare services, psychiatric care, or psychotherapy. Our services are focused on wellness, personal development, emotional support, and holistic healing.' },
+          { q: 'Can healing replace medical treatment?', a: 'No. SoulConnect services should not be considered a substitute for professional medical care, diagnosis, treatment, or advice. Always consult a qualified healthcare professional regarding medical concerns.' },
+          { q: 'Do you diagnose medical or mental health conditions?', a: 'No. We do not diagnose, treat, cure, or prevent medical or psychological conditions.' },
+          { q: 'Are results guaranteed?', a: 'No. Individual experiences and outcomes vary. SoulConnect does not guarantee specific results, outcomes, or transformations.' },
+          { q: 'Who are SoulConnect services suitable for?', a: 'Our services are suitable for adults seeking support with personal growth, emotional well-being, self-discovery, stress management, life challenges, and holistic healing.' },
+          { q: 'What is the difference between healing and therapy?', a: 'Healing services focus on wellness, personal growth, self-awareness, and holistic support. Therapy is typically provided by licensed healthcare professionals and may involve the diagnosis and treatment of mental health conditions.' },
+          { q: 'How do I book a session?', a: 'You can book a session directly through our website by selecting your preferred service, date, and available time slot.' },
+          { q: 'What payment methods do you accept?', a: 'We accept secure online payments through approved payment providers. Available payment methods will be displayed during checkout.' },
+          { q: 'What is your cancellation policy?', a: 'Appointments may be rescheduled or canceled according to the cancellation policy stated at the time of booking. Please review the booking terms before confirming your appointment.' },
+          { q: 'What if I miss my appointment?', a: 'Missed appointments and no-shows may be subject to the applicable booking and cancellation policy.' },
+          { q: 'Can I book multiple sessions?', a: 'Yes. Clients may schedule multiple sessions based on their personal goals and preferences.' },
+          { q: 'Why choose SoulConnect?', a: 'SoulConnect provides a supportive, professional, and client-centered approach focused on holistic healing, emotional well-being, personal growth, and meaningful transformation. Every session is tailored to the unique needs and goals of the individual.' },
+        ];
+        return (
+          <FAQSection faqs={faqs} />
+        );
+      })()}
+
+      {/* ═══════════════════════════════════════
           FINAL CTA
       ═══════════════════════════════════════ */}
       <section style={{ background: '#1a3d2e', padding: '96px 24px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -640,7 +731,7 @@ export default function Landing() {
               {[
                 { label: 'Home', href: '#' },
                 { label: 'About', href: '#' },
-                { label: 'FAQ', href: '#' },
+                { label: 'FAQ', href: '#faq' },
                 { label: 'How it Works', href: '#how-it-works' },
                 { label: 'Find a Match', to: '/signup' },
                 { label: 'Talk to a Healer', to: '/signup' },
