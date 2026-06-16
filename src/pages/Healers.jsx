@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { healerAPI } from '../services/api';
 
 const DEMO_HEALERS = [
@@ -52,6 +52,282 @@ const TIME_SLOTS = {
   'Tomorrow': ['10:00 AM', '12:00 PM', '2:00 PM', '5:00 PM', '7:00 PM'],
   'Day After': ['9:00 AM', '11:00 AM', '3:00 PM', '6:00 PM'],
 };
+
+// ── Consent Modal ─────────────────────────────────────────────────────────────
+const CONSENT_SECTIONS = [
+  {
+    heading: 'Nature of Services',
+    body: 'SoulConnect provides complementary wellness services, including Reiki, Energy Healing, Spiritual Guidance, Meditation, Coaching, and Wellness Support. These services are intended to support personal growth, relaxation, self-awareness, and overall well-being.',
+  },
+  {
+    heading: 'Not Medical Treatment',
+    body: 'Reiki and energy healing are complementary wellness practices. These services are not medical treatment. SoulConnect does not diagnose illness, prescribe medication, or replace healthcare professionals.',
+  },
+  {
+    heading: 'Medical Responsibility',
+    body: 'I agree that I remain responsible for seeking medical care when necessary, following advice from licensed healthcare providers, and maintaining any prescribed treatment plans. I will not discontinue medications or medical treatment based on information received from SoulConnect.',
+  },
+  {
+    heading: 'Voluntary Participation',
+    body: 'I understand my participation is entirely voluntary. I may stop a session at any time.',
+  },
+  {
+    heading: 'No Guaranteed Results',
+    body: 'Outcomes vary between individuals. No specific results are guaranteed. Testimonials do not guarantee similar experiences.',
+  },
+  {
+    heading: 'Personal Responsibility',
+    body: 'I accept full responsibility for my decisions, actions, health choices, and my interpretation of information provided.',
+  },
+  {
+    heading: 'Release of Liability',
+    body: 'To the fullest extent permitted by law, I release and hold harmless SoulConnect, its owners, practitioners, employees, contractors, and affiliates from any claims, liabilities, damages, injuries, losses, costs, or expenses arising from my participation in any service.',
+  },
+  {
+    heading: 'Electronic Consent',
+    body: 'By checking the acceptance box, signing electronically, and proceeding to book a session, I acknowledge that I have read this document, I understand this document, and I voluntarily agree to its terms.',
+  },
+];
+
+function ConsentModal({ healer, onClose, onAgree }) {
+  const [agreed, setAgreed] = useState(false);
+  const [sigMode, setSigMode] = useState('draw');
+  const [typedSig, setTypedSig] = useState('');
+  const [hasDrawn, setHasDrawn] = useState(false);
+  const canvasRef = useRef(null);
+  const isDrawing = useRef(false);
+  const lastPos = useRef(null);
+
+  // Init canvas
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fafaf9';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#1a3d2e';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }, [sigMode]);
+
+  const getPos = (e, canvas) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const src = e.touches ? e.touches[0] : e;
+    return {
+      x: (src.clientX - rect.left) * scaleX,
+      y: (src.clientY - rect.top) * scaleY,
+    };
+  };
+
+  const startDraw = useCallback((e) => {
+    e.preventDefault();
+    isDrawing.current = true;
+    const pos = getPos(e, canvasRef.current);
+    lastPos.current = pos;
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  }, []);
+
+  const draw = useCallback((e) => {
+    e.preventDefault();
+    if (!isDrawing.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const pos = getPos(e, canvas);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    lastPos.current = pos;
+    setHasDrawn(true);
+  }, []);
+
+  const stopDraw = useCallback(() => {
+    isDrawing.current = false;
+  }, []);
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fafaf9';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    setHasDrawn(false);
+  };
+
+  const canProceed = agreed && (sigMode === 'type' ? typedSig.trim().length >= 2 : hasDrawn);
+
+  const handleAgree = () => {
+    if (!canProceed) return;
+    const sig = sigMode === 'draw'
+      ? canvasRef.current.toDataURL()
+      : typedSig.trim();
+    onAgree(sig);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(6px)' }}>
+      <div className="w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl flex flex-col overflow-hidden"
+        style={{ background: 'var(--bg-card)', maxHeight: '92dvh', boxShadow: '0 32px 80px rgba(0,0,0,0.4)' }}>
+
+        {/* Header */}
+        <div className="px-5 py-4 flex items-start justify-between shrink-0"
+          style={{ borderBottom: '1px solid var(--border)', background: 'linear-gradient(135deg,rgba(26,61,46,0.06),rgba(45,106,79,0.04))' }}>
+          <div>
+            <div className="flex items-center gap-2 mb-0.5">
+              <span className="text-base">📋</span>
+              <h2 className="text-base font-bold" style={{ color: 'var(--text)' }}>Client Consent &amp; Disclaimer</h2>
+            </div>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              Read carefully before booking with {healer?.name}
+            </p>
+          </div>
+          <button onClick={onClose}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-sm hover:opacity-70 shrink-0 ml-4"
+            style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)' }}>✕</button>
+        </div>
+
+        {/* Consent content — scrollable */}
+        <div className="flex-1 overflow-y-auto px-5 py-4" style={{ scrollbarWidth: 'thin' }}>
+          {/* Intro */}
+          <div className="rounded-2xl p-4 mb-5"
+            style={{ background: 'rgba(26,61,46,0.06)', border: '1px solid rgba(26,61,46,0.15)' }}>
+            <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              By booking a session, purchasing a service, attending a workshop, or continuing with any SoulConnect
+              program, you acknowledge and agree to the following:
+            </p>
+          </div>
+
+          {/* Sections */}
+          <div className="space-y-4">
+            {CONSENT_SECTIONS.map((s, i) => (
+              <div key={i} className="rounded-2xl p-4" style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}>
+                <p className="text-xs font-bold mb-1.5" style={{ color: '#1a3d2e' }}>
+                  {i + 1}. {s.heading}
+                </p>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  {s.body}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Date + Signature placeholders in doc */}
+          <div className="mt-5 grid grid-cols-2 gap-4">
+            <div className="rounded-xl p-3" style={{ border: '1px solid var(--border)' }}>
+              <p className="text-[10px] font-semibold mb-1" style={{ color: 'var(--text-muted)' }}>DATE</p>
+              <p className="text-xs font-semibold" style={{ color: 'var(--text)' }}>
+                {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </p>
+            </div>
+            <div className="rounded-xl p-3" style={{ border: '1px solid var(--border)' }}>
+              <p className="text-[10px] font-semibold mb-1" style={{ color: 'var(--text-muted)' }}>HEALER</p>
+              <p className="text-xs font-semibold truncate" style={{ color: 'var(--text)' }}>{healer?.name}</p>
+            </div>
+          </div>
+
+          <p className="text-center text-[10px] mt-4 pb-2" style={{ color: 'var(--text-muted)' }}>
+            — End of Consent Form —
+          </p>
+        </div>
+
+        {/* Footer — agreement + signature */}
+        <div className="shrink-0 px-5 py-4 space-y-4" style={{ borderTop: '1px solid var(--border)', background: 'var(--bg-card)' }}>
+
+          {/* Agreement checkbox */}
+          <label className="flex items-start gap-3 cursor-pointer">
+            <div className="relative mt-0.5 shrink-0">
+              <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
+                className="sr-only" />
+              <div onClick={() => setAgreed(!agreed)}
+                className="w-5 h-5 rounded-md flex items-center justify-center transition-all cursor-pointer"
+                style={{
+                  background: agreed ? '#1a3d2e' : 'var(--bg-subtle)',
+                  border: `2px solid ${agreed ? '#1a3d2e' : 'var(--border)'}`,
+                }}>
+                {agreed && <span className="text-white text-xs font-bold">✓</span>}
+              </div>
+            </div>
+            <span className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              I have read and fully understand this Consent &amp; Disclaimer Form. I voluntarily agree to its terms and understand it is not medical treatment.
+            </span>
+          </label>
+
+          {/* Digital signature */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold" style={{ color: 'var(--text)' }}>Digital Signature</p>
+              <div className="flex gap-1">
+                {[{ id: 'draw', label: '✍️ Draw' }, { id: 'type', label: '⌨️ Type' }].map(({ id, label }) => (
+                  <button key={id} onClick={() => { setSigMode(id); setHasDrawn(false); setTypedSig(''); }}
+                    className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all"
+                    style={{
+                      background: sigMode === id ? '#1a3d2e' : 'var(--bg-subtle)',
+                      color: sigMode === id ? 'white' : 'var(--text-muted)',
+                    }}>
+                    {label}
+                  </button>
+                ))}
+                {sigMode === 'draw' && hasDrawn && (
+                  <button onClick={clearCanvas}
+                    className="px-2.5 py-1 rounded-lg text-xs font-semibold"
+                    style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444' }}>
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {sigMode === 'draw' ? (
+              <div className="rounded-2xl overflow-hidden" style={{ border: `2px solid ${hasDrawn ? '#1a3d2e' : 'var(--border)'}` }}>
+                <canvas
+                  ref={canvasRef}
+                  width={560} height={90}
+                  onMouseDown={startDraw} onMouseMove={draw} onMouseUp={stopDraw} onMouseLeave={stopDraw}
+                  onTouchStart={startDraw} onTouchMove={draw} onTouchEnd={stopDraw}
+                  className="w-full block touch-none cursor-crosshair"
+                  style={{ height: 90, background: '#fafaf9' }}
+                />
+              </div>
+            ) : (
+              <input
+                value={typedSig}
+                onChange={e => setTypedSig(e.target.value)}
+                placeholder="Type your full name as signature"
+                className="w-full px-4 py-3 rounded-2xl text-lg focus:outline-none"
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontStyle: 'italic',
+                  background: 'var(--bg-subtle)',
+                  color: 'var(--text)',
+                  border: `2px solid ${typedSig ? '#1a3d2e' : 'var(--border)'}`,
+                }}
+              />
+            )}
+            <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
+              {sigMode === 'draw' ? 'Sign using your mouse or finger' : 'Your typed name acts as your legal electronic signature'} · {new Date().toLocaleDateString('en-IN')}
+            </p>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={handleAgree}
+            disabled={!canProceed}
+            className="w-full py-3.5 rounded-2xl font-bold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-40"
+            style={{ background: canProceed ? 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' : 'var(--bg-subtle)', color: canProceed ? 'white' : 'var(--text-muted)' }}>
+            {canProceed ? 'I Agree & Continue to Booking →' : agreed ? (sigMode === 'draw' ? 'Please draw your signature above' : 'Please type your full name above') : 'Please check the agreement box above'}
+          </button>
+
+          <p className="text-center text-[10px]" style={{ color: 'var(--text-muted)' }}>
+            🔒 This consent is recorded with your booking · Support@soulconnect.health
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ── Booking Modal ──────────────────────────────────────────────────────────────
 function BookingModal({ healer, grad, onClose, onConfirm }) {
@@ -407,6 +683,8 @@ export default function Healers() {
   const [filter, setFilter] = useState('All');
   const [bookingHealer, setBookingHealer] = useState(null);
   const [bookingGrad, setBookingGrad] = useState('');
+  const [consentHealer, setConsentHealer] = useState(null);
+  const [consentGrad, setConsentGrad] = useState('');
 
   const FILTERS = ['All', 'Anxiety', 'Depression', 'Relationships', 'Trauma', 'Mindfulness'];
 
@@ -425,8 +703,15 @@ export default function Healers() {
   };
 
   const openBooking = (healer, grad) => {
-    setBookingHealer(healer);
-    setBookingGrad(grad);
+    setConsentHealer(healer);
+    setConsentGrad(grad);
+  };
+
+  const handleConsentAgree = (sig) => {
+    setBookingHealer(consentHealer);
+    setBookingGrad(consentGrad);
+    setConsentHealer(null);
+    setConsentGrad('');
   };
 
   return (
@@ -506,6 +791,15 @@ export default function Healers() {
           </button>
         </div>
       </div>
+
+      {/* Consent modal — shown before booking */}
+      {consentHealer && (
+        <ConsentModal
+          healer={consentHealer}
+          onClose={() => setConsentHealer(null)}
+          onAgree={handleConsentAgree}
+        />
+      )}
 
       {/* Booking modal */}
       {bookingHealer && (
