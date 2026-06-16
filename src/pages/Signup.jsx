@@ -437,7 +437,7 @@ export default function Signup() {
 
           {/* Mobile logo */}
           <div className="flex items-center mb-6 lg:hidden">
-            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 44, width: 'auto', objectFit: 'contain', maxWidth: 160 }} />
+            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 40, width: 'auto', objectFit: 'contain', maxWidth: 180 }} />
           </div>
 
           {/* Role badge */}

@@ -37,9 +37,10 @@ export default function Navbar() {
         }}>
         <div className="max-w-7xl mx-auto px-5 py-2.5 flex items-center justify-between w-full">
 
-          {/* Logo — left */}
+          {/* Logo — icon on mobile, full horizontal on desktop */}
           <Link to="/dashboard" className="flex items-center shrink-0">
-            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 56, width: 'auto', objectFit: 'contain', maxWidth: 220 }} />
+            <img src="/logo-navbar.png" alt="SoulConnect" className="md:hidden" style={{ height: 40, width: 40, objectFit: 'contain', borderRadius: 8 }} />
+            <img src="/logo-footer.png" alt="SoulConnect" className="hidden md:block" style={{ height: 52, width: 'auto', objectFit: 'contain', maxWidth: 220 }} />
           </Link>
 
           {/* ── Right side: pill nav + theme toggle ── */}

@@ -87,7 +87,7 @@ export default function Login() {
 
           {/* Mobile logo */}
           <div className="flex items-center mb-8 lg:hidden">
-            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 44, width: 'auto', objectFit: 'contain', maxWidth: 160 }} />
+            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 40, width: 'auto', objectFit: 'contain', maxWidth: 180 }} />
           </div>
 
           <div className="mb-8">

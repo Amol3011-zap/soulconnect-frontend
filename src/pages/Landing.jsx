@@ -258,9 +258,10 @@ export default function Landing() {
       ═══════════════════════════════════════ */}
       <nav style={{ background: '#1a3d2e' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          {/* Logo */}
+          {/* Logo — icon on mobile, full horizontal on desktop */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 56, width: 'auto', objectFit: 'contain', maxWidth: 240 }} />
+            <img src="/logo-navbar.png" alt="SoulConnect" className="md:hidden" style={{ height: 44, width: 44, objectFit: 'contain', borderRadius: 8 }} />
+            <img src="/logo-footer.png" alt="SoulConnect" className="hidden md:block" style={{ height: 56, width: 'auto', objectFit: 'contain', maxWidth: 240 }} />
           </Link>
 
           {/* Nav links — hidden on mobile */}
