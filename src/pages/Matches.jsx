@@ -98,7 +98,6 @@ function SoulRing({ score, color }) {
 // ── Match Card ─────────────────────────────────────────────────────────────────
 function MatchCard({ match, index, onConnect, connecting }) {
   const prob = PROBLEM_META[match.primary_problem] || { label: 'Peer Support', icon: '🤝', color: '#a78bfa' };
-  const grad = AVATAR_GRADS[index % AVATAR_GRADS.length];
   const initial = match.name?.[0]?.toUpperCase() || '?';
   const isConnecting = connecting === match.id;
   const accentColor = prob.color;
@@ -106,180 +105,133 @@ function MatchCard({ match, index, onConnect, connecting }) {
   return (
     <div
       style={{
-        position: 'relative', borderRadius: 28, overflow: 'hidden',
-        background: 'rgba(255,255,255,0.03)',
-        border: `1px solid ${accentColor}25`,
-        backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)',
-        boxShadow: `0 12px 50px rgba(0,0,0,0.5), 0 0 0 1px ${accentColor}15, inset 0 1px 0 rgba(255,255,255,0.06)`,
-        transition: 'transform 0.35s ease, box-shadow 0.35s ease',
+        position: 'relative', borderRadius: 20, overflow: 'hidden',
+        background: 'rgba(6, 1, 18, 0.94)',
+        backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
+        border: '1px solid rgba(255,255,255,0.055)',
+        boxShadow: `0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px ${accentColor}10`,
+        transition: 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-6px) scale(1.01)';
-        e.currentTarget.style.boxShadow = `0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px ${accentColor}40, 0 0 40px ${accentColor}15, inset 0 1px 0 rgba(255,255,255,0.08)`;
+        e.currentTarget.style.transform = 'translateY(-5px)';
+        e.currentTarget.style.boxShadow = `0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px ${accentColor}28, 0 0 60px ${accentColor}08`;
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.transform = 'translateY(0) scale(1)';
-        e.currentTarget.style.boxShadow = `0 12px 50px rgba(0,0,0,0.5), 0 0 0 1px ${accentColor}15, inset 0 1px 0 rgba(255,255,255,0.06)`;
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = `0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px ${accentColor}10`;
       }}
     >
-      {/* Top accent gradient bar */}
-      <div style={{ height: 2, width: '100%', background: `linear-gradient(to right, transparent, ${accentColor}80, #d4af37, ${accentColor}80, transparent)` }} />
+      {/* Accent top line */}
+      <div style={{ height: 1.5, background: `linear-gradient(90deg, transparent 0%, ${accentColor}90 30%, #d4af37 50%, ${accentColor}90 70%, transparent 100%)` }} />
 
-      {/* Card inner glow from accent colour */}
-      <div style={{
-        position: 'absolute', top: -40, left: '50%', transform: 'translateX(-50%)',
-        width: '60%', height: 80,
-        background: `radial-gradient(ellipse, ${accentColor}20 0%, transparent 70%)`,
-        pointerEvents: 'none',
-      }} />
+      {/* Subtle top inner glow */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 80, background: `linear-gradient(to bottom, ${accentColor}07, transparent)`, pointerEvents: 'none' }} />
 
-      <div style={{ padding: '22px 24px 24px' }}>
+      {/* ── HEADER: Large monogram + name + score ── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 18, padding: '26px 26px 0' }}>
 
-        {/* Avatar + Soul Arc row */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
-          {/* Avatar with pulsing aura */}
-          <div style={{ position: 'relative', flexShrink: 0 }}>
-            {/* Pulsing outer ring */}
-            <div style={{
-              position: 'absolute', inset: -6, borderRadius: 20,
-              border: `1.5px solid ${accentColor}40`,
-              animation: 'pulseRing 3s ease-in-out infinite',
-            }} />
-            {/* Glow blob */}
-            <div style={{
-              position: 'absolute', inset: -3, borderRadius: 18,
-              background: grad, opacity: 0.35, filter: 'blur(14px)',
-            }} />
-            <div style={{
-              position: 'relative',
-              width: 60, height: 60, borderRadius: 18,
-              background: grad,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 22, fontWeight: 800, color: '#fff',
-              boxShadow: `0 6px 24px rgba(0,0,0,0.5), 0 0 20px ${accentColor}30`,
-            }}>
-              {initial}
-            </div>
-            {/* Online dot */}
-            <div style={{
-              position: 'absolute', bottom: -2, right: -2,
-              width: 14, height: 14, borderRadius: '50%',
-              background: 'linear-gradient(135deg, #34d399, #10b981)',
-              border: '2.5px solid #030009',
-              boxShadow: '0 0 8px rgba(52,211,153,0.6)',
-            }} />
-          </div>
-
-          {/* Name + info */}
-          <div style={{ flex: 1, minWidth: 0, paddingTop: 4 }}>
-            <h3 style={{ fontSize: 20, fontWeight: 800, color: '#ffffff', margin: '0 0 4px', lineHeight: 1 }}>
-              {match.name}
-            </h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-              {match.age && <span style={{ fontSize: 12, color: 'rgba(196,181,253,0.55)' }}>{match.age} yrs</span>}
-              {match.city && (
-                <>
-                  <span style={{ color: 'rgba(196,181,253,0.2)', fontSize: 8 }}>●</span>
-                  <span style={{ fontSize: 12, color: 'rgba(196,181,253,0.55)' }}>📍 {match.city}</span>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Soul Ring - SVG arc */}
-          <SoulRing score={match.match_score || 0} color={accentColor} />
+        {/* Large italic monogram — the signature */}
+        <div style={{
+          fontSize: 72, fontWeight: 900, fontStyle: 'italic',
+          lineHeight: 0.85, letterSpacing: '-0.04em', flexShrink: 0,
+          background: `linear-gradient(160deg, ${accentColor} 0%, rgba(255,255,255,0.95) 55%, ${accentColor}70 100%)`,
+          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          filter: `drop-shadow(0 0 24px ${accentColor}45)`,
+          userSelect: 'none',
+        }}>
+          {initial}
         </div>
 
-        {/* Problem tags */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            fontSize: 11, fontWeight: 700,
-            padding: '5px 12px', borderRadius: 99,
-            background: `${accentColor}18`,
-            color: accentColor,
-            border: `1px solid ${accentColor}35`,
-            letterSpacing: '0.03em',
-          }}>
-            {prob.icon} {prob.label}
-          </span>
-          {(match.secondary_problems || []).slice(0, 2).map(p => {
-            const info = PROBLEM_META[p];
-            return info ? (
-              <span key={p} style={{
-                display: 'inline-flex', alignItems: 'center', gap: 5,
-                fontSize: 11, padding: '5px 10px', borderRadius: 99,
-                background: 'rgba(255,255,255,0.05)',
-                color: 'rgba(196,181,253,0.6)',
-                border: '1px solid rgba(255,255,255,0.1)',
-              }}>
-                {info.icon} {info.label}
-              </span>
-            ) : null;
-          })}
+        {/* Name + meta */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h3 style={{ margin: '0 0 6px', fontSize: 19, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1 }}>
+            {match.name}
+          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {match.age && <span style={{ fontSize: 11, color: 'rgba(196,181,253,0.4)' }}>{match.age} yrs</span>}
+            {match.city && <>
+              <span style={{ fontSize: 6, color: 'rgba(196,181,253,0.2)' }}>◆</span>
+              <span style={{ fontSize: 11, color: 'rgba(196,181,253,0.4)' }}>{match.city}</span>
+            </>}
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', display: 'inline-block', boxShadow: '0 0 8px rgba(52,211,153,0.9)', marginLeft: 2 }} />
+          </div>
         </div>
 
-        {/* Soul reading / match reason */}
-        {match.match_reason && (
-          <div style={{
-            display: 'flex', gap: 12, alignItems: 'flex-start',
-            padding: '14px 16px', marginBottom: 20,
-            background: 'rgba(212,175,55,0.04)',
-            border: '1px solid rgba(212,175,55,0.15)',
-            borderLeft: '3px solid rgba(212,175,55,0.5)',
-            borderRadius: '0 12px 12px 0',
-            backdropFilter: 'blur(10px)',
-          }}>
-            <span style={{ color: '#d4af37', fontSize: 18, lineHeight: 1.5, flexShrink: 0 }}>✦</span>
-            <p style={{ margin: 0, fontSize: 12, fontStyle: 'italic', color: 'rgba(221,214,254,0.7)', lineHeight: 1.8 }}>
-              "{match.match_reason}"
-            </p>
+        {/* Score — large number, no ring */}
+        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+          <div style={{ fontSize: 30, fontWeight: 900, color: '#d4af37', lineHeight: 1, letterSpacing: '-0.03em', filter: 'drop-shadow(0 0 12px rgba(212,175,55,0.4))' }}>
+            {match.match_score}
           </div>
-        )}
-
-        {/* CTA Button */}
-        <button
-          onClick={() => onConnect(match)}
-          disabled={isConnecting}
-          style={{
-            width: '100%', height: 52, borderRadius: 16,
-            fontSize: 14, fontWeight: 700, color: '#fff',
-            cursor: isConnecting ? 'default' : 'pointer',
-            border: 'none',
-            background: isConnecting
-              ? 'rgba(255,255,255,0.06)'
-              : 'linear-gradient(135deg, #3b0764 0%, #5b21b6 35%, #7c3aed 65%, #a855f7 100%)',
-            boxShadow: isConnecting ? 'none' : '0 0 0 1px rgba(168,85,247,0.3), 0 8px 32px rgba(124,58,237,0.5), 0 0 60px rgba(168,85,247,0.15)',
-            letterSpacing: '0.04em',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            transition: 'all 0.25s ease',
-          }}
-          onMouseEnter={e => {
-            if (!isConnecting) {
-              e.currentTarget.style.boxShadow = '0 0 0 1px rgba(168,85,247,0.5), 0 12px 45px rgba(124,58,237,0.65), 0 0 80px rgba(168,85,247,0.25)';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(168,85,247,0.3), 0 8px 32px rgba(124,58,237,0.5), 0 0 60px rgba(168,85,247,0.15)';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
-        >
-          {isConnecting ? (
-            <>
-              <span style={{ width: 16, height: 16, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', display: 'inline-block', animation: 'mandalaRotate 0.7s linear infinite' }} />
-              Opening sanctuary...
-            </>
-          ) : (
-            <>
-              <span style={{ fontSize: 16 }}>💬</span> Begin Conversation
-            </>
-          )}
-        </button>
+          <div style={{ fontSize: 8, color: 'rgba(212,175,55,0.45)', letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: 3 }}>
+            % aligned
+          </div>
+        </div>
       </div>
 
-      {/* Bottom shimmer */}
-      <div style={{ height: 1, width: '100%', background: `linear-gradient(to right, transparent, ${accentColor}30, rgba(212,175,55,0.3), ${accentColor}30, transparent)` }} />
+      {/* Divider */}
+      <div style={{ margin: '22px 26px 18px', height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07) 30%, rgba(255,255,255,0.07) 70%, transparent)' }} />
+
+      {/* Soul Reading label */}
+      <div style={{ padding: '0 26px', marginBottom: 10 }}>
+        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(212,175,55,0.45)' }}>◆ Soul Reading</span>
+      </div>
+
+      {/* Match reason — THE HERO of the card */}
+      {match.match_reason && (
+        <p style={{ margin: '0', padding: '0 26px 22px', fontSize: 16, fontStyle: 'italic', color: 'rgba(235,228,255,0.82)', lineHeight: 1.8, letterSpacing: '-0.01em' }}>
+          "{match.match_reason}"
+        </p>
+      )}
+
+      {/* Divider */}
+      <div style={{ margin: '0 26px 18px', height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.05) 70%, transparent)' }} />
+
+      {/* Problem indicators — dots only, no pill boxes */}
+      <div style={{ padding: '0 26px', marginBottom: 0, display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 600, color: accentColor }}>
+          <span style={{ width: 5, height: 5, borderRadius: '50%', background: accentColor, display: 'inline-block', boxShadow: `0 0 8px ${accentColor}` }} />
+          {prob.label}
+        </span>
+        {(match.secondary_problems || []).slice(0, 2).map(p => {
+          const info = PROBLEM_META[p];
+          return info ? (
+            <span key={p} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'rgba(196,181,253,0.45)', fontWeight: 500 }}>
+              <span style={{ width: 4, height: 4, borderRadius: '50%', background: info.color, display: 'inline-block', opacity: 0.6 }} />
+              {info.label}
+            </span>
+          ) : null;
+        })}
+      </div>
+
+      {/* CTA — editorial bar, NOT a rounded button */}
+      <button
+        onClick={() => onConnect(match)}
+        disabled={isConnecting}
+        style={{
+          width: '100%', padding: '18px 26px', marginTop: 20,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          background: isConnecting ? 'rgba(255,255,255,0.02)' : 'rgba(124,58,237,0.1)',
+          border: 'none',
+          borderTop: `1px solid ${isConnecting ? 'rgba(255,255,255,0.04)' : 'rgba(124,58,237,0.2)'}`,
+          cursor: isConnecting ? 'default' : 'pointer',
+          transition: 'background 0.2s ease, border-color 0.2s ease',
+        }}
+        onMouseEnter={e => {
+          if (!isConnecting) {
+            e.currentTarget.style.background = 'rgba(124,58,237,0.2)';
+            e.currentTarget.style.borderTopColor = 'rgba(168,85,247,0.4)';
+          }
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = 'rgba(124,58,237,0.1)';
+          e.currentTarget.style.borderTopColor = 'rgba(124,58,237,0.2)';
+        }}
+      >
+        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: isConnecting ? 'rgba(196,181,253,0.3)' : 'rgba(196,181,253,0.85)' }}>
+          {isConnecting ? 'Opening sanctuary...' : 'Begin Conversation'}
+        </span>
+        <span style={{ fontSize: 22, color: isConnecting ? 'rgba(255,255,255,0.15)' : '#d4af37', lineHeight: 1 }}>→</span>
+      </button>
     </div>
   );
 }
