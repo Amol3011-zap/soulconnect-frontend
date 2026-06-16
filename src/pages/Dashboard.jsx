@@ -5,35 +5,15 @@ import { useThemeStore } from '../store/theme';
 import ThemeToggle from '../components/ThemeToggle';
 import ActivitySuggestions from '../components/ActivitySuggestions';
 
-// ── Demo matches ───────────────────────────────────────────────────────────────
+// ── Demo match — one chatbot persona shown to every new user ───────────────────
 const DEMO_MATCHES = [
   {
     id: 101, name: 'Priya', initials: 'PR', age: 26, city: 'Mumbai',
     primary_problem: 'anxiety', match_score: 94,
     match_reason: 'Both navigating social anxiety and overthinking spirals',
-    last_message: 'How was your day today? 💙', last_time: '2m ago', online: true,
+    last_message: 'How was your day today? 💙', last_time: 'just now', online: true,
     grad: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
-  },
-  {
-    id: 102, name: 'Rohan', initials: 'RO', age: 29, city: 'Pune',
-    primary_problem: 'depression', match_score: 88,
-    match_reason: 'Similar experiences with low motivation and isolation',
-    last_message: 'I\'m really glad we got matched', last_time: '1h ago', online: true,
-    grad: 'linear-gradient(135deg, #0891b2, #2563eb)',
-  },
-  {
-    id: 103, name: 'Aisha', initials: 'AI', age: 24, city: 'Bangalore',
-    primary_problem: 'loneliness', match_score: 82,
-    match_reason: 'Both dealing with loneliness after a big life change',
-    last_message: "You're not alone, I promise 🌟", last_time: '3h ago', online: false,
-    grad: 'linear-gradient(135deg, #059669, #0891b2)',
-  },
-  {
-    id: 104, name: 'Dev', initials: 'DV', age: 31, city: 'Delhi',
-    primary_problem: 'work_career_stress', match_score: 79,
-    match_reason: 'Both burned out from high-pressure work environments',
-    last_message: 'Take it one day at a time 💜', last_time: '1d ago', online: false,
-    grad: 'linear-gradient(135deg, #d97706, #dc2626)',
+    isDemo: true,
   },
 ];
 
@@ -273,12 +253,12 @@ export default function Dashboard() {
       initHistory[m.id] = [
         {
           id: 1, from: 'bot',
-          text: `Hi! 👋 I'm ${m.name} — so glad SoulConnect connected us. I was a little nervous about reaching out first, but here we are 😊`,
+          text: `Hi! 👋 I'm ${m.name}. SoulConnect just matched us and I'm honestly really glad — I don't always find it easy to connect with new people, but something about this felt right 😊`,
           time: new Date(Date.now() - 5 * 60000),
         },
         {
           id: 2, from: 'bot',
-          text: `How was your day today? I genuinely want to know — not just the "fine, thanks" version 💙`,
+          text: `How are you doing today? And I mean that genuinely — not looking for "fine, thanks". What's actually going on with you? 💙`,
           time: new Date(Date.now() - 4 * 60000),
         },
       ];
@@ -369,18 +349,14 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Nav tabs */}
-        <div className="flex gap-1 px-5 mb-3">
-          {['Chats', 'Matches'].map(tab => (
-            <button key={tab}
-              className="flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all"
-              style={{
-                background: tab === 'Chats' ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'var(--bg-subtle)',
-                color: tab === 'Chats' ? 'white' : 'var(--text-secondary)',
-              }}>
-              {tab}
-            </button>
-          ))}
+        {/* Demo notice */}
+        <div className="mx-3 mb-3 px-3 py-2.5 rounded-xl flex items-center gap-2"
+          style={{ background: 'linear-gradient(135deg,rgba(124,58,237,0.12),rgba(37,99,235,0.08))', border: '1px solid rgba(124,58,237,0.2)' }}>
+          <span className="text-base">✨</span>
+          <div>
+            <p className="text-xs font-bold" style={{ color: '#a855f7' }}>Demo Match Active</p>
+            <p className="text-xs leading-tight" style={{ color: 'var(--text-muted)' }}>Chat with Priya — a real-feeling AI companion</p>
+          </div>
         </div>
 
         {/* Match list */}
@@ -403,7 +379,12 @@ export default function Dashboard() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-center mb-0.5">
-                  <span className="text-sm font-bold truncate" style={{ color: 'var(--text)' }}>{m.name}</span>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="text-sm font-bold truncate" style={{ color: 'var(--text)' }}>{m.name}</span>
+                    {m.isDemo && (
+                      <span className="shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(168,85,247,0.15)', color: '#a855f7' }}>DEMO</span>
+                    )}
+                  </div>
                   <span className="text-xs shrink-0 ml-1" style={{ color: 'var(--text-muted)' }}>{m.last_time}</span>
                 </div>
                 <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{m.last_message}</p>
@@ -464,9 +445,13 @@ export default function Dashboard() {
                   online
                 </span>
               )}
+              {activeMatch?.isDemo && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(168,85,247,0.15)', color: '#a855f7' }}>AI DEMO</span>
+              )}
             </div>
             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
               {PROBLEM_LABELS[activeMatch?.primary_problem]} · {activeMatch?.match_score}% match
+              {activeMatch?.isDemo && ' · AI companion'}
             </p>
           </div>
           <div className="flex items-center gap-2">
