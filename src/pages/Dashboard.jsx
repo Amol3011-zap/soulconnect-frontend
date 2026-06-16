@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/auth';
 import { useThemeStore } from '../store/theme';
 import ThemeToggle from '../components/ThemeToggle';
 import ActivitySuggestions from '../components/ActivitySuggestions';
+import GuidedHealing from '../components/GuidedHealing';
 
 // ── Demo match — one chatbot persona shown to every new user ───────────────────
 const DEMO_MATCHES = [
@@ -230,6 +231,7 @@ export default function Dashboard() {
   const [typing, setTyping] = useState(false);
   const [safetyDismissed, setSafetyDismissed] = useState({});
   const [showActivity, setShowActivity] = useState(false);
+  const [rightTab, setRightTab] = useState('activities'); // 'activities' | 'healing'
   const [mobileView, setMobileView] = useState('list');
   const [searchQuery, setSearchQuery] = useState('');
   const bottomRef = useRef(null);
@@ -456,13 +458,22 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setShowActivity(!showActivity)}
+              onClick={() => { setShowActivity(true); setRightTab('activities'); }}
               className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
               style={{
-                background: showActivity ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'var(--bg-subtle)',
-                color: showActivity ? 'white' : 'var(--text-secondary)',
+                background: showActivity && rightTab === 'activities' ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'var(--bg-subtle)',
+                color: showActivity && rightTab === 'activities' ? 'white' : 'var(--text-secondary)',
               }}>
               💡 Activities
+            </button>
+            <button
+              onClick={() => { setShowActivity(true); setRightTab('healing'); }}
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
+              style={{
+                background: showActivity && rightTab === 'healing' ? 'linear-gradient(135deg,#d4af37,#a855f7)' : 'var(--bg-subtle)',
+                color: showActivity && rightTab === 'healing' ? 'white' : 'var(--text-secondary)',
+              }}>
+              🌟 Healing
             </button>
             <button className="w-8 h-8 rounded-xl flex items-center justify-center text-sm transition-colors hover:opacity-70"
               style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)' }}>
@@ -560,43 +571,80 @@ export default function Dashboard() {
 
       {/* ── RIGHT PANEL ── */}
       {showActivity && (
-        <div className="hidden lg:flex flex-col w-72 shrink-0 border-l overflow-y-auto"
+        <div className="hidden lg:flex flex-col w-80 shrink-0 border-l overflow-y-auto"
           style={{ borderColor: 'var(--border)', background: 'var(--bg-card)' }}>
-          <div className="px-4 py-4">
-            <div className="flex items-center justify-between mb-4">
-              <p className="font-bold text-sm" style={{ color: 'var(--text)' }}>Quick Relief</p>
-              <button onClick={() => setShowActivity(false)}
-                className="text-xs hover:opacity-60 transition-opacity" style={{ color: 'var(--text-muted)' }}>✕</button>
+
+          {/* Panel header */}
+          <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0"
+            style={{ borderBottom: '1px solid var(--border)' }}>
+            <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--bg-subtle)' }}>
+              <button
+                onClick={() => setRightTab('activities')}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+                style={{
+                  background: rightTab === 'activities' ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'transparent',
+                  color: rightTab === 'activities' ? 'white' : 'var(--text-muted)',
+                }}>
+                ⚡ Relief
+              </button>
+              <button
+                onClick={() => setRightTab('healing')}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+                style={{
+                  background: rightTab === 'healing' ? 'linear-gradient(135deg,#d4af37,#a855f7)' : 'transparent',
+                  color: rightTab === 'healing' ? 'white' : 'var(--text-muted)',
+                }}>
+                🌟 Healing
+              </button>
             </div>
-            <ActivitySuggestions
-              problemType={activeMatch?.primary_problem || 'anxiety'}
-              matchName={activeMatch?.name}
-              onActivityComplete={() => {}}
-            />
-            <div className="rounded-2xl overflow-hidden mt-2"
-              style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63)' }}>
-              <div className="p-4">
-                <p className="text-xs font-bold text-white mb-1">Need more support?</p>
-                <p className="text-xs text-purple-200 mb-3">Chat with a verified therapist or counsellor.</p>
-                <button onClick={() => navigate('/healers')}
-                  className="w-full py-2 rounded-xl text-xs font-bold text-white hover:opacity-90 transition-opacity"
-                  style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
-                  Browse Healers →
-                </button>
-              </div>
-            </div>
-            <div className="rounded-2xl overflow-hidden mt-3"
-              style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}>
-              <div className="p-4">
-                <p className="text-xs font-bold mb-1" style={{ color: 'var(--text)' }}>👥 Join a Meetup</p>
-                <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>Small group sessions for your challenge.</p>
-                <button onClick={() => navigate('/meetups')}
-                  className="w-full py-2 rounded-xl text-xs font-semibold border transition-colors hover:opacity-80"
-                  style={{ color: 'var(--text)', borderColor: 'var(--border)', background: 'var(--bg-card)' }}>
-                  See Upcoming Meetups
-                </button>
-              </div>
-            </div>
+            <button onClick={() => setShowActivity(false)}
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-xs hover:opacity-60 transition-opacity"
+              style={{ background: 'var(--bg-subtle)', color: 'var(--text-muted)' }}>✕</button>
+          </div>
+
+          {/* Panel content */}
+          <div className="flex-1 overflow-y-auto px-4 py-4">
+            {rightTab === 'activities' && (
+              <>
+                <ActivitySuggestions
+                  problemType={activeMatch?.primary_problem || 'anxiety'}
+                  matchName={activeMatch?.name}
+                  onActivityComplete={() => {}}
+                />
+                <div className="rounded-2xl overflow-hidden mt-3"
+                  style={{ background: 'linear-gradient(135deg,#0f0c29,#302b63)' }}>
+                  <div className="p-4">
+                    <p className="text-xs font-bold text-white mb-1">Need more support?</p>
+                    <p className="text-xs text-purple-200 mb-3">Chat with a verified therapist or counsellor.</p>
+                    <button onClick={() => navigate('/healers')}
+                      className="w-full py-2 rounded-xl text-xs font-bold text-white hover:opacity-90 transition-opacity"
+                      style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
+                      Browse Healers →
+                    </button>
+                  </div>
+                </div>
+                <div className="rounded-2xl overflow-hidden mt-3"
+                  style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}>
+                  <div className="p-4">
+                    <p className="text-xs font-bold mb-1" style={{ color: 'var(--text)' }}>👥 Join a Meetup</p>
+                    <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>Small group sessions for your challenge.</p>
+                    <button onClick={() => navigate('/meetups')}
+                      className="w-full py-2 rounded-xl text-xs font-semibold border transition-colors hover:opacity-80"
+                      style={{ color: 'var(--text)', borderColor: 'var(--border)', background: 'var(--bg-card)' }}>
+                      See Upcoming Meetups
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {rightTab === 'healing' && (
+              <GuidedHealing
+                problemType={activeMatch?.primary_problem || 'anxiety'}
+                matchName={activeMatch?.name || 'Your Match'}
+                userId={activeMatch?.id}
+              />
+            )}
           </div>
         </div>
       )}
