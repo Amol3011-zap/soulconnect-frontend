@@ -18,8 +18,8 @@ export default function Login() {
     setError('');
     try {
       const response = await authAPI.login(phone);
-      setAuth(response.data, response.data.access_token);
-      navigate('/matches');
+      setAuth(response.data, response.data.access_token, response.data.role);
+      navigate('/matches'); // App.jsx will redirect healers to /healer-dashboard automatically
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed. Check your phone number.');
     } finally {

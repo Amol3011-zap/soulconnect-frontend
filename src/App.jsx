@@ -18,9 +18,9 @@ import HealerDashboard from './pages/HealerDashboard';
 import Navbar from './components/Navbar';
 
 function AppInner() {
-  const { token, user } = useAuthStore();
+  const { token, user, role } = useAuthStore();
   const location = useLocation();
-  const isHealer = user?.role === 'healer';
+  const isHealer = role === 'healer' || user?.role === 'healer';
 
   // Pages that manage their own header/nav
   const hideNav = location.pathname === '/matches' || isHealer;

@@ -264,7 +264,7 @@ export default function Signup() {
         }),
       };
       const response = await authAPI.signup(payload);
-      setAuth(response.data, response.data.access_token);
+      setAuth(response.data, response.data.access_token, role);
       navigate(role === 'healer' ? '/healer-dashboard' : '/matches');
     } catch (err) {
       const detail = err.response?.data?.detail;
