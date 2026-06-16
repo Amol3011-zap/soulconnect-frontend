@@ -366,7 +366,7 @@ export default function Landing() {
           </div>
 
           {/* Mobile cards — horizontal scroll */}
-          <div className="md:hidden" style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 8, marginBottom: 28, scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
+          <div className="md:hidden flex" style={{ gap: 12, overflowX: 'auto', paddingBottom: 8, marginBottom: 28, scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
             {[
               { to: '/signup', bg: 'linear-gradient(160deg,#312e81 0%,#4338ca 100%)', tag: 'Anxiety · Depression', title: 'Heal my mind', sub: 'Find your calm →', illustration: <LotusIllustration /> },
               { to: '/signup', bg: 'linear-gradient(160deg,#881337 0%,#be185d 100%)', tag: 'Breakup · Grief', title: 'Mend my heart', sub: 'Feel less alone →', illustration: <ConnectionIllustration /> },
