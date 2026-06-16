@@ -39,7 +39,7 @@ export default function Navbar() {
 
           {/* Logo — left */}
           <Link to="/dashboard" className="flex items-center shrink-0">
-            <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 48, width: 'auto', objectFit: 'contain', maxWidth: 180 }} />
+            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 56, width: 'auto', objectFit: 'contain', maxWidth: 220 }} />
           </Link>
 
           {/* ── Right side: pill nav + theme toggle ── */}

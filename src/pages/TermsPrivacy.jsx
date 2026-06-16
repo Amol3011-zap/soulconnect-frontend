@@ -215,7 +215,7 @@ export default function TermsPrivacy() {
 
           {/* Logo */}
           <div className="flex items-center mb-5">
-            <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 50, width: 'auto', objectFit: 'contain', mixBlendMode: 'screen' }} />
+            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 60, width: 'auto', objectFit: 'contain', maxWidth: 260, borderRadius: 10 }} />
           </div>
 
           <h1 style={{ color: 'white', fontSize: 28, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.3px' }}>

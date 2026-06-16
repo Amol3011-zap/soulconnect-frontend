@@ -431,7 +431,7 @@ export default function ForgotPassword() {
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           {/* Logo */}
           <div className="flex items-center">
-            <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 52, width: 'auto', objectFit: 'contain', mixBlendMode: 'screen' }} />
+            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 64, width: 'auto', objectFit: 'contain', maxWidth: 260, borderRadius: 10 }} />
           </div>
 
           {/* Headline */}
@@ -494,7 +494,7 @@ export default function ForgotPassword() {
 
           {/* Mobile logo */}
           <div className="flex items-center mb-8 lg:hidden">
-            <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 44, width: 'auto', objectFit: 'contain', maxWidth: 160 }} />
+            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 44, width: 'auto', objectFit: 'contain', maxWidth: 160 }} />
           </div>
 
           {/* Step Indicator */}

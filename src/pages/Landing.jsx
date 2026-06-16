@@ -260,7 +260,7 @@ export default function Landing() {
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
           {/* Logo */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 52, width: 'auto', objectFit: 'contain', borderRadius: 8, mixBlendMode: 'screen' }} />
+            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 56, width: 'auto', objectFit: 'contain', maxWidth: 240 }} />
           </Link>
 
           {/* Nav links — hidden on mobile */}
