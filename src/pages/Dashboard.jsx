@@ -439,18 +439,12 @@ export default function Dashboard() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{
                   width: 34, height: 34, borderRadius: 12,
-                  background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
+                  background: 'transparent',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 16,
-                  boxShadow: '0 0 18px rgba(124,58,237,0.4)',
-                }}>🌟</div>
-                <span style={{
-                  fontWeight: 800, fontSize: 16,
-                  background: `linear-gradient(135deg, ${GOLD}, #fff9e0, ${GOLD})`,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>SoulConnect</span>
+                }}>
+                  <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 34, width: 34, objectFit: 'contain', borderRadius: 8 }} />
+                </div>
+                <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 36, width: 'auto', objectFit: 'contain', maxWidth: 160 }} />
               </div>
               <ThemeToggle />
             </div>
