@@ -152,38 +152,7 @@
     </style>
   </head>
   <body style="margin:0;background:#09061a;color:#ede9fe;font-family:'Plus Jakarta Sans',sans-serif;">
-    <div id="root">
-      <!-- Crawler-readable content (hidden once React loads) -->
-      <div id="static-shell" style="max-width:680px;margin:0 auto;padding:60px 24px;text-align:center;">
-        <h1 style="font-size:2.5rem;font-weight:900;color:#ede9fe;margin-bottom:16px;">You Are Not Alone in This.</h1>
-        <p style="font-size:1.1rem;color:rgba(196,181,253,0.8);line-height:1.7;margin-bottom:32px;">
-          SoulConnect matches you with someone dealing with your exact struggle — breakup, anxiety, grief, or any of 25 specific challenges. Peer support that truly understands you.
-        </p>
-        <p style="font-size:0.9rem;color:rgba(196,181,253,0.5);margin-bottom:8px;">Challenges we support:</p>
-        <p style="font-size:0.85rem;color:rgba(196,181,253,0.5);line-height:1.8;">
-          Anxiety · Depression · Loneliness · Grief &amp; Loss · Relationship Breakup · Marriage Problems ·
-          Work Stress · Financial Stress · Panic Attacks · PTSD &amp; Trauma · Low Confidence ·
-          Sleep Problems · Family Issues · OCD · Trust Issues · Anger Management and more.
-        </p>
-        <p style="margin-top:32px;font-size:0.85rem;color:rgba(196,181,253,0.4);">Loading SoulConnect…</p>
-      </div>
-    </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>
-      // Hide static shell once React mounts
-      document.addEventListener('DOMContentLoaded', function() {
-        var shell = document.getElementById('static-shell');
-        if (shell) {
-          var observer = new MutationObserver(function() {
-            var root = document.getElementById('root');
-            if (root && root.children.length > 1) {
-              shell.style.display = 'none';
-              observer.disconnect();
-            }
-          });
-          observer.observe(document.getElementById('root'), { childList: true });
-        }
-      });
-    </script>
   </body>
 </html>
