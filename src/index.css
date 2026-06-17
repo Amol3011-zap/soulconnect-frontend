@@ -2,19 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Light mode variables ── */
+/* ── Light mode variables — Spiritual Premium ── */
 :root {
-  --bg: #f9fafb;
-  --bg-card: #ffffff;
-  --bg-subtle: #f3f4f6;
-  --border: #e5e7eb;
-  --border-subtle: #f3f4f6;
-  --text: #111827;
-  --text-secondary: #6b7280;
-  --text-muted: #9ca3af;
-  --nav-bg: rgba(255,255,255,0.95);
-  --input-bg: #f9fafb;
-  --input-border: #e5e7eb;
+  --bg: #FAFAFD;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #F5F3FF;
+  --border: #EDE9FE;
+  --border-subtle: #F5F3FF;
+  --text: #1F2937;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
+  --nav-bg: rgba(255,255,255,0.98);
+  --input-bg: #F5F3FF;
+  --input-border: #DDD6FE;
+  --primary: #6D5EF5;
+  --primary-hover: #5B4EE8;
+  --secondary: #A78BFA;
+  --accent: #E8D5FF;
+  --success: #7DD3A0;
   /* Safe area insets (for iPhone notch / home bar) */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -35,6 +40,10 @@
   --nav-bg: rgba(15,15,19,0.96);
   --input-bg: #22222e;
   --input-border: #2a2a38;
+  --primary: #8B7FF8;
+  --secondary: #A78BFA;
+  --accent: #312e81;
+  --success: #7DD3A0;
 }
 
 body {
@@ -58,7 +67,7 @@ html, body, #root {
 /* ── Scrollbar (desktop) ── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: #DDD6FE; border-radius: 99px; }
 .dark ::-webkit-scrollbar-thumb { background: #4c1d95; }
 /* Hide scrollbar on mobile but keep scrollable */
 @media (max-width: 768px) {

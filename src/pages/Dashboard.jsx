@@ -176,10 +176,6 @@ const DASH_STYLES = `
     .dash-page-bg { padding: 0 !important; align-items: stretch !important; }
     .dash-box { border-radius: 0 !important; height: 100dvh !important; box-shadow: none !important; }
   }
-  @keyframes dashStarPulse {
-    0%, 100% { opacity: 0.1; transform: scale(1); }
-    50% { opacity: 0.45; transform: scale(1.7); }
-  }
   @keyframes dotBounce {
     0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
     40% { transform: translateY(-6px); opacity: 1; }
@@ -189,49 +185,18 @@ const DASH_STYLES = `
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes pulseGreen {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.0); }
-    50%       { box-shadow: 0 0 0 4px rgba(52,211,153,0.2); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(125,211,160,0.0); }
+    50%       { box-shadow: 0 0 0 4px rgba(125,211,160,0.25); }
   }
   .dash-scroll::-webkit-scrollbar { width: 4px; }
   .dash-scroll::-webkit-scrollbar-track { background: transparent; }
-  .dash-scroll::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.25); border-radius: 4px; }
+  .dash-scroll::-webkit-scrollbar-thumb { background: rgba(109,94,245,0.18); border-radius: 4px; }
   .dash-msg-enter { animation: slideInChat 0.25s ease forwards; }
 `;
 
-// ── Background Particles ──────────────────────────────────────────────────────
-const BG_PARTICLES = [
-  { l: '5%',  t: '10%', s: 1.5, c: '#d4af37', d: 0 },
-  { l: '18%', t: '72%', s: 1,   c: '#c4b5fd', d: 0.9 },
-  { l: '32%', t: '28%', s: 2,   c: '#ffffff', d: 1.8 },
-  { l: '47%', t: '85%', s: 1.5, c: '#d4af37', d: 0.5 },
-  { l: '60%', t: '15%', s: 1,   c: '#c4b5fd', d: 2.3 },
-  { l: '75%', t: '60%', s: 2,   c: '#ffffff', d: 1.1 },
-  { l: '86%', t: '30%', s: 1.5, c: '#d4af37', d: 2.7 },
-  { l: '93%', t: '80%', s: 1,   c: '#c4b5fd', d: 0.3 },
-  { l: '12%', t: '45%', s: 1,   c: '#ffffff', d: 1.5 },
-  { l: '65%', t: '90%', s: 2,   c: '#d4af37', d: 3.2 },
-];
-
+// ── Background pattern (light) ────────────────────────────────────────────────
 function BgParticles() {
-  return (
-    <>
-      {BG_PARTICLES.map((p, i) => (
-        <div
-          key={i}
-          style={{
-            position: 'absolute',
-            left: p.l, top: p.t,
-            width: p.s, height: p.s,
-            borderRadius: '50%',
-            background: p.c,
-            animation: `dashStarPulse ${2.5 + (i % 3) * 0.6}s ease-in-out ${p.d}s infinite`,
-            pointerEvents: 'none',
-            zIndex: 0,
-          }}
-        />
-      ))}
-    </>
-  );
+  return null; // no heavy particles on light theme
 }
 
 // ── Safety Notice ─────────────────────────────────────────────────────────────
@@ -239,22 +204,19 @@ function SafetyNotice({ onDismiss }) {
   return (
     <div style={{
       margin: '14px 16px 6px',
-      borderRadius: 18,
-      overflow: 'hidden',
-      background: 'rgba(251,191,36,0.06)',
-      border: '1px solid rgba(251,191,36,0.2)',
-      backdropFilter: 'blur(16px)',
-      WebkitBackdropFilter: 'blur(16px)',
+      borderRadius: 16,
+      background: '#FFFBEB',
+      border: '1px solid #FDE68A',
     }}>
       <div style={{ padding: '12px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
             <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>⚠️</span>
             <div>
-              <p style={{ margin: '0 0 3px', fontSize: 11, fontWeight: 700, color: '#fbbf24' }}>
+              <p style={{ margin: '0 0 3px', fontSize: 11, fontWeight: 700, color: '#92400E' }}>
                 Safety &amp; Privacy Notice
               </p>
-              <p style={{ margin: 0, fontSize: 11, color: 'rgba(251,191,36,0.72)', lineHeight: 1.6 }}>
+              <p style={{ margin: 0, fontSize: 11, color: '#78350F', lineHeight: 1.6 }}>
                 Never share your phone number, address, or social media with matches.
                 Your safety is our priority. If you feel unsafe,{' '}
                 <span style={{ fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
@@ -269,8 +231,8 @@ function SafetyNotice({ onDismiss }) {
             aria-label="Dismiss safety notice"
             style={{
               flexShrink: 0, width: 44, height: 44, borderRadius: '50%',
-              background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.2)',
-              color: '#fbbf24', fontSize: 14, cursor: 'pointer',
+              background: '#FEF3C7', border: '1px solid #FDE68A',
+              color: '#92400E', fontSize: 14, cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
             ✕
@@ -287,7 +249,7 @@ function TypingIndicator({ grad }) {
     <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '4px 16px', alignItems: 'flex-end', gap: 8 }}>
       <div style={{
         width: 28, height: 28, borderRadius: '50%',
-        background: grad || 'linear-gradient(135deg,#7c3aed,#6d28d9)',
+        background: grad || 'linear-gradient(135deg,#6D5EF5,#8B5CF6)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 10, color: '#fff', fontWeight: 700, flexShrink: 0,
       }}>
@@ -295,10 +257,8 @@ function TypingIndicator({ grad }) {
       </div>
       <div style={{
         padding: '10px 16px', borderRadius: '20px 20px 20px 4px',
-        background: 'rgba(255,255,255,0.06)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        border: '1px solid rgba(255,255,255,0.1)',
+        background: '#F5F3FF',
+        border: '1px solid #EDE9FE',
       }}>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 14 }}>
           {[0, 1, 2].map(i => (
@@ -306,9 +266,8 @@ function TypingIndicator({ grad }) {
               key={i}
               style={{
                 width: 7, height: 7, borderRadius: '50%',
-                background: 'rgba(168,85,247,0.8)',
+                background: '#A78BFA',
                 animation: `dotBounce 1.2s ease-in-out ${i * 0.2}s infinite`,
-                boxShadow: '0 0 6px rgba(168,85,247,0.5)',
               }}
             />
           ))}
@@ -407,11 +366,11 @@ export default function Dashboard() {
   const filteredMatches = matches.filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()));
   const fmt             = (d) => d?.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
-  // ── Colour constants ───────────────────────────────────────────────────────
-  const SIDEBAR_BG   = 'rgba(8, 2, 20, 0.97)';
-  const CHAT_BG      = 'linear-gradient(180deg, #06010f 0%, #0d0425 50%, #080215 100%)';
-  const BORDER_COLOR = 'rgba(124,58,237,0.15)';
-  const GOLD         = '#a78bfa';
+  // ── Colour constants — Light theme ─────────────────────────────────────────
+  const SIDEBAR_BG   = '#FFFFFF';
+  const CHAT_BG      = '#FAFAFD';
+  const BORDER_COLOR = '#EDE9FE';
+  const GOLD         = '#6D5EF5';
 
   return (
     <>
@@ -420,7 +379,7 @@ export default function Dashboard() {
       {/* Page background */}
       <div className="dash-page-bg" style={{
         minHeight: '100dvh',
-        background: 'linear-gradient(135deg, #03000d 0%, #0a0320 50%, #040112 100%)',
+        background: '#FAFAFD',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -436,9 +395,9 @@ export default function Dashboard() {
         width: '100%',
         maxWidth: 1100,
         height: 'calc(100dvh - 32px)',
-        background: '#06010f',
+        background: '#FFFFFF',
         borderRadius: 20,
-        boxShadow: '0 0 0 1px rgba(124,58,237,0.2), 0 40px 80px rgba(0,0,0,0.8), 0 0 60px rgba(124,58,237,0.08)',
+        boxShadow: '0 0 0 1px #EDE9FE, 0 8px 48px rgba(109,94,245,0.1)',
         fontFamily: 'system-ui, -apple-system, sans-serif',
       }}>
 
@@ -487,13 +446,12 @@ export default function Dashboard() {
                   width: '100%', boxSizing: 'border-box',
                   paddingLeft: 36, paddingRight: 14, paddingTop: 10, paddingBottom: 10,
                   borderRadius: 14, fontSize: 13,
-                  background: 'rgba(255,255,255,0.04)',
-                  color: 'rgba(221,214,254,0.9)',
+                  background: '#F5F3FF',
+                  color: '#1F2937',
                   border: searchFocused
-                    ? `1.5px solid rgba(212,175,55,0.45)`
-                    : '1.5px solid rgba(255,255,255,0.08)',
+                    ? `1.5px solid #6D5EF5`
+                    : '1.5px solid #EDE9FE',
                   outline: 'none',
-                  backdropFilter: 'blur(12px)',
                   transition: 'border-color 0.2s',
                 }}
               />
@@ -505,14 +463,14 @@ export default function Dashboard() {
             margin: '0 12px 12px',
             padding: '10px 14px',
             borderRadius: 14,
-            background: 'rgba(168,85,247,0.08)',
-            border: '1px solid rgba(168,85,247,0.2)',
+            background: '#F5F3FF',
+            border: '1px solid #EDE9FE',
             display: 'flex', alignItems: 'center', gap: 10,
           }}>
             <span style={{ fontSize: 14 }}>✨</span>
             <div>
-              <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#a855f7' }}>Demo Active</p>
-              <p style={{ margin: 0, fontSize: 10, color: 'rgba(196,181,253,0.55)', lineHeight: 1.4 }}>
+              <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#6D5EF5' }}>Demo Active</p>
+              <p style={{ margin: 0, fontSize: 10, color: '#9CA3AF', lineHeight: 1.4 }}>
                 Chat with Priya — a real-feeling AI companion
               </p>
             </div>
@@ -531,14 +489,14 @@ export default function Dashboard() {
                     padding: '11px 12px', borderRadius: 16, marginBottom: 4,
                     textAlign: 'left', cursor: 'pointer',
                     background: isActive
-                      ? 'rgba(124,58,237,0.12)'
+                      ? '#F5F3FF'
                       : 'transparent',
                     border: isActive
-                      ? '1.5px solid rgba(124,58,237,0.3)'
+                      ? '1.5px solid #EDE9FE'
                       : '1.5px solid transparent',
-                    borderLeft: isActive ? '3px solid rgba(124,58,237,0.7)' : '3px solid transparent',
+                    borderLeft: isActive ? '3px solid #6D5EF5' : '3px solid transparent',
                     transition: 'all 0.2s ease',
-                    boxShadow: isActive ? '0 0 20px rgba(124,58,237,0.08)' : 'none',
+                    boxShadow: isActive ? '0 2px 12px rgba(109,94,245,0.08)' : 'none',
                   }}
                 >
                   <div style={{ position: 'relative', flexShrink: 0 }}>
@@ -547,7 +505,7 @@ export default function Dashboard() {
                       background: m.grad,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 13, fontWeight: 700, color: '#fff',
-                      boxShadow: isActive ? '0 0 14px rgba(124,58,237,0.4)' : 'none',
+                      boxShadow: isActive ? '0 2px 8px rgba(109,94,245,0.2)' : 'none',
                     }}>
                       {m.initials}
                     </div>
@@ -563,24 +521,24 @@ export default function Dashboard() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
                         <span style={{
-                          fontSize: 13, fontWeight: 700, color: '#e2d9f3',
+                          fontSize: 13, fontWeight: 700, color: '#1F2937',
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         }}>{m.name}</span>
                         {m.isDemo && (
                           <span style={{
                             fontSize: 8, fontWeight: 700, padding: '2px 5px', borderRadius: 6,
-                            background: 'rgba(168,85,247,0.15)', color: '#a855f7',
+                            background: '#F5F3FF', color: '#6D5EF5',
                             flexShrink: 0,
                           }}>DEMO</span>
                         )}
                       </div>
-                      <span style={{ fontSize: 10, color: 'rgba(196,181,253,0.35)', flexShrink: 0, marginLeft: 4 }}>
+                      <span style={{ fontSize: 10, color: '#9CA3AF', flexShrink: 0, marginLeft: 4 }}>
                         {m.last_time}
                       </span>
                     </div>
                     <p style={{
                       margin: 0, fontSize: 11,
-                      color: 'rgba(196,181,253,0.45)',
+                      color: '#9CA3AF',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                     }}>{m.last_message}</p>
                   </div>
@@ -599,15 +557,15 @@ export default function Dashboard() {
               style={{
                 width: '100%', display: 'flex', alignItems: 'center', gap: 12,
                 padding: '12px 16px', borderRadius: 14, cursor: 'pointer',
-                background: 'linear-gradient(135deg, #0891b2, #2563eb)',
+                background: 'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
                 border: 'none', marginBottom: 8,
-                boxShadow: '0 4px 20px rgba(8,145,178,0.3)',
+                boxShadow: '0 4px 14px rgba(109,94,245,0.3)',
               }}
             >
               <span style={{ fontSize: 20 }}>🧘</span>
               <div style={{ textAlign: 'left' }}>
                 <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#fff' }}>Talk to a Healer</p>
-                <p style={{ margin: 0, fontSize: 10, color: 'rgba(186,230,253,0.8)' }}>Book a professional session</p>
+                <p style={{ margin: 0, fontSize: 10, color: 'rgba(255,255,255,0.75)' }}>Book a professional session</p>
               </div>
             </button>
             <button
@@ -616,11 +574,11 @@ export default function Dashboard() {
                 width: '100%', padding: '8px', borderRadius: 10,
                 background: 'none', border: 'none', cursor: 'pointer',
                 fontSize: 11, fontWeight: 500,
-                color: 'rgba(196,181,253,0.35)',
+                color: '#9CA3AF',
                 transition: 'color 0.2s',
               }}
-              onMouseEnter={e => e.currentTarget.style.color = 'rgba(196,181,253,0.65)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(196,181,253,0.35)'}
+              onMouseEnter={e => e.currentTarget.style.color = '#6B7280'}
+              onMouseLeave={e => e.currentTarget.style.color = '#9CA3AF'}
             >
               Sign out
             </button>
@@ -649,9 +607,7 @@ export default function Dashboard() {
             display: 'flex', alignItems: 'center', gap: 12,
             padding: `max(env(safe-area-inset-top,0px),12px) 16px 12px`,
             borderBottom: `1px solid ${BORDER_COLOR}`,
-            background: 'rgba(6,1,15,0.85)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
+            background: '#FFFFFF',
             position: 'relative', zIndex: 10,
           }}>
             {/* Mobile back button */}
@@ -660,10 +616,9 @@ export default function Dashboard() {
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 width: 36, height: 36, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                backdropFilter: 'blur(12px)',
-                color: '#e2d9f3', fontSize: 20,
+                background: '#F5F3FF',
+                border: '1px solid #EDE9FE',
+                color: '#6D5EF5', fontSize: 20,
                 cursor: 'pointer',
                 marginRight: 4,
               }}
@@ -714,11 +669,11 @@ export default function Dashboard() {
                 {activeMatch?.isDemo && (
                   <span style={{
                     fontSize: 8, fontWeight: 700, padding: '2px 6px', borderRadius: 6,
-                    background: 'rgba(168,85,247,0.15)', color: '#a855f7',
+                    background: '#F5F3FF', color: '#6D5EF5',
                   }}>AI DEMO</span>
                 )}
               </div>
-              <p style={{ margin: 0, fontSize: 11, color: 'rgba(196,181,253,0.6)' }}>
+              <p style={{ margin: 0, fontSize: 11, color: '#9CA3AF' }}>
                 {PROBLEM_LABELS[activeMatch?.primary_problem]} · {activeMatch?.match_score}% match
                 {activeMatch?.isDemo && ' · AI companion'}
               </p>
@@ -784,12 +739,10 @@ export default function Dashboard() {
           <div style={{
             flexShrink: 0,
             display: 'flex',
-            gap: 6,
+            gap: 4,
             padding: '8px 12px',
-            borderBottom: '1px solid rgba(255,255,255,0.07)',
-            background: 'rgba(6,1,15,0.8)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
+            borderBottom: `1px solid ${BORDER_COLOR}`,
+            background: '#FFFFFF',
             position: 'relative', zIndex: 10,
           }}>
             {[
@@ -799,32 +752,16 @@ export default function Dashboard() {
             ].map(t => (
               <button key={t.key} onClick={() => setMainTab(t.key)} style={{
                 flex: 1,
-                padding: '10px 6px',
-                borderRadius: 12,
-                fontSize: 13,
-                fontWeight: 700,
+                padding: '9px 6px',
+                borderRadius: 10,
+                fontSize: 12,
+                fontWeight: 600,
                 cursor: 'pointer',
                 border: 'none',
-                letterSpacing: '0.02em',
                 transition: 'all 0.2s ease',
-                background: mainTab === t.key
-                  ? t.key === 'healing'
-                    ? 'linear-gradient(135deg, rgba(212,175,55,0.25), rgba(168,85,247,0.25))'
-                    : t.key === 'relief'
-                    ? 'linear-gradient(135deg, rgba(124,58,237,0.2), rgba(37,99,235,0.2))'
-                    : 'rgba(124,58,237,0.2)'
-                  : 'rgba(255,255,255,0.04)',
-                color: mainTab === t.key
-                  ? '#c4b5fd'
-                  : 'rgba(196,181,253,0.4)',
-                borderBottom: mainTab === t.key
-                  ? `2px solid #7c3aed`
-                  : '2px solid transparent',
-                boxShadow: mainTab === t.key
-                  ? t.key === 'healing'
-                    ? '0 0 16px rgba(212,175,55,0.15)'
-                    : '0 0 16px rgba(124,58,237,0.15)'
-                  : 'none',
+                background: mainTab === t.key ? '#F5F3FF' : 'transparent',
+                color: mainTab === t.key ? '#6D5EF5' : '#9CA3AF',
+                borderBottom: mainTab === t.key ? `2px solid #6D5EF5` : '2px solid transparent',
               }}>
                 {t.icon} {t.label}
               </button>
@@ -849,17 +786,15 @@ export default function Dashboard() {
             <div style={{
               margin: '12px 16px',
               padding: '12px 16px',
-              borderRadius: 16,
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(14px)',
-              WebkitBackdropFilter: 'blur(14px)',
+              borderRadius: 14,
+              background: '#F5F3FF',
+              border: '1px solid #EDE9FE',
               textAlign: 'center',
             }}>
-              <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 600, color: 'rgba(196,181,253,0.65)' }}>
+              <p style={{ margin: '0 0 3px', fontSize: 11, fontWeight: 600, color: '#6D5EF5' }}>
                 ✨ Why you were matched
               </p>
-              <p style={{ margin: 0, fontSize: 11, fontStyle: 'italic', color: 'rgba(196,181,253,0.45)' }}>
+              <p style={{ margin: 0, fontSize: 11, fontStyle: 'italic', color: '#6B7280' }}>
                 "{activeMatch?.match_reason}"
               </p>
             </div>
@@ -905,15 +840,13 @@ export default function Dashboard() {
                           ? '20px 20px 4px 20px'
                           : '20px 20px 20px 4px',
                         ...(isMe ? {
-                          background: 'linear-gradient(135deg, #4c1d95, #7c3aed)',
+                          background: 'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
                           color: '#ffffff',
-                          boxShadow: '0 2px 20px rgba(124,58,237,0.35)',
+                          boxShadow: '0 2px 12px rgba(109,94,245,0.25)',
                         } : {
-                          background: 'rgba(255,255,255,0.06)',
-                          backdropFilter: 'blur(16px)',
-                          WebkitBackdropFilter: 'blur(16px)',
-                          border: '1px solid rgba(255,255,255,0.1)',
-                          color: '#e2d9f3',
+                          background: '#F5F3FF',
+                          border: '1px solid #EDE9FE',
+                          color: '#1F2937',
                         }),
                       }}>
                         {msg.text}
@@ -970,25 +903,18 @@ export default function Dashboard() {
             flexShrink: 0,
             padding: `12px 16px max(env(safe-area-inset-bottom,0px),12px)`,
             borderTop: `1px solid ${BORDER_COLOR}`,
-            background: 'rgba(6,1,15,0.9)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
+            background: '#FFFFFF',
             position: 'relative', zIndex: 10,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               {/* Emoji button */}
               <button style={{
                 width: 38, height: 38, borderRadius: 12, flexShrink: 0,
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                backdropFilter: 'blur(12px)',
+                background: '#F5F3FF',
+                border: '1px solid #EDE9FE',
                 fontSize: 17, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'opacity 0.2s',
-              }}
-                onMouseEnter={e => e.currentTarget.style.opacity = '0.7'}
-                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-              >
+              }}>
                 😊
               </button>
 
@@ -1003,15 +929,14 @@ export default function Dashboard() {
                   padding: '11px 16px',
                   borderRadius: 20,
                   fontSize: 13,
-                  background: 'rgba(255,255,255,0.05)',
-                  color: '#e2d9f3',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  backdropFilter: 'blur(16px)',
+                  background: '#F5F3FF',
+                  color: '#1F2937',
+                  border: '1.5px solid #EDE9FE',
                   outline: 'none',
                   transition: 'border-color 0.2s',
                 }}
-                onFocus={e => e.target.style.borderColor = 'rgba(212,175,55,0.4)'}
-                onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                onFocus={e => e.target.style.borderColor = '#6D5EF5'}
+                onBlur={e => e.target.style.borderColor = '#EDE9FE'}
               />
 
               {/* Send button */}
@@ -1020,18 +945,12 @@ export default function Dashboard() {
                 disabled={!input.trim() || typing}
                 style={{
                   width: 42, height: 42, borderRadius: 14, flexShrink: 0,
-                  background: 'linear-gradient(135deg, #6d5acd 0%, #8b5cf6 100%)',
+                  background: 'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
                   border: 'none', cursor: input.trim() && !typing ? 'pointer' : 'default',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: input.trim() && !typing ? '0 0 20px rgba(212,175,55,0.35)' : 'none',
+                  boxShadow: input.trim() && !typing ? '0 4px 16px rgba(109,94,245,0.35)' : 'none',
                   opacity: !input.trim() || typing ? 0.4 : 1,
                   transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={e => {
-                  if (input.trim() && !typing) e.currentTarget.style.boxShadow = '0 0 30px rgba(212,175,55,0.5)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.boxShadow = input.trim() && !typing ? '0 0 20px rgba(212,175,55,0.35)' : 'none';
                 }}
               >
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
@@ -1039,9 +958,9 @@ export default function Dashboard() {
                 </svg>
               </button>
             </div>
-            <p style={{ textAlign: 'center', fontSize: 10, marginTop: 8, color: 'rgba(196,181,253,0.3)' }}>
+            <p style={{ textAlign: 'center', fontSize: 10, marginTop: 8, color: '#9CA3AF' }}>
               🔒 Anonymous &amp; encrypted ·{' '}
-              <span style={{ textDecoration: 'underline', cursor: 'pointer' }}>Report</span>
+              <span style={{ textDecoration: 'underline', cursor: 'pointer', color: '#6D5EF5' }}>Report</span>
             </p>
           </div>}
         </div>
@@ -1052,38 +971,35 @@ export default function Dashboard() {
             className="hidden lg:flex"
             style={{
               flexDirection: 'column',
-              width: 320,
+              width: 300,
               flexShrink: 0,
               borderLeft: `1px solid ${BORDER_COLOR}`,
-              background: SIDEBAR_BG,
+              background: '#FAFAFD',
               overflowY: 'auto',
             }}
           >
             {/* Panel header */}
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '16px 16px 14px',
+              padding: '14px 14px 12px',
               borderBottom: `1px solid ${BORDER_COLOR}`,
               flexShrink: 0,
+              background: '#FFFFFF',
             }}>
-              {/* Frosted pill tabs */}
               <div style={{
-                display: 'flex', gap: 4, padding: 4,
-                borderRadius: 14,
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                display: 'flex', gap: 3, padding: 3,
+                borderRadius: 12,
+                background: '#F5F3FF',
+                border: '1px solid #EDE9FE',
               }}>
                 <button
                   onClick={() => setRightTab('activities')}
                   style={{
-                    padding: '6px 12px', borderRadius: 10,
+                    padding: '6px 12px', borderRadius: 9,
                     fontSize: 11, fontWeight: 600, cursor: 'pointer',
                     border: 'none',
-                    background: rightTab === 'activities'
-                      ? 'linear-gradient(135deg,#7c3aed,#2563eb)'
-                      : 'transparent',
-                    color: rightTab === 'activities' ? '#fff' : 'rgba(196,181,253,0.5)',
-                    boxShadow: rightTab === 'activities' ? '0 0 12px rgba(124,58,237,0.35)' : 'none',
+                    background: rightTab === 'activities' ? 'linear-gradient(135deg,#6D5EF5,#8B5CF6)' : 'transparent',
+                    color: rightTab === 'activities' ? '#fff' : '#9CA3AF',
                     transition: 'all 0.2s',
                   }}>
                   ⚡ Relief
@@ -1091,14 +1007,11 @@ export default function Dashboard() {
                 <button
                   onClick={() => setRightTab('healing')}
                   style={{
-                    padding: '6px 12px', borderRadius: 10,
+                    padding: '6px 12px', borderRadius: 9,
                     fontSize: 11, fontWeight: 600, cursor: 'pointer',
                     border: 'none',
-                    background: rightTab === 'healing'
-                      ? `linear-gradient(135deg,${GOLD},#a855f7)`
-                      : 'transparent',
-                    color: rightTab === 'healing' ? '#fff' : 'rgba(196,181,253,0.5)',
-                    boxShadow: rightTab === 'healing' ? `0 0 12px rgba(212,175,55,0.35)` : 'none',
+                    background: rightTab === 'healing' ? 'linear-gradient(135deg,#6D5EF5,#A78BFA)' : 'transparent',
+                    color: rightTab === 'healing' ? '#fff' : '#9CA3AF',
                     transition: 'all 0.2s',
                   }}>
                   🌟 Healing
@@ -1108,9 +1021,9 @@ export default function Dashboard() {
                 onClick={() => setShowActivity(false)}
                 style={{
                   width: 28, height: 28, borderRadius: 8,
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  color: 'rgba(196,181,253,0.5)', fontSize: 11,
+                  background: '#F5F3FF',
+                  border: '1px solid #EDE9FE',
+                  color: '#6B7280', fontSize: 11,
                   cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
@@ -1128,44 +1041,44 @@ export default function Dashboard() {
                     onActivityComplete={() => {}}
                   />
                   <div style={{
-                    borderRadius: 18, overflow: 'hidden', marginTop: 14,
-                    background: 'linear-gradient(135deg,#0f0c29,#302b63)',
-                    border: '1px solid rgba(124,58,237,0.3)',
+                    borderRadius: 16, overflow: 'hidden', marginTop: 14,
+                    background: 'linear-gradient(135deg, #F5F3FF, #EDE9FE)',
+                    border: '1px solid #DDD6FE',
                   }}>
                     <div style={{ padding: 16 }}>
-                      <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 700, color: '#fff' }}>Need more support?</p>
-                      <p style={{ margin: '0 0 12px', fontSize: 11, color: 'rgba(196,181,253,0.7)' }}>Chat with a verified therapist or counsellor.</p>
+                      <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 700, color: '#1F2937' }}>Need more support?</p>
+                      <p style={{ margin: '0 0 12px', fontSize: 11, color: '#6B7280' }}>Chat with a verified therapist or counsellor.</p>
                       <button
                         onClick={() => navigate('/healers')}
                         style={{
                           width: '100%', padding: '9px', borderRadius: 12,
                           fontSize: 12, fontWeight: 700, color: '#fff',
-                          background: 'linear-gradient(135deg,#7c3aed,#2563eb)',
+                          background: 'linear-gradient(135deg,#6D5EF5,#8B5CF6)',
                           border: 'none', cursor: 'pointer',
-                          boxShadow: '0 4px 16px rgba(124,58,237,0.4)',
+                          boxShadow: '0 4px 14px rgba(109,94,245,0.3)',
                         }}>
                         Browse Healers →
                       </button>
                     </div>
                   </div>
                   <div style={{
-                    borderRadius: 18, overflow: 'hidden', marginTop: 12,
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: 16, overflow: 'hidden', marginTop: 12,
+                    background: '#FFFFFF',
+                    border: '1px solid #EDE9FE',
                   }}>
                     <div style={{ padding: 16 }}>
-                      <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 700, color: '#e2d9f3' }}>👥 Join a Meetup</p>
-                      <p style={{ margin: '0 0 12px', fontSize: 11, color: 'rgba(196,181,253,0.5)' }}>Small group sessions for your challenge.</p>
+                      <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 700, color: '#1F2937' }}>🫂 Join a Circle</p>
+                      <p style={{ margin: '0 0 12px', fontSize: 11, color: '#6B7280' }}>Small group sessions for your challenge.</p>
                       <button
                         onClick={() => navigate('/meetups')}
                         style={{
                           width: '100%', padding: '9px', borderRadius: 12,
-                          fontSize: 12, fontWeight: 600, color: 'rgba(196,181,253,0.8)',
-                          background: 'rgba(255,255,255,0.05)',
-                          border: '1px solid rgba(255,255,255,0.1)',
+                          fontSize: 12, fontWeight: 600, color: '#6D5EF5',
+                          background: '#F5F3FF',
+                          border: '1px solid #EDE9FE',
                           cursor: 'pointer',
                         }}>
-                        See Upcoming Meetups
+                        See Upcoming Circles
                       </button>
                     </div>
                   </div>

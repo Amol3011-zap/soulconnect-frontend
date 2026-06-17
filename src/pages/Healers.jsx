@@ -29,10 +29,10 @@ const DEMO_HEALERS = [
 ];
 
 const GRAD_COLORS = [
-  'linear-gradient(135deg, #7c3aed, #2563eb)',
-  'linear-gradient(135deg, #0891b2, #2563eb)',
-  'linear-gradient(135deg, #059669, #0891b2)',
-  'linear-gradient(135deg, #d97706, #dc2626)',
+  'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
+  'linear-gradient(135deg, #0891B2, #3B82F6)',
+  'linear-gradient(135deg, #059669, #10B981)',
+  'linear-gradient(135deg, #D97706, #F59E0B)',
 ];
 
 const ISSUE_OPTIONS = [
@@ -608,152 +608,126 @@ function BookingModal({ healer, grad, onClose, onConfirm }) {
 
 // ── Healer styles ──────────────────────────────────────────────────────────────
 const HEALER_STYLES = `
-  @media (prefers-reduced-motion: no-preference) {
-    @keyframes healAurora1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(40px,-30px) scale(1.15)} }
-    @keyframes healAurora2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-30px,40px) scale(1.1)} }
-    @keyframes healAurora3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(20px,20px) scale(1.08)} }
-    @keyframes healStarPulse { 0%,100%{opacity:0.1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.8)} }
-    @keyframes healFloat { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-8px)} }
-  }
-  .healer-card { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease; }
-  @media (hover: hover) { .healer-card:hover { transform: translateY(-6px); } }
+  .healer-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  @media (hover: hover) { .healer-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(109,94,245,0.14) !important; } }
 `;
 
-const CARD_ACCENTS = ['#7c3aed', '#0891b2', '#059669', '#d97706'];
+const CARD_ACCENTS = ['#6D5EF5', '#0891B2', '#059669', '#D97706'];
 
 // ── Healer Card ────────────────────────────────────────────────────────────────
 function HealerCard({ healer, index, onBook }) {
   const grad = GRAD_COLORS[index % GRAD_COLORS.length];
   const accent = CARD_ACCENTS[index % CARD_ACCENTS.length];
-  const initial = healer.initials?.[0] || healer.name?.[0] || '?';
 
   return (
     <div className="healer-card" style={{
-      background: 'rgb(7,2,20)',
-      border: `1px solid ${accent}28`,
-      borderRadius: 24,
+      background: '#FFFFFF',
+      border: '1px solid #EDE9FE',
+      borderRadius: 20,
       overflow: 'hidden',
-      boxShadow: `0 0 0 1px ${accent}12, 0 20px 60px rgba(0,0,0,0.6)`,
+      boxShadow: '0 2px 16px rgba(109,94,245,0.08)',
       position: 'relative',
     }}>
-      {/* Top accent line */}
-      <div style={{ height: 2, background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
+      {/* Top gradient accent bar */}
+      <div style={{ height: 4, background: grad }} />
 
-      {/* Inner glow */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 120,
-        background: `radial-gradient(ellipse at 50% 0%, ${accent}12 0%, transparent 70%)`,
-        pointerEvents: 'none',
-      }} />
-
-      <div style={{ padding: '24px 24px 0', position: 'relative' }}>
+      <div style={{ padding: '20px 20px 0' }}>
         {/* Header row */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
-          {/* Monogram */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 14 }}>
+          {/* Avatar circle */}
           <div style={{
-            fontSize: 52, fontWeight: 900, fontStyle: 'italic', lineHeight: 0.9,
-            background: `linear-gradient(160deg, ${accent} 0%, rgba(255,255,255,0.9) 55%, ${accent}80 100%)`,
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            filter: `drop-shadow(0 0 20px ${accent}50)`,
-            letterSpacing: '-0.04em',
-          }}>{initial}</div>
+            width: 56, height: 56, borderRadius: '50%', flexShrink: 0,
+            background: grad,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 20, fontWeight: 700, color: '#fff',
+          }}>
+            {healer.initials}
+          </div>
 
-          <div style={{ textAlign: 'right' }}>
-            {/* Badge */}
-            {healer.badge && (
-              <div style={{
-                display: 'inline-block',
-                fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                padding: '4px 10px', borderRadius: 20, marginBottom: 8,
-                background: `${healer.badge_color || accent}22`,
-                border: `1px solid ${healer.badge_color || accent}55`,
-                color: healer.badge_color || accent,
-              }}>{healer.badge}</div>
-            )}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: '#1F2937', margin: '0 0 3px', letterSpacing: '-0.01em' }}>
+                {healer.name}
+              </h3>
+              {healer.badge && (
+                <span style={{
+                  fontSize: 9, fontWeight: 700, letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  padding: '3px 8px', borderRadius: 20, flexShrink: 0,
+                  background: `${healer.badge_color || accent}18`,
+                  border: `1px solid ${healer.badge_color || accent}40`,
+                  color: healer.badge_color || accent,
+                }}>{healer.badge}</span>
+              )}
+            </div>
             {/* Rating */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
-              <span style={{ color: '#a78bfa', fontSize: 14 }}>★</span>
-              <span style={{ fontSize: 16, fontWeight: 900, color: '#a78bfa' }}>{healer.total_rating?.toFixed(1)}</span>
-              <span style={{ fontSize: 12, color: 'rgba(139,92,246,0.45)', letterSpacing: '0.08em' }}>
-                ({healer.review_count})
-              </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ color: '#F59E0B', fontSize: 13 }}>★</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#1F2937' }}>{healer.total_rating?.toFixed(1)}</span>
+              <span style={{ fontSize: 11, color: '#9CA3AF' }}>({healer.review_count} reviews)</span>
             </div>
           </div>
         </div>
 
-        {/* Name */}
-        <div style={{ marginBottom: 4 }}>
-          <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ebe4ff', letterSpacing: '-0.02em', margin: 0 }}>
-            {healer.name}
-          </h3>
-        </div>
-
-        {/* Specialties as dots */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
-          {(healer.specializations || []).slice(0, 3).map((s, i) => (
-            <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-              <span style={{ width: 4, height: 4, borderRadius: '50%', background: accent, boxShadow: `0 0 6px ${accent}`, display: 'inline-block', flexShrink: 0 }} />
-              <span style={{ fontSize: 11, color: 'rgba(235,228,255,0.55)', letterSpacing: '0.04em' }}>{s}</span>
-            </div>
+        {/* Specialties */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 12 }}>
+          {(healer.specializations || []).slice(0, 3).map(s => (
+            <span key={s} style={{
+              padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 500,
+              background: `${accent}12`, color: accent,
+              border: `1px solid ${accent}25`,
+            }}>{s}</span>
           ))}
         </div>
 
-        {/* Soul Reading label */}
-        <div style={{ marginBottom: 8 }}>
-          <span style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(139,92,246,0.4)' }}>◆ Healer Bio</span>
-        </div>
-
-        {/* Bio as hero italic */}
+        {/* Bio */}
         <p style={{
-          fontSize: 13, fontStyle: 'italic', color: 'rgba(235,228,255,0.72)',
-          lineHeight: 1.75, margin: '0 0 18px',
+          fontSize: 13, color: '#4B5563',
+          lineHeight: 1.7, margin: '0 0 14px',
         }}>
-          "{healer.bio?.slice(0, 110)}{healer.bio?.length > 110 ? '…' : ''}"
+          {healer.bio?.slice(0, 110)}{healer.bio?.length > 110 ? '…' : ''}
         </p>
 
         {/* Stats row */}
         <div style={{
-          display: 'flex', gap: 16, paddingBottom: 18,
-          borderBottom: `1px solid ${accent}18`,
+          display: 'flex', gap: 0, paddingBottom: 16,
+          borderBottom: '1px solid #F5F3FF',
         }}>
           {[
-            { label: 'Experience', value: `${healer.experience_years || '?'} yrs` },
-            { label: 'Format', value: healer.session_type || 'Video' },
-            { label: 'Languages', value: (healer.languages || ['En']).slice(0, 2).join(', ') },
-          ].map(({ label, value }) => (
-            <div key={label}>
-              <div style={{ fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.3)', marginBottom: 3 }}>{label}</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(235,228,255,0.7)' }}>{value}</div>
+            { icon: '📅', label: 'Experience', value: `${healer.experience_years || '?'} yrs` },
+            { icon: '📹', label: 'Format', value: healer.session_type || 'Video' },
+            { icon: '🌐', label: 'Languages', value: (healer.languages || ['En']).slice(0, 2).join(', ') },
+          ].map(({ icon, label, value }, i) => (
+            <div key={label} style={{ flex: 1, textAlign: 'center', borderRight: i < 2 ? '1px solid #F5F3FF' : 'none' }}>
+              <div style={{ fontSize: 14, marginBottom: 2 }}>{icon}</div>
+              <div style={{ fontSize: 11, fontWeight: 600, color: '#1F2937' }}>{value}</div>
+              <div style={{ fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9CA3AF' }}>{label}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* CTA bar */}
-      <button
-        onClick={() => onBook(healer, grad)}
-        style={{
-          width: '100%', padding: '16px 24px',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          background: 'transparent',
-          border: 'none',
-          borderTop: `1px solid ${accent}20`,
-          cursor: 'pointer',
-          transition: 'background 0.2s ease',
-        }}
-        onMouseEnter={e => e.currentTarget.style.background = `${accent}14`}
-        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-      >
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <span style={{ fontSize: 22, fontWeight: 900, color: '#a78bfa' }}>₹{healer.hourly_rate}</span>
-          <span style={{ fontSize: 12, color: 'rgba(139,92,246,0.45)', letterSpacing: '0.1em' }}>/session</span>
+      <div style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
+          <span style={{ fontSize: 20, fontWeight: 900, color: accent }}>₹{healer.hourly_rate}</span>
+          <span style={{ fontSize: 11, color: '#9CA3AF', marginLeft: 3 }}>/session</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(235,228,255,0.6)' }}>Book Session</span>
-          <span style={{ fontSize: 20, color: '#a78bfa', lineHeight: 1 }}>→</span>
-        </div>
-      </button>
+        <button
+          onClick={() => onBook(healer, grad)}
+          style={{
+            padding: '10px 22px', borderRadius: 13, fontSize: 13, fontWeight: 700,
+            background: `linear-gradient(135deg, ${accent}, ${accent}cc)`,
+            color: '#fff', border: 'none', cursor: 'pointer',
+            boxShadow: `0 4px 14px ${accent}35`,
+            transition: 'opacity 0.15s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '0.9'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+        >
+          Book Session →
+        </button>
+      </div>
     </div>
   );
 }
@@ -805,103 +779,112 @@ export default function Healers() {
     <>
       <style>{HEALER_STYLES}</style>
 
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #030009 0%, #0a0225 50%, #040112 100%)', position: 'relative', overflow: 'hidden' }}>
-
-        {/* Aurora blobs */}
-        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
-          <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%)', animation: 'healAurora1 18s ease-in-out infinite', filter: 'blur(60px)' }} />
-          <div style={{ position: 'absolute', top: '30%', right: '-10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(8,145,178,0.14) 0%, transparent 70%)', animation: 'healAurora2 22s ease-in-out infinite', filter: 'blur(70px)' }} />
-          <div style={{ position: 'absolute', bottom: '10%', left: '30%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', animation: 'healAurora3 26s ease-in-out infinite', filter: 'blur(80px)' }} />
-          {STARS.map((p, i) => (
-            <div key={i} style={{ position: 'absolute', left: p.l, top: p.t, width: p.s, height: p.s, borderRadius: '50%', background: p.c, animation: `healStarPulse ${2.5 + i % 3 * 0.5}s ease-in-out ${p.d}s infinite` }} />
-          ))}
-        </div>
+      <div style={{ minHeight: '100vh', background: '#FAFAFD' }}>
 
         {/* ── HERO ── */}
-        <div style={{ position: 'relative', zIndex: 1, padding: '60px 24px 50px', textAlign: 'center', borderBottom: '1px solid rgba(124,58,237,0.12)' }}>
-          {/* Ornamental divider top */}
-          <div style={{ fontSize: 13, letterSpacing: '0.5em', color: 'rgba(139,92,246,0.3)', marginBottom: 28 }}>◆ ✦ ◆</div>
-
-          {/* Badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 40, marginBottom: 20, background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.25)' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#a78bfa', boxShadow: '0 0 8px #a78bfa', display: 'inline-block' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#a78bfa' }}>Verified Professionals</span>
+        <div style={{
+          background: 'linear-gradient(135deg, #4C3DB8, #6D5EF5, #8B5CF6)',
+          padding: 'clamp(32px,5vw,56px) clamp(20px,4vw,48px)',
+          textAlign: 'center',
+          position: 'relative', overflow: 'hidden',
+          borderRadius: '0 0 32px 32px',
+          marginBottom: 32,
+        }}>
+          {/* Soft sacred geometry */}
+          <div aria-hidden="true" style={{ position: 'absolute', inset: 0, opacity: 0.1 }}>
+            <svg width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid slice">
+              {Array.from({ length: 6 }, (_, i) => {
+                const a = (i * 60) * Math.PI / 180;
+                return <circle key={i} cx={400 + 80 * Math.cos(a)} cy={100 + 80 * Math.sin(a)} r="80" fill="none" stroke="white" strokeWidth="0.7" />;
+              })}
+              <circle cx="400" cy="100" r="80" fill="none" stroke="white" strokeWidth="0.7" />
+              <circle cx="400" cy="100" r="130" fill="none" stroke="white" strokeWidth="0.4" strokeDasharray="4 8" />
+            </svg>
           </div>
 
-          {/* Heading */}
-          <h1 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 16px', color: '#ebe4ff' }}>
-            Find Your{' '}
-            <span style={{
-              background: 'linear-gradient(135deg, #a78bfa 0%, #e9d5ff 40%, #a78bfa 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            }}>Healer</span>
-          </h1>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            {/* Badge */}
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '6px 16px', borderRadius: 40, marginBottom: 16,
+              background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)',
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#7DD3A0', display: 'inline-block' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#fff' }}>Verified Professionals</span>
+            </div>
 
-          <p style={{ fontSize: 15, color: 'rgba(196,181,253,0.6)', maxWidth: 440, margin: '0 auto 40px', lineHeight: 1.7 }}>
-            Connect with verified therapists, counsellors, and wellness practitioners who specialise in your area of need.
-          </p>
+            <h1 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, letterSpacing: '-0.02em', lineHeight: 1.1, margin: '0 0 12px', color: '#FFFFFF' }}>
+              Find Your Healer
+            </h1>
 
-          {/* Stats */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 48 }}>
-            {[['500+', 'Healers'], ['4.8★', 'Avg Rating'], ['10K+', 'Sessions']].map(([val, label]) => (
-              <div key={label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 900, color: '#a78bfa', lineHeight: 1 }}>{val}</div>
-                <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.4)', marginTop: 4 }}>{label}</div>
-              </div>
-            ))}
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', maxWidth: 440, margin: '0 auto 28px', lineHeight: 1.7 }}>
+              Connect with verified therapists, counsellors, and wellness practitioners who specialise in your area of need.
+            </p>
+
+            {/* Stats */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, flexWrap: 'wrap' }}>
+              {[['500+', 'Healers'], ['4.8★', 'Avg Rating'], ['10K+', 'Sessions']].map(([val, label], i) => (
+                <div key={label} style={{
+                  textAlign: 'center', padding: '0 28px',
+                  borderRight: i < 2 ? '1px solid rgba(255,255,255,0.2)' : 'none',
+                }}>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{val}</div>
+                  <div style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)', marginTop: 4 }}>{label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* ── CONTENT ── */}
-        <div style={{ maxWidth: 960, margin: '0 auto', padding: '40px 20px 60px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 clamp(16px,3vw,32px) 80px' }}>
 
           {/* Filter pills */}
-          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 32, scrollbarWidth: 'none' }}>
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 28, scrollbarWidth: 'none' }}>
             {FILTERS.map(f => (
               <button key={f} onClick={() => setFilter(f)} style={{
                 flexShrink: 0, padding: '8px 20px', borderRadius: 40, fontSize: 13, fontWeight: 600, cursor: 'pointer',
                 transition: 'all 0.2s',
-                background: filter === f ? 'linear-gradient(135deg,#7c3aed,#a855f7)' : 'rgba(255,255,255,0.04)',
-                color: filter === f ? '#fff' : 'rgba(196,181,253,0.5)',
-                border: filter === f ? 'none' : '1px solid rgba(255,255,255,0.08)',
-                boxShadow: filter === f ? '0 0 20px rgba(124,58,237,0.35)' : 'none',
+                background: filter === f ? 'linear-gradient(135deg,#6D5EF5,#8B5CF6)' : '#FFFFFF',
+                color: filter === f ? '#fff' : '#6B7280',
+                border: filter === f ? 'none' : '1px solid #EDE9FE',
+                boxShadow: filter === f ? '0 4px 14px rgba(109,94,245,0.3)' : '0 1px 4px rgba(109,94,245,0.06)',
               }}>{f}</button>
             ))}
           </div>
 
           {/* Cards grid */}
           {loading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 20 }}>
-              {[1,2,3,4].map(i => (
-                <div key={i} style={{ borderRadius: 24, height: 280, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', animation: 'pulse 1.5s ease-in-out infinite' }} />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 20 }}>
+              {[1,2,3].map(i => (
+                <div key={i} style={{ borderRadius: 20, height: 260, background: '#FFFFFF', border: '1px solid #EDE9FE', animation: 'pulse 1.5s ease-in-out infinite' }} />
               ))}
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 20 }}>
               {healers.map((healer, i) => (
                 <HealerCard key={healer.id} healer={healer} index={i} onBook={openBooking} />
               ))}
             </div>
           )}
 
-          {/* CTA banner */}
+          {/* CTA banner — For Practitioners */}
           <div style={{
-            marginTop: 48, borderRadius: 24, padding: '32px 36px',
+            marginTop: 48, borderRadius: 20, padding: '28px 32px',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
-            background: 'rgb(7,2,20)',
-            border: '1px solid rgba(124,58,237,0.2)',
-            boxShadow: '0 0 60px rgba(124,58,237,0.08)',
+            background: 'linear-gradient(135deg, #F5F3FF, #EDE9FE)',
+            border: '1px solid #DDD6FE',
           }}>
             <div>
-              <div style={{ fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(139,92,246,0.6)', marginBottom: 8 }}>◆ For Practitioners</div>
-              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ebe4ff', margin: '0 0 6px' }}>Are you a healer or therapist?</h3>
-              <p style={{ fontSize: 13, color: 'rgba(196,181,253,0.5)', margin: 0 }}>Join our verified network and reach thousands who need your guidance.</p>
+              <div style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#A78BFA', marginBottom: 8, fontWeight: 700 }}>✦ For Practitioners</div>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#1F2937', margin: '0 0 5px' }}>Are you a healer or therapist?</h3>
+              <p style={{ fontSize: 13, color: '#6B7280', margin: 0 }}>Join our verified network and reach thousands who need your guidance.</p>
             </div>
             <button style={{
               flexShrink: 0, padding: '12px 24px', borderRadius: 14, fontSize: 12, fontWeight: 700,
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-              background: 'linear-gradient(135deg, #7c3aed, #a855f7)', color: '#fff', border: 'none',
-              cursor: 'pointer', boxShadow: '0 0 24px rgba(124,58,237,0.4)',
+              background: 'linear-gradient(135deg, #6D5EF5, #8B5CF6)', color: '#fff', border: 'none',
+              cursor: 'pointer', boxShadow: '0 4px 16px rgba(109,94,245,0.3)',
+              whiteSpace: 'nowrap',
             }}>Apply Now →</button>
           </div>
         </div>
