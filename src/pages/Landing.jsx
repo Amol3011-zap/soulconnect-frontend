@@ -283,16 +283,16 @@ export default function Landing() {
       {/* ═══════════════════════════════════════════════════════════════════
           HERO
       ════════════════════════════════════════════════════════════════════ */}
-      <section style={{ paddingTop: 72, background: 'linear-gradient(160deg, #FAF8F6 0%, #F3F0FF 50%, #FAF8F6 100%)', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ background: 'linear-gradient(160deg, #FAF8F6 0%, #F3F0FF 50%, #FAF8F6 100%)', position: 'relative', overflow: 'hidden' }}>
 
         {/* Background orbs */}
         <div style={{ position: 'absolute', top: '10%', left: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '5%', right: '5%', width: 320, height: 320, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,92,252,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-        <div style={{ maxWidth: 1400, margin: '0 auto', width: '100%', padding: '80px clamp(16px, 3vw, 48px) 80px', display: 'flex', gap: 'clamp(40px, 5vw, 72px)', alignItems: 'flex-start' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', width: '100%', padding: '96px clamp(20px, 4vw, 64px) 80px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(40px, 5vw, 72px)', alignItems: 'start' }}>
 
           {/* Left */}
-          <div className="fade-up" style={{ flex: '0 0 52%', maxWidth: '52%' }}>
+          <div className="fade-up" style={{ minWidth: 0 }}>
 
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 20, background: '#F0EBFF', border: '1px solid #DDD6FE', marginBottom: 24 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#7C5CFC', display: 'inline-block' }} />
@@ -345,18 +345,18 @@ export default function Landing() {
           </div>
 
           {/* Right — illustration */}
-          <div className="hidden md:flex float" style={{ flex: 1, flexDirection: 'column', position: 'relative' }}>
+          <div className="float" style={{ position: 'relative', minWidth: 0 }}>
 
             {/* Photo */}
             <div style={{
-              borderRadius: 32, overflow: 'hidden',
+              borderRadius: 28, overflow: 'hidden',
               boxShadow: '0 24px 80px rgba(124,92,252,0.2)',
-              aspectRatio: '4/5', position: 'relative', width: '100%',
+              width: '100%', height: 540, position: 'relative',
             }}>
               <img
                 src={HERO_IMG}
                 alt="Woman meditating peacefully"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
                 loading="eager"
               />
               {/* Subtle gradient overlay */}
@@ -406,7 +406,7 @@ export default function Landing() {
       {/* ═══════════════════════════════════════════════════════════════════
           STATS / TRUST BAR
       ════════════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: '0 clamp(16px, 3vw, 48px)', marginTop: -28, position: 'relative', zIndex: 10 }}>
+      <section style={{ padding: '0 clamp(20px, 4vw, 64px)', position: 'relative', zIndex: 10, marginTop: -32 }}>
         <div style={{ maxWidth: 1400, margin: '0 auto' }}>
           <div style={{
             background: '#fff', borderRadius: 24, padding: 'clamp(24px, 3vw, 36px) clamp(24px, 4vw, 48px)',
