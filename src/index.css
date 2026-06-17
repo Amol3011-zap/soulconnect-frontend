@@ -59,9 +59,11 @@ body {
 }
 
 /* ── Prevent overscroll bounce on the whole page (feels more app-like) ── */
-html, body, #root {
+html, body {
   overscroll-behavior: none;
-  height: 100%;
+}
+#root {
+  min-height: 100vh;
 }
 
 /* ── Scrollbar (desktop) ── */
