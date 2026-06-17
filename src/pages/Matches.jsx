@@ -3,246 +3,378 @@ import { useNavigate, Link } from 'react-router-dom';
 import { matchAPI } from '../services/api';
 import { useAuthStore } from '../store/auth';
 
+// ── Data ─────────────────────────────────────────────────────────────────────
+
 const DEMO_MATCHES = [
-  {
-    id: 101, name: 'Priya', age: 26, city: 'Mumbai', isDemo: true,
+  { id: 101, name: 'Priya', age: 26, city: 'Mumbai', isDemo: true,
     primary_problem: 'anxiety', match_score: 94,
     match_reason: 'Both navigating social anxiety and overthinking spirals',
-    secondary_problems: ['panic_attacks', 'sleep_problems'],
-    avatar_color: '#6D5EF5',
-  },
-  {
-    id: 102, name: 'Rohan', age: 29, city: 'Pune', isDemo: true,
+    secondary_problems: ['panic_attacks', 'sleep_problems'], avatar_color: '#8B5CF6' },
+  { id: 102, name: 'Rohan', age: 29, city: 'Pune', isDemo: true,
     primary_problem: 'depression', match_score: 88,
     match_reason: 'Similar experiences with low motivation and isolation',
-    secondary_problems: ['loneliness'],
-    avatar_color: '#0891B2',
-  },
-  {
-    id: 103, name: 'Aisha', age: 24, city: 'Bangalore', isDemo: true,
+    secondary_problems: ['loneliness'], avatar_color: '#0EA5E9' },
+  { id: 103, name: 'Aisha', age: 24, city: 'Bangalore', isDemo: true,
     primary_problem: 'loneliness', match_score: 82,
     match_reason: 'Both dealing with loneliness after a big life change',
-    secondary_problems: ['lack_of_confidence'],
-    avatar_color: '#059669',
-  },
-  {
-    id: 104, name: 'Dev', age: 31, city: 'Delhi', isDemo: true,
+    secondary_problems: ['lack_of_confidence'], avatar_color: '#10B981' },
+  { id: 104, name: 'Dev', age: 31, city: 'Delhi', isDemo: true,
     primary_problem: 'work_career_stress', match_score: 79,
     match_reason: 'Both burned out from high-pressure work environments',
-    secondary_problems: ['sleep_problems', 'anxiety'],
-    avatar_color: '#D97706',
-  },
+    secondary_problems: ['sleep_problems', 'anxiety'], avatar_color: '#F59E0B' },
 ];
 
 const PROBLEM_META = {
-  anxiety:                     { label: 'Anxiety',        icon: '🌀', bg: '#EDE9FE', color: '#6D5EF5' },
-  depression:                  { label: 'Depression',     icon: '💙', bg: '#DBEAFE', color: '#2563EB' },
-  loneliness:                  { label: 'Loneliness',     icon: '🕊️', bg: '#F3E8FF', color: '#9333EA' },
-  work_career_stress:          { label: 'Work Stress',    icon: '⚡', bg: '#FEF3C7', color: '#D97706' },
-  ptsd_trauma:                 { label: 'Trauma',         icon: '🌿', bg: '#D1FAE5', color: '#059669' },
-  grief_loss:                  { label: 'Grief',          icon: '🕯️', bg: '#F1F5F9', color: '#475569' },
-  relationship_breakup:        { label: 'Breakup',        icon: '💔', bg: '#FFE4E6', color: '#F43F5E' },
-  panic_attacks:               { label: 'Panic Attacks',  icon: '💓', bg: '#FCE7F3', color: '#EC4899' },
-  ocd_intrusive_thoughts:      { label: 'OCD',            icon: '🔄', bg: '#DBEAFE', color: '#3B82F6' },
-  lack_of_confidence:          { label: 'Confidence',     icon: '🌱', bg: '#DCFCE7', color: '#16A34A' },
-  sleep_problems:              { label: 'Sleep',          icon: '🌙', bg: '#EDE9FE', color: '#7C3AED' },
-  anger_management:            { label: 'Anger',          icon: '🔥', bg: '#FEE2E2', color: '#DC2626' },
-  financial_stress:            { label: 'Financial',      icon: '💸', bg: '#FEF9C3', color: '#CA8A04' },
-  marriage_problems:           { label: 'Marriage',       icon: '💑', bg: '#F3E8FF', color: '#9333EA' },
-  family_relationships:        { label: 'Family',         icon: '🏡', bg: '#D1FAE5', color: '#059669' },
-  trust_issues:                { label: 'Trust Issues',   icon: '🤝', bg: '#DBEAFE', color: '#2563EB' },
+  anxiety:               { label: 'Anxiety',       icon: '🌀', bg: '#F5F3FF', color: '#7C3AED' },
+  depression:            { label: 'Depression',    icon: '💙', bg: '#EFF6FF', color: '#2563EB' },
+  loneliness:            { label: 'Loneliness',    icon: '🕊️', bg: '#FAF5FF', color: '#9333EA' },
+  work_career_stress:    { label: 'Work Stress',   icon: '⚡', bg: '#FFFBEB', color: '#D97706' },
+  ptsd_trauma:           { label: 'Trauma',        icon: '🌿', bg: '#F0FDF4', color: '#059669' },
+  grief_loss:            { label: 'Grief',         icon: '🕯️', bg: '#F8FAFC', color: '#475569' },
+  relationship_breakup:  { label: 'Breakup',       icon: '💔', bg: '#FFF1F2', color: '#F43F5E' },
+  panic_attacks:         { label: 'Panic Attacks', icon: '💓', bg: '#FDF2F8', color: '#EC4899' },
+  ocd_intrusive_thoughts:{ label: 'OCD',           icon: '🔄', bg: '#EFF6FF', color: '#3B82F6' },
+  lack_of_confidence:    { label: 'Confidence',    icon: '🌱', bg: '#F0FDF4', color: '#16A34A' },
+  sleep_problems:        { label: 'Sleep',         icon: '🌙', bg: '#F5F3FF', color: '#7C3AED' },
+  anger_management:      { label: 'Anger',         icon: '🔥', bg: '#FEF2F2', color: '#DC2626' },
+  financial_stress:      { label: 'Financial',     icon: '💸', bg: '#FEFCE8', color: '#CA8A04' },
+  marriage_problems:     { label: 'Marriage',      icon: '💑', bg: '#FAF5FF', color: '#9333EA' },
+  family_relationships:  { label: 'Family',        icon: '🏡', bg: '#F0FDF4', color: '#059669' },
+  trust_issues:          { label: 'Trust Issues',  icon: '🤝', bg: '#EFF6FF', color: '#2563EB' },
 };
 
-const AFFIRMATIONS = [
-  '"The universe brought you here for a reason. Trust the process."',
-  '"Your pain is valid. Your healing is real. Your story matters."',
-  '"You are not alone. You are exactly where you need to be."',
-  '"Healing begins the moment you reach out. You already took that step."',
+const DAILY_AFFIRMATIONS = [
+  "I trust the timing of my life.",
+  "I am worthy of deep, healing connection.",
+  "Peace lives within me — I return to it now.",
+  "My healing is sacred, and I honor every step.",
+  "I am safe. I am loved. I belong here.",
+  "Every breath I take is an act of self-love.",
+  "I release what no longer serves my highest good.",
 ];
 
-// Sacred geometry SVG overlay
-function SacredGeometry() {
+const QUOTES = [
+  { text: "Peace comes from within.\nYou do not find it outside.", author: "Buddha" },
+  { text: "You yourself deserve your love and affection\nas much as anybody in the entire universe.", author: "Buddha" },
+  { text: "The present moment is the door to all moments.\nStep through it with courage.", author: "Thich Nhất Hạnh" },
+  { text: "In the middle of difficulty\nlies opportunity to grow.", author: "Rumi" },
+  { text: "Your task is not to seek for love,\nbut to find the barriers within yourself.", author: "Rumi" },
+];
+
+// ── Illustrations ─────────────────────────────────────────────────────────────
+
+function MountainScene() {
   return (
-    <svg
+    <svg viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.12 }}
-      viewBox="0 0 600 300"
-      preserveAspectRatio="xMidYMid slice"
-    >
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
       <defs>
-        <style>{`
-          @keyframes sgRotate { from { transform: rotate(0deg); transform-origin: 300px 150px; } to { transform: rotate(360deg); transform-origin: 300px 150px; } }
-          @keyframes sgCounter { from { transform: rotate(0deg); transform-origin: 300px 150px; } to { transform: rotate(-360deg); transform-origin: 300px 150px; } }
-          @media (prefers-reduced-motion: reduce) { .sg-r, .sg-c { animation: none !important; } }
-        `}</style>
+        <linearGradient id="mSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.55" />
+          <stop offset="40%" stopColor="#FDD5BF" stopOpacity="0.65" />
+          <stop offset="100%" stopColor="#FFECD2" stopOpacity="0.75" />
+        </linearGradient>
+        <radialGradient id="mSun" cx="62%" cy="62%" r="32%">
+          <stop offset="0%" stopColor="#FDE68A" stopOpacity="1" />
+          <stop offset="40%" stopColor="#FBBF24" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#FBBF24" stopOpacity="0" />
+        </radialGradient>
+        <filter id="mBlur"><feGaussianBlur stdDeviation="2.5" /></filter>
       </defs>
-      <g className="sg-r" style={{ animation: 'sgRotate 90s linear infinite' }}>
-        {Array.from({ length: 6 }, (_, i) => {
-          const a = (i * 60) * Math.PI / 180;
-          return <circle key={i} cx={300 + 90 * Math.cos(a)} cy={150 + 90 * Math.sin(a)} r="90" fill="none" stroke="white" strokeWidth="0.6" opacity="0.8" />;
-        })}
-        <circle cx="300" cy="150" r="90" fill="none" stroke="white" strokeWidth="0.6" opacity="0.8" />
-      </g>
-      <g className="sg-c" style={{ animation: 'sgCounter 60s linear infinite' }}>
-        <circle cx="300" cy="150" r="140" fill="none" stroke="white" strokeWidth="0.4" strokeDasharray="4 8" opacity="0.6" />
-        <circle cx="300" cy="150" r="165" fill="none" stroke="white" strokeWidth="0.3" strokeDasharray="2 10" opacity="0.4" />
-        {Array.from({ length: 12 }, (_, i) => {
-          const a = (i * 30) * Math.PI / 180;
-          return <circle key={i} cx={300 + 164 * Math.cos(a)} cy={150 + 164 * Math.sin(a)} r="3" fill="white" opacity="0.7" />;
-        })}
-      </g>
-      <circle cx="300" cy="150" r="5" fill="white" opacity="0.9" />
+
+      {/* Sky */}
+      <rect width="1000" height="220" fill="url(#mSky)" />
+
+      {/* Sun glow */}
+      <circle cx="620" cy="130" r="320" fill="url(#mSun)" />
+
+      {/* Sun disc */}
+      <circle cx="620" cy="150" r="28" fill="#FDE68A" opacity="0.9" filter="url(#mBlur)" />
+      <circle cx="620" cy="150" r="18" fill="#FCD34D" opacity="0.95" />
+
+      {/* Stars */}
+      {[[90,22],[220,14],[340,30],[500,18],[720,24],[860,12],[155,38],[440,26],[770,35]].map(([x,y],i) => (
+        <circle key={i} cx={x} cy={y} r="1.3" fill="white" opacity="0.65" />
+      ))}
+
+      {/* Far mountains (lightest purple) */}
+      <path d="M0,220 L120,95 L240,135 L370,65 L490,115 L610,50 L730,90 L850,60 L1000,85 L1000,220 Z"
+        fill="rgba(196,181,253,0.28)" />
+
+      {/* Mid mountains */}
+      <path d="M0,220 L90,140 L200,175 L310,125 L430,160 L560,100 L680,148 L800,95 L920,135 L1000,115 L1000,220 Z"
+        fill="rgba(139,92,246,0.32)" />
+
+      {/* Near mountains */}
+      <path d="M0,220 L0,190 L110,198 L220,170 L350,192 L490,160 L620,182 L740,155 L860,175 L1000,160 L1000,220 Z"
+        fill="rgba(109,94,245,0.42)" />
+
+      {/* Ground valley */}
+      <path d="M0,212 Q250,205 500,218 Q750,230 1000,212 L1000,220 L0,220 Z"
+        fill="rgba(91,78,232,0.3)" />
     </svg>
   );
 }
 
-// Compatibility ring (SVG donut)
-function CompatRing({ score, color }) {
-  const r = 20, circ = 2 * Math.PI * r;
+function GoldenMandala() {
   return (
-    <div style={{ position: 'relative', width: 50, height: 50, flexShrink: 0 }}>
-      <svg style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }} viewBox="0 0 50 50">
-        <circle cx="25" cy="25" r={r} fill="none" stroke="#EDE9FE" strokeWidth="3" />
-        <circle cx="25" cy="25" r={r} fill="none" stroke={color || '#6D5EF5'} strokeWidth="3"
-          strokeDasharray={`${circ * Math.min(score / 100, 1)} ${circ}`}
-          strokeLinecap="round" />
+    <svg viewBox="0 0 240 240" aria-hidden="true"
+      style={{ position: 'absolute', right: -10, top: -10, width: 260, height: 260, opacity: 0.82 }}>
+      <defs>
+        <linearGradient id="gGold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FDE68A" />
+          <stop offset="50%" stopColor="#F59E0B" />
+          <stop offset="100%" stopColor="#FCD34D" />
+        </linearGradient>
+      </defs>
+
+      {/* Outer rings */}
+      <circle cx="120" cy="120" r="108" fill="none" stroke="url(#gGold)" strokeWidth="0.6" opacity="0.55" />
+      <circle cx="120" cy="120" r="92"  fill="none" stroke="url(#gGold)" strokeWidth="0.4" opacity="0.45" strokeDasharray="3 6" />
+
+      {/* 12 outer dots */}
+      {Array.from({length:12}, (_,i) => {
+        const a = i * 30 * Math.PI / 180;
+        return <circle key={i} cx={120 + 108*Math.cos(a)} cy={120 + 108*Math.sin(a)} r="2.8" fill="url(#gGold)" opacity="0.75" />;
+      })}
+
+      {/* Flower of life — 6 petals + center */}
+      {[0,60,120,180,240,300].map((deg,i) => {
+        const a = deg * Math.PI / 180;
+        return <circle key={i} cx={120 + 42*Math.cos(a)} cy={120 + 42*Math.sin(a)} r="42" fill="none" stroke="url(#gGold)" strokeWidth="0.9" opacity="0.62" />;
+      })}
+      <circle cx="120" cy="120" r="42" fill="none" stroke="url(#gGold)" strokeWidth="0.9" opacity="0.62" />
+
+      {/* Radial lines */}
+      {[0,30,60,90,120,150].map((deg,i) => {
+        const a = deg * Math.PI / 180;
+        return (
+          <line key={i}
+            x1={120 - 86*Math.cos(a)} y1={120 - 86*Math.sin(a)}
+            x2={120 + 86*Math.cos(a)} y2={120 + 86*Math.sin(a)}
+            stroke="url(#gGold)" strokeWidth="0.45" opacity="0.38" />
+        );
+      })}
+
+      {/* Inner circles */}
+      <circle cx="120" cy="120" r="22" fill="none" stroke="url(#gGold)" strokeWidth="1.3" opacity="0.88" />
+      <circle cx="120" cy="120" r="9"  fill="url(#gGold)" opacity="0.65" />
+      <circle cx="120" cy="120" r="3.5" fill="white" opacity="0.9" />
+
+      {/* 8 inner dots */}
+      {Array.from({length:8}, (_,i) => {
+        const a = i * 45 * Math.PI / 180;
+        return <circle key={i} cx={120 + 22*Math.cos(a)} cy={120 + 22*Math.sin(a)} r="1.5" fill="url(#gGold)" opacity="0.8" />;
+      })}
+    </svg>
+  );
+}
+
+function ZenStones() {
+  return (
+    <svg viewBox="0 0 200 200" aria-hidden="true" style={{ width: 170, height: 170, flexShrink: 0 }}>
+      {/* Glow behind */}
+      <ellipse cx="100" cy="168" rx="72" ry="18" fill="rgba(186,230,253,0.35)" />
+
+      {/* Stone 5 — base (widest) */}
+      <ellipse cx="100" cy="155" rx="55" ry="24" fill="#94A3B8" />
+      <ellipse cx="97"  cy="145" rx="53" ry="15" fill="#CBD5E1" opacity="0.6" />
+
+      {/* Stone 4 */}
+      <ellipse cx="100" cy="120" rx="42" ry="20" fill="#7B91B0" />
+      <ellipse cx="97"  cy="111" rx="40" ry="12" fill="#93B4D0" opacity="0.6" />
+
+      {/* Stone 3 */}
+      <ellipse cx="100" cy="88" rx="32" ry="17" fill="#8B8FC4" />
+      <ellipse cx="98"  cy="79" rx="30" ry="11" fill="#A5A9D8" opacity="0.6" />
+
+      {/* Stone 2 */}
+      <ellipse cx="100" cy="60" rx="23" ry="13" fill="#7C6FE8" />
+      <ellipse cx="98"  cy="53" rx="22" ry="8"  fill="#9C91F0" opacity="0.6" />
+
+      {/* Stone 1 — top */}
+      <ellipse cx="100" cy="43" rx="13" ry="8" fill="#6D5EF5" opacity="0.85" />
+
+      {/* Left leaf */}
+      <path d="M50,92 Q28,74 34,46 Q48,64 50,92 Z" fill="rgba(110,231,183,0.62)" />
+      <line x1="50" y1="92" x2="36" y2="56" stroke="rgba(5,150,105,0.45)" strokeWidth="0.9" />
+      {/* Small left leaf */}
+      <path d="M62,158 Q52,143 62,127 Q65,143 62,158 Z" fill="rgba(167,243,208,0.48)" />
+
+      {/* Right leaf */}
+      <path d="M150,87 Q172,69 166,41 Q152,59 150,87 Z" fill="rgba(110,231,183,0.62)" />
+      <line x1="150" y1="87" x2="164" y2="51" stroke="rgba(5,150,105,0.45)" strokeWidth="0.9" />
+      {/* Small right leaf */}
+      <path d="M138,158 Q148,143 138,127 Q135,143 138,158 Z" fill="rgba(167,243,208,0.48)" />
+
+      {/* Water ripples */}
+      <ellipse cx="100" cy="170" rx="58" ry="9" fill="none" stroke="rgba(147,197,253,0.45)" strokeWidth="0.9" />
+      <ellipse cx="100" cy="174" rx="70" ry="11" fill="none" stroke="rgba(147,197,253,0.28)" strokeWidth="0.7" />
+    </svg>
+  );
+}
+
+function LotusIcon({ size = 18, color = '#8B5CF6' }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true"
+      style={{ width: size, height: size, display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}>
+      <path d="M12,21 C12,21 4,16 4,10 C4,7 7,5 10,6.3 C11,4 13,4 14,6.3 C17,5 20,7 20,10 C20,16 12,21 12,21 Z"
+        fill={`${color}22`} stroke={color} strokeWidth="1.3" strokeLinejoin="round" />
+      <path d="M12,21 C12,21 8,14.5 8,10 C8,8 10,7 12,8.2 C14,7 16,8 16,10 C16,14.5 12,21 12,21 Z"
+        fill={`${color}35`} stroke={color} strokeWidth="0.9" strokeLinejoin="round" />
+      <line x1="12" y1="21" x2="12" y2="8" stroke={color} strokeWidth="0.8" opacity="0.4" />
+    </svg>
+  );
+}
+
+// ── CompatRing ────────────────────────────────────────────────────────────────
+function CompatRing({ score, color }) {
+  const r = 18, circ = 2 * Math.PI * r;
+  return (
+    <div style={{ position: 'relative', width: 46, height: 46, flexShrink: 0 }}>
+      <svg style={{ width: '100%', height: '100%', transform: 'rotate(-90deg)' }} viewBox="0 0 46 46">
+        <circle cx="23" cy="23" r={r} fill="none" stroke="#F0EEFF" strokeWidth="3.2" />
+        <circle cx="23" cy="23" r={r} fill="none" stroke={color || '#8B5CF6'} strokeWidth="3.2"
+          strokeDasharray={`${circ * Math.min(score / 100, 1)} ${circ}`} strokeLinecap="round" />
       </svg>
-      <div style={{
-        position: 'absolute', inset: 0,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <span style={{ fontSize: 10, fontWeight: 800, color: color || '#6D5EF5', lineHeight: 1 }}>{score}%</span>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontSize: 9, fontWeight: 800, color: color || '#8B5CF6', lineHeight: 1 }}>{score}%</span>
       </div>
     </div>
   );
 }
 
-// Light premium match card
-function MatchCard({ match, index, onConnect, connecting }) {
-  const prob = PROBLEM_META[match.primary_problem] || { label: 'Peer Support', icon: '🤝', bg: '#EDE9FE', color: '#6D5EF5' };
+// ── StatCard ──────────────────────────────────────────────────────────────────
+function StatCard({ icon, value, label, sublabel, iconBg }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      style={{
+        background: '#FFFFFF', borderRadius: 20, padding: '22px 22px 18px',
+        boxShadow: hovered ? '0 10px 36px rgba(0,0,0,0.09)' : '0 2px 18px rgba(0,0,0,0.05)',
+        flex: 1, minWidth: 0,
+        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        transition: 'transform 0.22s ease, box-shadow 0.22s ease',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div style={{
+        width: 44, height: 44, borderRadius: 14,
+        background: iconBg || '#F5F3FF',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 22, marginBottom: 14,
+      }}>{icon}</div>
+      <div style={{ fontSize: 30, fontWeight: 800, color: '#1A1F36', letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>
+        {value}
+      </div>
+      <div style={{ fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 3 }}>{label}</div>
+      <div style={{ fontSize: 11, color: '#9CA3AF' }}>{sublabel}</div>
+    </div>
+  );
+}
+
+// ── MatchCard ─────────────────────────────────────────────────────────────────
+function MatchCard({ match, onConnect, connecting }) {
+  const prob = PROBLEM_META[match.primary_problem] || { label: 'Peer Support', icon: '🤝', bg: '#F5F3FF', color: '#8B5CF6' };
   const isConnecting = connecting === match.id;
   const initial = match.name?.[0]?.toUpperCase() || '?';
+  const [hovered, setHovered] = useState(false);
 
   return (
     <div
       style={{
-        background: '#FFFFFF',
-        borderRadius: 20,
-        border: '1px solid #EDE9FE',
-        boxShadow: '0 2px 16px rgba(109,94,245,0.08)',
-        transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-        overflow: 'hidden',
+        background: '#FFFFFF', borderRadius: 20, overflow: 'hidden',
+        boxShadow: hovered ? '0 14px 44px rgba(0,0,0,0.09)' : '0 2px 18px rgba(0,0,0,0.05)',
+        transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
+        transition: 'transform 0.24s ease, box-shadow 0.24s ease',
       }}
-      onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-4px)';
-        e.currentTarget.style.boxShadow = '0 12px 40px rgba(109,94,245,0.15)';
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = '0 2px 16px rgba(109,94,245,0.08)';
-      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      {/* Top accent bar */}
-      <div style={{ height: 3, background: `linear-gradient(90deg, ${match.avatar_color || '#6D5EF5'}, #A78BFA)` }} />
+      {/* Soft top accent bar */}
+      <div style={{ height: 4, background: `linear-gradient(90deg, ${match.avatar_color}, ${match.avatar_color}70)` }} />
 
-      <div style={{ padding: '20px 20px 0' }}>
-        {/* Header row */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
-          {/* Avatar */}
+      <div style={{ padding: '20px 22px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+
+          {/* Avatar — rounded square */}
           <div style={{ position: 'relative', flexShrink: 0 }}>
             <div style={{
-              width: 48, height: 48, borderRadius: '50%',
-              background: `linear-gradient(135deg, ${match.avatar_color || '#6D5EF5'}, #A78BFA)`,
+              width: 52, height: 52, borderRadius: 16,
+              background: `linear-gradient(135deg, ${match.avatar_color}, ${match.avatar_color}90)`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 18, fontWeight: 700, color: '#fff',
+              fontSize: 20, fontWeight: 700, color: '#fff',
             }}>{initial}</div>
-            {/* Online indicator */}
             <div style={{
-              position: 'absolute', bottom: 2, right: 2,
-              width: 10, height: 10, borderRadius: '50%',
-              background: '#7DD3A0',
-              border: '2px solid #fff',
-              boxShadow: '0 0 6px rgba(125,211,160,0.5)',
+              position: 'absolute', bottom: 0, right: 0,
+              width: 13, height: 13, borderRadius: '50%',
+              background: '#10B981', border: '2.5px solid #fff',
             }} />
           </div>
 
-          {/* Name + location */}
           <div style={{ flex: 1, minWidth: 0 }}>
-            <h3 style={{ margin: '0 0 3px', fontSize: 16, fontWeight: 700, color: '#1F2937', lineHeight: 1 }}>
-              {match.name}
-            </h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <h3 style={{ margin: '0 0 5px', fontSize: 16, fontWeight: 700, color: '#1A1F36' }}>{match.name}</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
               {match.age && <span style={{ fontSize: 12, color: '#9CA3AF' }}>{match.age} yrs</span>}
-              {match.city && <>
-                <span style={{ fontSize: 6, color: '#D1D5DB' }}>•</span>
-                <span style={{ fontSize: 12, color: '#9CA3AF' }}>{match.city}</span>
-              </>}
+              {match.city && (
+                <>
+                  <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#E5E7EB', display: 'inline-block' }} />
+                  <span style={{ fontSize: 12, color: '#9CA3AF' }}>{match.city}</span>
+                </>
+              )}
+              <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#E5E7EB', display: 'inline-block' }} />
+              <span style={{ fontSize: 12, color: '#10B981', fontWeight: 500 }}>● Online now</span>
             </div>
           </div>
 
-          {/* Compatibility ring */}
           <div style={{ textAlign: 'center', flexShrink: 0 }}>
-            <CompatRing score={match.match_score} color={match.avatar_color || '#6D5EF5'} />
-            <div style={{ fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9CA3AF', marginTop: 2 }}>match</div>
+            <CompatRing score={match.match_score} color={match.avatar_color} />
+            <div style={{ fontSize: 9, color: '#C4B5FD', fontWeight: 600, letterSpacing: '0.06em', marginTop: 2, textTransform: 'uppercase' }}>match</div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div style={{ height: 1, background: '#F5F3FF', marginBottom: 14 }} />
-
-        {/* Why matched */}
-        <div style={{ marginBottom: 6 }}>
-          <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#A78BFA', fontWeight: 600 }}>✦ Why you're matched</span>
-        </div>
         {match.match_reason && (
           <p style={{
-            fontSize: 13, fontStyle: 'italic', color: '#4B5563',
-            lineHeight: 1.7, margin: '0 0 14px',
+            margin: '0 0 14px', fontSize: 13, fontStyle: 'italic',
+            color: '#6B7280', lineHeight: 1.75,
+            padding: '10px 14px', borderRadius: 12,
+            background: '#FAFAFF',
           }}>
             "{match.match_reason}"
           </p>
         )}
 
-        {/* Problem tags */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 18 }}>
           <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600,
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            padding: '5px 12px', borderRadius: 20, fontSize: 11, fontWeight: 600,
             background: prob.bg, color: prob.color,
-          }}>
-            {prob.icon} {prob.label}
-          </span>
+          }}>{prob.icon} {prob.label}</span>
           {(match.secondary_problems || []).slice(0, 2).map(p => {
             const info = PROBLEM_META[p];
             return info ? (
               <span key={p} style={{
-                display: 'inline-flex', alignItems: 'center', gap: 4,
-                padding: '4px 10px', borderRadius: 20, fontSize: 11,
-                background: '#F5F3FF', color: '#6B7280',
-                border: '1px solid #EDE9FE',
-              }}>
-                {info.icon} {info.label}
-              </span>
+                display: 'inline-flex', alignItems: 'center', gap: 5,
+                padding: '5px 12px', borderRadius: 20, fontSize: 11,
+                background: '#F8F9FC', color: '#9CA3AF',
+              }}>{info.icon} {info.label}</span>
             ) : null;
           })}
         </div>
-      </div>
 
-      {/* CTA */}
-      <div style={{ padding: '0 20px 20px' }}>
         <button
           onClick={() => onConnect(match)}
           disabled={isConnecting}
           style={{
-            width: '100%', padding: '12px 20px', borderRadius: 14,
+            width: '100%', padding: '13px 20px', borderRadius: 14,
             fontSize: 13, fontWeight: 600, letterSpacing: '0.01em',
             background: isConnecting
-              ? '#F5F3FF'
-              : 'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
-            color: isConnecting ? '#A78BFA' : '#FFFFFF',
-            border: isConnecting ? '1px solid #EDE9FE' : 'none',
-            cursor: isConnecting ? 'default' : 'pointer',
-            boxShadow: isConnecting ? 'none' : '0 4px 16px rgba(109,94,245,0.3)',
+              ? '#F8F9FC'
+              : `linear-gradient(135deg, ${match.avatar_color}, ${match.avatar_color}CC)`,
+            color: isConnecting ? '#9CA3AF' : '#fff',
+            border: 'none', cursor: isConnecting ? 'default' : 'pointer',
+            boxShadow: isConnecting ? 'none' : `0 5px 18px ${match.avatar_color}40`,
             transition: 'all 0.2s ease',
           }}
         >
@@ -253,237 +385,168 @@ function MatchCard({ match, index, onConnect, connecting }) {
   );
 }
 
-// Stat card
-function StatCard({ icon, value, label, color }) {
+// ── Featured Support Circle ────────────────────────────────────────────────────
+function FeaturedCircle() {
+  const navigate = useNavigate();
+  const AVATAR_COLORS = ['#8B5CF6','#10B981','#F59E0B','#0EA5E9','#EC4899'];
+  const INITIALS      = ['P','R','A','D','S'];
+
   return (
     <div style={{
-      background: '#FFFFFF',
-      borderRadius: 16,
-      padding: '16px 18px',
-      border: '1px solid #EDE9FE',
-      boxShadow: '0 2px 12px rgba(109,94,245,0.06)',
-      flex: 1,
-      minWidth: 0,
+      background: 'linear-gradient(135deg, #EAF3FF 0%, #E4EDFF 50%, #EEF0FF 100%)',
+      borderRadius: 24, padding: '32px 36px',
+      boxShadow: '0 4px 28px rgba(99,102,241,0.09)',
+      display: 'flex', gap: 28, alignItems: 'center',
+      overflow: 'hidden', position: 'relative',
     }}>
+      {/* Soft orb */}
       <div style={{
-        width: 36, height: 36, borderRadius: 10,
-        background: `${color}18`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 18, marginBottom: 10,
-      }}>{icon}</div>
-      <div style={{ fontSize: 22, fontWeight: 800, color: '#1F2937', marginBottom: 3, lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 500 }}>{label}</div>
-    </div>
-  );
-}
+        position: 'absolute', top: -60, right: 120,
+        width: 220, height: 220, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
 
-// Right sidebar — Daily Intention, Angel Number, Breathing Widget
-function RightSidebar() {
-  const [breathPhase, setBreathPhase] = useState('idle'); // idle | inhale | hold | exhale
-  const [breathCount, setBreathCount] = useState(0);
-  const [breathTimer, setBreathTimer] = useState(null);
-
-  const startBreathing = () => {
-    setBreathPhase('inhale');
-    setBreathCount(c => c + 1);
-  };
-
-  useEffect(() => {
-    if (breathPhase === 'inhale') {
-      const t = setTimeout(() => setBreathPhase('hold'), 4000);
-      setBreathTimer(t);
-    } else if (breathPhase === 'hold') {
-      const t = setTimeout(() => setBreathPhase('exhale'), 4000);
-      setBreathTimer(t);
-    } else if (breathPhase === 'exhale') {
-      const t = setTimeout(() => {
-        setBreathCount(c => c + 1);
-        setBreathPhase('inhale');
-      }, 6000);
-      setBreathTimer(t);
-    }
-    return () => clearTimeout(breathTimer);
-  }, [breathPhase]);
-
-  const stopBreathing = () => {
-    clearTimeout(breathTimer);
-    setBreathPhase('idle');
-    setBreathCount(0);
-  };
-
-  const breathLabel = { idle: 'Start', inhale: 'Breathe in...', hold: 'Hold...', exhale: 'Breathe out...' };
-  const breathSize = breathPhase === 'inhale' ? 80 : breathPhase === 'hold' ? 80 : 52;
-
-  const INTENTIONS = [
-    "Today I choose peace over perfection.",
-    "I am worthy of love and connection.",
-    "My struggles do not define me — my resilience does.",
-    "I give myself permission to heal at my own pace.",
-    "Every small step forward is progress.",
-  ];
-  const ANGEL_MESSAGES = {
-    111: "A portal of new beginnings is open. Trust the path unfolding before you.",
-    222: "Balance and harmony are aligning in your life. You are on the right path.",
-    333: "The universe is calling you to create. Express your truth boldly.",
-    444: "You are divinely protected and supported. You are not alone.",
-    555: "Change is coming — embrace it with an open heart.",
-  };
-
-  const today = new Date();
-  const intentionIndex = today.getDate() % INTENTIONS.length;
-  const angelNumbers = [111, 222, 333, 444, 555];
-  const angelNumber = angelNumbers[today.getDate() % angelNumbers.length];
-
-  return (
-    <div style={{ width: 260, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-      {/* Daily Intention */}
-      <div style={{
-        background: 'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
-        borderRadius: 20, padding: '20px',
-        boxShadow: '0 8px 32px rgba(109,94,245,0.25)',
-        color: '#fff',
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', opacity: 0.8, marginBottom: 10 }}>
-          ✦ Daily Intention
-        </div>
-        <p style={{ fontSize: 14, lineHeight: 1.7, fontStyle: 'italic', margin: 0, opacity: 0.95 }}>
-          "{INTENTIONS[intentionIndex]}"
-        </p>
-        <div style={{ marginTop: 14, height: 1, background: 'rgba(255,255,255,0.2)' }} />
-        <p style={{ margin: '12px 0 0', fontSize: 11, opacity: 0.65 }}>
-          {today.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
-        </p>
-      </div>
-
-      {/* Angel Number */}
-      <div style={{
-        background: '#FFFFFF',
-        borderRadius: 20, padding: '20px',
-        border: '1px solid #EDE9FE',
-        boxShadow: '0 2px 16px rgba(109,94,245,0.07)',
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A78BFA', marginBottom: 10 }}>
-          ✦ Angel Number
-        </div>
+      {/* Left content */}
+      <div style={{ flex: 1, minWidth: 0, position: 'relative', zIndex: 1 }}>
         <div style={{
-          fontSize: 48, fontWeight: 900, letterSpacing: '-0.02em',
-          background: 'linear-gradient(135deg, #6D5EF5, #A78BFA)',
-          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text', marginBottom: 10, lineHeight: 1,
+          display: 'inline-flex', alignItems: 'center', gap: 7,
+          padding: '5px 14px', borderRadius: 20,
+          background: 'rgba(139,92,246,0.12)', marginBottom: 16,
         }}>
-          {angelNumber}
-        </div>
-        <p style={{ fontSize: 12, color: '#4B5563', lineHeight: 1.65, margin: 0 }}>
-          {ANGEL_MESSAGES[angelNumber]}
-        </p>
-      </div>
-
-      {/* Breathing Widget */}
-      <div style={{
-        background: '#FFFFFF',
-        borderRadius: 20, padding: '20px',
-        border: '1px solid #EDE9FE',
-        boxShadow: '0 2px 16px rgba(109,94,245,0.07)',
-        textAlign: 'center',
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A78BFA', marginBottom: 16 }}>
-          ✦ Breathing Exercise
+          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#8B5CF6', display: 'inline-block', animation: 'pulse 2s infinite' }} />
+          <span style={{ fontSize: 11, fontWeight: 700, color: '#8B5CF6', letterSpacing: '0.09em', textTransform: 'uppercase' }}>Live Now</span>
         </div>
 
-        {/* Breathing orb */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginBottom: 14, height: 100,
-        }}>
-          <div style={{
-            width: breathSize, height: breathSize, borderRadius: '50%',
-            background: breathPhase === 'idle'
-              ? 'linear-gradient(135deg, #EDE9FE, #F5F3FF)'
-              : 'linear-gradient(135deg, #6D5EF5, #A78BFA)',
-            transition: 'width 4s ease, height 4s ease, background 1s ease',
-            boxShadow: breathPhase !== 'idle' ? '0 0 30px rgba(109,94,245,0.35)' : 'none',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <span style={{ fontSize: breathPhase === 'idle' ? 24 : 20 }}>
-              {breathPhase === 'idle' ? '🌸' : '🫁'}
-            </span>
+        <h3 style={{
+          fontSize: 22, fontWeight: 800, color: '#1A1F36',
+          margin: '0 0 12px', letterSpacing: '-0.02em',
+          fontFamily: '"Playfair Display", Georgia, serif',
+        }}>Anxiety Support Circle</h3>
+
+        {/* Participant avatars */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+          <div style={{ display: 'flex' }}>
+            {AVATAR_COLORS.map((c, i) => (
+              <div key={i} style={{
+                width: 30, height: 30, borderRadius: '50%',
+                background: `linear-gradient(135deg, ${c}, ${c}BB)`,
+                border: '2.5px solid white',
+                marginLeft: i > 0 ? -9 : 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 10, fontWeight: 700, color: '#fff', flexShrink: 0,
+              }}>{INITIALS[i]}</div>
+            ))}
           </div>
+          <span style={{ fontSize: 12, color: '#6B7280' }}>+3 more healing together</span>
         </div>
 
-        <p style={{
-          fontSize: 13, fontWeight: 600, marginBottom: 14,
-          color: breathPhase === 'idle' ? '#9CA3AF' : '#6D5EF5',
-        }}>
-          {breathLabel[breathPhase]}
-          {breathPhase !== 'idle' && breathCount > 0 && (
-            <span style={{ fontSize: 11, color: '#A78BFA', marginLeft: 6 }}>cycle {breathCount}</span>
-          )}
+        <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.75, margin: '0 0 18px', maxWidth: 400 }}>
+          A safe space to share, breathe, and heal together.
+          Guided by an experienced facilitator with compassion.
         </p>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 22, flexWrap: 'wrap' }}>
+          {[['⏱', '60 min'], ['👥', '8 / 12 joined'], ['🔒', 'Safe space']].map(([icon, text]) => (
+            <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: 14 }}>{icon}</span>
+              <span style={{ fontSize: 12, color: '#6B7280', fontWeight: 500 }}>{text}</span>
+            </div>
+          ))}
+        </div>
 
         <button
-          onClick={breathPhase === 'idle' ? startBreathing : stopBreathing}
+          onClick={() => navigate('/groups')}
           style={{
-            padding: '10px 24px', borderRadius: 12, fontSize: 12, fontWeight: 600,
-            background: breathPhase === 'idle'
-              ? 'linear-gradient(135deg, #6D5EF5, #8B5CF6)'
-              : '#FEF2F2',
-            color: breathPhase === 'idle' ? '#fff' : '#EF4444',
-            border: 'none', cursor: 'pointer',
-            boxShadow: breathPhase === 'idle' ? '0 4px 12px rgba(109,94,245,0.3)' : 'none',
-            transition: 'all 0.2s',
+            padding: '13px 28px', borderRadius: 14, fontSize: 13, fontWeight: 700,
+            background: 'linear-gradient(135deg, #8B5CF6, #6D5EF5)',
+            color: '#fff', border: 'none', cursor: 'pointer',
+            boxShadow: '0 6px 22px rgba(139,92,246,0.32)',
+            transition: 'transform 0.18s ease, box-shadow 0.18s ease',
           }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(139,92,246,0.4)'; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 22px rgba(139,92,246,0.32)'; }}
         >
-          {breathPhase === 'idle' ? 'Begin' : 'Stop'}
+          Join Circle →
         </button>
       </div>
 
-      {/* Quick links */}
-      <div style={{
-        background: '#FFFFFF',
-        borderRadius: 20, padding: '16px 18px',
-        border: '1px solid #EDE9FE',
-        boxShadow: '0 2px 12px rgba(109,94,245,0.06)',
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A78BFA', marginBottom: 12 }}>
-          ✦ Quick Access
-        </div>
-        {[
-          { to: '/healers', label: 'Book a Healer', icon: '🧘', color: '#059669' },
-          { to: '/groups', label: 'Join a Circle', icon: '🫂', color: '#6D5EF5' },
-          { to: '/mood', label: 'Log Your Mood', icon: '📊', color: '#D97706' },
-        ].map(({ to, label, icon, color }) => (
-          <Link key={to} to={to}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              padding: '9px 0', textDecoration: 'none', color: '#4B5563',
-              borderBottom: '1px solid #F5F3FF', fontSize: 13, fontWeight: 500,
-            }}
-          >
-            <span style={{
-              width: 30, height: 30, borderRadius: 8, flexShrink: 0,
-              background: `${color}15`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 15,
-            }}>{icon}</span>
-            {label}
-            <span style={{ marginLeft: 'auto', color: '#D1D5DB', fontSize: 12 }}>→</span>
-          </Link>
-        ))}
+      {/* Right: Zen stones illustration */}
+      <div className="hidden md:flex" style={{ flexShrink: 0, alignItems: 'center', justifyContent: 'center' }}>
+        <ZenStones />
       </div>
     </div>
   );
 }
 
-// ── Main Matches Page ──────────────────────────────────────────────────────────
+// ── SuggestedCard ─────────────────────────────────────────────────────────────
+function SuggestedCard({ title, date, time, participants, icon, iconBg, iconColor, buttonColor }) {
+  const navigate = useNavigate();
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      style={{
+        background: '#FFFFFF', borderRadius: 20, padding: '22px',
+        boxShadow: hovered ? '0 12px 36px rgba(0,0,0,0.09)' : '0 2px 16px rgba(0,0,0,0.05)',
+        flex: 1, minWidth: 0,
+        transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
+        transition: 'transform 0.22s ease, box-shadow 0.22s ease',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div style={{
+        width: 46, height: 46, borderRadius: 14,
+        background: iconBg, display: 'flex', alignItems: 'center',
+        justifyContent: 'center', fontSize: 22, marginBottom: 16,
+      }}>{icon}</div>
+
+      <h4 style={{ fontSize: 15, fontWeight: 700, color: '#1A1F36', margin: '0 0 10px', letterSpacing: '-0.01em' }}>
+        {title}
+      </h4>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 18 }}>
+        <span style={{ fontSize: 12, color: '#9CA3AF' }}>📅 {date}</span>
+        <span style={{ fontSize: 12, color: '#9CA3AF' }}>🕐 {time}</span>
+        <span style={{ fontSize: 12, color: '#9CA3AF' }}>👥 {participants}</span>
+      </div>
+
+      <button
+        onClick={() => navigate('/meetups')}
+        style={{
+          width: '100%', padding: '11px 16px', borderRadius: 12,
+          fontSize: 12, fontWeight: 600, cursor: 'pointer', border: 'none',
+          background: iconBg, color: iconColor || buttonColor,
+          transition: 'opacity 0.18s',
+        }}
+        onMouseEnter={e => e.currentTarget.style.opacity = '0.82'}
+        onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+      >
+        Reserve Spot
+      </button>
+    </div>
+  );
+}
+
+// ── Main Page ─────────────────────────────────────────────────────────────────
 export default function Matches() {
   const [matches, setMatches]       = useState([]);
   const [loading, setLoading]       = useState(true);
   const [connecting, setConnecting] = useState(null);
   const [toast, setToast]           = useState(null);
-  const [affirmation]               = useState(() => AFFIRMATIONS[Math.floor(Math.random() * AFFIRMATIONS.length)]);
   const navigate                    = useNavigate();
   const { user }                    = useAuthStore();
+
+  // Inject Playfair Display
+  useEffect(() => {
+    if (!document.getElementById('sc-playfair')) {
+      const link = document.createElement('link');
+      link.id   = 'sc-playfair';
+      link.rel  = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap';
+      document.head.appendChild(link);
+    }
+  }, []);
 
   useEffect(() => { fetchMatches(); }, []);
 
@@ -522,204 +585,276 @@ export default function Matches() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const hour     = new Date().getHours();
-  const greeting = hour < 5 ? 'Still up?' : hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const today     = new Date();
+  const hour      = today.getHours();
   const firstName = user?.name?.split(' ')[0] || 'Friend';
+  const greeting  = hour < 5 ? 'Good night' : hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const quote     = QUOTES[today.getDate() % QUOTES.length];
+  const affirmation = DAILY_AFFIRMATIONS[today.getDate() % DAILY_AFFIRMATIONS.length];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FAFAFD' }}>
+    <div style={{ minHeight: '100vh', background: '#F8F9FC', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
+
+      {/* Global styles */}
+      <style>{`
+        @keyframes scFadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .sc-fade { animation: scFadeUp 0.45s ease both; }
+        .sc-fade-2 { animation: scFadeUp 0.45s 0.08s ease both; }
+        .sc-fade-3 { animation: scFadeUp 0.45s 0.16s ease both; }
+        .sc-fade-4 { animation: scFadeUp 0.45s 0.24s ease both; }
+        .sc-fade-5 { animation: scFadeUp 0.45s 0.32s ease both; }
+        .sc-fade-6 { animation: scFadeUp 0.45s 0.40s ease both; }
+        @media (prefers-reduced-motion: reduce) {
+          .sc-fade, .sc-fade-2, .sc-fade-3, .sc-fade-4, .sc-fade-5, .sc-fade-6 { animation: none; }
+        }
+      `}</style>
 
       {/* Toast */}
       {toast && (
         <div style={{
-          position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)',
-          zIndex: 9999, padding: '12px 24px',
-          background: '#1F2937',
-          borderRadius: 14, color: '#fff',
-          fontSize: 13, fontWeight: 600,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
-        }}>
-          {toast}
-        </div>
+          position: 'fixed', top: 100, left: '50%', transform: 'translateX(-50%)',
+          zIndex: 9999, padding: '12px 28px',
+          background: '#1A1F36', borderRadius: 14, color: '#fff',
+          fontSize: 13, fontWeight: 600, boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+          letterSpacing: '0.01em',
+        }}>{toast}</div>
       )}
 
-      {/* ── Hero Section ── */}
-      <div style={{
-        position: 'relative', overflow: 'hidden',
-        background: 'linear-gradient(135deg, #4C3DB8 0%, #6D5EF5 40%, #8B5CF6 70%, #A78BFA 100%)',
-        padding: 'clamp(32px, 5vw, 56px) clamp(20px, 4vw, 48px)',
-        borderRadius: '0 0 32px 32px',
-        marginBottom: 32,
-      }}>
-        <SacredGeometry />
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 24px 100px' }}>
 
-        {/* Greeting */}
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', fontWeight: 500, marginBottom: 6 }}>
-            {greeting} 🙏
-          </p>
-          <h1 style={{ fontSize: 'clamp(26px, 4vw, 40px)', fontWeight: 900, color: '#FFFFFF', margin: '0 0 8px', letterSpacing: '-0.02em', lineHeight: 1.15 }}>
-            Namaste, {firstName}
-          </h1>
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, maxWidth: 480, margin: '0 0 24px' }}>
-            {affirmation}
-          </p>
+        {/* ── 1. HERO CARD ─────────────────────────────────────────────────── */}
+        <div className="sc-fade" style={{
+          position: 'relative', height: 220, borderRadius: 28, overflow: 'hidden',
+          marginBottom: 24,
+          boxShadow: '0 10px 48px rgba(139,92,246,0.14)',
+        }}>
+          <MountainScene />
 
-          {/* Stats row */}
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            {[
-              { icon: '💫', value: matches.length || 4, label: 'Soul Matches' },
-              { icon: '🫂', value: 3, label: 'Circles' },
-              { icon: '🧘', value: 12, label: 'Sessions' },
-              { icon: '🌱', value: 7, label: 'Days Journey' },
-            ].map(({ icon, value, label }) => (
-              <div key={label} style={{
-                background: 'rgba(255,255,255,0.15)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: 14, padding: '10px 16px',
-                border: '1px solid rgba(255,255,255,0.2)',
-                minWidth: 80,
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                  <span style={{ fontSize: 16 }}>{icon}</span>
-                  <span style={{ fontSize: 20, fontWeight: 900, color: '#fff' }}>{value}</span>
-                </div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.7)', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+          {/* Frosted gradient for text readability */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(95deg, rgba(248,245,255,0.82) 0%, rgba(248,245,255,0.52) 52%, transparent 100%)',
+            pointerEvents: 'none',
+          }} />
 
-      {/* ── Main content + Right sidebar ── */}
-      <div style={{
-        maxWidth: 1200, margin: '0 auto',
-        padding: '0 clamp(16px,3vw,32px) 80px',
-        display: 'flex', gap: 28, alignItems: 'flex-start',
-      }}>
-
-        {/* ── Center content ── */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-
-          {/* Stat cards row */}
-          <div style={{ display: 'flex', gap: 14, marginBottom: 28, overflowX: 'auto', paddingBottom: 4 }}>
-            <StatCard icon="💫" value={matches.length || '4'} label="Soul Matches Found" color="#6D5EF5" />
-            <StatCard icon="🫂" value="3" label="Circles Joined" color="#059669" />
-            <StatCard icon="🧘" value="12" label="Sessions Attended" color="#D97706" />
-            <StatCard icon="📊" value="7/10" label="Avg Mood This Week" color="#0891B2" />
-          </div>
-
-          {/* Continue your journey */}
-          <div style={{ marginBottom: 28 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1F2937', margin: 0 }}>Continue Your Journey</h2>
-              <Link to="/chat" style={{ fontSize: 12, color: '#6D5EF5', fontWeight: 600, textDecoration: 'none' }}>View all →</Link>
-            </div>
-
-            {/* Featured match/chat card */}
-            <div style={{
-              background: '#FFFFFF', borderRadius: 20, padding: 20,
-              border: '1px solid #EDE9FE', boxShadow: '0 2px 16px rgba(109,94,245,0.08)',
-              display: 'flex', gap: 16, alignItems: 'center',
+          {/* Text — left */}
+          <div style={{
+            position: 'absolute', left: 0, top: 0, bottom: 0,
+            display: 'flex', flexDirection: 'column', justifyContent: 'center',
+            padding: '0 0 0 44px', maxWidth: 440, zIndex: 2,
+          }}>
+            <p style={{ margin: '0 0 8px', fontSize: 11, fontWeight: 700, color: '#8B5CF6', letterSpacing: '0.13em', textTransform: 'uppercase' }}>
+              {greeting}, {firstName} 🙏
+            </p>
+            <p style={{
+              margin: '0 0 10px',
+              fontFamily: '"Playfair Display", Georgia, "Times New Roman", serif',
+              fontSize: 'clamp(17px, 2vw, 22px)',
+              fontStyle: 'italic', color: '#2D1B69', lineHeight: 1.58,
+              whiteSpace: 'pre-line',
             }}>
-              <div style={{
-                width: 56, height: 56, borderRadius: '50%', flexShrink: 0,
-                background: 'linear-gradient(135deg, #6D5EF5, #A78BFA)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 22, fontWeight: 700, color: '#fff',
-                position: 'relative',
-              }}>
-                P
-                <div style={{
-                  position: 'absolute', bottom: 2, right: 2,
-                  width: 12, height: 12, borderRadius: '50%',
-                  background: '#7DD3A0', border: '2px solid #fff',
-                }} />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <span style={{ fontSize: 15, fontWeight: 700, color: '#1F2937' }}>Priya</span>
-                  <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 20, background: '#EDE9FE', color: '#6D5EF5', fontWeight: 600 }}>94% match</span>
-                  <span style={{ fontSize: 11, color: '#7DD3A0', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 3 }}>
-                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#7DD3A0', display: 'inline-block' }} />
-                    online
-                  </span>
-                </div>
-                <p style={{ margin: 0, fontSize: 12, color: '#6B7280' }}>How was your day today? 💙</p>
-              </div>
-              <Link to="/chat"
-                style={{
-                  padding: '10px 20px', borderRadius: 12, fontSize: 12, fontWeight: 600,
-                  background: 'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
-                  color: '#fff', textDecoration: 'none',
-                  boxShadow: '0 4px 12px rgba(109,94,245,0.3)',
-                  flexShrink: 0,
-                }}>
-                Chat →
-              </Link>
-            </div>
+              "{quote.text}"
+            </p>
+            <p style={{
+              margin: 0,
+              fontFamily: '"Playfair Display", Georgia, serif',
+              fontSize: 13, color: '#8B5CF6', fontWeight: 600,
+            }}>
+              — {quote.author}
+            </p>
           </div>
 
-          {/* Soul Matches section */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          {/* Sacred geometry mandala — right */}
+          <div style={{ position: 'absolute', right: 0, top: 0, zIndex: 1 }}>
+            <GoldenMandala />
+          </div>
+        </div>
+
+        {/* ── 2. STATS ROW ─────────────────────────────────────────────────── */}
+        <div className="sc-fade-2" style={{ display: 'flex', gap: 14, marginBottom: 36, overflowX: 'auto', paddingBottom: 4 }}>
+          <StatCard icon="🫂" value="8"  label="Circles Joined"     sublabel="Keep showing up"    iconBg="#EDE9FE" />
+          <StatCard icon="✨" value="24" label="People Connected"   sublabel="Beautiful souls"    iconBg="#DBEAFE" />
+          <StatCard icon="🧘" value="12" label="Sessions Attended"  sublabel="You're growing"     iconBg="#D1FAE5" />
+          <StatCard icon="🌱" value="27" label="Days on Journey"    sublabel="Keep going"         iconBg="#FED7AA" />
+        </div>
+
+        {/* ── 3. CONTINUE YOUR JOURNEY ─────────────────────────────────────── */}
+        <div className="sc-fade-3" style={{ marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 5 }}>
+            <LotusIcon size={20} />
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1A1F36', margin: 0, letterSpacing: '-0.02em',
+              fontFamily: '"Playfair Display", Georgia, serif' }}>
+              Continue your journey
+            </h2>
+          </div>
+          <p style={{ fontSize: 13, color: '#9CA3AF', margin: '0 0 22px 29px' }}>A healing space waiting for your return</p>
+        </div>
+
+        {/* ── 4. FEATURED SUPPORT CIRCLE ───────────────────────────────────── */}
+        <div className="sc-fade-3" style={{ marginBottom: 36 }}>
+          <FeaturedCircle />
+        </div>
+
+        {/* ── 5. SUGGESTED FOR YOU ─────────────────────────────────────────── */}
+        <div className="sc-fade-4" style={{ marginBottom: 36 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+              <LotusIcon size={18} color="#F59E0B" />
               <div>
-                <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1F2937', margin: '0 0 2px' }}>Your Soul Matches</h2>
-                <p style={{ fontSize: 12, color: '#9CA3AF', margin: 0 }}>Kindred spirits who understand your journey</p>
-              </div>
-              <div style={{
-                padding: '6px 14px', borderRadius: 20,
-                background: '#F5F3FF', border: '1px solid #EDE9FE',
-                fontSize: 12, fontWeight: 600, color: '#6D5EF5',
-              }}>
-                {matches.length} matched
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1A1F36', margin: 0, letterSpacing: '-0.01em' }}>
+                  Suggested for you
+                </h2>
+                <p style={{ fontSize: 12, color: '#9CA3AF', margin: '2px 0 0' }}>Curated healing experiences</p>
               </div>
             </div>
+            <Link to="/meetups" style={{ fontSize: 13, fontWeight: 600, color: '#8B5CF6', textDecoration: 'none',
+              padding: '6px 14px', borderRadius: 10, background: '#F5F3FF', transition: 'background 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.background = '#EDE9FE'}
+              onMouseLeave={e => e.currentTarget.style.background = '#F5F3FF'}
+            >
+              See all →
+            </Link>
+          </div>
 
-            {loading ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {[1, 2, 3].map(i => (
-                  <div key={i} style={{
-                    height: 180, borderRadius: 20,
-                    background: '#fff', border: '1px solid #EDE9FE',
-                    animation: 'pulse 1.5s ease-in-out infinite',
-                  }} />
-                ))}
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {matches.map((match, i) => (
-                  <MatchCard
-                    key={match.id}
-                    match={match}
-                    index={i}
-                    onConnect={handleConnect}
-                    connecting={connecting}
-                  />
-                ))}
-
-                {/* Privacy note */}
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '14px 18px', borderRadius: 16,
-                  background: '#fff', border: '1px solid #EDE9FE',
-                  marginTop: 4,
-                }}>
-                  <span style={{ fontSize: 14, flexShrink: 0 }}>🔒</span>
-                  <p style={{ margin: 0, fontSize: 11, color: '#9CA3AF', lineHeight: 1.6 }}>
-                    All matches are anonymous. Your personal details are never shared.
-                    <span style={{ color: '#6D5EF5', marginLeft: 4, fontWeight: 600 }}>Learn more →</span>
-                  </p>
-                </div>
-              </div>
-            )}
+          <div style={{ display: 'flex', gap: 16 }}>
+            <SuggestedCard
+              title="Letting Go Workshop"
+              date="Sat, Jun 21"
+              time="10:00 AM IST"
+              participants="14 / 20 joined"
+              icon="🍂"
+              iconBg="#FFF7ED"
+              iconColor="#D97706"
+            />
+            <SuggestedCard
+              title="Self Love Circle"
+              date="Sun, Jun 22"
+              time="6:00 PM IST"
+              participants="8 / 15 joined"
+              icon="💗"
+              iconBg="#FDF2F8"
+              iconColor="#EC4899"
+            />
+            <SuggestedCard
+              title="Forgiveness Healing"
+              date="Mon, Jun 23"
+              time="7:30 PM IST"
+              participants="6 / 12 joined"
+              icon="🌸"
+              iconBg="#F5F3FF"
+              iconColor="#8B5CF6"
+            />
           </div>
         </div>
 
-        {/* ── Right Sidebar — desktop only ── */}
-        <div className="hidden lg:flex" style={{ flexDirection: 'column' }}>
-          <RightSidebar />
+        {/* ── 6. DAILY AFFIRMATION ─────────────────────────────────────────── */}
+        <div className="sc-fade-5" style={{
+          background: 'linear-gradient(135deg, #EAF3FF 0%, #E6EEFF 55%, #EEF2FF 100%)',
+          borderRadius: 24, padding: '36px 40px',
+          marginBottom: 48,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
+          boxShadow: '0 4px 22px rgba(99,102,241,0.07)',
+          position: 'relative', overflow: 'hidden',
+        }}>
+          {/* Soft orb decoration */}
+          <div style={{
+            position: 'absolute', right: 60, top: -40,
+            width: 180, height: 180, borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)',
+            pointerEvents: 'none',
+          }} />
+
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <p style={{ margin: '0 0 12px', fontSize: 11, fontWeight: 700, color: '#8B5CF6', letterSpacing: '0.13em', textTransform: 'uppercase' }}>
+              ✦ Affirmation for you
+            </p>
+            <p style={{
+              margin: '0 0 24px',
+              fontFamily: '"Playfair Display", Georgia, serif',
+              fontSize: 'clamp(20px, 2.2vw, 28px)',
+              color: '#1A1F36', fontStyle: 'italic', lineHeight: 1.45, fontWeight: 600,
+            }}>
+              "{affirmation}"
+            </p>
+            <button
+              style={{
+                padding: '13px 30px', borderRadius: 14, fontSize: 13, fontWeight: 700,
+                background: 'linear-gradient(135deg, #8B5CF6, #6D5EF5)',
+                color: '#fff', border: 'none', cursor: 'pointer',
+                boxShadow: '0 6px 22px rgba(139,92,246,0.3)',
+                transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(139,92,246,0.38)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 22px rgba(139,92,246,0.3)'; }}
+            >
+              🔁 Repeat Today
+            </button>
+          </div>
+
+          <div style={{ fontSize: 80, flexShrink: 0, opacity: 0.55, position: 'relative', zIndex: 1 }}>🪷</div>
         </div>
+
+        {/* ── 7. SOUL MATCHES ──────────────────────────────────────────────── */}
+        <div className="sc-fade-6">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+              <LotusIcon size={20} color="#10B981" />
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1A1F36', margin: 0, letterSpacing: '-0.02em',
+                fontFamily: '"Playfair Display", Georgia, serif' }}>
+                Your Soul Matches
+              </h2>
+            </div>
+            <div style={{
+              padding: '5px 16px', borderRadius: 20,
+              background: '#F0FDF4', fontSize: 12, fontWeight: 700, color: '#10B981',
+            }}>
+              {matches.length} matched
+            </div>
+          </div>
+          <p style={{ fontSize: 13, color: '#9CA3AF', margin: '0 0 22px 29px' }}>
+            Kindred spirits who truly understand your journey
+          </p>
+
+          {loading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {[1,2,3].map(i => (
+                <div key={i} style={{
+                  height: 190, borderRadius: 20,
+                  background: 'linear-gradient(90deg, #f0f0f5 25%, #f8f8fc 50%, #f0f0f5 75%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer 1.6s ease-in-out infinite',
+                }} />
+              ))}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {matches.map(match => (
+                <MatchCard
+                  key={match.id}
+                  match={match}
+                  onConnect={handleConnect}
+                  connecting={connecting}
+                />
+              ))}
+
+              {/* Privacy note */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 12,
+                padding: '14px 18px', borderRadius: 16,
+                background: '#FAFAFF',
+              }}>
+                <span style={{ fontSize: 16, flexShrink: 0 }}>🔒</span>
+                <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF', lineHeight: 1.65 }}>
+                  All matches are completely anonymous. Your personal details are never shared with anyone.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
       </div>
     </div>
   );

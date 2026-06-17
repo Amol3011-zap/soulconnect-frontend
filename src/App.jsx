@@ -34,9 +34,8 @@ function AppInner() {
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       {token && !hideNav && <Navbar />}
 
-      {/* Sidebar spacer — pushes content right on desktop when navbar is visible */}
-      <div style={{ paddingLeft: token && !hideNav ? undefined : 0 }}
-        className={token && !hideNav ? 'md:pl-[220px]' : ''}>
+      {/* Top nav spacer — pushes content down on desktop when top navbar is visible */}
+      <div style={{ paddingTop: token && !hideNav ? 80 : 0 }}>
 
       <Routes>
         <Route path="/" element={<Landing />} />
