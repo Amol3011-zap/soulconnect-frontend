@@ -26,13 +26,15 @@ const DEMO_MEETUPS = [
 ];
 
 const MEETUP_STYLES = `
-  @keyframes meetAurora1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(50px,-40px) scale(1.12)} }
-  @keyframes meetAurora2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-40px,50px) scale(1.1)} }
-  @keyframes meetAurora3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30px,20px) scale(1.08)} }
-  @keyframes meetStar { 0%,100%{opacity:0.08;transform:scale(1)} 50%{opacity:0.45;transform:scale(1.8)} }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes meetAurora1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(50px,-40px) scale(1.12)} }
+    @keyframes meetAurora2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-40px,50px) scale(1.1)} }
+    @keyframes meetAurora3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30px,20px) scale(1.08)} }
+    @keyframes meetStar { 0%,100%{opacity:0.08;transform:scale(1)} 50%{opacity:0.45;transform:scale(1.8)} }
+  }
   @keyframes meetPulse { 0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,0)} 50%{box-shadow:0 0 0 5px rgba(139,92,246,0.12)} }
   .meet-card { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease; }
-  .meet-card:hover { transform: translateY(-5px); }
+  @media (hover: hover) { .meet-card:hover { transform: translateY(-5px); } }
 `;
 
 function formatDate(iso) {
@@ -56,11 +58,11 @@ function SpotsBar({ current, max, accent }) {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-        <span style={{ fontSize: 10, letterSpacing: '0.1em', color: 'rgba(196,181,253,0.4)', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: 12, letterSpacing: '0.06em', color: 'rgba(196,181,253,0.55)', textTransform: 'uppercase' }}>
           {current} joined
         </span>
-        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-          color: isFull ? '#ef4444' : isAlmostFull ? '#f59e0b' : 'rgba(196,181,253,0.4)' }}>
+        <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+          color: isFull ? '#ef4444' : isAlmostFull ? '#f59e0b' : 'rgba(196,181,253,0.55)' }}>
           {isFull ? 'Full' : `${left} spot${left !== 1 ? 's' : ''} left`}
         </span>
       </div>
@@ -84,9 +86,7 @@ function MeetupCard({ meetup, joining, onJoin }) {
 
   return (
     <div className="meet-card" style={{
-      background: 'rgba(6,1,18,0.92)',
-      backdropFilter: 'blur(30px)',
-      WebkitBackdropFilter: 'blur(30px)',
+      background: 'rgb(7,2,20)',
       border: `1px solid ${accent}28`,
       borderRadius: 24,
       overflow: 'hidden',

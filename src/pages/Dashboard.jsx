@@ -266,10 +266,11 @@ function SafetyNotice({ onDismiss }) {
           </div>
           <button
             onClick={onDismiss}
+            aria-label="Dismiss safety notice"
             style={{
-              flexShrink: 0, width: 22, height: 22, borderRadius: '50%',
+              flexShrink: 0, width: 44, height: 44, borderRadius: '50%',
               background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.2)',
-              color: '#fbbf24', fontSize: 10, cursor: 'pointer',
+              color: '#fbbf24', fontSize: 14, cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
             ✕

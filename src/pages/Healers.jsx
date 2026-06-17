@@ -217,18 +217,18 @@ function ConsentModal({ healer, onClose, onAgree }) {
           {/* Date + Signature placeholders in doc */}
           <div className="mt-5 grid grid-cols-2 gap-4">
             <div className="rounded-xl p-3" style={{ border: '1px solid var(--border)' }}>
-              <p className="text-[10px] font-semibold mb-1" style={{ color: 'var(--text-muted)' }}>DATE</p>
+              <p className="text-xs font-semibold mb-1" style={{ color: 'var(--text-muted)' }}>DATE</p>
               <p className="text-xs font-semibold" style={{ color: 'var(--text)' }}>
                 {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
             </div>
             <div className="rounded-xl p-3" style={{ border: '1px solid var(--border)' }}>
-              <p className="text-[10px] font-semibold mb-1" style={{ color: 'var(--text-muted)' }}>HEALER</p>
+              <p className="text-xs font-semibold mb-1" style={{ color: 'var(--text-muted)' }}>HEALER</p>
               <p className="text-xs font-semibold truncate" style={{ color: 'var(--text)' }}>{healer?.name}</p>
             </div>
           </div>
 
-          <p className="text-center text-[10px] mt-4 pb-2" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-center text-xs mt-4 pb-2" style={{ color: 'var(--text-muted)' }}>
             — End of Consent Form —
           </p>
         </div>
@@ -305,7 +305,7 @@ function ConsentModal({ healer, onClose, onAgree }) {
                 }}
               />
             )}
-            <p className="text-[10px] mt-1" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
               {sigMode === 'draw' ? 'Sign using your mouse or finger' : 'Your typed name acts as your legal electronic signature'} · {new Date().toLocaleDateString('en-IN')}
             </p>
           </div>
@@ -319,7 +319,7 @@ function ConsentModal({ healer, onClose, onAgree }) {
             {canProceed ? 'I Agree & Continue to Booking →' : agreed ? (sigMode === 'draw' ? 'Please draw your signature above' : 'Please type your full name above') : 'Please check the agreement box above'}
           </button>
 
-          <p className="text-center text-[10px]" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-center text-xs" style={{ color: 'var(--text-muted)' }}>
             🔒 This consent is recorded with your booking · Support@soulconnect.health
           </p>
         </div>
@@ -608,14 +608,15 @@ function BookingModal({ healer, grad, onClose, onConfirm }) {
 
 // ── Healer styles ──────────────────────────────────────────────────────────────
 const HEALER_STYLES = `
-  @keyframes healAurora1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(40px,-30px) scale(1.15)} }
-  @keyframes healAurora2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-30px,40px) scale(1.1)} }
-  @keyframes healAurora3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(20px,20px) scale(1.08)} }
-  @keyframes healStarPulse { 0%,100%{opacity:0.1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.8)} }
-  @keyframes healCardHover { from{transform:translateY(0)} to{transform:translateY(-6px)} }
-  @keyframes healFloat { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-8px)} }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes healAurora1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(40px,-30px) scale(1.15)} }
+    @keyframes healAurora2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-30px,40px) scale(1.1)} }
+    @keyframes healAurora3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(20px,20px) scale(1.08)} }
+    @keyframes healStarPulse { 0%,100%{opacity:0.1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.8)} }
+    @keyframes healFloat { 0%,100%{transform:translateY(0px)} 50%{transform:translateY(-8px)} }
+  }
   .healer-card { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease; }
-  .healer-card:hover { transform: translateY(-6px); }
+  @media (hover: hover) { .healer-card:hover { transform: translateY(-6px); } }
 `;
 
 const CARD_ACCENTS = ['#7c3aed', '#0891b2', '#059669', '#d97706'];
@@ -628,9 +629,7 @@ function HealerCard({ healer, index, onBook }) {
 
   return (
     <div className="healer-card" style={{
-      background: 'rgba(6,1,18,0.92)',
-      backdropFilter: 'blur(30px)',
-      WebkitBackdropFilter: 'blur(30px)',
+      background: 'rgb(7,2,20)',
       border: `1px solid ${accent}28`,
       borderRadius: 24,
       overflow: 'hidden',
@@ -676,7 +675,7 @@ function HealerCard({ healer, index, onBook }) {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4 }}>
               <span style={{ color: '#a78bfa', fontSize: 14 }}>★</span>
               <span style={{ fontSize: 16, fontWeight: 900, color: '#a78bfa' }}>{healer.total_rating?.toFixed(1)}</span>
-              <span style={{ fontSize: 10, color: 'rgba(139,92,246,0.45)', letterSpacing: '0.08em' }}>
+              <span style={{ fontSize: 12, color: 'rgba(139,92,246,0.45)', letterSpacing: '0.08em' }}>
                 ({healer.review_count})
               </span>
             </div>
@@ -748,10 +747,10 @@ function HealerCard({ healer, index, onBook }) {
       >
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
           <span style={{ fontSize: 22, fontWeight: 900, color: '#a78bfa' }}>₹{healer.hourly_rate}</span>
-          <span style={{ fontSize: 10, color: 'rgba(139,92,246,0.45)', letterSpacing: '0.1em' }}>/session</span>
+          <span style={{ fontSize: 12, color: 'rgba(139,92,246,0.45)', letterSpacing: '0.1em' }}>/session</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(235,228,255,0.6)' }}>Book Session</span>
+          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(235,228,255,0.6)' }}>Book Session</span>
           <span style={{ fontSize: 20, color: '#a78bfa', lineHeight: 1 }}>→</span>
         </div>
       </button>
@@ -847,7 +846,7 @@ export default function Healers() {
             {[['500+', 'Healers'], ['4.8★', 'Avg Rating'], ['10K+', 'Sessions']].map(([val, label]) => (
               <div key={label} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 24, fontWeight: 900, color: '#a78bfa', lineHeight: 1 }}>{val}</div>
-                <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.4)', marginTop: 4 }}>{label}</div>
+                <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(196,181,253,0.4)', marginTop: 4 }}>{label}</div>
               </div>
             ))}
           </div>
@@ -889,12 +888,12 @@ export default function Healers() {
           <div style={{
             marginTop: 48, borderRadius: 24, padding: '32px 36px',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
-            background: 'rgba(6,1,18,0.85)', backdropFilter: 'blur(30px)',
+            background: 'rgb(7,2,20)',
             border: '1px solid rgba(124,58,237,0.2)',
             boxShadow: '0 0 60px rgba(124,58,237,0.08)',
           }}>
             <div>
-              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(139,92,246,0.5)', marginBottom: 8 }}>◆ For Practitioners</div>
+              <div style={{ fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(139,92,246,0.6)', marginBottom: 8 }}>◆ For Practitioners</div>
               <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ebe4ff', margin: '0 0 6px' }}>Are you a healer or therapist?</h3>
               <p style={{ fontSize: 13, color: 'rgba(196,181,253,0.5)', margin: 0 }}>Join our verified network and reach thousands who need your guidance.</p>
             </div>

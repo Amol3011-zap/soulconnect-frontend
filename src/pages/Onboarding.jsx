@@ -22,16 +22,14 @@ const PROBLEMS = [
 ];
 
 export default function Onboarding() {
-  const [selected, setSelected] = useState(null);
-  const [step, setStep] = useState(0); // 0 = welcome, 1 = pick problem, 2 = done
-  const { setPrimaryProblem, user } = useAuthStore();
+  // Problem selection already collected in Signup step 3 — skip to welcome → loading
+  const [step, setStep] = useState(0); // 0 = welcome, 1 = finding matches
+  const { user } = useAuthStore();
   const navigate = useNavigate();
 
   const handleContinue = () => {
-    if (step === 0) { setStep(1); return; }
-    if (step === 1 && selected) {
-      setPrimaryProblem(selected);
-      setStep(2);
+    if (step === 0) {
+      setStep(1);
       setTimeout(() => navigate('/dashboard'), 1800);
     }
   };
@@ -76,80 +74,27 @@ export default function Onboarding() {
             <button
               onClick={handleContinue}
               style={{
-                width: '100%', padding: '16px', borderRadius: 18,
+                width: '100%', minHeight: 52, padding: '14px 24px', borderRadius: 18,
                 fontSize: 16, fontWeight: 700, color: '#fff', cursor: 'pointer',
                 background: 'linear-gradient(135deg, #5b21b6, #7c3aed, #a855f7)',
                 border: 'none',
                 boxShadow: '0 0 40px rgba(124,58,237,0.4)',
                 letterSpacing: '0.03em',
               }}>
-              Begin My Journey →
+              See My Matches →
             </button>
           </div>
         )}
 
-        {/* STEP 1 — Pick problem */}
+        {/* STEP 1 — Finding matches / loading */}
         {step === 1 && (
-          <div style={{ animation: 'fadeIn 0.4s ease' }}>
-            <div style={{ textAlign: 'center', marginBottom: 24 }}>
-              <h2 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 8 }}>What brings you here?</h2>
-              <p style={{ fontSize: 13, color: 'rgba(196,181,253,0.6)' }}>Choose the one that feels most true right now.</p>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
-              {PROBLEMS.map(p => (
-                <button
-                  key={p.key}
-                  onClick={() => setSelected(p.key)}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '12px 14px', borderRadius: 16,
-                    textAlign: 'left', cursor: 'pointer',
-                    transition: 'all 0.18s ease',
-                    background: selected === p.key
-                      ? 'linear-gradient(135deg, rgba(124,58,237,0.25), rgba(168,85,247,0.15))'
-                      : 'rgba(255,255,255,0.04)',
-                    border: selected === p.key
-                      ? '1.5px solid rgba(168,85,247,0.6)'
-                      : '1.5px solid rgba(255,255,255,0.08)',
-                    boxShadow: selected === p.key ? '0 0 20px rgba(124,58,237,0.2)' : 'none',
-                  }}>
-                  <span style={{ fontSize: 24, flexShrink: 0 }}>{p.emoji}</span>
-                  <div style={{ minWidth: 0 }}>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: selected === p.key ? '#c4b5fd' : 'rgba(221,214,254,0.85)', lineHeight: 1.3 }}>{p.label}</p>
-                    <p style={{ margin: 0, fontSize: 10, color: 'rgba(196,181,253,0.45)', lineHeight: 1.4, marginTop: 2 }}>{p.desc}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={handleContinue}
-              disabled={!selected}
-              style={{
-                width: '100%', padding: '15px', borderRadius: 18,
-                fontSize: 15, fontWeight: 700, color: '#fff', cursor: selected ? 'pointer' : 'default',
-                background: selected ? 'linear-gradient(135deg, #5b21b6, #7c3aed, #a855f7)' : 'rgba(255,255,255,0.06)',
-                border: 'none',
-                boxShadow: selected ? '0 0 30px rgba(124,58,237,0.4)' : 'none',
-                opacity: selected ? 1 : 0.5,
-                transition: 'all 0.2s ease',
-              }}>
-              Find My Soul Matches →
-            </button>
-            <p style={{ textAlign: 'center', fontSize: 11, color: 'rgba(196,181,253,0.35)', marginTop: 12 }}>
-              🔒 This is private. Only used to match you with the right people.
-            </p>
-          </div>
-        )}
-
-        {/* STEP 2 — Done / loading */}
-        {step === 2 && (
-          <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s ease' }}>
-            <div style={{ fontSize: 64, marginBottom: 20 }}>✨</div>
+          <div role="status" aria-live="polite" style={{ textAlign: 'center', animation: 'fadeIn 0.5s ease' }}>
+            <div style={{ fontSize: 64, marginBottom: 20 }} aria-hidden="true">✨</div>
             <h2 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 12 }}>Finding your matches...</h2>
-            <p style={{ fontSize: 14, color: 'rgba(196,181,253,0.6)', lineHeight: 1.7 }}>
+            <p style={{ fontSize: 14, color: 'rgba(196,181,253,0.7)', lineHeight: 1.7 }}>
               The universe is aligning you with souls who truly understand.
             </p>
-            <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center', gap: 8 }}>
+            <div aria-hidden="true" style={{ marginTop: 32, display: 'flex', justifyContent: 'center', gap: 8 }}>
               {[0,1,2].map(i => (
                 <div key={i} style={{
                   width: 10, height: 10, borderRadius: '50%',

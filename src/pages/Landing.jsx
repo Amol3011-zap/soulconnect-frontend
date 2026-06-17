@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+
+/* ── Reduced-motion helper ── */
+const REDUCED_MOTION = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function FAQSection({ faqs }) {
   const [open, setOpen] = useState(null);
   return (
-    <section id="faq" style={{ background: '#f5f0eb', padding: '96px 24px' }}>
+    <section id="faq" style={{ background: '#f5f0eb', padding: 'clamp(40px,6vw,72px) 24px' }}>
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12, textAlign: 'center' }}>
           Got Questions?
@@ -12,43 +15,53 @@ function FAQSection({ faqs }) {
         <h2 style={{ color: '#111827', fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 800, textAlign: 'center', marginBottom: 12, letterSpacing: '-0.4px' }}>
           Frequently Asked Questions
         </h2>
-        <p style={{ color: '#6b7280', fontSize: 16, textAlign: 'center', marginBottom: 52 }}>
+        <p style={{ color: '#6b7280', fontSize: 16, textAlign: 'center', marginBottom: 40 }}>
           Everything you need to know about SoulConnect and how healing works.
         </p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {faqs.map((faq, i) => (
-            <div key={i}
-              style={{
-                background: 'white', borderRadius: 12,
-                border: open === i ? '1.5px solid #2d6a4f' : '1.5px solid #e5e7eb',
-                overflow: 'hidden', transition: 'border-color 0.2s',
-              }}>
-              <button
-                onClick={() => setOpen(open === i ? null : i)}
+        <div role="list" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {faqs.map((faq, i) => {
+            const panelId = `faq-panel-${i}`;
+            const btnId   = `faq-btn-${i}`;
+            return (
+              <div key={i} role="listitem"
                 style={{
-                  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '18px 22px', background: 'none', border: 'none', cursor: 'pointer',
-                  textAlign: 'left', gap: 16,
+                  background: 'white', borderRadius: 12,
+                  border: open === i ? '1.5px solid #2d6a4f' : '1.5px solid #e5e7eb',
+                  overflow: 'hidden', transition: 'border-color 0.2s',
                 }}>
-                <span style={{ fontWeight: 600, fontSize: 15, color: '#111827', lineHeight: 1.4 }}>{faq.q}</span>
-                <span style={{
-                  flexShrink: 0, width: 24, height: 24, borderRadius: '50%',
-                  background: open === i ? '#1a3d2e' : '#f3f4f6',
-                  color: open === i ? 'white' : '#6b7280',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 16, fontWeight: 700, lineHeight: 1,
-                  transition: 'all 0.2s',
-                }}>
-                  {open === i ? '−' : '+'}
-                </span>
-              </button>
-              {open === i && (
-                <div style={{ padding: '0 22px 18px', color: '#4b5563', fontSize: 14, lineHeight: 1.75 }}>
+                <button
+                  id={btnId}
+                  aria-expanded={open === i}
+                  aria-controls={panelId}
+                  onClick={() => setOpen(open === i ? null : i)}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    minHeight: 56, padding: '14px 22px', background: 'none', border: 'none', cursor: 'pointer',
+                    textAlign: 'left', gap: 16,
+                  }}>
+                  <span style={{ fontWeight: 600, fontSize: 15, color: '#111827', lineHeight: 1.4 }}>{faq.q}</span>
+                  <span aria-hidden="true" style={{
+                    flexShrink: 0, width: 32, height: 32, borderRadius: '50%',
+                    background: open === i ? '#1a3d2e' : '#f3f4f6',
+                    color: open === i ? 'white' : '#6b7280',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 18, fontWeight: 700, lineHeight: 1,
+                    transition: 'all 0.2s',
+                  }}>
+                    {open === i ? '−' : '+'}
+                  </span>
+                </button>
+                <div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={btnId}
+                  hidden={open !== i}
+                  style={{ padding: '0 22px 18px', color: '#4b5563', fontSize: 14, lineHeight: 1.75 }}>
                   {faq.a}
                 </div>
-              )}
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -250,39 +263,128 @@ const CompassIllustration = () => (
 );
 
 export default function Landing() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const drawerRef = useRef(null);
+
+  /* Close drawer on Escape key */
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
+  /* Trap focus inside drawer when open */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const el = drawerRef.current;
+    if (!el) return;
+    const focusable = el.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+    if (focusable[0]) focusable[0].focus();
+  }, [menuOpen]);
+
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: "'Inter', 'Plus Jakarta Sans', sans-serif", color: '#1a1a1a' }}>
 
       {/* ═══════════════════════════════════════
           NAVBAR
       ═══════════════════════════════════════ */}
-      <nav style={{ background: '#1a3d2e' }}>
+      <nav role="navigation" aria-label="Main navigation" style={{ background: '#1a3d2e', position: 'sticky', top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-          {/* Logo — icon on mobile, full horizontal on desktop */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src="/logo-navbar.png" alt="SoulConnect" className="md:hidden" style={{ height: 44, width: 44, objectFit: 'contain', borderRadius: 8 }} />
-            <img src="/logo-footer.png" alt="SoulConnect" className="hidden md:block" style={{ height: 56, width: 'auto', objectFit: 'contain', maxWidth: 240 }} />
+          {/* Logo */}
+          <Link to="/" aria-label="SoulConnect home" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <img src="/logo-navbar.png" alt="" aria-hidden="true" className="md:hidden" style={{ height: 44, width: 44, objectFit: 'contain', borderRadius: 8 }} />
+            <img src="/logo-footer.png" alt="" aria-hidden="true" className="hidden md:block" style={{ height: 56, width: 'auto', objectFit: 'contain', maxWidth: 240 }} />
           </Link>
 
-          {/* Nav links — hidden on mobile */}
+          {/* Nav links — desktop only */}
           <div className="hidden md:flex" style={{ alignItems: 'center', gap: 28 }}>
-            <a href="#how-it-works" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>How it Works</a>
-            <a href="#features" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>Features</a>
-            <a href="#healers" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>Healers</a>
-            <a href="#faq" style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>FAQ</a>
+            {[['#how-it-works','How it Works'],['#features','Features'],['#healers','Healers'],['#faq','FAQ']].map(([href,label]) => (
+              <a key={href} href={href} style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>{label}</a>
+            ))}
           </div>
 
-          {/* Auth buttons */}
+          {/* Right: auth buttons + hamburger */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Link to="/login" style={{ color: 'white', fontWeight: 600, fontSize: 14, textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.4)', borderRadius: 8, padding: '7px 16px' }}>
+            <Link to="/login" className="hidden md:inline-flex" style={{ color: 'white', fontWeight: 600, fontSize: 14, textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.4)', borderRadius: 8, padding: '10px 18px', minHeight: 44, alignItems: 'center' }}>
               Log in
             </Link>
-            <Link to="/signup" style={{ background: '#f59e0b', color: '#1a1a1a', fontWeight: 700, fontSize: 14, textDecoration: 'none', borderRadius: 8, padding: '8px 18px', boxShadow: '0 2px 8px rgba(245,158,11,0.35)' }}>
-              Get started
+            <Link to="/signup" style={{ background: '#7c3aed', color: 'white', fontWeight: 700, fontSize: 14, textDecoration: 'none', borderRadius: 8, padding: '10px 18px', minHeight: 44, display: 'inline-flex', alignItems: 'center', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }}>
+              Find My Match
             </Link>
+            {/* Hamburger — mobile only */}
+            <button
+              className="md:hidden"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-drawer"
+              onClick={() => setMenuOpen(v => !v)}
+              style={{ width: 44, height: 44, borderRadius: 8, background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+              <span style={{ display: 'block', width: 20, height: 2, background: 'white', borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translateY(7px)' : 'none' }} />
+              <span style={{ display: 'block', width: 20, height: 2, background: 'white', borderRadius: 2, transition: 'all 0.2s', opacity: menuOpen ? 0 : 1 }} />
+              <span style={{ display: 'block', width: 20, height: 2, background: 'white', borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translateY(-7px)' : 'none' }} />
+            </button>
           </div>
         </div>
       </nav>
+
+      {/* ── Mobile Drawer ── */}
+      {menuOpen && (
+        <div
+          onClick={() => setMenuOpen(false)}
+          style={{ position: 'fixed', inset: 0, zIndex: 49, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+          aria-hidden="true"
+        />
+      )}
+      <div
+        id="mobile-drawer"
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        className="md:hidden"
+        style={{
+          position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50,
+          width: 280, background: '#1a3d2e',
+          transform: menuOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: REDUCED_MOTION ? 'none' : 'transform 0.28s cubic-bezier(0.4,0,0.2,1)',
+          display: 'flex', flexDirection: 'column',
+          boxShadow: '4px 0 32px rgba(0,0,0,0.4)',
+          overflowY: 'auto',
+        }}>
+        {/* Drawer header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 40, width: 40, objectFit: 'contain', borderRadius: 8 }} />
+          <button
+            aria-label="Close menu"
+            onClick={() => setMenuOpen(false)}
+            style={{ width: 44, height: 44, borderRadius: 8, background: 'rgba(255,255,255,0.08)', border: 'none', cursor: 'pointer', color: 'white', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            ✕
+          </button>
+        </div>
+
+        {/* Drawer nav links */}
+        <nav aria-label="Mobile navigation" style={{ flex: 1, padding: '12px 0' }}>
+          {[['#how-it-works','How it Works','🌿'],['#features','Features','✨'],['#healers','Healers','🧘'],['#faq','FAQ','❓']].map(([href,label,icon]) => (
+            <a key={href} href={href} onClick={() => setMenuOpen(false)}
+              style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px', color: 'rgba(255,255,255,0.85)', textDecoration: 'none', fontSize: 16, fontWeight: 500, minHeight: 52, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              <span style={{ fontSize: 20 }}>{icon}</span>
+              {label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Drawer CTAs */}
+        <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <Link to="/login" onClick={() => setMenuOpen(false)}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 48, borderRadius: 10, border: '1.5px solid rgba(255,255,255,0.35)', color: 'white', fontWeight: 600, fontSize: 15, textDecoration: 'none' }}>
+            Log in
+          </Link>
+          <Link to="/signup" onClick={() => setMenuOpen(false)}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 48, borderRadius: 10, background: '#7c3aed', color: 'white', fontWeight: 700, fontSize: 15, textDecoration: 'none', boxShadow: '0 4px 14px rgba(124,58,237,0.4)' }}>
+            Find My Match →
+          </Link>
+        </div>
+      </div>
 
       {/* ═══════════════════════════════════════
           HERO SECTION
@@ -302,12 +404,18 @@ export default function Landing() {
               Connect with someone dealing with your exact struggle — breakup, anxiety, grief, or any of&nbsp;
               <strong style={{ color: 'white' }}>25 specific challenges</strong>. Peer support that truly understands you.
             </p>
-            {/* Mobile CTA buttons */}
-            <div className="flex md:hidden" style={{ justifyContent: 'center', gap: 10, marginBottom: 28 }}>
-              <Link to="/signup" style={{ background: '#f59e0b', color: '#1a1a1a', fontWeight: 700, fontSize: 15, textDecoration: 'none', borderRadius: 50, padding: '12px 28px', boxShadow: '0 4px 16px rgba(245,158,11,0.4)' }}>
-                Find My Match →
+            {/* CTA buttons — visible on all screen sizes */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, marginBottom: 28 }}>
+              <Link to="/signup" style={{ background: 'linear-gradient(135deg,#6d28d9,#7c3aed)', color: 'white', fontWeight: 700, fontSize: 16, textDecoration: 'none', borderRadius: 50, padding: '14px 32px', boxShadow: '0 4px 20px rgba(124,58,237,0.45)', display: 'inline-flex', alignItems: 'center', minHeight: 52 }}>
+                Find Someone Who Gets It →
+              </Link>
+              <Link to="/login" style={{ background: 'rgba(255,255,255,0.1)', color: 'white', fontWeight: 600, fontSize: 15, textDecoration: 'none', borderRadius: 50, padding: '14px 28px', border: '1.5px solid rgba(255,255,255,0.3)', display: 'inline-flex', alignItems: 'center', minHeight: 52 }}>
+                Log in
               </Link>
             </div>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, marginBottom: 28 }}>
+              🔒 Free · Anonymous · Takes 3 minutes
+            </p>
           </div>
 
           {/* THREE SOULCONNECT CATEGORY CARDS */}
@@ -444,27 +552,34 @@ export default function Landing() {
             ))}
           </div>
 
-          {/* Problem pills row */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, paddingBottom: 48 }}>
+          {/* Problem pills row — clickable, 44px tap targets */}
+          <div role="list" aria-label="Supported challenges" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, paddingBottom: 48 }}>
             {problems.map((p) => (
-              <span
+              <Link
                 key={p}
+                to="/signup"
+                role="listitem"
                 style={{
                   background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)',
-                  color: 'rgba(255,255,255,0.8)', padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 500,
+                  color: 'rgba(255,255,255,0.85)', padding: '10px 18px', borderRadius: 999,
+                  fontSize: 13, fontWeight: 500, textDecoration: 'none', display: 'inline-flex',
+                  alignItems: 'center', minHeight: 44,
                 }}
               >
                 {p}
-              </span>
+              </Link>
             ))}
-            <span
+            <Link
+              to="/signup"
+              role="listitem"
               style={{
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
-                color: 'rgba(255,255,255,0.5)', padding: '6px 16px', borderRadius: 999, fontSize: 13,
+                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)',
+                color: 'rgba(255,255,255,0.6)', padding: '10px 18px', borderRadius: 999,
+                fontSize: 13, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', minHeight: 44,
               }}
             >
               +15 more
-            </span>
+            </Link>
           </div>
 
         </div>
@@ -478,19 +593,19 @@ export default function Landing() {
       {/* ═══════════════════════════════════════
           HOW IT WORKS
       ═══════════════════════════════════════ */}
-      <section id="how-it-works" style={{ background: '#f8faf9', padding: '88px 24px' }}>
+      <section id="how-it-works" style={{ background: '#f8faf9', padding: 'clamp(40px,6vw,72px) 24px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Simple Process</p>
-            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>Start healing in 3 steps</h2>
+            <h2 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>Start healing in 3 steps</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, position: 'relative' }}>
-            {steps.map(({ step, title, desc }, idx) => (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
+            {steps.map(({ step, title, desc }) => (
               <div
                 key={step}
                 style={{
-                  background: 'white', borderRadius: 16, padding: 36,
+                  background: 'white', borderRadius: 16, padding: 'clamp(20px,3vw,36px)',
                   border: '1px solid #e5e7eb', textAlign: 'center',
                   boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
                 }}
@@ -516,19 +631,19 @@ export default function Landing() {
       {/* ═══════════════════════════════════════
           FEATURES
       ═══════════════════════════════════════ */}
-      <section id="features" style={{ background: 'white', padding: '88px 24px' }}>
+      <section id="features" style={{ background: 'white', padding: 'clamp(40px,6vw,72px) 24px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>What We Offer</p>
-            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>Everything you need to heal</h2>
+            <h2 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>Everything you need to heal</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
             {features.map(({ title, desc, icon }) => (
               <div
                 key={title}
                 style={{
-                  background: '#f8faf9', borderRadius: 16, padding: 36,
+                  background: '#f8faf9', borderRadius: 16, padding: 'clamp(20px,3vw,36px)',
                   border: '1px solid #e5e7eb',
                 }}
               >
@@ -536,6 +651,39 @@ export default function Landing() {
                 <h3 style={{ fontWeight: 700, fontSize: 18, color: '#111827', marginBottom: 10 }}>{title}</h3>
                 <p style={{ color: '#6b7280', fontSize: 14, lineHeight: 1.7 }}>{desc}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          TESTIMONIALS
+      ═══════════════════════════════════════ */}
+      <section id="testimonials" aria-label="User testimonials" style={{ background: '#f8faf9', padding: 'clamp(40px,6vw,72px) 24px' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Real Stories</p>
+            <h2 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>People who found their people</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+            {testimonials.map((t) => (
+              <figure key={t.name} style={{ background: 'white', borderRadius: 16, padding: 28, border: '1px solid #e5e7eb', margin: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
+                  <div style={{ width: 48, height: 48, borderRadius: '50%', background: t.avatarBg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: 18 }}>
+                    {t.initials}
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: 700, fontSize: 15, color: '#111827', margin: 0 }}>{t.name}, {t.age}</p>
+                    <span style={{ fontSize: 12, background: '#dcfce7', color: '#166534', padding: '2px 10px', borderRadius: 20, fontWeight: 600 }}>{t.tag}</span>
+                  </div>
+                </div>
+                <blockquote style={{ margin: 0 }}>
+                  <p style={{ color: '#374151', fontSize: 14, lineHeight: 1.75, fontStyle: 'italic' }}>{t.quote}</p>
+                </blockquote>
+                <div role="img" aria-label={`${t.stars} out of 5 stars`} style={{ marginTop: 14, color: '#f59e0b', fontSize: 14 }}>
+                  {'★'.repeat(t.stars)}
+                </div>
+              </figure>
             ))}
           </div>
         </div>
@@ -572,41 +720,18 @@ export default function Landing() {
       </section>
 
       {/* ═══════════════════════════════════════
-          FAQ
+          FAQ  (8 high-signal questions)
       ═══════════════════════════════════════ */}
-      {(() => {
-        const faqs = [
-          { q: 'What is SoulConnect?', a: 'SoulConnect is a professional wellness and personal development platform dedicated to supporting emotional well-being, self-awareness, inner growth, stress reduction, and holistic healing. Our sessions are designed to help individuals reconnect with themselves, gain clarity, and create positive change in their lives.' },
-          { q: 'What is Healing?', a: 'Healing is a holistic process that supports emotional, mental, energetic, and spiritual well-being. It focuses on helping individuals release stress, restore balance, improve self-awareness, and promote overall wellness.' },
-          { q: 'How can Healing help me?', a: 'Healing sessions may help support stress reduction, emotional balance, relaxation, personal growth, self-awareness, inner peace, relationship challenges, life transitions, and spiritual exploration. Every individual\'s experience is unique, and results may vary.' },
-          { q: 'What happens during a Healing session?', a: 'Each session is conducted in a safe and supportive environment. Depending on your needs, the session may include guided conversation, energy-based practices, relaxation techniques, mindfulness exercises, and personal development guidance.' },
-          { q: 'Do I need any prior experience?', a: 'No. Our services are suitable for both beginners and individuals who have previously explored wellness or healing practices.' },
-          { q: 'How long does a session last?', a: 'Session lengths vary depending on the service selected. Details regarding session duration are provided at the time of booking.' },
-          { q: 'How many sessions will I need?', a: 'The number of sessions varies from person to person and depends on individual goals, circumstances, and preferences. Some clients benefit from a single session, while others choose ongoing support.' },
-          { q: 'Are sessions available online?', a: 'Yes. SoulConnect offers online sessions that can be accessed from the comfort of your home, allowing clients from different locations to participate.' },
-          { q: 'Can healing sessions be conducted remotely?', a: 'Yes. Many clients choose remote sessions and find them to be a convenient and effective way to receive support and guidance.' },
-          { q: 'What should I do before a session?', a: 'We recommend choosing a quiet and comfortable space, ensuring a stable internet connection for online sessions, and approaching the experience with an open and relaxed mindset.' },
-          { q: 'What should I do after a session?', a: 'Allow yourself time to reflect, rest if needed, stay hydrated, and observe any insights or changes that may emerge following your session.' },
-          { q: 'Will I feel something during the session?', a: 'Experiences vary for every individual. Some people report feeling deeply relaxed, peaceful, emotional, energized, or reflective, while others may notice subtle changes over time.' },
-          { q: 'What if I do not feel anything during the session?', a: 'Every person\'s experience is different. Not feeling immediate sensations does not mean the session was ineffective. Many clients notice benefits gradually over time.' },
-          { q: 'Is everything discussed during sessions confidential?', a: 'We respect your privacy and handle personal information with care. Information is managed in accordance with our Privacy Policy and applicable laws.' },
-          { q: 'Are your services medical treatment?', a: 'No. SoulConnect does not provide medical diagnosis, medical treatment, healthcare services, psychiatric care, or psychotherapy. Our services are focused on wellness, personal development, emotional support, and holistic healing.' },
-          { q: 'Can healing replace medical treatment?', a: 'No. SoulConnect services should not be considered a substitute for professional medical care, diagnosis, treatment, or advice. Always consult a qualified healthcare professional regarding medical concerns.' },
-          { q: 'Do you diagnose medical or mental health conditions?', a: 'No. We do not diagnose, treat, cure, or prevent medical or psychological conditions.' },
-          { q: 'Are results guaranteed?', a: 'No. Individual experiences and outcomes vary. SoulConnect does not guarantee specific results, outcomes, or transformations.' },
-          { q: 'Who are SoulConnect services suitable for?', a: 'Our services are suitable for adults seeking support with personal growth, emotional well-being, self-discovery, stress management, life challenges, and holistic healing.' },
-          { q: 'What is the difference between healing and therapy?', a: 'Healing services focus on wellness, personal growth, self-awareness, and holistic support. Therapy is typically provided by licensed healthcare professionals and may involve the diagnosis and treatment of mental health conditions.' },
-          { q: 'How do I book a session?', a: 'You can book a session directly through our website by selecting your preferred service, date, and available time slot.' },
-          { q: 'What payment methods do you accept?', a: 'We accept secure online payments through approved payment providers. Available payment methods will be displayed during checkout.' },
-          { q: 'What is your cancellation policy?', a: 'Appointments may be rescheduled or canceled according to the cancellation policy stated at the time of booking. Please review the booking terms before confirming your appointment.' },
-          { q: 'What if I miss my appointment?', a: 'Missed appointments and no-shows may be subject to the applicable booking and cancellation policy.' },
-          { q: 'Can I book multiple sessions?', a: 'Yes. Clients may schedule multiple sessions based on their personal goals and preferences.' },
-          { q: 'Why choose SoulConnect?', a: 'SoulConnect provides a supportive, professional, and client-centered approach focused on holistic healing, emotional well-being, personal growth, and meaningful transformation. Every session is tailored to the unique needs and goals of the individual.' },
-        ];
-        return (
-          <FAQSection faqs={faqs} />
-        );
-      })()}
+      <FAQSection faqs={[
+        { q: 'Is SoulConnect free to use?', a: 'Yes — creating an account, getting peer-matched, and joining support circles is completely free. Verified healer sessions are paid individually, starting at ₹500/session.' },
+        { q: 'Is my identity kept anonymous?', a: 'Completely. Your real name, phone number, and social media are never shared with matches or visible publicly. You decide exactly what you reveal and when.' },
+        { q: 'How does the peer matching work?', a: 'When you sign up, you select your primary challenge (e.g. anxiety, breakup, grief). Our algorithm matches you with someone going through the same specific issue — not just "mental health" broadly. Most people are matched within a few minutes.' },
+        { q: 'Is this a replacement for therapy?', a: 'No — and we\'re honest about that. SoulConnect is peer support: real people who truly understand your struggle. For clinical care, we connect you with verified therapists and counsellors on the platform.' },
+        { q: 'Which cities are support circles available in?', a: 'Online matching works across India. In-person circles run in Mumbai, Delhi, Bangalore, Pune, Chennai, Hyderabad, and 44 more cities — with new cities added every month.' },
+        { q: 'Who are the verified healers?', a: 'Our healers are certified professionals — psychologists, therapists, counsellors, yoga teachers, Reiki practitioners, and life coaches. Every healer is manually reviewed before joining the platform.' },
+        { q: 'What if I need urgent help?', a: 'SoulConnect is a supportive community, not a crisis service. If you\'re in immediate distress or having thoughts of self-harm, please contact iCall (9152987821) or Vandrevala Foundation (1860-2662-345), both available 24/7 across India.' },
+        { q: 'How do I get started?', a: 'Sign up for free in about 3 minutes. Choose what you\'re going through, and we\'ll show you your first peer match. No credit card, no waiting list.' },
+      ]} />
 
       {/* ═══════════════════════════════════════
           FINAL CTA
@@ -633,14 +758,15 @@ export default function Landing() {
           <Link
             to="/signup"
             style={{
-              display: 'inline-block', background: '#f59e0b', color: '#1a1a1a',
+              display: 'inline-flex', alignItems: 'center', minHeight: 52,
+              background: 'linear-gradient(135deg,#6d28d9,#7c3aed)', color: 'white',
               fontWeight: 700, fontSize: 16, textDecoration: 'none',
-              padding: '15px 40px', borderRadius: 8,
-              boxShadow: '0 4px 20px rgba(245,158,11,0.4)',
+              padding: '14px 40px', borderRadius: 50,
+              boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
               transition: 'all 0.2s',
             }}
           >
-            Start for Free — Find My Match
+            Find My Match — It's Free →
           </Link>
           <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, marginTop: 16 }}>No credit card required</p>
         </div>
