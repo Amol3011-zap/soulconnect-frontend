@@ -28,11 +28,31 @@
     <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
 
     <!-- ── SEO & sharing ── -->
-    <meta name="description" content="SoulConnect — Match with someone dealing with your exact problem. Free peer support + verified healers. You are not alone." />
+    <meta name="description" content="SoulConnect — Match with someone dealing with your exact problem. Free peer support + verified healers. Anxiety, depression, grief, breakups and 21 more. You are not alone." />
+    <meta name="keywords" content="peer support, mental health, anxiety, depression, grief, loneliness, therapy, healing, soul connect" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="SoulConnect" />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SoulConnect" />
+    <meta property="og:url" content="https://soulconnect.health/" />
     <meta property="og:title" content="SoulConnect — You Are Not Alone" />
-    <meta property="og:description" content="Match with someone who truly understands what you're going through. 25 specific problems. Real people. Real healing." />
-    <meta property="og:image" content="/icon.svg" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:description" content="Match with someone who truly understands what you're going through. 25 specific problems. Real people. Real healing. Free peer support + verified healers." />
+    <meta property="og:image" content="https://soulconnect.health/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="SoulConnect — Peer Support for Real Life Struggles" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@soulconnect" />
+    <meta name="twitter:title" content="SoulConnect — You Are Not Alone" />
+    <meta name="twitter:description" content="Match with someone who truly understands what you're going through. Anxiety, grief, breakups and more. Free peer support." />
+    <meta name="twitter:image" content="https://soulconnect.health/og-image.png" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://soulconnect.health/" />
 
     <!-- Disable phone/email detection auto-link on iOS -->
     <meta name="format-detection" content="telephone=no, email=no, address=no" />
@@ -131,8 +151,39 @@
       }
     </style>
   </head>
-  <body class="bg-gray-50">
-    <div id="root"></div>
+  <body style="margin:0;background:#09061a;color:#ede9fe;font-family:'Plus Jakarta Sans',sans-serif;">
+    <div id="root">
+      <!-- Crawler-readable content (hidden once React loads) -->
+      <div id="static-shell" style="max-width:680px;margin:0 auto;padding:60px 24px;text-align:center;">
+        <h1 style="font-size:2.5rem;font-weight:900;color:#ede9fe;margin-bottom:16px;">You Are Not Alone in This.</h1>
+        <p style="font-size:1.1rem;color:rgba(196,181,253,0.8);line-height:1.7;margin-bottom:32px;">
+          SoulConnect matches you with someone dealing with your exact struggle — breakup, anxiety, grief, or any of 25 specific challenges. Peer support that truly understands you.
+        </p>
+        <p style="font-size:0.9rem;color:rgba(196,181,253,0.5);margin-bottom:8px;">Challenges we support:</p>
+        <p style="font-size:0.85rem;color:rgba(196,181,253,0.5);line-height:1.8;">
+          Anxiety · Depression · Loneliness · Grief &amp; Loss · Relationship Breakup · Marriage Problems ·
+          Work Stress · Financial Stress · Panic Attacks · PTSD &amp; Trauma · Low Confidence ·
+          Sleep Problems · Family Issues · OCD · Trust Issues · Anger Management and more.
+        </p>
+        <p style="margin-top:32px;font-size:0.85rem;color:rgba(196,181,253,0.4);">Loading SoulConnect…</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Hide static shell once React mounts
+      document.addEventListener('DOMContentLoaded', function() {
+        var shell = document.getElementById('static-shell');
+        if (shell) {
+          var observer = new MutationObserver(function() {
+            var root = document.getElementById('root');
+            if (root && root.children.length > 1) {
+              shell.style.display = 'none';
+              observer.disconnect();
+            }
+          });
+          observer.observe(document.getElementById('root'), { childList: true });
+        }
+      });
+    </script>
   </body>
 </html>
