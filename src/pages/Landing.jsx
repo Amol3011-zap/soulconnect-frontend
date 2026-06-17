@@ -373,7 +373,7 @@ export default function Landing() {
         transition: 'all 0.4s ease',
         display: 'flex', alignItems: 'center',
       }}>
-        <div style={{ width: 'min(95vw,1800px)', margin: '0 auto', padding: '0 clamp(16px,2.5vw,52px)', display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: '100%', maxWidth: 1800, margin: '0 auto', padding: '0 clamp(16px,2.5vw,52px)', display: 'flex', alignItems: 'center' }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginRight: 44, flexShrink: 0 }}>
             <div style={{ width: 40, height: 40, borderRadius: 13, background: `linear-gradient(135deg, ${P}, ${LAV})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, boxShadow: `0 4px 16px rgba(109,74,255,0.4)` }}>🪷</div>
             <div>
@@ -431,7 +431,7 @@ export default function Landing() {
           })}
         </div>
 
-        <div className="hero-grid" style={{ width: 'min(95vw,1800px)', margin: '0 auto', padding: '80px clamp(20px,2.5vw,60px) 72px', display: 'grid', gridTemplateColumns: '50fr 50fr', gap: 'clamp(40px,4vw,88px)', alignItems: 'center', position: 'relative', zIndex: 1 }}>
+        <div className="hero-grid" style={{ width: '100%', maxWidth: 1800, margin: '0 auto', padding: '80px clamp(20px,2.5vw,60px) 72px', display: 'grid', gridTemplateColumns: '50fr 50fr', gap: 'clamp(40px,4vw,88px)', alignItems: 'center', position: 'relative', zIndex: 1 }}>
 
           {/* LEFT */}
           <div className="fade-up" style={{ minWidth: 0 }}>
@@ -777,68 +777,70 @@ export default function Landing() {
       </section>
 
       {/* ══════════════ FOOTER ══════════════ */}
-      <footer style={{ background: '#0C0A22', padding: 'clamp(52px,5.5vw,80px) clamp(16px,2.5vw,52px) 36px', fontFamily: FONT }}>
-        <div style={{ maxWidth: 1800, margin: '0 auto' }}>
-          <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 52, marginBottom: 60 }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 20 }}>
-                <div style={{ width: 42, height: 42, borderRadius: 14, background: `linear-gradient(135deg, ${P}, ${LAV})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>🪷</div>
-                <div>
-                  <div style={{ fontSize: 17, fontWeight: 800, color: '#fff' }}>Soul<span style={{ color: LAV }}>Connect</span></div>
-                  <div style={{ fontSize: 9, color: LAV, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Heal · Connect · Grow</div>
-                </div>
-              </div>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', lineHeight: 1.80, maxWidth: 270, marginBottom: 28 }}>
-                A community-driven healing platform where people facing similar life challenges connect, support each other, and heal together.
-              </p>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {['📘','📸','🐦','💼'].map((icon, i) => (
-                  <a key={i} href="#" style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, textDecoration: 'none', transition: 'background 0.2s' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = `rgba(109,74,255,0.4)`; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}>
-                    {icon}
-                  </a>
-                ))}
-              </div>
-            </div>
+      <footer style={{ background: '#F0F0EB', fontFamily: FONT }}>
 
-            {[
-              { title: 'Platform',  links: ['Community', 'Healing Circles', 'Daily Challenges', 'Soul Journey', 'Events'] },
-              { title: 'Support',   links: ['Find a Healer', 'Book Session', 'Wellness Assessment', 'About Us', 'Contact'] },
-              { title: 'Legal',     links: ['Privacy Policy', 'Terms of Use', 'Cookie Policy', 'Accessibility', 'Safety'] },
-            ].map(col => (
-              <div key={col.title}>
-                <h4 style={{ fontSize: 12, fontWeight: 700, color: LAV, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 18 }}>{col.title}</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
-                  {col.links.map(l => (
-                    <a key={l} href="#" style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', transition: 'color 0.15s' }}
-                      onMouseEnter={e => { e.currentTarget.style.color = '#fff'; }}
-                      onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.38)'; }}>
-                      {l}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 30, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', margin: 0 }}>© 2026 SoulConnect. All rights reserved.</p>
-            <div style={{ display: 'flex', gap: 28 }}>
-              <Link to="/terms" style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none', transition: 'color 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.75)'; }}
-                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}>
-                Terms of Use
-              </Link>
-              <Link to="/terms#privacy" style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none', transition: 'color 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.75)'; }}
-                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; }}>
-                Privacy Policy
-              </Link>
+        {/* Top row: nav links + social icons */}
+        <div style={{ borderBottom: '1px solid #D8D8D0', padding: '18px clamp(16px,2.5vw,52px)' }}>
+          <div style={{ maxWidth: 1800, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+            {/* Nav links */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 0 }}>
+              {['Home', 'Community', 'About', 'FAQ', 'Healers', 'Careers', 'Find a Healer', 'Online Healing', 'Contact', 'For Healers'].map((l, i) => (
+                <a key={i} href="#" style={{ fontSize: 13, color: '#1a3d2e', fontWeight: 500, textDecoration: 'none', padding: '4px 14px', borderRight: i < 9 ? '1px solid #C8C8C0' : 'none', transition: 'color 0.15s', whiteSpace: 'nowrap' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = P; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = '#1a3d2e'; }}>
+                  {l}
+                </a>
+              ))}
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.18)', margin: 0 }}>Made with 💜 for those who need it most</p>
+            {/* Social icons */}
+            <div style={{ display: 'flex', gap: 8 }}>
+              {[
+                { label: 'f',  title: 'Facebook'  },
+                { label: '📷', title: 'Instagram', emoji: true },
+                { label: '♪',  title: 'TikTok'    },
+                { label: '✕',  title: 'X'         },
+                { label: 'in', title: 'LinkedIn'  },
+              ].map((s, i) => (
+                <a key={i} href="#" title={s.title} style={{ width: 36, height: 36, borderRadius: '50%', background: '#1a3d2e', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: s.emoji ? 14 : 13, fontWeight: 700, textDecoration: 'none', transition: 'background 0.2s', flexShrink: 0 }}
+                  onMouseEnter={e => { e.currentTarget.style.background = P; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#1a3d2e'; }}>
+                  {s.label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Bottom row: legal links + copyright */}
+        <div style={{ padding: '14px clamp(16px,2.5vw,52px)' }}>
+          <div style={{ maxWidth: 1800, margin: '0 auto', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+            <Link to="/terms" style={{ fontSize: 13, color: '#1a3d2e', fontWeight: 500, textDecoration: 'none', padding: '2px 0', transition: 'color 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = P; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#1a3d2e'; }}>
+              Terms &amp; Conditions
+            </Link>
+            <span style={{ color: '#C8C8C0', fontSize: 13 }}>·</span>
+            <Link to="/terms#privacy" style={{ fontSize: 13, color: '#1a3d2e', fontWeight: 500, textDecoration: 'none', padding: '2px 0', transition: 'color 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = P; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#1a3d2e'; }}>
+              Privacy Policy
+            </Link>
+            <span style={{ color: '#C8C8C0', fontSize: 13 }}>·</span>
+            <a href="#" style={{ fontSize: 13, color: '#1a3d2e', fontWeight: 500, textDecoration: 'none', transition: 'color 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = P; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#1a3d2e'; }}>
+              Cookie Settings
+            </a>
+            <span style={{ color: '#C8C8C0', fontSize: 13 }}>·</span>
+            <a href="#" style={{ fontSize: 13, color: '#1a3d2e', fontWeight: 500, textDecoration: 'none', transition: 'color 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = P; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#1a3d2e'; }}>
+              Web Accessibility
+            </a>
+            <span style={{ color: '#C8C8C0', fontSize: 13, marginLeft: 4 }}>© 2026 SoulConnect</span>
+          </div>
+        </div>
+
       </footer>
 
     </div>
