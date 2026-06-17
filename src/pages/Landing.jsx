@@ -230,7 +230,7 @@ export default function Landing() {
         transition: 'all 0.3s ease',
         display: 'flex', alignItems: 'center',
       }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', width: '100%', padding: '0 clamp(16px, 3vw, 40px)', display: 'flex', alignItems: 'center' }}>
+        <div style={{ maxWidth: 1700, margin: '0 auto', width: '100%', padding: '0 clamp(16px, 3vw, 40px)', display: 'flex', alignItems: 'center' }}>
 
           {/* Logo */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginRight: 40, flexShrink: 0 }}>
@@ -289,13 +289,13 @@ export default function Landing() {
       {/* ═══════════════════════════════════════════════════════════════════
           HERO
       ════════════════════════════════════════════════════════════════════ */}
-      <section style={{ background: 'linear-gradient(160deg, #FAF8F6 0%, #F3F0FF 50%, #FAF8F6 100%)', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ background: 'linear-gradient(160deg, #FAF8F6 0%, #F3F0FF 50%, #FAF8F6 100%)', position: 'relative', overflow: 'hidden', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
 
         {/* Background orbs */}
-        <div style={{ position: 'absolute', top: '10%', left: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '5%', right: '5%', width: 320, height: 320, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,92,252,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '10%', left: '-5%', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '5%', right: '5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,92,252,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-        <div style={{ maxWidth: 1400, margin: '0 auto', width: '100%', padding: '96px clamp(20px, 4vw, 64px) 80px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(40px, 5vw, 72px)', alignItems: 'start' }}>
+        <div style={{ width: 'min(95vw, 1700px)', margin: '0 auto', padding: '80px clamp(20px, 2.5vw, 48px) 64px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(48px, 5vw, 100px)', alignItems: 'center' }}>
 
           {/* Left */}
           <div className="fade-up" style={{ minWidth: 0 }}>
@@ -305,23 +305,23 @@ export default function Landing() {
               <span style={{ fontSize: 11, fontWeight: 700, color: '#7C5CFC', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Peer Support For Real Life Struggles</span>
             </div>
 
-            <h1 style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(2rem, 4.5vw, 3.6rem)', fontWeight: 800, color: '#1E1B4B', lineHeight: 1.18, letterSpacing: '-0.02em', marginBottom: 20 }}>
+            <h1 style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(4rem, 7vw, 7rem)', fontWeight: 800, color: '#1E1B4B', lineHeight: 1.08, letterSpacing: '-0.03em', marginBottom: 20 }}>
               Find Someone Who Truly{' '}
               <span style={{ color: '#7C5CFC', fontStyle: 'italic' }}>Understands</span>{' '}
               What You're Going Through
             </h1>
 
-            <p style={{ fontSize: 'clamp(15px, 1.5vw, 17px)', color: '#6B7280', lineHeight: 1.75, marginBottom: 8 }}>
+            <p style={{ fontSize: 'clamp(16px, 1.5vw, 20px)', color: '#6B7280', lineHeight: 1.75, marginBottom: 8 }}>
               Whether you're healing from a breakup, struggling with anxiety, grieving a loss, or feeling alone... connect with people who have walked the same path.
             </p>
-            <p style={{ fontSize: 'clamp(15px, 1.5vw, 17px)', color: '#7C5CFC', fontWeight: 600, marginBottom: 32 }}>
+            <p style={{ fontSize: 'clamp(16px, 1.5vw, 20px)', color: '#7C5CFC', fontWeight: 600, marginBottom: 36 }}>
               You don't have to carry it alone anymore.
             </p>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 32 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginBottom: 36 }}>
               <Link to="/signup" className="sc-btn-primary" style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '14px 30px', borderRadius: 14, fontSize: 15, fontWeight: 700,
+                padding: '18px 40px', borderRadius: 16, fontSize: 18, fontWeight: 700,
                 color: '#fff', textDecoration: 'none',
                 background: 'linear-gradient(135deg, #7C5CFC, #6D4EE8)',
                 boxShadow: '0 6px 20px rgba(124,92,252,0.38)',
@@ -330,7 +330,7 @@ export default function Landing() {
               </Link>
               <a href="#how-it-works" className="sc-btn-outline" style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
-                padding: '14px 26px', borderRadius: 14, fontSize: 15, fontWeight: 600,
+                padding: '18px 32px', borderRadius: 16, fontSize: 18, fontWeight: 600,
                 color: '#1E1B4B', textDecoration: 'none',
                 border: '1.5px solid #D1D5DB', background: '#fff',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.06)', transition: 'all 0.18s',
@@ -356,8 +356,8 @@ export default function Landing() {
             {/* Photo */}
             <div style={{
               borderRadius: 28, overflow: 'hidden',
-              boxShadow: '0 24px 80px rgba(124,92,252,0.2)',
-              width: '100%', height: 540, position: 'relative',
+              boxShadow: '0 32px 100px rgba(124,92,252,0.22)',
+              width: '100%', height: 'clamp(500px, 60vh, 780px)', position: 'relative',
             }}>
               <img
                 src={HERO_IMG}
@@ -413,7 +413,7 @@ export default function Landing() {
           STATS / TRUST BAR
       ════════════════════════════════════════════════════════════════════ */}
       <section style={{ padding: '0 clamp(20px, 4vw, 64px)', position: 'relative', zIndex: 10, marginTop: -32 }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1700, margin: '0 auto' }}>
           <div style={{
             background: '#fff', borderRadius: 24, padding: 'clamp(24px, 3vw, 36px) clamp(24px, 4vw, 48px)',
             boxShadow: '0 8px 48px rgba(0,0,0,0.08)',
@@ -446,7 +446,7 @@ export default function Landing() {
           PROBLEM CATEGORIES
       ════════════════════════════════════════════════════════════════════ */}
       <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1700, margin: '0 auto' }}>
           <SectionHeader
             title="You're Not Alone In What You're Facing"
             subtitle="Whatever you're going through, there are others here who truly get it."
@@ -482,7 +482,7 @@ export default function Landing() {
           HOW IT WORKS
       ════════════════════════════════════════════════════════════════════ */}
       <section id="how-it-works" style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: '#fff' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1700, margin: '0 auto' }}>
           <SectionHeader title="How SoulConnect Works" />
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 0, position: 'relative' }}>
@@ -529,7 +529,7 @@ export default function Landing() {
           TESTIMONIALS
       ════════════════════════════════════════════════════════════════════ */}
       <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: '#FAF8F6' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1700, margin: '0 auto' }}>
           <SectionHeader title="Real Stories. Real Healing." subtitle="Thousands of people have found their people here." />
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
@@ -555,7 +555,7 @@ export default function Landing() {
           CIRCLES + HEALERS
       ════════════════════════════════════════════════════════════════════ */}
       <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: '#fff' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}>
+        <div style={{ maxWidth: 1700, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}>
 
           {/* Upcoming Circles */}
           <div>
@@ -631,7 +631,7 @@ export default function Landing() {
           DAILY HEALING TOOLS
       ════════════════════════════════════════════════════════════════════ */}
       <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: '#FAF8F6' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1700, margin: '0 auto' }}>
           <SectionHeader title="Daily Healing Tools" subtitle="Simple tools to support your journey every day." />
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 14 }}>
@@ -697,7 +697,7 @@ export default function Landing() {
           FOOTER
       ════════════════════════════════════════════════════════════════════ */}
       <footer style={{ background: '#1E1B4B', padding: 'clamp(40px, 5vw, 64px) clamp(16px, 3vw, 48px) 28px' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1700, margin: '0 auto' }}>
 
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
 
