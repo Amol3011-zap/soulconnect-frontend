@@ -418,7 +418,7 @@ export default function Landing() {
       )}
 
       {/* ══════════════ HERO ══════════════ */}
-      <section style={{ background: 'linear-gradient(148deg, #0F0A24 0%, #1E0B45 35%, #2A0D5E 65%, #120828 100%)', minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ background: 'linear-gradient(148deg, #0F0A24 0%, #1E0B45 35%, #2A0D5E 65%, #120828 100%)', minHeight: '100vh', display: 'flex', alignItems: 'flex-start', position: 'relative', overflow: 'hidden' }}>
         {/* BG orbs */}
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
           <div style={{ position: 'absolute', top: '10%', left: '2%', width: 600, height: 600, borderRadius: '50%', background: `radial-gradient(circle, rgba(109,74,255,0.14) 0%, transparent 70%)` }} />
@@ -431,7 +431,7 @@ export default function Landing() {
           })}
         </div>
 
-        <div className="hero-grid" style={{ width: '100%', maxWidth: 1800, margin: '0 auto', padding: '80px clamp(20px,2.5vw,60px) 72px', display: 'grid', gridTemplateColumns: '50fr 50fr', gap: 'clamp(40px,4vw,88px)', alignItems: 'center', position: 'relative', zIndex: 1 }}>
+        <div className="hero-grid" style={{ width: '100%', maxWidth: 1800, margin: '0 auto', padding: '100px clamp(20px,2.5vw,60px) 80px', display: 'grid', gridTemplateColumns: '50fr 50fr', gap: 'clamp(40px,4vw,88px)', alignItems: 'center', position: 'relative', zIndex: 1 }}>
 
           {/* LEFT */}
           <div className="fade-up" style={{ minWidth: 0 }}>
