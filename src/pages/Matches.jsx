@@ -533,7 +533,7 @@ export default function Matches() {
           {[
             { icon: '🫂', value: '8',  label: 'Circles Joined',    sub: 'Active member',    iconBg: '#EDE9FE', valColor: '#7C3AED' },
             { icon: '✨', value: '24', label: 'People Connected',  sub: 'Beautiful souls',   iconBg: '#DBEAFE', valColor: '#2563EB' },
-            { icon: '🧘', value: '12', label: 'Sessions Attended', sub: 'You're growing',    iconBg: '#D1FAE5', valColor: '#059669' },
+            { icon: '🧘', value: '12', label: 'Sessions Attended', sub: "You're growing",    iconBg: '#D1FAE5', valColor: '#059669' },
             { icon: '🌱', value: '27', label: 'Days on Journey',   sub: 'Keep showing up',  iconBg: '#FEF3C7', valColor: '#D97706' },
           ].map((stat, i) => (
             <div key={i} className="kpi-card" style={{
