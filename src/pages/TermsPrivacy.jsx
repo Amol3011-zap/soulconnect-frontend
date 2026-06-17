@@ -137,7 +137,11 @@ const SECTIONS_PRIVACY = [
   },
   {
     title: 'Data Security',
-    content: 'We implement reasonable technical and organizational measures to protect your personal information from unauthorized access, disclosure, alteration, or destruction.',
+    content: 'We implement reasonable safeguards to protect information. No method of electronic transmission or storage can be guaranteed completely secure.',
+  },
+  {
+    title: 'Data Retention',
+    content: 'We retain information only as long as reasonably necessary for business, legal, and operational purposes.',
   },
   {
     title: 'Your Rights',
@@ -149,8 +153,16 @@ const SECTIONS_PRIVACY = [
     footer: 'To exercise these rights, contact us at Support@soulconnect.health',
   },
   {
+    title: "Children's Privacy",
+    content: 'Services are not intended for children under 18 without parental or legal guardian consent.',
+  },
+  {
+    title: 'Updates',
+    content: 'This Privacy Policy may be updated periodically. Continued use of our services indicates acceptance of any revisions.',
+  },
+  {
     title: 'Contact',
-    content: 'For privacy-related questions or requests, please contact us at Support@soulconnect.health',
+    content: 'For privacy-related questions or requests, please contact us at support@soulconnect.health',
   },
 ];
 
