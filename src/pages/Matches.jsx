@@ -63,58 +63,7 @@ const QUOTES = [
 
 // ── Illustrations ─────────────────────────────────────────────────────────────
 
-function MountainScene() {
-  return (
-    <svg viewBox="0 0 1000 220" preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-      <defs>
-        <linearGradient id="mSky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.55" />
-          <stop offset="40%" stopColor="#FDD5BF" stopOpacity="0.65" />
-          <stop offset="100%" stopColor="#FFECD2" stopOpacity="0.75" />
-        </linearGradient>
-        <radialGradient id="mSun" cx="62%" cy="62%" r="32%">
-          <stop offset="0%" stopColor="#FDE68A" stopOpacity="1" />
-          <stop offset="40%" stopColor="#FBBF24" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="#FBBF24" stopOpacity="0" />
-        </radialGradient>
-        <filter id="mBlur"><feGaussianBlur stdDeviation="2.5" /></filter>
-      </defs>
-
-      {/* Sky */}
-      <rect width="1000" height="220" fill="url(#mSky)" />
-
-      {/* Sun glow */}
-      <circle cx="620" cy="130" r="320" fill="url(#mSun)" />
-
-      {/* Sun disc */}
-      <circle cx="620" cy="150" r="28" fill="#FDE68A" opacity="0.9" filter="url(#mBlur)" />
-      <circle cx="620" cy="150" r="18" fill="#FCD34D" opacity="0.95" />
-
-      {/* Stars */}
-      {[[90,22],[220,14],[340,30],[500,18],[720,24],[860,12],[155,38],[440,26],[770,35]].map(([x,y],i) => (
-        <circle key={i} cx={x} cy={y} r="1.3" fill="white" opacity="0.65" />
-      ))}
-
-      {/* Far mountains (lightest purple) */}
-      <path d="M0,220 L120,95 L240,135 L370,65 L490,115 L610,50 L730,90 L850,60 L1000,85 L1000,220 Z"
-        fill="rgba(196,181,253,0.28)" />
-
-      {/* Mid mountains */}
-      <path d="M0,220 L90,140 L200,175 L310,125 L430,160 L560,100 L680,148 L800,95 L920,135 L1000,115 L1000,220 Z"
-        fill="rgba(139,92,246,0.32)" />
-
-      {/* Near mountains */}
-      <path d="M0,220 L0,190 L110,198 L220,170 L350,192 L490,160 L620,182 L740,155 L860,175 L1000,160 L1000,220 Z"
-        fill="rgba(109,94,245,0.42)" />
-
-      {/* Ground valley */}
-      <path d="M0,212 Q250,205 500,218 Q750,230 1000,212 L1000,220 L0,220 Z"
-        fill="rgba(91,78,232,0.3)" />
-    </svg>
-  );
-}
+const HERO_PHOTO = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1400&q=80';
 
 function GoldenMandala() {
   return (
@@ -390,84 +339,97 @@ function FeaturedCircle() {
   const navigate = useNavigate();
   const AVATAR_COLORS = ['#8B5CF6','#10B981','#F59E0B','#0EA5E9','#EC4899'];
   const INITIALS      = ['P','R','A','D','S'];
+  const now = new Date();
+  const timeLabel = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }).toUpperCase();
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg, #EAF3FF 0%, #E4EDFF 50%, #EEF0FF 100%)',
-      borderRadius: 24, padding: '32px 36px',
-      boxShadow: '0 4px 28px rgba(99,102,241,0.09)',
-      display: 'flex', gap: 28, alignItems: 'center',
+      background: 'linear-gradient(140deg, #EDF5FF 0%, #E8F0FF 40%, #EEF1FF 100%)',
+      borderRadius: 24, padding: '36px 40px',
+      boxShadow: '0 4px 32px rgba(99,102,241,0.08)',
+      display: 'flex', gap: 32, alignItems: 'center',
       overflow: 'hidden', position: 'relative',
     }}>
-      {/* Soft orb */}
+      {/* Subtle orb */}
       <div style={{
-        position: 'absolute', top: -60, right: 120,
-        width: 220, height: 220, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)',
+        position: 'absolute', bottom: -60, left: '40%',
+        width: 260, height: 260, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
       {/* Left content */}
       <div style={{ flex: 1, minWidth: 0, position: 'relative', zIndex: 1 }}>
+
+        {/* TODAY tag — matches reference */}
         <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 7,
+          display: 'inline-flex', alignItems: 'center', gap: 8,
           padding: '5px 14px', borderRadius: 20,
-          background: 'rgba(139,92,246,0.12)', marginBottom: 16,
+          background: 'rgba(255,255,255,0.8)',
+          border: '1px solid rgba(139,92,246,0.2)',
+          marginBottom: 18,
         }}>
-          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#8B5CF6', display: 'inline-block', animation: 'pulse 2s infinite' }} />
-          <span style={{ fontSize: 11, fontWeight: 700, color: '#8B5CF6', letterSpacing: '0.09em', textTransform: 'uppercase' }}>Live Now</span>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+          <span style={{ fontSize: 11, fontWeight: 700, color: '#374151', letterSpacing: '0.06em' }}>
+            TODAY · {timeLabel}
+          </span>
         </div>
 
         <h3 style={{
-          fontSize: 22, fontWeight: 800, color: '#1A1F36',
-          margin: '0 0 12px', letterSpacing: '-0.02em',
+          fontSize: 24, fontWeight: 800, color: '#111827',
+          margin: '0 0 14px', letterSpacing: '-0.02em',
           fontFamily: '"Playfair Display", Georgia, serif',
         }}>Anxiety Support Circle</h3>
 
         {/* Participant avatars */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
           <div style={{ display: 'flex' }}>
-            {AVATAR_COLORS.map((c, i) => (
+            {AVATAR_COLORS.slice(0, 3).map((c, i) => (
               <div key={i} style={{
-                width: 30, height: 30, borderRadius: '50%',
-                background: `linear-gradient(135deg, ${c}, ${c}BB)`,
+                width: 36, height: 36, borderRadius: '50%',
+                background: `linear-gradient(135deg, ${c}, ${c}AA)`,
                 border: '2.5px solid white',
-                marginLeft: i > 0 ? -9 : 0,
+                marginLeft: i > 0 ? -10 : 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 10, fontWeight: 700, color: '#fff', flexShrink: 0,
+                fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0,
+                boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
               }}>{INITIALS[i]}</div>
             ))}
           </div>
-          <span style={{ fontSize: 12, color: '#6B7280' }}>+3 more healing together</span>
+          <span style={{ fontSize: 13, color: '#6B7280', fontWeight: 500 }}>+5 others healing together</span>
         </div>
 
-        <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.75, margin: '0 0 18px', maxWidth: 400 }}>
+        <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.75, margin: '0 0 20px', maxWidth: 380 }}>
           A safe space to share, breathe, and heal together.
-          Guided by an experienced facilitator with compassion.
         </p>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 22, flexWrap: 'wrap' }}>
-          {[['⏱', '60 min'], ['👥', '8 / 12 joined'], ['🔒', 'Safe space']].map(([icon, text]) => (
-            <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 14 }}>{icon}</span>
-              <span style={{ fontSize: 12, color: '#6B7280', fontWeight: 500 }}>{text}</span>
-            </div>
-          ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 22, marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 15 }}>⏱</span>
+            <span style={{ fontSize: 13, color: '#6B7280', fontWeight: 500 }}>60 min</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 15 }}>👥</span>
+            <span style={{ fontSize: 13, color: '#6B7280', fontWeight: 500 }}>8 / 12 joined</span>
+          </div>
         </div>
 
+        {/* Outlined button — matches reference */}
         <button
           onClick={() => navigate('/groups')}
           style={{
-            padding: '13px 28px', borderRadius: 14, fontSize: 13, fontWeight: 700,
-            background: 'linear-gradient(135deg, #8B5CF6, #6D5EF5)',
-            color: '#fff', border: 'none', cursor: 'pointer',
-            boxShadow: '0 6px 22px rgba(139,92,246,0.32)',
-            transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+            padding: '12px 32px', borderRadius: 14, fontSize: 13, fontWeight: 700,
+            background: '#FFFFFF',
+            color: '#374151',
+            border: '1.5px solid #D1D5DB',
+            cursor: 'pointer',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            transition: 'all 0.18s ease',
           }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(139,92,246,0.4)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 22px rgba(139,92,246,0.32)'; }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#8B5CF6'; e.currentTarget.style.color = '#8B5CF6'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(139,92,246,0.15)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.color = '#374151'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'; }}
         >
-          Join Circle →
+          Join Circle
         </button>
       </div>
 
@@ -623,55 +585,55 @@ export default function Matches() {
         }}>{toast}</div>
       )}
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 24px 100px' }}>
+      {/* ── 1. HERO CARD — full width ────────────────────────────────────── */}
+      <div className="sc-fade" style={{
+        position: 'relative', height: 200,
+        backgroundImage: `url(${HERO_PHOTO})`,
+        backgroundSize: 'cover', backgroundPosition: 'center 60%',
+        marginBottom: 0,
+        overflow: 'hidden',
+      }}>
+        {/* Soft left-to-right frosted overlay so text is readable */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(100deg, rgba(255,251,255,0.88) 0%, rgba(255,251,255,0.62) 45%, rgba(255,251,255,0.15) 72%, transparent 100%)',
+          pointerEvents: 'none',
+        }} />
 
-        {/* ── 1. HERO CARD ─────────────────────────────────────────────────── */}
-        <div className="sc-fade" style={{
-          position: 'relative', height: 220, borderRadius: 28, overflow: 'hidden',
-          marginBottom: 24,
-          boxShadow: '0 10px 48px rgba(139,92,246,0.14)',
-        }}>
-          <MountainScene />
-
-          {/* Frosted gradient for text readability */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(95deg, rgba(248,245,255,0.82) 0%, rgba(248,245,255,0.52) 52%, transparent 100%)',
-            pointerEvents: 'none',
-          }} />
-
-          {/* Text — left */}
-          <div style={{
-            position: 'absolute', left: 0, top: 0, bottom: 0,
-            display: 'flex', flexDirection: 'column', justifyContent: 'center',
-            padding: '0 0 0 44px', maxWidth: 440, zIndex: 2,
-          }}>
-            <p style={{ margin: '0 0 8px', fontSize: 11, fontWeight: 700, color: '#8B5CF6', letterSpacing: '0.13em', textTransform: 'uppercase' }}>
-              {greeting}, {firstName} 🙏
-            </p>
-            <p style={{
-              margin: '0 0 10px',
-              fontFamily: '"Playfair Display", Georgia, "Times New Roman", serif',
-              fontSize: 'clamp(17px, 2vw, 22px)',
-              fontStyle: 'italic', color: '#2D1B69', lineHeight: 1.58,
-              whiteSpace: 'pre-line',
-            }}>
-              "{quote.text}"
-            </p>
-            <p style={{
-              margin: 0,
-              fontFamily: '"Playfair Display", Georgia, serif',
-              fontSize: 13, color: '#8B5CF6', fontWeight: 600,
-            }}>
-              — {quote.author}
-            </p>
-          </div>
-
-          {/* Sacred geometry mandala — right */}
-          <div style={{ position: 'absolute', right: 0, top: 0, zIndex: 1 }}>
-            <GoldenMandala />
+        {/* Text — left, centred in max-width container */}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', padding: '0 36px' }}>
+            <div style={{ maxWidth: 430 }}>
+              <p style={{ margin: '0 0 7px', fontSize: 11, fontWeight: 700, color: '#7C5CBF', letterSpacing: '0.13em', textTransform: 'uppercase' }}>
+                {greeting}, {firstName} 🙏
+              </p>
+              <p style={{
+                margin: '0 0 9px',
+                fontFamily: '"Playfair Display", Georgia, "Times New Roman", serif',
+                fontSize: 'clamp(16px, 1.8vw, 21px)',
+                fontStyle: 'italic', color: '#1E1B4B', lineHeight: 1.6,
+                whiteSpace: 'pre-line',
+              }}>
+                {quote.text}
+              </p>
+              <p style={{
+                margin: 0,
+                fontFamily: '"Playfair Display", Georgia, serif',
+                fontSize: 13, color: '#7C5CBF', fontWeight: 600,
+              }}>
+                — {quote.author}
+              </p>
+            </div>
           </div>
         </div>
+
+        {/* Sacred geometry mandala — right */}
+        <div style={{ position: 'absolute', right: 0, top: 0, zIndex: 1 }}>
+          <GoldenMandala />
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 24px 100px' }}>
 
         {/* ── 2. STATS ROW ─────────────────────────────────────────────────── */}
         <div className="sc-fade-2" style={{ display: 'flex', gap: 14, marginBottom: 36, overflowX: 'auto', paddingBottom: 4 }}>
