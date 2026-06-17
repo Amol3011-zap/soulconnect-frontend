@@ -673,68 +673,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── DAILY CHALLENGES ── */}
-      <section style={{ padding:'clamp(64px,7vw,100px) clamp(16px,2.5vw,52px)', background:'#FAFAFC' }}>
-        <div style={{ maxWidth:1800, margin:'0 auto' }}>
-          <SectionHeader eyebrow="Join the Challenge" title="Daily Healing Challenges" subtitle="Small daily actions that compound into massive transformation. Join thousands on the same challenge." />
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))', gap:18 }}>
-            {CHALLENGES.map((c,i) => (
-              <div key={i} className="sc-card-hover" style={{ background:'#fff', borderRadius:24, padding:'28px 26px', border:'1.5px solid #EDE9FE', boxShadow:'0 2px 14px rgba(0,0,0,0.04)' }}>
-                <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:18 }}>
-                  <div style={{ width:60, height:60, borderRadius:20, background:c.bg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28 }}>{c.icon}</div>
-                  <span style={{ fontSize:11, fontWeight:700, color:c.color, background:c.bg, padding:'5px 12px', borderRadius:20 }}>{c.dur}</span>
-                </div>
-                <h3 style={{ fontSize:17, fontWeight:700, color:'#0F0F1A', marginBottom:8 }}>{c.label}</h3>
-                <p style={{ fontSize:14, color:'#6B7280', lineHeight:1.65, marginBottom:16 }}>{c.desc}</p>
-                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16 }}>
-                  <span style={{ fontSize:12, color:c.color, fontWeight:700, background:c.bg, padding:'4px 10px', borderRadius:16 }}>🔥 Day {c.streak} streak</span>
-                </div>
-                <div style={{ height:5, background:'#EDE9FE', borderRadius:4, overflow:'hidden', marginBottom:16 }}>
-                  <div style={{ height:'100%', width:`${Math.min((c.streak/30)*100,100)}%`, background:c.color, borderRadius:4, transition:'width 0.6s' }}/>
-                </div>
-                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                  <span style={{ fontSize:13, color:'#6B7280', fontWeight:500 }}>🙌 {c.joined.toLocaleString()} joined</span>
-                  <Link to="/signup" style={{ fontSize:13, fontWeight:700, color:c.color, textDecoration:'none', padding:'8px 18px', borderRadius:10, background:c.bg }}>Join →</Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SOUL JOURNEY ── */}
-      <section style={{ padding:'clamp(64px,7vw,100px) clamp(16px,2.5vw,52px)', background:'linear-gradient(180deg,#EDE9FE 0%,#F5F3FF 40%,#FAFAFC 100%)', position:'relative', overflow:'hidden' }}>
-        <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', fontSize:400, opacity:0.025, pointerEvents:'none', lineHeight:1, userSelect:'none' }}>🪷</div>
-        <div style={{ maxWidth:1800, margin:'0 auto', position:'relative', zIndex:1 }}>
-          <SectionHeader eyebrow="Your Growth Path" title="The Soul Journey" subtitle="A five-stage path from your first step to complete inner transformation." />
-          <div style={{ display:'flex', gap:'clamp(12px,2vw,28px)', justifyContent:'space-between', position:'relative', paddingBottom:8, overflowX:'auto' }}>
-            <div style={{ position:'absolute', top:50, left:'9%', right:'9%', height:3, background:'linear-gradient(90deg,#34C38F,#A78BFA,#F472B6,#F5B841,#60A5FA)', opacity:0.38, borderRadius:4, zIndex:0 }}/>
-            {SOUL_STAGES.map((s,i) => (
-              <div key={i} style={{ flex:'1 1 0', display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', position:'relative', zIndex:1, padding:'0 4px', minWidth:140 }}>
-                <div style={{ width:100, height:100, borderRadius:'50%', background: s.active?`linear-gradient(135deg,${s.color}28,${s.color}55)`:'rgba(255,255,255,0.85)', border: s.active?`3px solid ${s.color}`:'2px solid rgba(196,181,253,0.4)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:42, marginBottom:20, position:'relative', boxShadow: s.active?`0 0 0 10px ${s.color}14,0 14px 40px ${s.color}30`:'0 4px 18px rgba(0,0,0,0.07)', animation: s.active?'breathe 3.5s ease-in-out infinite':'none' }}>
-                  {s.emoji}
-                  <div style={{ position:'absolute', top:-9, right:-9, width:28, height:28, borderRadius:'50%', background:`linear-gradient(135deg,${s.color},${s.color}bb)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:800, color:'#fff', boxShadow:`0 2px 10px ${s.color}55` }}>{i+1}</div>
-                </div>
-                <h3 style={{ fontSize:16, fontWeight:700, color: s.active?'#0F0F1A':'#4B5563', marginBottom:6 }}>{s.title}</h3>
-                <p style={{ fontSize:13, color:'#9CA3AF', lineHeight:1.55, marginBottom:10, maxWidth:148 }}>{s.desc}</p>
-                <span style={{ fontSize:12, color:s.color, fontWeight:600 }}>{s.members.toLocaleString()} members</span>
-                {s.active && (
-                  <div style={{ marginTop:12, display:'inline-flex', alignItems:'center', gap:6, padding:'5px 14px', borderRadius:20, background:`${s.color}18`, border:`1px solid ${s.color}44` }}>
-                    <span style={{ width:7, height:7, borderRadius:'50%', background:s.color, display:'inline-block' }}/>
-                    <span style={{ fontSize:11, fontWeight:700, color:s.color, letterSpacing:'0.06em', textTransform:'uppercase' }}>You are here</span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <div style={{ textAlign:'center', marginTop:56 }}>
-            <Link to="/signup" className="sc-btn-primary" style={{ display:'inline-flex', alignItems:'center', gap:10, padding:'17px 44px', borderRadius:16, fontSize:16, fontWeight:700, color:'#fff', textDecoration:'none', background:`linear-gradient(135deg,${P},#5B3CE8)`, boxShadow:'0 8px 28px rgba(109,74,255,0.4)' }}>
-              Start Your Journey →
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* ── TESTIMONIALS ── */}
       <section style={{ padding:'clamp(64px,7vw,100px) clamp(16px,2.5vw,52px)', background:'#FAFAFC' }}>
         <div style={{ maxWidth:1800, margin:'0 auto' }}>
@@ -791,34 +729,6 @@ export default function Landing() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── TRUST & SAFETY ── */}
-      <section style={{ padding:'clamp(64px,7vw,100px) clamp(16px,2.5vw,52px)', background:'#F0F0EB' }}>
-        <div style={{ maxWidth:1800, margin:'0 auto' }}>
-          <SectionHeader eyebrow="Your Safety is Our Priority" title="You're Safe Here" subtitle="Everything we build is designed to make you feel protected, respected, and in control." />
-          <div className="three-col" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:18, marginBottom:40 }}>
-            {[
-              { icon:'🔒', title:'Fully Anonymous',       desc:'Your real name is never shared with other members. You choose your identity.' },
-              { icon:'🛡️', title:'Safe & Moderated',      desc:'Harmful content is reviewed and removed within minutes by our 24/7 team.' },
-              { icon:'👁️', title:'Privacy First',         desc:'We never sell your data. GDPR-compliant. Your information stays yours.' },
-              { icon:'📋', title:'Community Guidelines',  desc:'Zero tolerance for harassment, bullying, or harmful content of any kind.' },
-              { icon:'🚨', title:'Instant Reporting',     desc:'One-tap reporting system. Every post and message has a report button.' },
-              { icon:'🔐', title:'Encrypted Chats',       desc:'All private conversations are end-to-end encrypted. Nobody else can read them.' },
-            ].map((t,i) => (
-              <div key={i} className="sc-card-hover" style={{ background:'#fff', borderRadius:24, padding:'28px 24px', border:'1.5px solid #E5E5DE', boxShadow:'0 2px 12px rgba(0,0,0,0.04)' }}>
-                <div style={{ fontSize:36, marginBottom:16 }}>{t.icon}</div>
-                <h3 style={{ fontSize:16, fontWeight:700, color:'#0F0F1A', marginBottom:8 }}>{t.title}</h3>
-                <p style={{ fontSize:14, color:'#6B7280', lineHeight:1.7 }}>{t.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div style={{ textAlign:'center', padding:'16px 32px', background:'rgba(26,61,46,0.06)', borderRadius:20, border:'1px solid rgba(26,61,46,0.12)' }}>
-            <p style={{ fontSize:14, color:'#1a3d2e', fontWeight:600, letterSpacing:'0.04em' }}>
-              256-bit SSL · GDPR Compliant · Zero Data Sales · 24/7 Moderation
-            </p>
           </div>
         </div>
       </section>
