@@ -1,867 +1,747 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-/* ── Reduced-motion helper ── */
-const REDUCED_MOTION = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// ── Constants ─────────────────────────────────────────────────────────────────
 
-function FAQSection({ faqs }) {
-  const [open, setOpen] = useState(null);
+const HERO_IMG  = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=900&q=80';
+const CIRCLE_IMGS = [
+  'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=500&q=70',
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=500&q=70',
+  'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=500&q=70',
+];
+
+const HEALER_IMGS = [
+  'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=80&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80',
+  'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=80&q=80',
+];
+
+const TESTIMONIAL_IMGS = [
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80',
+  'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=80&q=80',
+];
+
+const NAV_LINKS = ['How It Works', 'Features', 'Healers', 'Circles', 'Resources', 'About Us'];
+
+const STATS = [
+  { icon: '👥', value: '12,000+', label: 'People Helped' },
+  { icon: '🧘', value: '500+',    label: 'Verified Healers' },
+  { icon: '🌍', value: '50+',     label: 'Cities' },
+  { icon: '💛', value: '25+',     label: 'Life Challenges' },
+];
+
+const CATEGORIES = [
+  { icon: '💔', label: 'Breakup &\nHeartbreak',     bg: '#FFF1F2', iconBg: '#FFE4E6', color: '#E11D48' },
+  { icon: '🧠', label: 'Anxiety &\nOverthinking',   bg: '#F5F3FF', iconBg: '#EDE9FE', color: '#7C3AED' },
+  { icon: '🌧',  label: 'Grief &\nLoss',            bg: '#EFF6FF', iconBg: '#DBEAFE', color: '#2563EB' },
+  { icon: '😔', label: 'Loneliness &\nIsolation',   bg: '#F0FDF4', iconBg: '#DCFCE7', color: '#16A34A' },
+  { icon: '💼', label: 'Career &\nWork Stress',     bg: '#FFFBEB', iconBg: '#FEF3C7', color: '#D97706' },
+  { icon: '🌙', label: 'Sleep &\nInsomnia',         bg: '#FAF5FF', iconBg: '#F3E8FF', color: '#9333EA' },
+];
+
+const STEPS = [
+  { num: '01', title: 'Choose Your Struggle',    desc: 'Pick the challenge you\'re facing right now.',     emoji: '🧘' },
+  { num: '02', title: 'Get Matched Anonymously', desc: 'We connect you with people who truly understand.', emoji: '💫' },
+  { num: '03', title: 'Heal Together',           desc: 'Share, listen, support and grow together in a safe space.', emoji: '🫂' },
+];
+
+const TESTIMONIALS = [
+  { name: 'Riya, 24', city: 'Mumbai',    img: TESTIMONIAL_IMGS[0], quote: 'I was going through the worst breakup of my life. SoulConnect helped me find people who really understood me.' },
+  { name: 'Arjun, 27', city: 'Bangalore', img: TESTIMONIAL_IMGS[1], quote: 'The anxiety support circle changed everything for me. I don\'t feel alone anymore. I feel seen.' },
+  { name: 'Priya, 31', city: 'Delhi',     img: TESTIMONIAL_IMGS[2], quote: 'After my dad passed away, I thought I\'d never be okay. The grief circle gave me a new family.' },
+];
+
+const CIRCLES = [
+  { title: 'Anxiety Support Circle',    time: 'Today, 7:00 PM',    tag: 'Today',     tagColor: '#7C5CFC', joined: 12, img: CIRCLE_IMGS[0] },
+  { title: 'Heartbreak Healing Circle', time: 'Tomorrow, 6:30 PM', tag: 'Tomorrow',  tagColor: '#E11D48', joined: 8,  img: CIRCLE_IMGS[1] },
+  { title: 'Grief & Loss Circle',       time: 'Sun, 7:00 PM',      tag: 'Sun',       tagColor: '#2563EB', joined: 15, img: CIRCLE_IMGS[2] },
+];
+
+const HEALERS = [
+  { name: 'Dr. Meera Shah',  role: 'Counselor · 8+ Years', spec: 'Anxiety, Trauma, Relationships', rating: 4.9, img: HEALER_IMGS[0] },
+  { name: 'Rohit Verma',     role: 'Therapist · 6+ Years', spec: 'Depression, Grief, Stress',      rating: 4.8, img: HEALER_IMGS[1] },
+  { name: 'Ananya Iyer',     role: 'Life Coach · 5+ Years', spec: 'Confidence, Purpose, Healing',  rating: 4.9, img: HEALER_IMGS[2] },
+];
+
+const TOOLS = [
+  { icon: '😊', label: 'Mood Tracker' },
+  { icon: '📔', label: 'Guided Journal' },
+  { icon: '🌬️', label: 'Breathing Exercises' },
+  { icon: '🎧', label: 'Meditations' },
+  { icon: '✨', label: 'Angel Numbers' },
+  { icon: '🌸', label: 'Daily Affirmations' },
+];
+
+const FAQS = [
+  { q: 'Is SoulConnect free to use?', a: 'Yes — creating an account, getting peer-matched, and joining support circles is completely free. Verified healer sessions are paid individually, starting at ₹500/session.' },
+  { q: 'Is my identity kept anonymous?', a: 'Completely. Your real name, phone number, and social media are never shared with matches or visible publicly.' },
+  { q: 'How does the peer matching work?', a: 'When you sign up, you select your primary challenge. Our algorithm matches you with someone going through the same specific issue — not just "mental health" broadly. Most people are matched within minutes.' },
+  { q: 'Is this a replacement for therapy?', a: "No — and we're honest about that. SoulConnect is peer support: real people who truly understand your struggle. For clinical care, we connect you with verified therapists." },
+  { q: 'What if I need urgent help?', a: "SoulConnect is a supportive community, not a crisis service. If you're in immediate distress, please contact iCall (9152987821) or Vandrevala Foundation (1860-2662-345), available 24/7." },
+];
+
+// ── SVG Illustrations ─────────────────────────────────────────────────────────
+
+function MandalaOverlay() {
   return (
-    <section id="faq" style={{ background: '#f5f0eb', padding: 'clamp(40px,6vw,72px) 24px' }}>
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12, textAlign: 'center' }}>
-          Got Questions?
-        </p>
-        <h2 style={{ color: '#111827', fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 800, textAlign: 'center', marginBottom: 12, letterSpacing: '-0.4px' }}>
-          Frequently Asked Questions
-        </h2>
-        <p style={{ color: '#6b7280', fontSize: 16, textAlign: 'center', marginBottom: 40 }}>
-          Everything you need to know about SoulConnect and how healing works.
-        </p>
-        <div role="list" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {faqs.map((faq, i) => {
-            const panelId = `faq-panel-${i}`;
-            const btnId   = `faq-btn-${i}`;
-            return (
-              <div key={i} role="listitem"
-                style={{
-                  background: 'white', borderRadius: 12,
-                  border: open === i ? '1.5px solid #2d6a4f' : '1.5px solid #e5e7eb',
-                  overflow: 'hidden', transition: 'border-color 0.2s',
-                }}>
-                <button
-                  id={btnId}
-                  aria-expanded={open === i}
-                  aria-controls={panelId}
-                  onClick={() => setOpen(open === i ? null : i)}
-                  style={{
-                    width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    minHeight: 56, padding: '14px 22px', background: 'none', border: 'none', cursor: 'pointer',
-                    textAlign: 'left', gap: 16,
-                  }}>
-                  <span style={{ fontWeight: 600, fontSize: 15, color: '#111827', lineHeight: 1.4 }}>{faq.q}</span>
-                  <span aria-hidden="true" style={{
-                    flexShrink: 0, width: 32, height: 32, borderRadius: '50%',
-                    background: open === i ? '#1a3d2e' : '#f3f4f6',
-                    color: open === i ? 'white' : '#6b7280',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 18, fontWeight: 700, lineHeight: 1,
-                    transition: 'all 0.2s',
-                  }}>
-                    {open === i ? '−' : '+'}
-                  </span>
-                </button>
-                <div
-                  id={panelId}
-                  role="region"
-                  aria-labelledby={btnId}
-                  hidden={open !== i}
-                  style={{ padding: '0 22px 18px', color: '#4b5563', fontSize: 14, lineHeight: 1.75 }}>
-                  {faq.a}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+    <svg viewBox="0 0 320 320" aria-hidden="true" style={{ position: 'absolute', right: -30, top: -20, width: 360, height: 360, opacity: 0.18, pointerEvents: 'none' }}>
+      <defs>
+        <linearGradient id="mGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#7C5CFC" />
+          <stop offset="100%" stopColor="#A78BFA" />
+        </linearGradient>
+      </defs>
+      {[150,120,90,60,30].map((r, i) => (
+        <circle key={i} cx="160" cy="160" r={r} fill="none" stroke="url(#mGrad)" strokeWidth={i === 0 ? 0.6 : 0.4} strokeDasharray={i % 2 === 0 ? 'none' : '4 8'} />
+      ))}
+      {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg, i) => {
+        const a = deg * Math.PI / 180;
+        return <circle key={i} cx={160 + 150*Math.cos(a)} cy={160 + 150*Math.sin(a)} r="3" fill="url(#mGrad)" opacity="0.7" />;
+      })}
+      {[0,60,120,180,240,300].map((deg, i) => {
+        const a = deg * Math.PI / 180;
+        return <circle key={i} cx={160 + 60*Math.cos(a)} cy={160 + 60*Math.sin(a)} r="60" fill="none" stroke="url(#mGrad)" strokeWidth="0.7" opacity="0.6" />;
+      })}
+      <circle cx="160" cy="160" r="60" fill="none" stroke="url(#mGrad)" strokeWidth="0.7" opacity="0.6" />
+      {[0,45,90,135,180,225,270,315].map((deg, i) => {
+        const a = deg * Math.PI / 180;
+        return <line key={i} x1={160 - 120*Math.cos(a)} y1={160 - 120*Math.sin(a)} x2={160 + 120*Math.cos(a)} y2={160 + 120*Math.sin(a)} stroke="url(#mGrad)" strokeWidth="0.4" opacity="0.4" />;
+      })}
+      <circle cx="160" cy="160" r="24" fill="none" stroke="url(#mGrad)" strokeWidth="1.2" />
+      <circle cx="160" cy="160" r="10" fill="url(#mGrad)" opacity="0.6" />
+    </svg>
   );
 }
 
-const stats = [
-  { value: '12,000+', label: 'People Helped' },
-  { value: '25', label: 'Problem Categories' },
-  { value: '500+', label: 'Verified Healers' },
-  { value: '50+', label: 'Cities in India' },
-];
+function LotusHero() {
+  return (
+    <svg viewBox="0 0 80 80" aria-hidden="true" style={{ width: 56, height: 56 }}>
+      <defs>
+        <linearGradient id="lGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#7C5CFC" />
+          <stop offset="100%" stopColor="#A78BFA" />
+        </linearGradient>
+      </defs>
+      <path d="M40 65 C40 65 18 52 18 36 C18 27 25 22 31 24.5 C33 19 37 18 40 20 C43 18 47 19 49 24.5 C55 22 62 27 62 36 C62 52 40 65 40 65Z" fill="url(#lGrad)" opacity="0.15" stroke="url(#lGrad)" strokeWidth="1.5" />
+      <path d="M40 65 C40 65 28 50 28 36 C28 29 33 25 37 27 C38 23 39 22 40 23 C41 22 42 23 43 27 C47 25 52 29 52 36 C52 50 40 65 40 65Z" fill="url(#lGrad)" opacity="0.25" stroke="url(#lGrad)" strokeWidth="1" />
+      <line x1="40" y1="65" x2="40" y2="26" stroke="url(#lGrad)" strokeWidth="1" opacity="0.4" />
+    </svg>
+  );
+}
 
-const steps = [
-  { step: '01', title: 'Choose Your Problem', desc: 'Pick from 25 specific life challenges — from breakups to OCD to financial stress.' },
-  { step: '02', title: 'Get Matched Instantly', desc: 'Our algorithm finds someone nearby dealing with the same issue within minutes.' },
-  { step: '03', title: 'Heal Together', desc: 'Chat, meet up, or book a healer. You are never alone in this journey.' },
-];
+// ── FAQ Accordion ─────────────────────────────────────────────────────────────
 
-const features = [
-  {
-    title: 'Peer Matching',
-    desc: 'We match you with someone dealing with your exact issue — not just "mental health" in general. Same breakup. Same anxiety. Same grief.',
-    icon: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="14" cy="12" r="5" fill="#2d6a4f" />
-        <circle cx="26" cy="12" r="5" fill="#1a7a8a" />
-        <path d="M4 32c0-5.523 4.477-10 10-10h12c5.523 0 10 4.477 10 10" stroke="#1a3d2e" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-        <path d="M20 22v-4M17 20h6" stroke="#b5650d" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Verified Healers',
-    desc: 'When peer support isn\'t enough, book 1:1 sessions with certified Pranic healers starting at ₹500/hr.',
-    icon: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="20" cy="14" r="6" fill="#2d6a4f" />
-        <path d="M8 36c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="#1a3d2e" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-        <circle cx="32" cy="10" r="5" fill="#f59e0b" />
-        <path d="M30 10h4M32 8v4" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Real Meetups',
-    desc: 'Weekly in-person circles in your city — small groups (max 8) built around your specific struggle.',
-    icon: (
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="20" cy="10" r="5" fill="#1a7a8a" />
-        <path d="M10 34c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="#1a3d2e" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-        <path d="M20 20l-6 6M20 20l6 6" stroke="#b5650d" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="14" cy="26" r="3" fill="#2d6a4f" />
-        <circle cx="26" cy="26" r="3" fill="#2d6a4f" />
-      </svg>
-    ),
-  },
-];
+function FAQ({ faqs }) {
+  const [open, setOpen] = useState(null);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {faqs.map((faq, i) => (
+        <div key={i} style={{ background: '#fff', borderRadius: 16, border: open === i ? '1.5px solid #A78BFA' : '1.5px solid #EDE9FE', overflow: 'hidden', transition: 'border-color 0.2s', boxShadow: open === i ? '0 4px 20px rgba(124,92,252,0.08)' : 'none' }}>
+          <button
+            onClick={() => setOpen(open === i ? null : i)}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 22px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', gap: 16 }}
+          >
+            <span style={{ fontWeight: 600, fontSize: 15, color: '#1E1B4B' }}>{faq.q}</span>
+            <span style={{ width: 28, height: 28, borderRadius: '50%', background: open === i ? '#7C5CFC' : '#F5F3FF', color: open === i ? 'white' : '#7C5CFC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, flexShrink: 0, transition: 'all 0.2s' }}>
+              {open === i ? '−' : '+'}
+            </span>
+          </button>
+          {open === i && (
+            <div style={{ padding: '0 22px 18px', color: '#6B7280', fontSize: 14, lineHeight: 1.75 }}>{faq.a}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
-const testimonials = [
-  {
-    initials: 'P',
-    name: 'Priya S.',
-    age: 28,
-    tag: 'Breakup',
-    avatarBg: '#2d6a4f',
-    quote: '"I felt completely alone after my breakup. SoulConnect matched me with someone 2 months into the same journey. For the first time, someone truly understood."',
-    stars: 5,
-  },
-  {
-    initials: 'R',
-    name: 'Rohan M.',
-    age: 31,
-    tag: 'Work Anxiety',
-    avatarBg: '#1a7a8a',
-    quote: '"Anxiety was destroying my career. I found peers going through the exact same thing. Went from 8/10 anxiety to 3/10 in just 6 weeks."',
-    stars: 5,
-  },
-  {
-    initials: 'K',
-    name: 'Kavya T.',
-    age: 35,
-    tag: 'Marriage Problems',
-    avatarBg: '#b5650d',
-    quote: '"My marriage was falling apart. SoulConnect matched me with couples navigating the same issues. Their honesty showed me I was not alone."',
-    stars: 5,
-  },
-];
+// ── Section Header ────────────────────────────────────────────────────────────
 
-const problems = [
-  'Breakup', 'Anxiety', 'Depression', 'Marriage', 'Loneliness',
-  'Career Stress', 'Grief', 'Financial', 'Sleep Issues', 'Anger',
-];
+function SectionHeader({ eyebrow, title, subtitle, center = true }) {
+  return (
+    <div style={{ textAlign: center ? 'center' : 'left', marginBottom: 40 }}>
+      {eyebrow && (
+        <p style={{ fontSize: 12, fontWeight: 700, color: '#7C5CFC', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 10 }}>
+          {eyebrow}
+        </p>
+      )}
+      <h2 style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 800, color: '#1E1B4B', letterSpacing: '-0.02em', margin: '0 auto 12px', maxWidth: center ? 560 : 'none', lineHeight: 1.25 }}>
+        {title}
+      </h2>
+      {subtitle && <p style={{ fontSize: 16, color: '#6B7280', maxWidth: center ? 500 : 'none', margin: center ? '0 auto' : 0, lineHeight: 1.65 }}>{subtitle}</p>}
+    </div>
+  );
+}
 
-/* ── Unique SVG illustrations — abstract & spiritual, not person silhouettes ── */
-
-// Card 1: Lotus mandala — inner peace / healing mind
-const LotusIllustration = () => (
-  <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Outer glow ring */}
-    <circle cx="75" cy="75" r="60" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-    <circle cx="75" cy="75" r="48" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-    {/* 8 petals */}
-    {[0,45,90,135,180,225,270,315].map((deg, i) => {
-      const rad = (deg * Math.PI) / 180;
-      const cx = 75 + Math.cos(rad) * 28;
-      const cy = 75 + Math.sin(rad) * 28;
-      return (
-        <ellipse key={i} cx={cx} cy={cy} rx="11" ry="18"
-          transform={`rotate(${deg}, ${cx}, ${cy})`}
-          fill={`rgba(255,255,255,${0.18 + (i % 2) * 0.08})`} />
-      );
-    })}
-    {/* Inner petals */}
-    {[22,67,112,157,202,247].map((deg, i) => {
-      const rad = (deg * Math.PI) / 180;
-      const cx = 75 + Math.cos(rad) * 16;
-      const cy = 75 + Math.sin(rad) * 16;
-      return (
-        <ellipse key={i} cx={cx} cy={cy} rx="7" ry="12"
-          transform={`rotate(${deg}, ${cx}, ${cy})`}
-          fill="rgba(255,255,255,0.3)" />
-      );
-    })}
-    {/* Center */}
-    <circle cx="75" cy="75" r="10" fill="rgba(255,255,255,0.55)" />
-    <circle cx="75" cy="75" r="5" fill="rgba(255,255,255,0.9)" />
-    {/* Radiating dots */}
-    {[0,60,120,180,240,300].map((deg, i) => {
-      const rad = (deg * Math.PI) / 180;
-      return <circle key={i} cx={75 + Math.cos(rad) * 42} cy={75 + Math.sin(rad) * 42} r="2" fill="rgba(255,255,255,0.4)" />;
-    })}
-  </svg>
-);
-
-// Card 2: Intertwined hearts / vines — connection & relationships
-const ConnectionIllustration = () => (
-  <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Background ring */}
-    <circle cx="75" cy="75" r="55" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" strokeDasharray="4 6" />
-    {/* Left heart */}
-    <path d="M50 58 C50 50 38 46 34 54 C30 62 34 70 50 82 C50 82 50 82 50 82"
-      stroke="rgba(255,255,255,0.6)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    <path d="M50 58 C50 50 62 46 66 54 C70 62 66 70 50 82"
-      stroke="rgba(255,255,255,0.6)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    {/* Right heart */}
-    <path d="M100 58 C100 50 88 46 84 54 C80 62 84 70 100 82"
-      stroke="rgba(255,255,255,0.5)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    <path d="M100 58 C100 50 112 46 116 54 C120 62 116 70 100 82"
-      stroke="rgba(255,255,255,0.5)" strokeWidth="3" strokeLinecap="round" fill="none" />
-    {/* Connecting vine/thread */}
-    <path d="M50 82 C55 90 65 85 75 90 C85 95 95 88 100 82"
-      stroke="rgba(255,255,255,0.45)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-    {/* Small sparkles */}
-    <circle cx="75" cy="90" r="3.5" fill="rgba(255,255,255,0.7)" />
-    <circle cx="60" cy="100" r="2" fill="rgba(255,255,255,0.4)" />
-    <circle cx="90" cy="100" r="2" fill="rgba(255,255,255,0.4)" />
-    <circle cx="75" cy="108" r="2.5" fill="rgba(255,255,255,0.3)" />
-    {/* Stars */}
-    {[[40,42],[110,42],[75,38],[30,72],[120,72]].map(([x,y],i) => (
-      <circle key={i} cx={x} cy={y} r="1.5" fill="rgba(255,255,255,0.5)" />
-    ))}
-    {/* Inner glow fill on hearts */}
-    <path d="M50 58 C50 50 38 46 34 54 C30 62 34 70 50 82 C66 70 70 62 66 54 C62 46 50 50 50 58Z"
-      fill="rgba(255,255,255,0.08)" />
-    <path d="M100 58 C100 50 88 46 84 54 C80 62 84 70 100 82 C116 70 120 62 116 54 C112 46 100 50 100 58Z"
-      fill="rgba(255,255,255,0.08)" />
-  </svg>
-);
-
-// Card 3: Compass star / north star — finding your path
-const CompassIllustration = () => (
-  <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Outer rings */}
-    <circle cx="75" cy="75" r="58" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-    <circle cx="75" cy="75" r="44" stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="3 5" />
-    {/* 4 large compass points */}
-    <path d="M75 20 L68 68 L75 75 L82 68 Z" fill="rgba(255,255,255,0.55)" />
-    <path d="M75 130 L68 82 L75 75 L82 82 Z" fill="rgba(255,255,255,0.35)" />
-    <path d="M20 75 L68 68 L75 75 L68 82 Z" fill="rgba(255,255,255,0.35)" />
-    <path d="M130 75 L82 68 L75 75 L82 82 Z" fill="rgba(255,255,255,0.55)" />
-    {/* 4 diagonal smaller points */}
-    <path d="M75 75 L47 47 L68 68 Z" fill="rgba(255,255,255,0.2)" />
-    <path d="M75 75 L103 47 L82 68 Z" fill="rgba(255,255,255,0.2)" />
-    <path d="M75 75 L47 103 L68 82 Z" fill="rgba(255,255,255,0.2)" />
-    <path d="M75 75 L103 103 L82 82 Z" fill="rgba(255,255,255,0.2)" />
-    {/* Concentric detail rings */}
-    <circle cx="75" cy="75" r="28" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-    <circle cx="75" cy="75" r="16" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" />
-    {/* Center dot */}
-    <circle cx="75" cy="75" r="7" fill="rgba(255,255,255,0.7)" />
-    <circle cx="75" cy="75" r="3" fill="white" />
-    {/* Cardinal label dots */}
-    <circle cx="75" cy="30" r="2.5" fill="rgba(255,255,255,0.8)" />
-    <circle cx="75" cy="120" r="2" fill="rgba(255,255,255,0.4)" />
-    <circle cx="30" cy="75" r="2" fill="rgba(255,255,255,0.4)" />
-    <circle cx="120" cy="75" r="2.5" fill="rgba(255,255,255,0.8)" />
-  </svg>
-);
+// ── Main Component ────────────────────────────────────────────────────────────
 
 export default function Landing() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const drawerRef = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
 
-  /* Close drawer on Escape key */
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    if (!document.getElementById('sc-playfair')) {
+      const link = document.createElement('link');
+      link.id = 'sc-playfair'; link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap';
+      document.head.appendChild(link);
+    }
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  /* Trap focus inside drawer when open */
-  useEffect(() => {
-    if (!menuOpen) return;
-    const el = drawerRef.current;
-    if (!el) return;
-    const focusable = el.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
-    if (focusable[0]) focusable[0].focus();
-  }, [menuOpen]);
-
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ fontFamily: "'Inter', 'Plus Jakarta Sans', sans-serif", color: '#1a1a1a' }}>
+    <div style={{ fontFamily: 'Inter, -apple-system, sans-serif', background: '#FAF8F6', color: '#1E1B4B', overflowX: 'hidden' }}>
 
-      {/* ═══════════════════════════════════════
+      <style>{`
+        @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes floatY { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+        @keyframes pulse { 0%,100% { box-shadow:0 0 0 0 rgba(124,92,252,0.3); } 50% { box-shadow:0 0 0 10px rgba(124,92,252,0); } }
+        .fade-up { animation: fadeUp 0.6s ease both; }
+        .float   { animation: floatY 4s ease-in-out infinite; }
+        .sc-btn-primary { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+        .sc-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(124,92,252,0.38) !important; }
+        .sc-btn-outline:hover { background: #F5F3FF !important; border-color: #7C5CFC !important; color: #7C5CFC !important; }
+        .sc-card-hover { transition: transform 0.22s ease, box-shadow 0.22s ease; }
+        .sc-card-hover:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(0,0,0,0.1) !important; }
+        .sc-cat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.09) !important; }
+        .sc-cat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        @media (prefers-reduced-motion: reduce) { .fade-up,.float,.sc-btn-primary,.sc-btn-outline,.sc-card-hover,.sc-cat-card { animation:none !important; transition:none !important; } }
+      `}</style>
+
+      {/* ═══════════════════════════════════════════════════════════════════
           NAVBAR
-      ═══════════════════════════════════════ */}
-      <nav role="navigation" aria-label="Main navigation" style={{ background: '#1a3d2e', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
+      ════════════════════════════════════════════════════════════════════ */}
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+        height: 72,
+        background: scrolled ? 'rgba(255,255,255,0.97)' : 'rgba(255,255,255,0.92)',
+        backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: scrolled ? '1px solid rgba(237,233,254,0.8)' : '1px solid rgba(237,233,254,0.4)',
+        boxShadow: scrolled ? '0 2px 24px rgba(124,92,252,0.07)' : 'none',
+        transition: 'all 0.3s ease',
+        display: 'flex', alignItems: 'center',
+      }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', width: '100%', padding: '0 clamp(16px, 3vw, 40px)', display: 'flex', alignItems: 'center' }}>
+
           {/* Logo */}
-          <Link to="/" aria-label="SoulConnect home" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src="/logo-navbar.png" alt="" aria-hidden="true" className="md:hidden" style={{ height: 44, width: 44, objectFit: 'contain', borderRadius: 8 }} />
-            <img src="/logo-footer.png" alt="" aria-hidden="true" className="hidden md:block" style={{ height: 56, width: 'auto', objectFit: 'contain', maxWidth: 240 }} />
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginRight: 40, flexShrink: 0 }}>
+            <div style={{ width: 38, height: 38, borderRadius: 12, background: 'linear-gradient(135deg, #7C5CFC, #A78BFA)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, boxShadow: '0 4px 12px rgba(124,92,252,0.3)' }}>🪷</div>
+            <div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#1E1B4B', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                Soul<span style={{ color: '#7C5CFC' }}>Connect</span>
+              </div>
+              <div style={{ fontSize: 9, color: '#A78BFA', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                Heal · Connect · Grow
+              </div>
+            </div>
           </Link>
 
-          {/* Nav links — desktop only */}
-          <div className="hidden md:flex" style={{ alignItems: 'center', gap: 28 }}>
-            {[['#how-it-works','How it Works'],['#features','Features'],['#healers','Healers'],['#faq','FAQ']].map(([href,label]) => (
-              <a key={href} href={href} style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: 14, textDecoration: 'none' }}>{label}</a>
+          {/* Nav links */}
+          <div className="hidden md:flex" style={{ alignItems: 'center', gap: 4, flex: 1, justifyContent: 'center' }}>
+            {NAV_LINKS.map(l => (
+              <a key={l} href="#" style={{ padding: '8px 14px', borderRadius: 10, fontSize: 13, fontWeight: 500, color: '#6B7280', textDecoration: 'none', transition: 'all 0.15s', whiteSpace: 'nowrap' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#7C5CFC'; e.currentTarget.style.background = '#F5F3FF'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#6B7280'; e.currentTarget.style.background = 'transparent'; }}>
+                {l}
+              </a>
             ))}
           </div>
 
-          {/* Right: auth buttons + hamburger */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Link to="/login" className="hidden md:inline-flex" style={{ color: 'white', fontWeight: 600, fontSize: 14, textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.4)', borderRadius: 8, padding: '10px 18px', minHeight: 44, alignItems: 'center' }}>
-              Log in
+          {/* CTAs */}
+          <div className="hidden md:flex" style={{ alignItems: 'center', gap: 10, marginLeft: 'auto' }}>
+            <Link to="/login" className="sc-btn-outline" style={{ padding: '10px 20px', borderRadius: 12, fontSize: 13, fontWeight: 600, color: '#1E1B4B', textDecoration: 'none', border: '1.5px solid #D1D5DB', background: 'transparent', transition: 'all 0.15s' }}>
+              Log In
             </Link>
-            <Link to="/signup" style={{ background: '#7c3aed', color: 'white', fontWeight: 700, fontSize: 14, textDecoration: 'none', borderRadius: 8, padding: '10px 18px', minHeight: 44, display: 'inline-flex', alignItems: 'center', boxShadow: '0 2px 8px rgba(124,58,237,0.4)' }}>
+            <Link to="/signup" className="sc-btn-primary" style={{ padding: '10px 22px', borderRadius: 12, fontSize: 13, fontWeight: 700, color: '#fff', textDecoration: 'none', background: 'linear-gradient(135deg, #7C5CFC, #6D4EE8)', boxShadow: '0 4px 14px rgba(124,92,252,0.35)' }}>
               Find My Match
             </Link>
-            {/* Hamburger — mobile only */}
-            <button
-              className="md:hidden"
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={menuOpen}
-              aria-controls="mobile-drawer"
-              onClick={() => setMenuOpen(v => !v)}
-              style={{ width: 44, height: 44, borderRadius: 8, background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
-              <span style={{ display: 'block', width: 20, height: 2, background: 'white', borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translateY(7px)' : 'none' }} />
-              <span style={{ display: 'block', width: 20, height: 2, background: 'white', borderRadius: 2, transition: 'all 0.2s', opacity: menuOpen ? 0 : 1 }} />
-              <span style={{ display: 'block', width: 20, height: 2, background: 'white', borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translateY(-7px)' : 'none' }} />
-            </button>
           </div>
+
+          {/* Mobile hamburger */}
+          <button className="md:hidden" onClick={() => setMenuOpen(v => !v)} style={{ marginLeft: 'auto', width: 40, height: 40, borderRadius: 10, background: '#F5F3FF', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+            {[0,1,2].map(i => <span key={i} style={{ width: 18, height: 2, background: '#7C5CFC', borderRadius: 2, display: 'block' }} />)}
+          </button>
         </div>
       </nav>
 
-      {/* ── Mobile Drawer ── */}
+      {/* Mobile menu */}
       {menuOpen && (
-        <div
-          onClick={() => setMenuOpen(false)}
-          style={{ position: 'fixed', inset: 0, zIndex: 49, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
-          aria-hidden="true"
-        />
+        <div style={{ position: 'fixed', inset: 0, zIndex: 99, background: 'rgba(30,27,75,0.5)', backdropFilter: 'blur(4px)' }} onClick={() => setMenuOpen(false)}>
+          <div style={{ position: 'absolute', top: 72, left: 0, right: 0, background: '#fff', padding: '20px 24px', boxShadow: '0 8px 40px rgba(0,0,0,0.12)' }} onClick={e => e.stopPropagation()}>
+            {NAV_LINKS.map(l => <a key={l} href="#" onClick={() => setMenuOpen(false)} style={{ display: 'block', padding: '14px 0', fontSize: 15, fontWeight: 500, color: '#1E1B4B', textDecoration: 'none', borderBottom: '1px solid #F5F3FF' }}>{l}</a>)}
+            <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
+              <Link to="/login" onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: 'center', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 600, color: '#1E1B4B', textDecoration: 'none', border: '1.5px solid #D1D5DB' }}>Log In</Link>
+              <Link to="/signup" onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: 'center', padding: '12px', borderRadius: 12, fontSize: 14, fontWeight: 700, color: '#fff', textDecoration: 'none', background: 'linear-gradient(135deg, #7C5CFC, #6D4EE8)' }}>Find My Match</Link>
+            </div>
+          </div>
+        </div>
       )}
-      <div
-        id="mobile-drawer"
-        ref={drawerRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Navigation menu"
-        className="md:hidden"
-        style={{
-          position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50,
-          width: 280, background: '#1a3d2e',
-          transform: menuOpen ? 'translateX(0)' : 'translateX(-100%)',
-          transition: REDUCED_MOTION ? 'none' : 'transform 0.28s cubic-bezier(0.4,0,0.2,1)',
-          display: 'flex', flexDirection: 'column',
-          boxShadow: '4px 0 32px rgba(0,0,0,0.4)',
-          overflowY: 'auto',
-        }}>
-        {/* Drawer header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-          <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 40, width: 40, objectFit: 'contain', borderRadius: 8 }} />
-          <button
-            aria-label="Close menu"
-            onClick={() => setMenuOpen(false)}
-            style={{ width: 44, height: 44, borderRadius: 8, background: 'rgba(255,255,255,0.08)', border: 'none', cursor: 'pointer', color: 'white', fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            ✕
-          </button>
-        </div>
 
-        {/* Drawer nav links */}
-        <nav aria-label="Mobile navigation" style={{ flex: 1, padding: '12px 0' }}>
-          {[['#how-it-works','How it Works','🌿'],['#features','Features','✨'],['#healers','Healers','🧘'],['#faq','FAQ','❓']].map(([href,label,icon]) => (
-            <a key={href} href={href} onClick={() => setMenuOpen(false)}
-              style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px', color: 'rgba(255,255,255,0.85)', textDecoration: 'none', fontSize: 16, fontWeight: 500, minHeight: 52, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-              <span style={{ fontSize: 20 }}>{icon}</span>
-              {label}
-            </a>
-          ))}
-        </nav>
+      {/* ═══════════════════════════════════════════════════════════════════
+          HERO
+      ════════════════════════════════════════════════════════════════════ */}
+      <section style={{ paddingTop: 72, minHeight: '100vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(160deg, #FAF8F6 0%, #F3F0FF 50%, #FAF8F6 100%)', position: 'relative', overflow: 'hidden' }}>
 
-        {/* Drawer CTAs */}
-        <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <Link to="/login" onClick={() => setMenuOpen(false)}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 48, borderRadius: 10, border: '1.5px solid rgba(255,255,255,0.35)', color: 'white', fontWeight: 600, fontSize: 15, textDecoration: 'none' }}>
-            Log in
-          </Link>
-          <Link to="/signup" onClick={() => setMenuOpen(false)}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 48, borderRadius: 10, background: '#7c3aed', color: 'white', fontWeight: 700, fontSize: 15, textDecoration: 'none', boxShadow: '0 4px 14px rgba(124,58,237,0.4)' }}>
-            Find My Match →
-          </Link>
-        </div>
-      </div>
+        {/* Background orbs */}
+        <div style={{ position: 'absolute', top: '10%', left: '-5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '5%', right: '5%', width: 320, height: 320, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,92,252,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-      {/* ═══════════════════════════════════════
-          HERO SECTION
-      ═══════════════════════════════════════ */}
-      <section style={{ background: '#1a3d2e', paddingBottom: 0 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(36px,6vw,72px) 20px 0' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', width: '100%', padding: 'clamp(40px, 6vw, 80px) clamp(16px, 3vw, 48px)', display: 'flex', gap: 'clamp(40px, 6vw, 80px)', alignItems: 'center' }}>
 
-          {/* Hero text */}
-          <div style={{ textAlign: 'center', marginBottom: 'clamp(32px,5vw,56px)' }}>
-            <p style={{ color: '#86efac', fontWeight: 600, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>
-              Peer Support for Real Life Struggles
-            </p>
-            <h1 style={{ color: 'white', fontSize: 'clamp(2rem,7vw,3.75rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: 16, letterSpacing: '-0.5px' }}>
-              You Are Not Alone in This.
+          {/* Left */}
+          <div className="fade-up" style={{ flex: '0 0 50%', maxWidth: '50%' }}>
+
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 20, background: '#F0EBFF', border: '1px solid #DDD6FE', marginBottom: 24 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#7C5CFC', display: 'inline-block' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#7C5CFC', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Peer Support For Real Life Struggles</span>
+            </div>
+
+            <h1 style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(2rem, 4.5vw, 3.6rem)', fontWeight: 800, color: '#1E1B4B', lineHeight: 1.18, letterSpacing: '-0.02em', marginBottom: 20 }}>
+              Find Someone Who Truly{' '}
+              <span style={{ color: '#7C5CFC', fontStyle: 'italic' }}>Understands</span>{' '}
+              What You're Going Through
             </h1>
-            <p style={{ color: 'rgba(255,255,255,0.72)', fontSize: 'clamp(15px,2vw,18px)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.65 }}>
-              Connect with someone dealing with your exact struggle — breakup, anxiety, grief, or any of&nbsp;
-              <strong style={{ color: 'white' }}>25 specific challenges</strong>. Peer support that truly understands you.
+
+            <p style={{ fontSize: 'clamp(15px, 1.5vw, 17px)', color: '#6B7280', lineHeight: 1.75, marginBottom: 8 }}>
+              Whether you're healing from a breakup, struggling with anxiety, grieving a loss, or feeling alone... connect with people who have walked the same path.
             </p>
-            {/* CTA buttons — visible on all screen sizes */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, marginBottom: 28 }}>
-              <Link to="/signup" style={{ background: 'linear-gradient(135deg,#6d28d9,#7c3aed)', color: 'white', fontWeight: 700, fontSize: 16, textDecoration: 'none', borderRadius: 50, padding: '14px 32px', boxShadow: '0 4px 20px rgba(124,58,237,0.45)', display: 'inline-flex', alignItems: 'center', minHeight: 52 }}>
-                Find Someone Who Gets It →
-              </Link>
-              <Link to="/login" style={{ background: 'rgba(255,255,255,0.1)', color: 'white', fontWeight: 600, fontSize: 15, textDecoration: 'none', borderRadius: 50, padding: '14px 28px', border: '1.5px solid rgba(255,255,255,0.3)', display: 'inline-flex', alignItems: 'center', minHeight: 52 }}>
-                Log in
-              </Link>
-            </div>
-            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, marginBottom: 28 }}>
-              🔒 Free · Anonymous · Takes 3 minutes
+            <p style={{ fontSize: 'clamp(15px, 1.5vw, 17px)', color: '#7C5CFC', fontWeight: 600, marginBottom: 32 }}>
+              You don't have to carry it alone anymore.
             </p>
-          </div>
 
-          {/* THREE SOULCONNECT CATEGORY CARDS */}
-          {/* Desktop: 3-col grid | Mobile: horizontal scroll */}
-          <div className="hidden md:grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 48 }}>
-
-            {/* Card 1 — Heal My Mind — deep indigo */}
-            <Link
-              to="/signup"
-              style={{
-                display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                background: 'linear-gradient(160deg, #312e81 0%, #4338ca 100%)',
-                borderRadius: 20, padding: 32, minHeight: 320,
-                textDecoration: 'none', position: 'relative', overflow: 'hidden',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 20px 56px rgba(67,56,202,0.45)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-            >
-              <div>
-                <p style={{ color: 'rgba(199,210,254,0.85)', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
-                  Anxiety · Depression · Stress
-                </p>
-                <p style={{ color: 'white', fontSize: 22, fontWeight: 800, lineHeight: 1.25 }}>Heal my mind</p>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, padding: '12px 0' }}>
-                <LotusIllustration />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: 'rgba(199,210,254,0.7)', fontSize: 12 }}>Find your calm →</span>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                  <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.15)" />
-                  <path d="M13 16h7M18 13l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </Link>
-
-            {/* Card 2 — Mend My Heart — deep rose */}
-            <Link
-              to="/signup"
-              style={{
-                display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                background: 'linear-gradient(160deg, #881337 0%, #be185d 100%)',
-                borderRadius: 20, padding: 32, minHeight: 320,
-                textDecoration: 'none', position: 'relative', overflow: 'hidden',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 20px 56px rgba(190,24,93,0.45)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-            >
-              <div>
-                <p style={{ color: 'rgba(254,205,211,0.85)', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
-                  Breakup · Grief · Loneliness
-                </p>
-                <p style={{ color: 'white', fontSize: 22, fontWeight: 800, lineHeight: 1.25 }}>Mend my heart</p>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, padding: '12px 0' }}>
-                <ConnectionIllustration />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: 'rgba(254,205,211,0.7)', fontSize: 12 }}>Feel less alone →</span>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                  <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.15)" />
-                  <path d="M13 16h7M18 13l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </Link>
-
-            {/* Card 3 — Find My Path — deep teal */}
-            <Link
-              to="/signup"
-              style={{
-                display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                background: 'linear-gradient(160deg, #134e4a 0%, #0f766e 100%)',
-                borderRadius: 20, padding: 32, minHeight: 320,
-                textDecoration: 'none', position: 'relative', overflow: 'hidden',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 20px 56px rgba(15,118,110,0.45)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-            >
-              <div>
-                <p style={{ color: 'rgba(153,246,228,0.85)', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
-                  Career · Identity · Purpose
-                </p>
-                <p style={{ color: 'white', fontSize: 22, fontWeight: 800, lineHeight: 1.25 }}>Find my path</p>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, padding: '12px 0' }}>
-                <CompassIllustration />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: 'rgba(153,246,228,0.7)', fontSize: 12 }}>Discover direction →</span>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                  <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.15)" />
-                  <path d="M13 16h7M18 13l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </Link>
-
-          </div>
-
-          {/* Mobile cards — horizontal scroll */}
-          <div className="md:hidden flex" style={{ gap: 12, overflowX: 'auto', paddingBottom: 8, marginBottom: 28, scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
-            {[
-              { to: '/signup', bg: 'linear-gradient(160deg,#312e81 0%,#4338ca 100%)', tag: 'Anxiety · Depression', title: 'Heal my mind', sub: 'Find your calm →', illustration: <LotusIllustration /> },
-              { to: '/signup', bg: 'linear-gradient(160deg,#881337 0%,#be185d 100%)', tag: 'Breakup · Grief', title: 'Mend my heart', sub: 'Feel less alone →', illustration: <ConnectionIllustration /> },
-              { to: '/signup', bg: 'linear-gradient(160deg,#134e4a 0%,#0f766e 100%)', tag: 'Career · Purpose', title: 'Find my path', sub: 'Discover direction →', illustration: <CompassIllustration /> },
-            ].map(card => (
-              <Link key={card.title} to={card.to} style={{
-                flexShrink: 0, width: '72vw', maxWidth: 260, minHeight: 280,
-                background: card.bg, borderRadius: 20, padding: '24px 22px',
-                textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                scrollSnapAlign: 'start',
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 32 }}>
+              <Link to="/signup" className="sc-btn-primary" style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '14px 30px', borderRadius: 14, fontSize: 15, fontWeight: 700,
+                color: '#fff', textDecoration: 'none',
+                background: 'linear-gradient(135deg, #7C5CFC, #6D4EE8)',
+                boxShadow: '0 6px 20px rgba(124,92,252,0.38)',
               }}>
-                <div>
-                  <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>{card.tag}</p>
-                  <p style={{ color: 'white', fontSize: 20, fontWeight: 800, lineHeight: 1.2 }}>{card.title}</p>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0' }}>{card.illustration}</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: 12 }}>{card.sub}</span>
-                  <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                    <circle cx="16" cy="16" r="16" fill="rgba(255,255,255,0.15)" />
-                    <path d="M13 16h7M18 13l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
+                Start Healing →
               </Link>
-            ))}
+              <a href="#how-it-works" className="sc-btn-outline" style={{
+                display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '14px 26px', borderRadius: 14, fontSize: 15, fontWeight: 600,
+                color: '#1E1B4B', textDecoration: 'none',
+                border: '1.5px solid #D1D5DB', background: '#fff',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)', transition: 'all 0.18s',
+              }}>
+                <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>▶</div>
+                How It Works
+              </a>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
+              {[['🔒', 'Anonymous & Safe'], ['💜', 'Judgment-Free Space'], ['✓', 'Free To Join']].map(([icon, label]) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                  <span style={{ fontSize: 14 }}>{icon}</span>
+                  <span style={{ fontSize: 13, color: '#6B7280', fontWeight: 500 }}>{label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Problem pills row — clickable, 44px tap targets */}
-          <div role="list" aria-label="Supported challenges" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, paddingBottom: 48 }}>
-            {problems.map((p) => (
-              <Link
-                key={p}
-                to="/signup"
-                role="listitem"
-                style={{
-                  background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)',
-                  color: 'rgba(255,255,255,0.85)', padding: '10px 18px', borderRadius: 999,
-                  fontSize: 13, fontWeight: 500, textDecoration: 'none', display: 'inline-flex',
-                  alignItems: 'center', minHeight: 44,
-                }}
-              >
-                {p}
+          {/* Right — illustration */}
+          <div className="hidden md:block float" style={{ flex: 1, position: 'relative', minHeight: 520 }}>
+
+            {/* Photo */}
+            <div style={{
+              borderRadius: 32, overflow: 'hidden',
+              boxShadow: '0 24px 80px rgba(124,92,252,0.2)',
+              height: 520, position: 'relative',
+            }}>
+              <img
+                src={HERO_IMG}
+                alt="Woman meditating peacefully"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                loading="eager"
+              />
+              {/* Subtle gradient overlay */}
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(124,92,252,0.05) 0%, rgba(30,27,75,0.08) 100%)' }} />
+            </div>
+
+            {/* Mandala overlay */}
+            <MandalaOverlay />
+
+            {/* Floating rating card */}
+            <div style={{
+              position: 'absolute', bottom: 32, right: -20,
+              background: '#fff', borderRadius: 20, padding: '14px 20px',
+              boxShadow: '0 8px 40px rgba(0,0,0,0.12)',
+              border: '1px solid rgba(237,233,254,0.8)',
+              display: 'flex', alignItems: 'center', gap: 14,
+              zIndex: 2, backdropFilter: 'blur(8px)',
+              animation: 'pulse 3s ease-in-out infinite',
+            }}>
+              <div style={{ display: 'flex' }}>
+                {[0,1,2,3].map(i => (
+                  <div key={i} style={{ width: 30, height: 30, borderRadius: '50%', background: `hsl(${250 + i*30}, 60%, 65%)`, border: '2px solid white', marginLeft: i > 0 ? -8 : 0 }} />
+                ))}
+              </div>
+              <div>
+                <div style={{ display: 'flex', gap: 2, marginBottom: 2 }}>{'★★★★★'.split('').map((s,i) => <span key={i} style={{ color: '#F59E0B', fontSize: 13 }}>{s}</span>)}</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#1E1B4B' }}>4.9/5</div>
+                <div style={{ fontSize: 11, color: '#9CA3AF' }}>from 2,300+ members</div>
+              </div>
+            </div>
+
+            {/* Floating "healing" badge */}
+            <div style={{
+              position: 'absolute', top: 28, left: -16,
+              background: 'linear-gradient(135deg, #7C5CFC, #A78BFA)', borderRadius: 16, padding: '10px 16px',
+              boxShadow: '0 8px 24px rgba(124,92,252,0.3)',
+              zIndex: 2,
+            }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Currently healing</div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#fff' }}>1,247 souls 🌸</div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          STATS / TRUST BAR
+      ════════════════════════════════════════════════════════════════════ */}
+      <section style={{ padding: '0 clamp(16px, 3vw, 48px)', marginTop: -28, position: 'relative', zIndex: 10 }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <div style={{
+            background: '#fff', borderRadius: 24, padding: 'clamp(24px, 3vw, 36px) clamp(24px, 4vw, 48px)',
+            boxShadow: '0 8px 48px rgba(0,0,0,0.08)',
+            border: '1px solid rgba(237,233,254,0.6)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            flexWrap: 'wrap', gap: 24,
+          }}>
+            {STATS.map((s, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, flex: '1 0 140px' }}>
+                <div style={{ width: 50, height: 50, borderRadius: 16, background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>{s.icon}</div>
+                <div>
+                  <div style={{ fontSize: 26, fontWeight: 800, color: '#1E1B4B', letterSpacing: '-0.03em', lineHeight: 1 }}>{s.value}</div>
+                  <div style={{ fontSize: 12, color: '#6B7280', fontWeight: 500, marginTop: 2 }}>{s.label}</div>
+                </div>
+                {i < STATS.length - 1 && <div className="hidden md:block" style={{ width: 1, height: 40, background: '#EDE9FE', marginLeft: 'auto' }} />}
+              </div>
+            ))}
+            {/* Testimonial quote */}
+            <div style={{ flex: '1 0 200px', borderLeft: '3px solid #EDE9FE', paddingLeft: 24 }}>
+              <p style={{ fontSize: 13, fontStyle: 'italic', color: '#6B7280', lineHeight: 1.6, margin: '0 0 6px' }}>
+                "SoulConnect changed my life. I finally felt understood."
+              </p>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#7C5CFC' }}>— Neha, 28</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          PROBLEM CATEGORIES
+      ════════════════════════════════════════════════════════════════════ */}
+      <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <SectionHeader
+            title="You're Not Alone In What You're Facing"
+            subtitle="Whatever you're going through, there are others here who truly get it."
+          />
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 14 }}>
+            {CATEGORIES.map((cat, i) => (
+              <Link key={i} to="/signup" className="sc-cat-card" style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
+                background: '#fff', borderRadius: 20, padding: '28px 16px',
+                textDecoration: 'none', border: '1.5px solid #EDE9FE',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+              }}>
+                <div style={{ width: 64, height: 64, borderRadius: 20, background: cat.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30 }}>{cat.icon}</div>
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#1E1B4B', textAlign: 'center', lineHeight: 1.4, whiteSpace: 'pre-line' }}>{cat.label}</span>
+                <span style={{ fontSize: 11, color: cat.color, fontWeight: 600 }}>Find support →</span>
               </Link>
             ))}
-            <Link
-              to="/signup"
-              role="listitem"
-              style={{
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)',
-                color: 'rgba(255,255,255,0.6)', padding: '10px 18px', borderRadius: 999,
-                fontSize: 13, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', minHeight: 44,
-              }}
-            >
-              +15 more
+            <Link to="/signup" className="sc-cat-card" style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10,
+              background: 'linear-gradient(135deg, #7C5CFC, #A78BFA)', borderRadius: 20, padding: '28px 16px',
+              textDecoration: 'none', border: 'none',
+              boxShadow: '0 4px 20px rgba(124,92,252,0.25)',
+            }}>
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>→</div>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', textAlign: 'center', lineHeight: 1.4 }}>View All{'\n'}Challenges</span>
             </Link>
           </div>
-
         </div>
-
-        {/* Wave transition to white */}
-        <svg viewBox="0 0 1440 64" style={{ display: 'block', width: '100%', height: 64 }} preserveAspectRatio="none">
-          <path fill="white" d="M0,32 C360,64 1080,0 1440,32 L1440,64 L0,64 Z" />
-        </svg>
       </section>
 
-      {/* ═══════════════════════════════════════
+      {/* ═══════════════════════════════════════════════════════════════════
           HOW IT WORKS
-      ═══════════════════════════════════════ */}
-      <section id="how-it-works" style={{ background: '#f8faf9', padding: 'clamp(40px,6vw,72px) 24px' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Simple Process</p>
-            <h2 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>Start healing in 3 steps</h2>
-          </div>
+      ════════════════════════════════════════════════════════════════════ */}
+      <section id="how-it-works" style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: '#fff' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <SectionHeader title="How SoulConnect Works" />
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
-            {steps.map(({ step, title, desc }) => (
-              <div
-                key={step}
-                style={{
-                  background: 'white', borderRadius: 16, padding: 'clamp(20px,3vw,36px)',
-                  border: '1px solid #e5e7eb', textAlign: 'center',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
-                }}
-              >
-                <div
-                  style={{
-                    width: 52, height: 52, borderRadius: 14, background: '#1a3d2e',
-                    color: 'white', fontWeight: 800, fontSize: 17,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    margin: '0 auto 20px',
-                  }}
-                >
-                  {step}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 0, position: 'relative' }}>
+            {STEPS.map((step, i) => (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '0 24px', position: 'relative' }}>
+                {/* Connector line */}
+                {i < STEPS.length - 1 && (
+                  <div className="hidden md:block" style={{ position: 'absolute', top: 60, left: '60%', right: '-10%', height: 2, background: 'linear-gradient(90deg, #EDE9FE, #DDD6FE)', zIndex: 0, borderRadius: 2 }}>
+                    <div style={{ position: 'absolute', right: -4, top: -4, width: 10, height: 10, borderRadius: '50%', background: '#A78BFA' }} />
+                  </div>
+                )}
+
+                {/* Step circle */}
+                <div style={{
+                  width: 120, height: 120, borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #F5F3FF, #EDE9FE)',
+                  border: '2px solid #DDD6FE',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 40, marginBottom: 20,
+                  position: 'relative', zIndex: 1,
+                  boxShadow: '0 8px 32px rgba(124,92,252,0.12)',
+                }}>
+                  {step.emoji}
+                  <div style={{ position: 'absolute', top: -8, right: -8, width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #7C5CFC, #A78BFA)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: '#fff', boxShadow: '0 4px 12px rgba(124,92,252,0.4)' }}>
+                    {step.num}
+                  </div>
                 </div>
-                <h3 style={{ fontWeight: 700, fontSize: 17, color: '#111827', marginBottom: 10 }}>{title}</h3>
-                <p style={{ color: '#6b7280', fontSize: 14, lineHeight: 1.7 }}>{desc}</p>
+
+                <h3 style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 20, fontWeight: 700, color: '#1E1B4B', marginBottom: 10 }}>{step.title}</h3>
+                <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.7, maxWidth: 220 }}>{step.desc}</p>
               </div>
             ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: 48 }}>
+            <Link to="/signup" className="sc-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '14px 36px', borderRadius: 14, fontSize: 15, fontWeight: 700, color: '#fff', textDecoration: 'none', background: 'linear-gradient(135deg, #7C5CFC, #6D4EE8)', boxShadow: '0 6px 20px rgba(124,92,252,0.35)' }}>
+              Start Your Journey →
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════
-          FEATURES
-      ═══════════════════════════════════════ */}
-      <section id="features" style={{ background: 'white', padding: 'clamp(40px,6vw,72px) 24px' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>What We Offer</p>
-            <h2 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>Everything you need to heal</h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
-            {features.map(({ title, desc, icon }) => (
-              <div
-                key={title}
-                style={{
-                  background: '#f8faf9', borderRadius: 16, padding: 'clamp(20px,3vw,36px)',
-                  border: '1px solid #e5e7eb',
-                }}
-              >
-                <div style={{ marginBottom: 20 }}>{icon}</div>
-                <h3 style={{ fontWeight: 700, fontSize: 18, color: '#111827', marginBottom: 10 }}>{title}</h3>
-                <p style={{ color: '#6b7280', fontSize: 14, lineHeight: 1.7 }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════
+      {/* ═══════════════════════════════════════════════════════════════════
           TESTIMONIALS
-      ═══════════════════════════════════════ */}
-      <section id="testimonials" aria-label="User testimonials" style={{ background: '#f8faf9', padding: 'clamp(40px,6vw,72px) 24px' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <p style={{ color: '#2d6a4f', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>Real Stories</p>
-            <h2 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.5px' }}>People who found their people</h2>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
-            {testimonials.map((t) => (
-              <figure key={t.name} style={{ background: 'white', borderRadius: 16, padding: 28, border: '1px solid #e5e7eb', margin: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: '50%', background: t.avatarBg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: 18 }}>
-                    {t.initials}
-                  </div>
+      ════════════════════════════════════════════════════════════════════ */}
+      <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: '#FAF8F6' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <SectionHeader title="Real Stories. Real Healing." subtitle="Thousands of people have found their people here." />
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="sc-card-hover" style={{ background: '#fff', borderRadius: 24, padding: '28px', border: '1.5px solid #EDE9FE', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' }}>
+                <div style={{ fontSize: 36, color: '#EDE9FE', fontFamily: 'Georgia', lineHeight: 1, marginBottom: 12 }}>"</div>
+                <p style={{ fontSize: 15, color: '#374151', lineHeight: 1.75, fontStyle: 'italic', marginBottom: 20 }}>{t.quote}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <img src={t.img} alt={t.name} style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', border: '2px solid #EDE9FE' }} loading="lazy" />
                   <div>
-                    <p style={{ fontWeight: 700, fontSize: 15, color: '#111827', margin: 0 }}>{t.name}, {t.age}</p>
-                    <span style={{ fontSize: 12, background: '#dcfce7', color: '#166534', padding: '2px 10px', borderRadius: 20, fontWeight: 600 }}>{t.tag}</span>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1E1B4B' }}>{t.name}</div>
+                    <div style={{ fontSize: 12, color: '#9CA3AF' }}>{t.city}</div>
                   </div>
+                  <div style={{ marginLeft: 'auto', color: '#F59E0B', fontSize: 13 }}>★★★★★</div>
                 </div>
-                <blockquote style={{ margin: 0 }}>
-                  <p style={{ color: '#374151', fontSize: 14, lineHeight: 1.75, fontStyle: 'italic' }}>{t.quote}</p>
-                </blockquote>
-                <div role="img" aria-label={`${t.stars} out of 5 stars`} style={{ marginTop: 14, color: '#f59e0b', fontSize: 14 }}>
-                  {'★'.repeat(t.stars)}
-                </div>
-              </figure>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════
-          TRUST STRIP
-      ═══════════════════════════════════════ */}
-      <section style={{ background: '#1a3d2e', padding: '28px 24px' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 40 }}>
-          {[
-            { icon: (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="8" rx="2" fill="#86efac"/><path d="M5 7V5a3 3 0 016 0v2" stroke="#86efac" strokeWidth="1.5" strokeLinecap="round" fill="none"/></svg>
-            ), label: '100% Anonymous' },
-            { icon: (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#86efac" strokeWidth="1.5"/><path d="M5 8l2 2 4-4" stroke="#86efac" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            ), label: 'Verified Healers' },
-            { icon: (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 14S2 10 2 6a4 4 0 018 0 4 4 0 018 0c0 4-6 8-6 8z" fill="#86efac"/></svg>
-            ), label: 'No Judgment' },
-            { icon: (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v4l3 2" stroke="#86efac" strokeWidth="1.5" strokeLinecap="round"/><circle cx="8" cy="8" r="6" stroke="#86efac" strokeWidth="1.5" fill="none"/></svg>
-            ), label: 'Match in Minutes' },
-            { icon: (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#86efac" strokeWidth="1.5" fill="none"/><path d="M8 4v8M4 6h8M4 10h8" stroke="#86efac" strokeWidth="1" strokeLinecap="round"/></svg>
-            ), label: 'Made for India' },
-          ].map(({ icon, label }) => (
-            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              {icon}
-              <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, fontWeight: 600 }}>{label}</span>
+      {/* ═══════════════════════════════════════════════════════════════════
+          CIRCLES + HEALERS
+      ════════════════════════════════════════════════════════════════════ */}
+      <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: '#fff' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}>
+
+          {/* Upcoming Circles */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+              <div>
+                <h2 style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 22, fontWeight: 800, color: '#1E1B4B', margin: 0 }}>Upcoming Support Circles</h2>
+                <p style={{ fontSize: 13, color: '#9CA3AF', margin: '4px 0 0' }}>Safe spaces to share and heal together</p>
+              </div>
+              <Link to="/signup" style={{ fontSize: 12, fontWeight: 600, color: '#7C5CFC', textDecoration: 'none', padding: '6px 14px', borderRadius: 10, background: '#F5F3FF' }}>View all</Link>
             </div>
-          ))}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {CIRCLES.map((c, i) => (
+                <div key={i} className="sc-card-hover" style={{ borderRadius: 20, overflow: 'hidden', border: '1.5px solid #EDE9FE', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', position: 'relative', height: 140 }}>
+                  <img src={c.img} alt={c.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(30,27,75,0.75) 0%, rgba(30,27,75,0.4) 60%, transparent 100%)' }} />
+                  <div style={{ position: 'relative', zIndex: 1, padding: '18px 20px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', marginBottom: 8 }}>
+                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+                        <span style={{ fontSize: 10, fontWeight: 700, color: '#fff', letterSpacing: '0.06em' }}>{c.time}</span>
+                      </div>
+                      <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: 0 }}>{c.title}</h3>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>👥 {c.joined} joined · 60 min</span>
+                      <button onClick={() => window.location.href = '/signup'} style={{ padding: '7px 18px', borderRadius: 10, fontSize: 12, fontWeight: 700, background: '#fff', color: '#7C5CFC', border: 'none', cursor: 'pointer' }}>
+                        Join Circle
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Top Healers */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+              <div>
+                <h2 style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 22, fontWeight: 800, color: '#1E1B4B', margin: 0 }}>Top Healers</h2>
+                <p style={{ fontSize: 13, color: '#9CA3AF', margin: '4px 0 0' }}>Verified wellness professionals</p>
+              </div>
+              <Link to="/signup" style={{ fontSize: 12, fontWeight: 600, color: '#7C5CFC', textDecoration: 'none', padding: '6px 14px', borderRadius: 10, background: '#F5F3FF' }}>View all</Link>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {HEALERS.map((h, i) => (
+                <div key={i} className="sc-card-hover" style={{ display: 'flex', alignItems: 'center', gap: 14, background: '#FAFAFA', borderRadius: 18, padding: '16px 18px', border: '1.5px solid #EDE9FE', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
+                  <img src={h.img} alt={h.name} style={{ width: 52, height: 52, borderRadius: 16, objectFit: 'cover', flexShrink: 0, border: '2px solid #EDE9FE' }} loading="lazy" />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1E1B4B' }}>{h.name}</div>
+                    <div style={{ fontSize: 11, color: '#9CA3AF', marginBottom: 4 }}>{h.role}</div>
+                    <div style={{ fontSize: 11, color: '#6B7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{h.spec}</div>
+                  </div>
+                  <div style={{ flexShrink: 0, textAlign: 'right' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8, justifyContent: 'flex-end' }}>
+                      <span style={{ color: '#F59E0B', fontSize: 12 }}>★</span>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: '#1E1B4B' }}>{h.rating}</span>
+                    </div>
+                    <button onClick={() => window.location.href = '/signup'} style={{ padding: '7px 14px', borderRadius: 10, fontSize: 11, fontWeight: 700, background: 'linear-gradient(135deg, #7C5CFC, #A78BFA)', color: '#fff', border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(124,92,252,0.3)', whiteSpace: 'nowrap' }}>
+                      Book Session
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════
-          FAQ  (8 high-signal questions)
-      ═══════════════════════════════════════ */}
-      <FAQSection faqs={[
-        { q: 'Is SoulConnect free to use?', a: 'Yes — creating an account, getting peer-matched, and joining support circles is completely free. Verified healer sessions are paid individually, starting at ₹500/session.' },
-        { q: 'Is my identity kept anonymous?', a: 'Completely. Your real name, phone number, and social media are never shared with matches or visible publicly. You decide exactly what you reveal and when.' },
-        { q: 'How does the peer matching work?', a: 'When you sign up, you select your primary challenge (e.g. anxiety, breakup, grief). Our algorithm matches you with someone going through the same specific issue — not just "mental health" broadly. Most people are matched within a few minutes.' },
-        { q: 'Is this a replacement for therapy?', a: 'No — and we\'re honest about that. SoulConnect is peer support: real people who truly understand your struggle. For clinical care, we connect you with verified therapists and counsellors on the platform.' },
-        { q: 'Which cities are support circles available in?', a: 'Online matching works across India. In-person circles run in Mumbai, Delhi, Bangalore, Pune, Chennai, Hyderabad, and 44 more cities — with new cities added every month.' },
-        { q: 'Who are the verified healers?', a: 'Our healers are certified professionals — psychologists, therapists, counsellors, yoga teachers, Reiki practitioners, and life coaches. Every healer is manually reviewed before joining the platform.' },
-        { q: 'What if I need urgent help?', a: 'SoulConnect is a supportive community, not a crisis service. If you\'re in immediate distress or having thoughts of self-harm, please contact iCall (9152987821) or Vandrevala Foundation (1860-2662-345), both available 24/7 across India.' },
-        { q: 'How do I get started?', a: 'Sign up for free in about 3 minutes. Choose what you\'re going through, and we\'ll show you your first peer match. No credit card, no waiting list.' },
-      ]} />
+      {/* ═══════════════════════════════════════════════════════════════════
+          DAILY HEALING TOOLS
+      ════════════════════════════════════════════════════════════════════ */}
+      <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: '#FAF8F6' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <SectionHeader title="Daily Healing Tools" subtitle="Simple tools to support your journey every day." />
 
-      {/* ═══════════════════════════════════════
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 14 }}>
+            {TOOLS.map((tool, i) => (
+              <Link key={i} to="/signup" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, padding: '28px 16px', borderRadius: 20, background: '#fff', border: '1.5px solid #EDE9FE', textDecoration: 'none', boxShadow: '0 2px 12px rgba(0,0,0,0.04)', transition: 'all 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(124,92,252,0.1)'; e.currentTarget.style.borderColor = '#C4B5FD'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.04)'; e.currentTarget.style.borderColor = '#EDE9FE'; }}>
+                <div style={{ width: 52, height: 52, borderRadius: 18, background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>{tool.icon}</div>
+                <span style={{ fontSize: 13, fontWeight: 600, color: '#1E1B4B', textAlign: 'center' }}>{tool.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          FAQ
+      ════════════════════════════════════════════════════════════════════ */}
+      <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: '#fff' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <SectionHeader title="Frequently Asked Questions" subtitle="Everything you need to know about SoulConnect." />
+          <FAQ faqs={FAQS} />
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
           FINAL CTA
-      ═══════════════════════════════════════ */}
-      <section style={{ background: '#1a3d2e', padding: '96px 24px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        {/* Subtle background shape */}
-        <div style={{
-          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-          width: 600, height: 600, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(45,106,79,0.6) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
+      ════════════════════════════════════════════════════════════════════ */}
+      <section style={{ padding: 'clamp(60px, 7vw, 96px) clamp(16px, 3vw, 48px)', background: 'linear-gradient(160deg, #F5F3FF 0%, #EDE9FE 50%, #F5F3FF 100%)', position: 'relative', overflow: 'hidden' }}>
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 600, margin: '0 auto' }}>
-          <p style={{ color: '#86efac', fontWeight: 700, fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 16 }}>
-            Take the first step
-          </p>
-          <h2 style={{ color: 'white', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: 20, letterSpacing: '-0.5px' }}>
-            You deserve to feel<br />understood.
+        {/* Background orbs */}
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,92,252,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -60, right: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+          <div style={{ fontSize: 56, marginBottom: 20 }}>🪷</div>
+
+          <h2 style={{ fontFamily: '"Playfair Display", Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, color: '#1E1B4B', lineHeight: 1.25, marginBottom: 16, letterSpacing: '-0.02em' }}>
+            Your healing journey<br />can begin today.
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 17, lineHeight: 1.7, marginBottom: 36 }}>
-            Join thousands of people who found their people on SoulConnect. Free, anonymous, and takes just 5 minutes.
+
+          <p style={{ fontSize: 17, color: '#6B7280', marginBottom: 36, lineHeight: 1.65 }}>
+            Take the first step. We're here for you.
           </p>
-          <Link
-            to="/signup"
-            style={{
-              display: 'inline-flex', alignItems: 'center', minHeight: 52,
-              background: 'linear-gradient(135deg,#6d28d9,#7c3aed)', color: 'white',
-              fontWeight: 700, fontSize: 16, textDecoration: 'none',
-              padding: '14px 40px', borderRadius: 50,
-              boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
-              transition: 'all 0.2s',
-            }}
-          >
-            Find My Match — It's Free →
+
+          <Link to="/signup" className="sc-btn-primary" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 10,
+            padding: '16px 40px', borderRadius: 16, fontSize: 16, fontWeight: 700,
+            color: '#fff', textDecoration: 'none',
+            background: 'linear-gradient(135deg, #7C5CFC, #6D4EE8)',
+            boxShadow: '0 8px 32px rgba(124,92,252,0.4)',
+          }}>
+            Find My Support Match →
           </Link>
-          <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, marginTop: 16 }}>No credit card required</p>
+
+          <p style={{ fontSize: 13, color: '#9CA3AF', marginTop: 16 }}>
+            🔒 Free · Anonymous · Takes 3 Minutes
+          </p>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════
+      {/* ═══════════════════════════════════════════════════════════════════
           FOOTER
-      ═══════════════════════════════════════ */}
-      <footer style={{ background: '#f5f0eb' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 28px 0' }}>
+      ════════════════════════════════════════════════════════════════════ */}
+      <footer style={{ background: '#1E1B4B', padding: 'clamp(40px, 5vw, 64px) clamp(16px, 3vw, 48px) 28px' }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
 
-          {/* Top row: nav links + social icons */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, paddingBottom: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
 
-            {/* Nav links */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 24px' }}>
-              {[
-                { label: 'Home', href: '#' },
-                { label: 'About', href: '#' },
-                { label: 'FAQ', href: '#faq' },
-                { label: 'How it Works', href: '#how-it-works' },
-                { label: 'Find a Match', to: '/signup' },
-                { label: 'Talk to a Healer', to: '/signup' },
-                { label: 'Contact', href: '#' },
-                { label: 'For Healers', to: '/signup' },
-              ].map(({ label, href, to }) =>
-                to ? (
-                  <Link key={label} to={to}
-                    style={{ color: '#3d5a4a', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}
-                    onMouseEnter={e => e.target.style.color = '#1a3d2e'}
-                    onMouseLeave={e => e.target.style.color = '#3d5a4a'}>
-                    {label}
-                  </Link>
-                ) : (
-                  <a key={label} href={href}
-                    style={{ color: '#3d5a4a', fontSize: 14, fontWeight: 500, textDecoration: 'none' }}
-                    onMouseEnter={e => e.target.style.color = '#1a3d2e'}
-                    onMouseLeave={e => e.target.style.color = '#3d5a4a'}>
-                    {label}
+            {/* Brand */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                <div style={{ width: 38, height: 38, borderRadius: 12, background: 'linear-gradient(135deg, #7C5CFC, #A78BFA)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>🪷</div>
+                <div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>Soul<span style={{ color: '#A78BFA' }}>Connect</span></div>
+                  <div style={{ fontSize: 9, color: '#A78BFA', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Heal · Connect · Grow</div>
+                </div>
+              </div>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, maxWidth: 240, marginBottom: 20 }}>
+                A safe, anonymous peer support platform for real life struggles.
+              </p>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {['📘','📸','🐦','💼'].map((icon, i) => (
+                  <a key={i} href="#" style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, textDecoration: 'none', transition: 'background 0.2s' }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,92,252,0.4)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}>
+                    {icon}
                   </a>
-                )
-              )}
+                ))}
+              </div>
             </div>
 
-            {/* Social icons */}
-            <div style={{ display: 'flex', gap: 10 }}>
-              {[
-                /* Facebook */
-                <svg key="fb" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>,
-                /* Instagram */
-                <svg key="ig" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/></svg>,
-                /* TikTok */
-                <svg key="tt" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.54V6.79a4.85 4.85 0 01-1.02-.1z"/></svg>,
-                /* X / Twitter */
-                <svg key="x" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>,
-                /* LinkedIn */
-                <svg key="li" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2" fill="white"/></svg>,
-              ].map((icon, i) => (
-                <a key={i} href="#"
-                  style={{ width: 38, height: 38, borderRadius: '50%', background: '#1a3d2e', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.2s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = '#2d6a4f'}
-                  onMouseLeave={e => e.currentTarget.style.background = '#1a3d2e'}>
-                  {icon}
-                </a>
-              ))}
-            </div>
+            {[
+              { title: 'Platform', links: ['How It Works', 'Find a Match', 'Support Circles', 'Healers', 'Meditations'] },
+              { title: 'Company', links: ['About Us', 'For Healers', 'Blog', 'Careers', 'Contact'] },
+              { title: 'Legal', links: ['Privacy Policy', 'Terms of Use', 'Cookie Policy', 'Accessibility'] },
+            ].map(col => (
+              <div key={col.title}>
+                <h4 style={{ fontSize: 12, fontWeight: 700, color: '#A78BFA', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 14 }}>{col.title}</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {col.links.map(l => (
+                    <a key={l} href="#" style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', transition: 'color 0.15s' }}
+                      onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                      onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.55)'}>
+                      {l}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Footer logo */}
-          <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 0 16px' }}>
-            <img src="/logo-footer-monochrome.png" alt="SoulConnect" style={{ height: 56, width: 'auto', objectFit: 'contain', opacity: 0.85 }} />
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', margin: 0 }}>© 2026 SoulConnect. All rights reserved.</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', margin: 0 }}>Made with 💜 for those who need it most</p>
           </div>
-
-          <div style={{ height: 1, background: '#ddd5cc', marginBottom: 0 }} />
-
-          {/* Bottom row: legal links + copyright */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '18px 0 28px' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px' }}>
-              {[
-                { label: 'Terms & Conditions', href: '/terms' },
-                { label: 'Privacy Policy', href: '/terms#privacy' },
-                { label: 'Cookie Settings', href: '#' },
-                { label: 'Web Accessibility', href: '#' },
-              ].map(({ label, href }) => (
-                <a key={label} href={href}
-                  style={{ color: '#5a7a6a', fontSize: 13, textDecoration: 'none' }}
-                  onMouseEnter={e => e.target.style.color = '#1a3d2e'}
-                  onMouseLeave={e => e.target.style.color = '#5a7a6a'}>
-                  {label}
-                </a>
-              ))}
-            </div>
-            <p style={{ color: '#8a9e94', fontSize: 13, margin: 0 }}>© 2026 SoulConnect</p>
-          </div>
-
         </div>
       </footer>
 
