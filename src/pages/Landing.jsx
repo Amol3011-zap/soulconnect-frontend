@@ -656,35 +656,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── WELLNESS ASSESSMENT ── */}
-      <WellnessAssessment/>
-
-      {/* ── LIVE COMMUNITY ACTIVITY ── */}
-      <section style={{ padding:'clamp(64px,7vw,100px) clamp(16px,2.5vw,52px)', background:'#0F0A24' }}>
-        <div style={{ maxWidth:1800, margin:'0 auto' }}>
-          <SectionHeader eyebrow="Live Now" title="Right Now, Inside SoulConnect" subtitle="Real people, real conversations, real healing — happening this very moment." light center />
-          <div className="three-col" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:18, marginBottom:40 }}>
-            {LIVE_ACTIVITY.map((a,i) => (
-              <div key={i} className="sc-card-hover" style={{ background:'rgba(255,255,255,0.04)', borderRadius:22, padding:'28px 28px 24px', border:'1.5px solid rgba(255,255,255,0.06)', borderLeft:`4px solid ${a.color}` }}>
-                <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:14 }}>
-                  <span className="live-dot" style={{ width:9, height:9, borderRadius:'50%', background:GRN, display:'inline-block', flexShrink:0 }}/>
-                  <span style={{ fontSize:12, fontWeight:700, color:GRN, letterSpacing:'0.06em', textTransform:'uppercase' }}>Live now</span>
-                </div>
-                <div style={{ fontSize:52, fontWeight:800, color:a.color, lineHeight:1, letterSpacing:'-0.04em', marginBottom:8 }}>{a.n}</div>
-                <p style={{ fontSize:15, color:'rgba(255,255,255,0.65)', fontWeight:500, lineHeight:1.55, marginBottom:18 }}>{a.label}</p>
-                <Link to="/signup" style={{ fontSize:13, color:a.color, fontWeight:700, textDecoration:'none' }}>Join Conversation →</Link>
-              </div>
-            ))}
-          </div>
-          <div style={{ textAlign:'center', padding:'20px 32px', background:'rgba(255,255,255,0.04)', borderRadius:20, border:'1px solid rgba(255,255,255,0.06)', display:'inline-block', margin:'0 auto', width:'100%' }}>
-            <p style={{ color:'rgba(255,255,255,0.6)', fontSize:16, fontWeight:500 }}>
-              <span style={{ fontWeight:800, color:'#fff', fontSize:22 }}>735</span> people healing together right now ·{' '}
-              <Link to="/signup" style={{ color:LAV, fontWeight:700, textDecoration:'none' }}>Join them →</Link>
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* ── HOW IT WORKS ── */}
       <section style={{ padding:'clamp(64px,7vw,100px) clamp(16px,2.5vw,52px)', background:'#fff' }}>
         <div style={{ maxWidth:1800, margin:'0 auto' }}>
@@ -698,44 +669,6 @@ export default function Landing() {
                 <p style={{ fontSize:14, color:'#6B7280', lineHeight:1.72 }}>{s.desc}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── PRODUCT DEMO ── */}
-      <ProductDemo/>
-
-      {/* ── HEALING CIRCLES ── */}
-      <section style={{ padding:'clamp(64px,7vw,100px) clamp(16px,2.5vw,52px)', background:'linear-gradient(148deg,#0F0A24 0%,#1E0B45 50%,#2A0D5E 100%)', position:'relative', overflow:'hidden' }}>
-        <div style={{ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:800, height:800, borderRadius:'50%', background:'radial-gradient(circle,rgba(109,74,255,0.12) 0%,transparent 70%)', pointerEvents:'none' }}/>
-        <div style={{ maxWidth:1800, margin:'0 auto', position:'relative', zIndex:1 }}>
-          <SectionHeader eyebrow="Find Your Circle" title="Join a Healing Circle" subtitle="Private, anonymous groups of 8-20 people facing the exact same challenge as you." light center />
-          <div className="three-col" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20, marginBottom:40 }}>
-            {HEALING_CIRCLES.map((c,i) => (
-              <div key={i} className="sc-card-hover" style={{ background:'rgba(255,255,255,0.05)', borderRadius:24, padding:'28px 24px', border:'1px solid rgba(255,255,255,0.08)', backdropFilter:'blur(12px)' }}>
-                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
-                  <div style={{ width:56, height:56, borderRadius:18, background:`${c.color}22`, border:`2px solid ${c.color}44`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:26 }}>{c.emoji}</div>
-                  {c.live
-                    ? <span style={{ display:'flex', alignItems:'center', gap:6, padding:'5px 12px', borderRadius:20, background:'rgba(239,68,68,0.15)', border:'1px solid rgba(239,68,68,0.3)', fontSize:11, fontWeight:700, color:'#f87171' }}><span style={{ width:6, height:6, borderRadius:'50%', background:'#ef4444', display:'inline-block', animation:'shimmer 1.5s ease-in-out infinite' }}/>LIVE</span>
-                    : <span style={{ fontSize:11, fontWeight:600, color:'rgba(255,255,255,0.4)', background:'rgba(255,255,255,0.06)', padding:'5px 10px', borderRadius:20 }}>🕐 {c.next}</span>
-                  }
-                </div>
-                <h3 style={{ fontSize:17, fontWeight:700, color:'#fff', marginBottom:8 }}>{c.name}</h3>
-                <div style={{ display:'flex', gap:14, marginBottom:20 }}>
-                  <span style={{ fontSize:12, color:'rgba(255,255,255,0.45)' }}>👥 {c.members.toLocaleString()} members</span>
-                  <span style={{ fontSize:12, color:'rgba(255,255,255,0.45)' }}>📅 {c.sessions} sessions/mo</span>
-                </div>
-                {!c.live && <p style={{ fontSize:11, color:'rgba(255,255,255,0.35)', marginBottom:16 }}>Next: {c.next}</p>}
-                <Link to="/signup" style={{ display:'flex', alignItems:'center', justifyContent:'center', padding:'11px', borderRadius:12, background:`linear-gradient(135deg,${c.color},${c.color}cc)`, color:'#fff', textDecoration:'none', fontSize:13, fontWeight:700, boxShadow:`0 4px 16px ${c.color}44` }}>
-                  Join Circle →
-                </Link>
-              </div>
-            ))}
-          </div>
-          <div style={{ textAlign:'center' }}>
-            <Link to="/signup" style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'13px 32px', borderRadius:28, border:'1.5px solid rgba(255,255,255,0.2)', color:'rgba(255,255,255,0.7)', textDecoration:'none', fontSize:14, fontWeight:600, background:'rgba(255,255,255,0.04)', transition:'all 0.2s' }}>
-              See all 25+ Healing Circles →
-            </Link>
           </div>
         </div>
       </section>
@@ -917,42 +850,6 @@ export default function Landing() {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── EVENTS ── */}
-      <section style={{ padding:'clamp(64px,7vw,100px) clamp(16px,2.5vw,52px)', background:'#FAFAFC' }}>
-        <div style={{ maxWidth:1800, margin:'0 auto' }}>
-          <SectionHeader eyebrow="Live Events" title="Upcoming Healing Events" subtitle="Group experiences that heal, connect, and transform. Live sessions with real community energy." />
-          <div className="three-col" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }}>
-            {EVENTS.map((ev,i) => (
-              <div key={i} className="sc-card-hover" style={{ borderRadius:26, overflow:'hidden', position:'relative', height:220, boxShadow:'0 4px 20px rgba(0,0,0,0.08)' }}>
-                <img src={ev.img} alt={ev.title} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }} loading="lazy"/>
-                <div style={{ position:'absolute', inset:0, background:'linear-gradient(145deg,rgba(15,10,36,0.82) 0%,rgba(15,10,36,0.5) 55%,rgba(15,10,36,0.2) 100%)' }}/>
-                <div style={{ position:'relative', zIndex:1, padding:'22px 26px', height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
-                  <div>
-                    <div style={{ display:'inline-flex', alignItems:'center', gap:7, padding:'4px 12px', borderRadius:20, background:ev.typeColor, marginBottom:10 }}>
-                      <span style={{ fontSize:11, fontWeight:700, color:'#fff', letterSpacing:'0.06em' }}>{ev.type}</span>
-                    </div>
-                    <h3 style={{ fontSize:17, fontWeight:700, color:'#fff', marginBottom:4 }}>{ev.title}</h3>
-                    <span style={{ fontSize:13, color:'rgba(255,255,255,0.65)' }}>with {ev.host} · {ev.time}</span>
-                  </div>
-                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:16 }}>
-                    <div style={{ flex:1 }}>
-                      <div style={{ display:'flex', justifyContent:'space-between', marginBottom:5 }}>
-                        <span style={{ fontSize:12, color:'rgba(255,255,255,0.65)' }}>{ev.joined}/{ev.limit} joined</span>
-                        <span style={{ fontSize:12, color: ev.joined>=ev.limit*0.9?'#FCA5A5':GRN, fontWeight:600 }}>{ev.limit-ev.joined} spots left</span>
-                      </div>
-                      <div style={{ height:5, background:'rgba(255,255,255,0.18)', borderRadius:4, overflow:'hidden' }}>
-                        <div style={{ height:'100%', width:`${(ev.joined/ev.limit)*100}%`, background: ev.joined>=ev.limit*0.9?'#FCA5A5':GRN, borderRadius:4 }}/>
-                      </div>
-                    </div>
-                    <Link to="/signup" style={{ flexShrink:0, padding:'9px 20px', borderRadius:12, fontSize:13, fontWeight:700, color:'#fff', textDecoration:'none', background:'rgba(255,255,255,0.18)', backdropFilter:'blur(8px)', border:'1px solid rgba(255,255,255,0.22)', whiteSpace:'nowrap' }}>Register</Link>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
