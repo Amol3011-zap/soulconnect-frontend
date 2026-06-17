@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /matches
+Disallow: /onboarding
+Disallow: /account
+Disallow: /healer-dashboard
+
+# Block authenticated/private routes from indexing
+Disallow: /api/
+
+Sitemap: https://soulconnect.health/sitemap.xml
