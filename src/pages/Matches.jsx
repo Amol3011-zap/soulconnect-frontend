@@ -557,178 +557,139 @@ export default function Matches() {
   return (
     <div style={{ minHeight: '100vh', background: '#F8F9FC', fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif' }}>
 
-      {/* Global styles */}
       <style>{`
         @keyframes scFadeUp {
-          from { opacity: 0; transform: translateY(16px); }
+          from { opacity: 0; transform: translateY(14px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        .sc-fade { animation: scFadeUp 0.45s ease both; }
-        .sc-fade-2 { animation: scFadeUp 0.45s 0.08s ease both; }
-        .sc-fade-3 { animation: scFadeUp 0.45s 0.16s ease both; }
-        .sc-fade-4 { animation: scFadeUp 0.45s 0.24s ease both; }
-        .sc-fade-5 { animation: scFadeUp 0.45s 0.32s ease both; }
-        .sc-fade-6 { animation: scFadeUp 0.45s 0.40s ease both; }
+        .sc-fade  { animation: scFadeUp 0.4s ease both; }
+        .sc-fade-2{ animation: scFadeUp 0.4s 0.07s ease both; }
+        .sc-fade-3{ animation: scFadeUp 0.4s 0.14s ease both; }
+        .sc-fade-4{ animation: scFadeUp 0.4s 0.21s ease both; }
+        .sc-fade-5{ animation: scFadeUp 0.4s 0.28s ease both; }
         @media (prefers-reduced-motion: reduce) {
-          .sc-fade, .sc-fade-2, .sc-fade-3, .sc-fade-4, .sc-fade-5, .sc-fade-6 { animation: none; }
+          .sc-fade,.sc-fade-2,.sc-fade-3,.sc-fade-4,.sc-fade-5 { animation: none; }
         }
       `}</style>
 
-      {/* Toast */}
       {toast && (
         <div style={{
           position: 'fixed', top: 100, left: '50%', transform: 'translateX(-50%)',
           zIndex: 9999, padding: '12px 28px',
           background: '#1A1F36', borderRadius: 14, color: '#fff',
           fontSize: 13, fontWeight: 600, boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-          letterSpacing: '0.01em',
         }}>{toast}</div>
       )}
 
-      {/* ── 1. HERO CARD — full width ────────────────────────────────────── */}
+      {/* ── HERO — true full-viewport-width ──────────────────────────────── */}
       <div className="sc-fade" style={{
-        position: 'relative', height: 200,
+        position: 'relative',
+        width: '100%',
+        height: 210,
         backgroundImage: `url(${HERO_PHOTO})`,
-        backgroundSize: 'cover', backgroundPosition: 'center 60%',
-        marginBottom: 0,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center 55%',
         overflow: 'hidden',
       }}>
-        {/* Soft left-to-right frosted overlay so text is readable */}
+        {/* Subtle left overlay only — let the photo breathe on the right */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(100deg, rgba(255,251,255,0.88) 0%, rgba(255,251,255,0.62) 45%, rgba(255,251,255,0.15) 72%, transparent 100%)',
+          background: 'linear-gradient(105deg, rgba(250,248,255,0.78) 0%, rgba(250,248,255,0.48) 38%, rgba(250,248,255,0.12) 58%, transparent 78%)',
           pointerEvents: 'none',
         }} />
 
-        {/* Text — left, centred in max-width container */}
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', padding: '0 36px' }}>
-            <div style={{ maxWidth: 430 }}>
-              <p style={{ margin: '0 0 7px', fontSize: 11, fontWeight: 700, color: '#7C5CBF', letterSpacing: '0.13em', textTransform: 'uppercase' }}>
-                {greeting}, {firstName} 🙏
-              </p>
-              <p style={{
-                margin: '0 0 9px',
-                fontFamily: '"Playfair Display", Georgia, "Times New Roman", serif',
-                fontSize: 'clamp(16px, 1.8vw, 21px)',
-                fontStyle: 'italic', color: '#1E1B4B', lineHeight: 1.6,
-                whiteSpace: 'pre-line',
-              }}>
-                {quote.text}
-              </p>
-              <p style={{
-                margin: 0,
-                fontFamily: '"Playfair Display", Georgia, serif',
-                fontSize: 13, color: '#7C5CBF', fontWeight: 600,
-              }}>
-                — {quote.author}
-              </p>
-            </div>
+        {/* Quote text — aligned to left edge of page content */}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', padding: '0 clamp(20px, 4vw, 64px)' }}>
+          <div style={{ maxWidth: 420 }}>
+            <p style={{ margin: '0 0 6px', fontSize: 10, fontWeight: 700, color: '#7C5CBF', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+              {greeting}, {firstName} 🙏
+            </p>
+            <p style={{
+              margin: '0 0 8px',
+              fontFamily: '"Playfair Display", Georgia, serif',
+              fontSize: 'clamp(15px, 1.6vw, 20px)',
+              fontStyle: 'italic', color: '#1E1B4B', lineHeight: 1.62,
+              whiteSpace: 'pre-line',
+            }}>
+              {quote.text}
+            </p>
+            <p style={{ margin: 0, fontFamily: '"Playfair Display", Georgia, serif', fontSize: 12, color: '#7C5CBF', fontWeight: 600 }}>
+              — {quote.author}
+            </p>
           </div>
         </div>
 
-        {/* Sacred geometry mandala — right */}
+        {/* Mandala — right */}
         <div style={{ position: 'absolute', right: 0, top: 0, zIndex: 1 }}>
           <GoldenMandala />
         </div>
       </div>
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 24px 100px' }}>
+      {/* ── PAGE CONTENT — full width with generous padding ───────────────── */}
+      <div style={{ width: '100%', padding: '28px clamp(20px, 4vw, 64px) 80px' }}>
 
-        {/* ── 2. STATS ROW ─────────────────────────────────────────────────── */}
-        <div className="sc-fade-2" style={{ display: 'flex', gap: 14, marginBottom: 36, overflowX: 'auto', paddingBottom: 4 }}>
-          <StatCard icon="🫂" value="8"  label="Circles Joined"     sublabel="Keep showing up"    iconBg="#EDE9FE" />
-          <StatCard icon="✨" value="24" label="People Connected"   sublabel="Beautiful souls"    iconBg="#DBEAFE" />
-          <StatCard icon="🧘" value="12" label="Sessions Attended"  sublabel="You're growing"     iconBg="#D1FAE5" />
-          <StatCard icon="🌱" value="27" label="Days on Journey"    sublabel="Keep going"         iconBg="#FED7AA" />
+        {/* ── STATS ROW ──────────────────────────────────────────────────── */}
+        <div className="sc-fade-2" style={{ display: 'flex', gap: 14, marginBottom: 36, overflowX: 'auto', paddingBottom: 2 }}>
+          <StatCard icon="🫂" value="8"  label="Circles Joined"    sublabel="Keep showing up" iconBg="#EDE9FE" />
+          <StatCard icon="✨" value="24" label="People Connected"  sublabel="Beautiful souls"  iconBg="#DBEAFE" />
+          <StatCard icon="🧘" value="12" label="Sessions Attended" sublabel="You're growing"   iconBg="#D1FAE5" />
+          <StatCard icon="🌱" value="27" label="Days on Journey"   sublabel="Keep going"       iconBg="#FED7AA" />
         </div>
 
-        {/* ── 3. CONTINUE YOUR JOURNEY ─────────────────────────────────────── */}
-        <div className="sc-fade-3" style={{ marginBottom: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 5 }}>
+        {/* ── CONTINUE YOUR JOURNEY ──────────────────────────────────────── */}
+        <div className="sc-fade-3" style={{ marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 4 }}>
             <LotusIcon size={20} />
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1A1F36', margin: 0, letterSpacing: '-0.02em',
-              fontFamily: '"Playfair Display", Georgia, serif' }}>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1A1F36', margin: 0, letterSpacing: '-0.02em', fontFamily: '"Playfair Display", Georgia, serif' }}>
               Continue your journey
             </h2>
           </div>
-          <p style={{ fontSize: 13, color: '#9CA3AF', margin: '0 0 22px 29px' }}>A healing space waiting for your return</p>
+          <p style={{ fontSize: 13, color: '#9CA3AF', margin: '0 0 20px 29px' }}>A healing space waiting for your return</p>
         </div>
 
-        {/* ── 4. FEATURED SUPPORT CIRCLE ───────────────────────────────────── */}
+        {/* ── FEATURED SUPPORT CIRCLE ────────────────────────────────────── */}
         <div className="sc-fade-3" style={{ marginBottom: 36 }}>
           <FeaturedCircle />
         </div>
 
-        {/* ── 5. SUGGESTED FOR YOU ─────────────────────────────────────────── */}
+        {/* ── SUGGESTED FOR YOU ──────────────────────────────────────────── */}
         <div className="sc-fade-4" style={{ marginBottom: 36 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
               <LotusIcon size={18} color="#F59E0B" />
               <div>
-                <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1A1F36', margin: 0, letterSpacing: '-0.01em' }}>
-                  Suggested for you
-                </h2>
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1A1F36', margin: 0, letterSpacing: '-0.01em' }}>Suggested for you</h2>
                 <p style={{ fontSize: 12, color: '#9CA3AF', margin: '2px 0 0' }}>Curated healing experiences</p>
               </div>
             </div>
-            <Link to="/meetups" style={{ fontSize: 13, fontWeight: 600, color: '#8B5CF6', textDecoration: 'none',
-              padding: '6px 14px', borderRadius: 10, background: '#F5F3FF', transition: 'background 0.15s' }}
+            <Link to="/meetups"
+              style={{ fontSize: 13, fontWeight: 600, color: '#8B5CF6', textDecoration: 'none', padding: '6px 14px', borderRadius: 10, background: '#F5F3FF' }}
               onMouseEnter={e => e.currentTarget.style.background = '#EDE9FE'}
               onMouseLeave={e => e.currentTarget.style.background = '#F5F3FF'}
-            >
-              See all →
-            </Link>
+            >See all →</Link>
           </div>
 
           <div style={{ display: 'flex', gap: 16 }}>
-            <SuggestedCard
-              title="Letting Go Workshop"
-              date="Sat, Jun 21"
-              time="10:00 AM IST"
-              participants="14 / 20 joined"
-              icon="🍂"
-              iconBg="#FFF7ED"
-              iconColor="#D97706"
-            />
-            <SuggestedCard
-              title="Self Love Circle"
-              date="Sun, Jun 22"
-              time="6:00 PM IST"
-              participants="8 / 15 joined"
-              icon="💗"
-              iconBg="#FDF2F8"
-              iconColor="#EC4899"
-            />
-            <SuggestedCard
-              title="Forgiveness Healing"
-              date="Mon, Jun 23"
-              time="7:30 PM IST"
-              participants="6 / 12 joined"
-              icon="🌸"
-              iconBg="#F5F3FF"
-              iconColor="#8B5CF6"
-            />
+            <SuggestedCard title="Letting Go Workshop"  date="Sat, Jun 21" time="10:00 AM IST" participants="14 / 20 joined" icon="🍂" iconBg="#FFF7ED" iconColor="#D97706" />
+            <SuggestedCard title="Self Love Circle"     date="Sun, Jun 22" time="6:00 PM IST"  participants="8 / 15 joined"  icon="💗" iconBg="#FDF2F8" iconColor="#EC4899" />
+            <SuggestedCard title="Forgiveness Healing"  date="Mon, Jun 23" time="7:30 PM IST"  participants="6 / 12 joined"  icon="🌸" iconBg="#F5F3FF" iconColor="#8B5CF6" />
           </div>
         </div>
 
-        {/* ── 6. DAILY AFFIRMATION ─────────────────────────────────────────── */}
+        {/* ── DAILY AFFIRMATION ──────────────────────────────────────────── */}
         <div className="sc-fade-5" style={{
           background: 'linear-gradient(135deg, #EAF3FF 0%, #E6EEFF 55%, #EEF2FF 100%)',
-          borderRadius: 24, padding: '36px 40px',
-          marginBottom: 48,
+          borderRadius: 24, padding: '36px 44px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
           boxShadow: '0 4px 22px rgba(99,102,241,0.07)',
           position: 'relative', overflow: 'hidden',
         }}>
-          {/* Soft orb decoration */}
           <div style={{
-            position: 'absolute', right: 60, top: -40,
+            position: 'absolute', right: 80, top: -40,
             width: 180, height: 180, borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)',
             pointerEvents: 'none',
           }} />
-
           <div style={{ position: 'relative', zIndex: 1 }}>
             <p style={{ margin: '0 0 12px', fontSize: 11, fontWeight: 700, color: '#8B5CF6', letterSpacing: '0.13em', textTransform: 'uppercase' }}>
               ✦ Affirmation for you
@@ -736,7 +697,7 @@ export default function Matches() {
             <p style={{
               margin: '0 0 24px',
               fontFamily: '"Playfair Display", Georgia, serif',
-              fontSize: 'clamp(20px, 2.2vw, 28px)',
+              fontSize: 'clamp(20px, 2vw, 28px)',
               color: '#1A1F36', fontStyle: 'italic', lineHeight: 1.45, fontWeight: 600,
             }}>
               "{affirmation}"
@@ -755,66 +716,7 @@ export default function Matches() {
               🔁 Repeat Today
             </button>
           </div>
-
-          <div style={{ fontSize: 80, flexShrink: 0, opacity: 0.55, position: 'relative', zIndex: 1 }}>🪷</div>
-        </div>
-
-        {/* ── 7. SOUL MATCHES ──────────────────────────────────────────────── */}
-        <div className="sc-fade-6">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-              <LotusIcon size={20} color="#10B981" />
-              <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1A1F36', margin: 0, letterSpacing: '-0.02em',
-                fontFamily: '"Playfair Display", Georgia, serif' }}>
-                Your Soul Matches
-              </h2>
-            </div>
-            <div style={{
-              padding: '5px 16px', borderRadius: 20,
-              background: '#F0FDF4', fontSize: 12, fontWeight: 700, color: '#10B981',
-            }}>
-              {matches.length} matched
-            </div>
-          </div>
-          <p style={{ fontSize: 13, color: '#9CA3AF', margin: '0 0 22px 29px' }}>
-            Kindred spirits who truly understand your journey
-          </p>
-
-          {loading ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {[1,2,3].map(i => (
-                <div key={i} style={{
-                  height: 190, borderRadius: 20,
-                  background: 'linear-gradient(90deg, #f0f0f5 25%, #f8f8fc 50%, #f0f0f5 75%)',
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer 1.6s ease-in-out infinite',
-                }} />
-              ))}
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {matches.map(match => (
-                <MatchCard
-                  key={match.id}
-                  match={match}
-                  onConnect={handleConnect}
-                  connecting={connecting}
-                />
-              ))}
-
-              {/* Privacy note */}
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                padding: '14px 18px', borderRadius: 16,
-                background: '#FAFAFF',
-              }}>
-                <span style={{ fontSize: 16, flexShrink: 0 }}>🔒</span>
-                <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF', lineHeight: 1.65 }}>
-                  All matches are completely anonymous. Your personal details are never shared with anyone.
-                </p>
-              </div>
-            </div>
-          )}
+          <div style={{ fontSize: 80, flexShrink: 0, opacity: 0.5, position: 'relative', zIndex: 1 }}>🪷</div>
         </div>
 
       </div>
