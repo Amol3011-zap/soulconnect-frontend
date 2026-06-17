@@ -74,11 +74,17 @@ const TOOLS = [
 ];
 
 const FAQS = [
-  { q: 'Is SoulConnect free to use?', a: 'Yes — creating an account, getting peer-matched, and joining support circles is completely free. Verified healer sessions are paid individually, starting at ₹500/session.' },
-  { q: 'Is my identity kept anonymous?', a: 'Completely. Your real name, phone number, and social media are never shared with matches or visible publicly.' },
-  { q: 'How does the peer matching work?', a: 'When you sign up, you select your primary challenge. Our algorithm matches you with someone going through the same specific issue — not just "mental health" broadly. Most people are matched within minutes.' },
-  { q: 'Is this a replacement for therapy?', a: "No — and we're honest about that. SoulConnect is peer support: real people who truly understand your struggle. For clinical care, we connect you with verified therapists." },
-  { q: 'What if I need urgent help?', a: "SoulConnect is a supportive community, not a crisis service. If you're in immediate distress, please contact iCall (9152987821) or Vandrevala Foundation (1860-2662-345), available 24/7." },
+  { q: 'What is SoulConnect?', a: 'SoulConnect is a wellness platform that connects individuals with experienced Reiki healers, energy healers, meditation guides, spiritual mentors, life coaches, and holistic wellness practitioners who support emotional, mental, spiritual, and personal growth.' },
+  { q: 'How does Reiki and Energy Healing work?', a: 'Reiki and energy healing are holistic wellness practices that aim to support relaxation, stress reduction, emotional balance, and overall well-being. Every person\'s experience is unique, and sessions are designed to create a calm and supportive healing environment.' },
+  { q: 'Are online healing sessions effective?', a: 'Many clients report positive experiences from online and distance healing sessions. Practitioners use various techniques to facilitate relaxation, mindfulness, energy balancing, and spiritual support regardless of location.' },
+  { q: 'Are your practitioners verified?', a: 'Yes. SoulConnect reviews practitioner profiles, certifications, experience, and background information before allowing them to offer services on the platform. Verification requirements may vary depending on the type of service offered.' },
+  { q: 'Can healing sessions replace medical treatment?', a: 'No. SoulConnect services are not a substitute for medical treatment, psychotherapy, psychiatric care, or professional healthcare advice. Always consult qualified healthcare professionals regarding medical or mental health concerns.' },
+  { q: 'What can I expect during my first session?', a: 'Your first session typically includes an introduction, discussion of your goals or concerns, and the practitioner\'s chosen healing approach. Sessions are conducted in a respectful, confidential, and judgment-free environment.' },
+  { q: 'Is my information kept confidential?', a: 'Yes. We take privacy seriously. Personal information and session details are handled with care and in accordance with our Privacy Policy. However, no online platform can guarantee absolute security.' },
+  { q: 'How do I choose the right healer or coach?', a: 'You can browse practitioner profiles, specialties, experience, certifications, reviews, languages spoken, pricing, and availability to find someone who aligns with your needs and goals.' },
+  { q: 'What happens if I need to cancel or reschedule?', a: "Appointments can usually be rescheduled or canceled according to the practitioner's cancellation policy. We recommend reviewing the cancellation terms before booking your session." },
+  { q: 'What types of services are available on SoulConnect?', a: 'SoulConnect offers a wide range of wellness services including: Reiki Healing, Energy Healing, Sound Healing, Meditation Guidance, Breathwork, Spiritual Coaching, Life Coaching, Relationship Coaching, Chakra Balancing, Mindfulness Practices, and Holistic Wellness Programs.' },
+  { q: 'Are results guaranteed?', a: 'No. Healing, coaching, and wellness services are highly personal experiences. Results vary from person to person, and no specific outcome can be guaranteed. The effectiveness of any session depends on many factors, including individual participation, openness, and personal circumstances.' },
 ];
 
 // ── SVG Illustrations ─────────────────────────────────────────────────────────
