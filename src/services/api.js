@@ -61,6 +61,14 @@ export const adminAPI = {
   getStats: () => api.get('/admin/stats'),
 };
 
+export const journeyAPI = {
+  logActivity: (data) => api.post('/journey/activity', data),
+  getProgress: () => api.get('/journey/progress'),
+  getActivities: (days = 30, activityType = null) =>
+    api.get('/journey/activities', { params: { days, activity_type: activityType || undefined } }),
+  getStats: () => api.get('/journey/stats'),
+};
+
 export const paymentAPI = {
   createOrder: (amount, description) => api.post('/payments/create-order', { amount, description }),
   verifyPayment: (data) => api.post('/payments/verify', data),
