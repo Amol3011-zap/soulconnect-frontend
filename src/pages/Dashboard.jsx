@@ -488,11 +488,14 @@ export default function Dashboard() {
     };
   }, []);
 
-  // Pre-select match from Matches page
+  // Pre-select match from Matches page, or switch to a specific tab
   useEffect(() => {
     if (location.state?.matchId) {
       const found = DEMO_MATCHES.find(m => m.id === location.state.matchId);
       if (found) { setActiveMatch(found); setMobileView('chat'); }
+    }
+    if (location.state?.tab) {
+      setMainTab(location.state.tab);
     }
   }, [location.state]);
 

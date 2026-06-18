@@ -1114,7 +1114,7 @@ export default function Matches() {
             </div>
 
             <button
-              onClick={() => navigate('/mood')}
+              onClick={() => navigate('/chat', { state: { tab: 'healing' } })}
               style={{
                 background: 'none', border: 'none',
                 fontSize: 13, fontWeight: 700, color: '#A78BFA',
