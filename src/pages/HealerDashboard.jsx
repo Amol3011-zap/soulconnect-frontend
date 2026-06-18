@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import ThemeToggle from '../components/ThemeToggle';
+import GuideOnboarding, { useNeedsGuideOnboarding } from './GuideOnboarding';
 
 // ── Demo healing requests ──────────────────────────────────────────────────────
 const DEMO_REQUESTS = [
@@ -251,6 +252,8 @@ export default function HealerDashboard() {
   const [acceptedRequests, setAcceptedRequests] = useState({});
   const [declinedRequests, setDeclinedRequests] = useState(new Set());
   const [filter, setFilter] = useState('all');
+  const needsGuideOnboarding = useNeedsGuideOnboarding();
+  const [guideOnboardingDone, setGuideOnboardingDone] = useState(!needsGuideOnboarding);
 
   const healerName = user?.name || 'Healer';
   const pendingCount = DEMO_REQUESTS.filter(r => !acceptedRequests[r.id] && !declinedRequests.has(r.id)).length;
@@ -269,6 +272,10 @@ export default function HealerDashboard() {
     if (filter === 'pending') return !acceptedRequests[r.id] && !declinedRequests.has(r.id);
     return true;
   });
+
+  if (!guideOnboardingDone) {
+    return <GuideOnboarding onComplete={() => setGuideOnboardingDone(true)} />;
+  }
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>

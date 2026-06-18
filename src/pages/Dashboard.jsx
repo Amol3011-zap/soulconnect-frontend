@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { useThemeStore } from '../store/theme';
 import ThemeToggle from '../components/ThemeToggle';
@@ -408,9 +408,9 @@ function SafetyNotice({ onDismiss }) {
         <p style={{ margin: 0, fontSize: 11, color: '#78350F', lineHeight: 1.6 }}>
           Never share your phone number, address, or social media with matches.
           Your safety is our priority. If you feel unsafe,{' '}
-          <span style={{ fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
+          <Link to="/safety" style={{ fontWeight: 600, color: '#92400E', textDecoration: 'underline' }}>
             visit our Safety Center
-          </span>.
+          </Link>.
           This is a peer support space — not a substitute for professional care.
         </p>
       </div>
