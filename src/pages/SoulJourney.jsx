@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { journeyAPI } from '../services/api';
+import { useAuthStore } from '../store/auth';
 
 const STAGES = [
   {
@@ -53,6 +54,7 @@ const STAGE_INDEX = {
 };
 
 export default function SoulJourney() {
+  const { token } = useAuthStore();
   const [progress, setProgress] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,6 +65,7 @@ export default function SoulJourney() {
   const [logSuccess, setLogSuccess] = useState(false);
 
   const fetchData = async () => {
+    if (!token) return;
     try {
       setLoading(true);
       const [progressRes, statsRes] = await Promise.all([
@@ -81,7 +84,7 @@ export default function SoulJourney() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [token]);
 
   const handleLog = async (e) => {
     e.preventDefault();
