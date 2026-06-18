@@ -62,10 +62,27 @@ export const adminAPI = {
 };
 
 export const challengesAPI = {
-  getToday: () => api.get('/challenges/today'),
+  getToday: () => api.get('/challenges/today').catch(err => {
+    const status = err?.response?.status;
+    if (status === 401) throw { type: 'auth', message: 'Session expired. Please log in again.' };
+    if (status === 404) throw { type: 'not_found', message: 'Challenges not found.' };
+    throw { type: 'network', message: 'Could not load challenges. Check your connection.' };
+  }),
+
   complete: (challengeId, actualDuration = null) =>
-    api.post(`/challenges/complete/${challengeId}`, { actual_duration: actualDuration }),
-  getWeeklySummary: () => api.get('/challenges/weekly-summary'),
+    api.post(`/challenges/complete/${challengeId}`, { actual_duration: actualDuration }).catch(err => {
+      const status = err?.response?.status;
+      if (status === 400) throw { type: 'already_done', message: 'Already completed today!' };
+      if (status === 401) throw { type: 'auth', message: 'Session expired. Please log in again.' };
+      if (status === 404) throw { type: 'not_found', message: 'Challenge not found.' };
+      throw { type: 'network', message: 'Could not complete challenge. Try again.' };
+    }),
+
+  getWeeklySummary: () => api.get('/challenges/weekly-summary').catch(err => {
+    const status = err?.response?.status;
+    if (status === 401) throw { type: 'auth', message: 'Session expired. Please log in again.' };
+    throw { type: 'network', message: 'Could not load weekly summary.' };
+  }),
 };
 
 export const journeyAPI = {
