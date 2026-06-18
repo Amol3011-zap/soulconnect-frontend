@@ -1,17 +1,91 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { chatAPI } from '../services/api';
 import ActivitySuggestions from '../components/ActivitySuggestions';
 import GuidedHealing from '../components/GuidedHealing';
 
+const CRISIS_PHRASES = [
+  'i want to die', 'want to die', 'kill myself', 'end my life', 'end it all',
+  'i want to hurt myself', 'hurt myself', 'harm myself', 'self harm',
+  'nobody would miss me', 'no one would miss me', "nobody cares if i'm gone",
+  "i can't go on", 'cant go on', 'i give up on life', 'not worth living',
+  'thinking about suicide', 'suicidal', 'i want to disappear forever',
+  'i want to stop existing',
+];
+
+function detectCrisis(text) {
+  const lower = text.toLowerCase();
+  return CRISIS_PHRASES.some(phrase => lower.includes(phrase));
+}
+
+function CrisisPopup({ onClose, onNavigate }) {
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0,0,0,0.5)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
+    }}>
+      <div style={{
+        background: '#fff', borderRadius: 20, padding: '32px 28px',
+        maxWidth: 420, width: '100%',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+        animation: 'fadeUp 0.3s ease both',
+        textAlign: 'center',
+      }}>
+        <style>{`@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }`}</style>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>💜</div>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1e1b4b', margin: '0 0 10px' }}>
+          We hear you
+        </h2>
+        <p style={{ color: '#6B7280', fontSize: 15, lineHeight: 1.7, marginBottom: 20 }}>
+          It sounds like you might be going through something really difficult right now. You don't have to face this alone. Please reach out — support is available.
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
+          <button
+            onClick={() => onNavigate('/crisis-support')}
+            style={{
+              background: 'linear-gradient(135deg,#DC2626,#B91C1C)',
+              color: '#fff', border: 'none', borderRadius: 99,
+              padding: '14px', fontSize: 15, fontWeight: 700, cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(220,38,38,0.3)',
+            }}
+          >🆘 View Crisis Support Resources</button>
+          <button
+            onClick={() => onNavigate('/healers')}
+            style={{
+              background: 'linear-gradient(135deg,#6D4AFF,#8B5CF6)',
+              color: '#fff', border: 'none', borderRadius: 99,
+              padding: '14px', fontSize: 15, fontWeight: 700, cursor: 'pointer',
+            }}
+          >🧘 Find Professional Support</button>
+        </div>
+        <div style={{ background: '#FEF3C7', borderRadius: 10, padding: '10px 14px', marginBottom: 16 }}>
+          <p style={{ margin: 0, color: '#92400E', fontSize: 13, fontWeight: 600 }}>
+            🚨 If you are in immediate danger, call <strong>112 / 911 / 999</strong> right now.
+          </p>
+        </div>
+        <button
+          onClick={onClose}
+          style={{
+            background: 'none', border: 'none', color: '#9CA3AF',
+            fontSize: 13, cursor: 'pointer', textDecoration: 'underline',
+          }}
+        >Continue in SoulConnect</button>
+      </div>
+    </div>
+  );
+}
+
 export default function Chat() {
   const { matchId } = useParams();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [matchName, setMatchName] = useState('Your Match');
   const [problem, setProblem] = useState('anxiety');
   const [activeTab, setActiveTab] = useState('chat'); // chat, activities, healing
+  const [showCrisisPopup, setShowCrisisPopup] = useState(false);
 
   useEffect(() => {
     fetchMessages();
@@ -32,7 +106,9 @@ export default function Chat() {
 
   const handleSend = async () => {
     if (!newMessage.trim()) return;
-
+    if (detectCrisis(newMessage)) {
+      setShowCrisisPopup(true);
+    }
     try {
       await chatAPI.sendMessage(matchId, newMessage);
       setNewMessage('');
@@ -48,6 +124,12 @@ export default function Chat() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      {showCrisisPopup && (
+        <CrisisPopup
+          onClose={() => setShowCrisisPopup(false)}
+          onNavigate={(path) => { setShowCrisisPopup(false); navigate(path); }}
+        />
+      )}
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">Chat with {matchName}</h1>
         <p className="text-gray-600">Peer support for {problem}</p>

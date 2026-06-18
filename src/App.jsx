@@ -20,8 +20,17 @@ import HealerDashboard from './pages/HealerDashboard';
 import GroupChat from './pages/GroupChat';
 import Onboarding from './pages/Onboarding';
 import SoulJourney from './pages/SoulJourney';
+import SafetyPolicy from './pages/SafetyPolicy';
+import CrisisSupport from './pages/CrisisSupport';
+import GuideTerms from './pages/GuideTerms';
+import CommunityRules from './pages/CommunityRules';
+import ReportConcern from './pages/ReportConcern';
 
 import Navbar from './components/Navbar';
+import SafetyFloatButton from './components/SafetyFloatButton';
+
+// Pages where the SafetyFloatButton is redundant (already have full crisis UI)
+const HIDE_FLOAT_PATHS = ['/crisis-support', '/safety', '/report', '/community-rules', '/guide-terms'];
 
 function AppInner() {
   const { token, user, role } = useAuthStore();
@@ -30,6 +39,20 @@ function AppInner() {
 
   // Pages that manage their own header/nav
   const hideNav = location.pathname === '/chat' || location.pathname === '/groups' || location.pathname === '/' || location.pathname === '/mood' || isHealer;
+
+  // Hide float button on safety pages (they have their own UI) and landing
+  const hideFloat = HIDE_FLOAT_PATHS.includes(location.pathname) || location.pathname === '/';
+
+  // Trust & safety routes accessible to everyone (logged-in or not)
+  const safetyRoutes = (
+    <>
+      <Route path="/safety" element={<SafetyPolicy />} />
+      <Route path="/crisis-support" element={<CrisisSupport />} />
+      <Route path="/guide-terms" element={<GuideTerms />} />
+      <Route path="/community-rules" element={<CommunityRules />} />
+      <Route path="/report" element={<ReportConcern />} />
+    </>
+  );
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
@@ -40,6 +63,9 @@ function AppInner() {
 
       <Routes>
         <Route path="/" element={<Landing />} />
+
+        {/* Trust & Safety — always accessible */}
+        {safetyRoutes}
 
         {!token ? (
           <>
@@ -76,6 +102,9 @@ function AppInner() {
         )}
       </Routes>
       </div>
+
+      {/* Global floating safety button — visible on all pages except landing & safety pages */}
+      {!hideFloat && <SafetyFloatButton />}
     </div>
   );
 }
