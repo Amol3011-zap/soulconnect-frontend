@@ -425,6 +425,68 @@ export default function Dashboard() {
   const bottomRef = useRef(null);
   const chatLoggedRef = useRef(false);
 
+  // Music player state
+  const [currentTrack, setCurrentTrack]     = useState(0);
+  const [isPlaying, setIsPlaying]           = useState(false);
+  const [musicProgress, setMusicProgress]   = useState(0);
+  const audioRef = useRef(null);
+  const progressTimerRef = useRef(null);
+
+  const TRACKS = [
+    { title: 'Tibetan Singing Bowls', sub: 'Deep meditation', emoji: '🎵', color: '#6D4AFF', bg: 'linear-gradient(135deg,#1a0845,#3b1f8c)', src: 'https://cdn.pixabay.com/audio/2022/03/15/audio_62727f69e8.mp3' },
+    { title: 'Rain & Forest Sounds', sub: 'Nature healing', emoji: '🌧', color: '#10B981', bg: 'linear-gradient(135deg,#064e3b,#065f46)', src: 'https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3' },
+    { title: 'Om Chanting', sub: 'Sacred frequency', emoji: '🙏', color: '#F59E0B', bg: 'linear-gradient(135deg,#78350f,#92400e)', src: 'https://cdn.pixabay.com/audio/2022/10/25/audio_9f54e43c71.mp3' },
+    { title: 'Healing Frequencies', sub: '432 Hz harmony', emoji: '✨', color: '#8B5CF6', bg: 'linear-gradient(135deg,#4c1d95,#5b21b6)', src: 'https://cdn.pixabay.com/audio/2021/11/25/audio_5e5e05e1cf.mp3' },
+    { title: 'Ocean Waves', sub: 'Calm your soul', emoji: '🌊', color: '#0EA5E9', bg: 'linear-gradient(135deg,#0c4a6e,#075985)', src: 'https://cdn.pixabay.com/audio/2022/03/24/audio_4e5ca5d87a.mp3' },
+  ];
+
+  const track = TRACKS[currentTrack];
+
+  const togglePlay = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isPlaying) {
+      audio.pause();
+      clearInterval(progressTimerRef.current);
+    } else {
+      audio.play().catch(() => {});
+      progressTimerRef.current = setInterval(() => {
+        if (audio.duration) setMusicProgress((audio.currentTime / audio.duration) * 100);
+      }, 500);
+    }
+    setIsPlaying(p => !p);
+  };
+
+  const changeTrack = (dir) => {
+    const audio = audioRef.current;
+    if (audio) { audio.pause(); audio.currentTime = 0; }
+    clearInterval(progressTimerRef.current);
+    setIsPlaying(false);
+    setMusicProgress(0);
+    setCurrentTrack(t => (t + dir + TRACKS.length) % TRACKS.length);
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.src = track.src;
+    audio.load();
+    if (isPlaying) {
+      audio.play().catch(() => {});
+      progressTimerRef.current = setInterval(() => {
+        if (audio.duration) setMusicProgress((audio.currentTime / audio.duration) * 100);
+      }, 500);
+    }
+    return () => clearInterval(progressTimerRef.current);
+  }, [currentTrack]);
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) audioRef.current.pause();
+      clearInterval(progressTimerRef.current);
+    };
+  }, []);
+
   // Pre-select match from Matches page
   useEffect(() => {
     if (location.state?.matchId) {
@@ -1258,52 +1320,109 @@ export default function Dashboard() {
             <div style={{ textAlign: 'center', fontSize: 18 }}>💜</div>
           </div>
 
-          {/* Card 3 — Tools For You */}
+          {/* Card 3 — Healing Sounds Player */}
           <div style={{
-            background: '#fff',
-            borderRadius: 16,
-            border: '1px solid rgba(109,74,255,0.1)',
-            padding: 18,
+            borderRadius: 20,
+            overflow: 'hidden',
             marginBottom: 14,
-            boxShadow: '0 2px 20px rgba(109,74,255,0.08)',
+            boxShadow: '0 8px 32px rgba(109,74,255,0.2)',
+            position: 'relative',
           }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1333', marginBottom: 12 }}>
-              Tools For You
-            </div>
-            {[
-              { icon: '🧘', title: '2-Min Calm Breathing', sub: 'Relax your mind' },
-              { icon: '📔', title: 'Reflection Journal', sub: 'Write your thoughts' },
-              { icon: '🎵', title: 'Soothing Music', sub: 'Calm your soul' },
-            ].map((tool, i, arr) => (
-              <div
-                key={tool.title}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '11px 0',
-                  borderBottom: i < arr.length - 1 ? '1px solid rgba(109,74,255,0.06)' : 'none',
-                  cursor: 'pointer',
-                  borderRadius: 10,
-                  transition: 'background 0.2s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(109,74,255,0.04)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <div style={{
-                  width: 36, height: 36, borderRadius: '50%',
-                  background: 'rgba(109,74,255,0.08)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 18, flexShrink: 0,
-                }}>
-                  {tool.icon}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1333', marginBottom: 2 }}>{tool.title}</div>
-                  <div style={{ fontSize: 11, color: '#6B7280' }}>{tool.sub}</div>
-                </div>
-                <span style={{ color: '#A78BFA', fontSize: 16 }}>›</span>
+            {/* Background art */}
+            <div style={{
+              background: track.bg,
+              padding: '20px 18px 0',
+              position: 'relative',
+              overflow: 'hidden',
+            }}>
+              {/* Floating particles */}
+              <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} style={{
+                    position: 'absolute',
+                    width: 3 + (i % 3),
+                    height: 3 + (i % 3),
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.25)',
+                    left: `${10 + i * 12}%`,
+                    top: `${15 + (i * 17) % 60}%`,
+                    animation: `float ${2.5 + i * 0.4}s ease-in-out ${i * 0.3}s infinite alternate`,
+                  }} />
+                ))}
               </div>
-            ))}
+              {/* Label */}
+              <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>
+                🎧 Healing Sounds
+              </div>
+              {/* Big emoji art */}
+              <div style={{ textAlign: 'center', fontSize: 52, marginBottom: 8, filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.3))', lineHeight: 1 }}>
+                {track.emoji}
+              </div>
+              {/* Track name */}
+              <div style={{ textAlign: 'center', marginBottom: 16 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 3 }}>{track.title}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>{track.sub}</div>
+              </div>
+              {/* Progress bar */}
+              <div style={{ height: 3, background: 'rgba(255,255,255,0.15)', borderRadius: 99, marginBottom: 16, overflow: 'hidden' }}>
+                <div style={{
+                  height: '100%', borderRadius: 99,
+                  width: `${musicProgress}%`,
+                  background: 'rgba(255,255,255,0.8)',
+                  transition: 'width 0.5s linear',
+                }} />
+              </div>
+              {/* Controls */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 20 }}>
+                <button onClick={() => changeTrack(-1)} style={{ background: 'rgba(255,255,255,0.12)', border: 'none', borderRadius: '50%', width: 36, height: 36, cursor: 'pointer', fontSize: 16, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>⏮</button>
+                <button onClick={togglePlay} style={{
+                  background: '#fff', border: 'none', borderRadius: '50%',
+                  width: 52, height: 52, cursor: 'pointer', fontSize: 20,
+                  color: track.color, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+                  transition: 'transform 0.1s',
+                }}>
+                  {isPlaying ? '⏸' : '▶'}
+                </button>
+                <button onClick={() => changeTrack(1)} style={{ background: 'rgba(255,255,255,0.12)', border: 'none', borderRadius: '50%', width: 36, height: 36, cursor: 'pointer', fontSize: 16, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>⏭</button>
+              </div>
+            </div>
+            {/* Track list */}
+            <div style={{ background: '#fff', padding: '10px 14px 12px' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#9CA3AF', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>All Tracks</div>
+              {TRACKS.map((t, i) => (
+                <div key={t.title} onClick={() => { changeTrack(i - currentTrack); }} style={{
+                  display: 'flex', alignItems: 'center', gap: 10, padding: '7px 8px', borderRadius: 10,
+                  cursor: 'pointer', background: i === currentTrack ? 'rgba(109,74,255,0.07)' : 'transparent',
+                  transition: 'background 0.15s',
+                }}
+                  onMouseEnter={e => { if (i !== currentTrack) e.currentTarget.style.background = 'rgba(109,74,255,0.04)'; }}
+                  onMouseLeave={e => { if (i !== currentTrack) e.currentTarget.style.background = 'transparent'; }}
+                >
+                  <span style={{ fontSize: 16, width: 24, textAlign: 'center' }}>{t.emoji}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 12, fontWeight: i === currentTrack ? 700 : 500, color: i === currentTrack ? '#6D4AFF' : '#1A1333' }}>{t.title}</div>
+                    <div style={{ fontSize: 10, color: '#9CA3AF' }}>{t.sub}</div>
+                  </div>
+                  {i === currentTrack && isPlaying && (
+                    <div style={{ display: 'flex', gap: 2, alignItems: 'flex-end', height: 14 }}>
+                      {[4, 8, 6, 10, 5].map((h, j) => (
+                        <div key={j} style={{ width: 2, height: h, background: '#6D4AFF', borderRadius: 99, animation: `musicBar ${0.5 + j * 0.1}s ease-in-out ${j * 0.1}s infinite alternate` }} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <audio ref={audioRef} onEnded={() => { setIsPlaying(false); setMusicProgress(0); clearInterval(progressTimerRef.current); }} />
           </div>
+
+          <style>{`
+            @keyframes musicBar {
+              from { transform: scaleY(0.4); }
+              to   { transform: scaleY(1); }
+            }
+          `}</style>
 
           {/* Card 4 — Need Immediate Support */}
           <div style={{
