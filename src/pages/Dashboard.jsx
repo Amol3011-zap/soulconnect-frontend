@@ -9,6 +9,71 @@ import DailyChallenges from '../components/DailyChallenges';
 import DashboardStats from '../components/DashboardStats';
 import { journeyAPI } from '../services/api';
 
+// ── Crisis phrase detection ────────────────────────────────────────────────
+const CRISIS_PHRASES = [
+  'i want to die','want to die','kill myself','end my life','end it all',
+  'i want to hurt myself','hurt myself','harm myself','self harm','selfharm',
+  'nobody would miss me','no one would miss me','nobody cares',
+  "i can't go on",'cant go on','cannot go on','i give up on life',
+  'not worth living','thinking about suicide','suicidal','sucide','suicide',
+  'i want to disappear forever','want to stop existing','want to end it',
+];
+function detectCrisis(text) {
+  const l = text.toLowerCase();
+  return CRISIS_PHRASES.some(p => l.includes(p));
+}
+
+function CrisisPopup({ onClose, onNavigate }) {
+  return (
+    <div style={{
+      position:'fixed',inset:0,zIndex:99999,
+      background:'rgba(0,0,0,0.55)',backdropFilter:'blur(6px)',
+      display:'flex',alignItems:'center',justifyContent:'center',padding:20,
+    }}>
+      <div style={{
+        background:'#fff',borderRadius:24,padding:'36px 30px',
+        maxWidth:420,width:'100%',
+        boxShadow:'0 24px 80px rgba(0,0,0,0.3)',
+        textAlign:'center',
+        animation:'crisisFadeUp 0.35s cubic-bezier(0.34,1.56,0.64,1) both',
+      }}>
+        <style>{`@keyframes crisisFadeUp{from{opacity:0;transform:translateY(28px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}`}</style>
+        <div style={{
+          width:72,height:72,borderRadius:'50%',
+          background:'linear-gradient(135deg,#7C3AED,#6D28D9)',
+          display:'flex',alignItems:'center',justifyContent:'center',
+          fontSize:34,margin:'0 auto 18px',
+          boxShadow:'0 8px 28px rgba(109,74,255,0.35)',
+        }}>💜</div>
+        <h2 style={{fontSize:22,fontWeight:800,color:'#1e1b4b',margin:'0 0 10px'}}>We hear you</h2>
+        <p style={{color:'#6B7280',fontSize:15,lineHeight:1.75,margin:'0 0 22px'}}>
+          What you're feeling matters. You don't have to carry this alone. Trained professionals are ready to help right now.
+        </p>
+        <div style={{background:'#FEF3C7',borderRadius:12,padding:'12px 16px',marginBottom:20,border:'1px solid #FDE68A'}}>
+          <p style={{margin:0,color:'#92400E',fontSize:13,fontWeight:700,lineHeight:1.5}}>
+            🚨 If you're in immediate danger — call <strong>112 / 911 / 999</strong>
+          </p>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:18}}>
+          <button onClick={()=>onNavigate('/crisis-support')} style={{
+            background:'linear-gradient(135deg,#DC2626,#B91C1C)',color:'#fff',
+            border:'none',borderRadius:99,padding:'14px',fontSize:15,fontWeight:700,cursor:'pointer',
+            boxShadow:'0 4px 16px rgba(220,38,38,0.3)',
+          }}>🆘 Crisis Support & Helplines</button>
+          <button onClick={()=>onNavigate('/healers')} style={{
+            background:'linear-gradient(135deg,#6D4AFF,#8B5CF6)',color:'#fff',
+            border:'none',borderRadius:99,padding:'14px',fontSize:15,fontWeight:700,cursor:'pointer',
+          }}>🧘 Find Professional Support</button>
+        </div>
+        <button onClick={onClose} style={{
+          background:'none',border:'none',color:'#9CA3AF',
+          fontSize:13,cursor:'pointer',textDecoration:'underline',
+        }}>I'm okay, continue chatting</button>
+      </div>
+    </div>
+  );
+}
+
 // ── Demo match — one chatbot persona shown to every new user ───────────────────
 const DEMO_MATCHES = [
   {
@@ -431,6 +496,7 @@ export default function Dashboard() {
   const [currentTrack, setCurrentTrack]     = useState(0);
   const [isPlaying, setIsPlaying]           = useState(false);
   const [musicProgress, setMusicProgress]   = useState(0);
+  const [showCrisisPopup, setShowCrisisPopup] = useState(false);
   const audioRef = useRef(null);
   const progressTimerRef = useRef(null);
 
@@ -509,6 +575,7 @@ export default function Dashboard() {
     const text = (overrideText || input).trim();
     if (!text || typing) return;
     setInput('');
+    if (detectCrisis(text)) setShowCrisisPopup(true);
     const msgId = Date.now();
 
     setMessages(prev => [...prev, { id: msgId, from: 'me', text, time: new Date() }]);
@@ -605,6 +672,14 @@ export default function Dashboard() {
   return (
     <>
       <style>{DASH_STYLES}</style>
+
+      {/* Crisis popup */}
+      {showCrisisPopup && (
+        <CrisisPopup
+          onClose={() => setShowCrisisPopup(false)}
+          onNavigate={(path) => { setShowCrisisPopup(false); navigate(path); }}
+        />
+      )}
 
       {/* Fixed layout — 3 columns */}
       <div

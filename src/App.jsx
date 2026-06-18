@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './store/auth';
 import { useThemeStore } from './store/theme';
@@ -25,6 +25,7 @@ import CrisisSupport from './pages/CrisisSupport';
 import GuideTerms from './pages/GuideTerms';
 import CommunityRules from './pages/CommunityRules';
 import ReportConcern from './pages/ReportConcern';
+import SafetyOnboarding, { useNeedsOnboarding } from './pages/SafetyOnboarding';
 
 import Navbar from './components/Navbar';
 import SafetyFloatButton from './components/SafetyFloatButton';
@@ -36,6 +37,8 @@ function AppInner() {
   const { token, user, role } = useAuthStore();
   const location = useLocation();
   const isHealer = role === 'healer' || user?.role === 'healer';
+  const needsOnboarding = useNeedsOnboarding();
+  const [onboardingDone, setOnboardingDone] = useState(!needsOnboarding);
 
   // Pages that manage their own header/nav
   const hideNav = location.pathname === '/chat' || location.pathname === '/groups' || location.pathname === '/' || location.pathname === '/mood' || isHealer;
@@ -54,8 +57,16 @@ function AppInner() {
     </>
   );
 
+  // Show safety onboarding overlay for logged-in regular users who haven't acknowledged
+  const showOnboarding = token && !isHealer && !onboardingDone;
+
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+      {/* Safety onboarding gate — overlays everything for users who haven't acknowledged */}
+      {showOnboarding && (
+        <SafetyOnboarding onComplete={() => setOnboardingDone(true)} />
+      )}
+
       {token && !hideNav && <Navbar />}
 
       {/* Top nav spacer — pushes content down on desktop when top navbar is visible */}
@@ -104,7 +115,7 @@ function AppInner() {
       </div>
 
       {/* Global floating safety button — visible on all pages except landing & safety pages */}
-      {!hideFloat && <SafetyFloatButton />}
+      {!hideFloat && !showOnboarding && <SafetyFloatButton />}
     </div>
   );
 }
