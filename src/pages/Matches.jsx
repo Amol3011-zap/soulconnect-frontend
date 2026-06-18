@@ -650,7 +650,7 @@ export default function Matches() {
         position: 'relative', zIndex: 1,
         maxWidth: 1200, margin: '0 auto',
         padding: 'clamp(16px, 2.5vw, 28px)',
-        paddingTop: 88,
+        paddingTop: 'calc(64px + 28px)',
         paddingBottom: 60,
       }}>
 
