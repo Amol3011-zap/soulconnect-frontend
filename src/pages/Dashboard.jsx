@@ -277,9 +277,15 @@ const DASH_STYLES = `
   .dc-scroll::-webkit-scrollbar-thumb { background: rgba(109,74,255,0.18); border-radius: 4px; }
   .dc-msg-enter { animation: slideInChat 0.25s ease forwards; }
   @media (max-width: 900px) {
-    .dc-layout { grid-template-columns: 1fr !important; }
+    .dc-layout {
+      grid-template-columns: 1fr !important;
+      margin-top: 0 !important;
+      height: 100dvh !important;
+      height: -webkit-fill-available !important;
+    }
     .dc-sidebar { display: none !important; }
-    .dc-right { display: none !important; }
+    .dc-right  { display: none !important; }
+    .dc-main   { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important; }
   }
 `;
 
@@ -936,7 +942,7 @@ export default function Dashboard() {
         </div>
 
         {/* ─────────────────── CENTER CHAT AREA ─────────────────────────────── */}
-        <div style={{
+        <div className="dc-main" style={{
           display: 'flex',
           flexDirection: 'column',
           background: '#FAF7FF',

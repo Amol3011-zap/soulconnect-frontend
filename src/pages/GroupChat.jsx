@@ -461,6 +461,7 @@ export default function GroupChat() {
   const [joinedGroups, setJoinedGroups] = useState(new Set(['g1']));
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMood, setSelectedMood] = useState(null);
+  const [moodShared, setMoodShared] = useState(false);
   const [showCheckin, setShowCheckin] = useState(true);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [showUpcomingCircle, setShowUpcomingCircle] = useState(true);
@@ -803,30 +804,63 @@ export default function GroupChat() {
                 </div>
 
                 {showCheckin && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
-                    {MOODS.map(mood => {
-                      const isSelected = selectedMood === mood.label;
-                      return (
-                        <button key={mood.label} onClick={() => setSelectedMood(isSelected ? null : mood.label)}
-                          style={{
-                            padding: '10px 16px', borderRadius: 12, cursor: 'pointer',
-                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
-                            background: isSelected ? 'rgba(109,74,255,0.2)' : 'rgba(255,255,255,0.05)',
-                            border: isSelected ? '1px solid #6D4AFF' : '1px solid rgba(255,255,255,0.1)',
-                            transform: isSelected ? 'scale(1.05)' : 'scale(1)',
-                            transition: 'all 0.2s',
-                            boxShadow: isSelected ? '0 0 12px rgba(109,74,255,0.3)' : 'none',
-                            fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
-                          }}>
-                          <span style={{ fontSize: 18 }}>{mood.emoji}</span>
-                          <span style={{ color: isSelected ? '#A78BFA' : 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 600 }}>
-                            {mood.label}
-                          </span>
-                          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10 }}>{mood.count}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
+                      {MOODS.map(mood => {
+                        const isSelected = selectedMood === mood.label;
+                        return (
+                          <button key={mood.label} onClick={() => setSelectedMood(isSelected ? null : mood.label)}
+                            style={{
+                              padding: '10px 16px', borderRadius: 12, cursor: 'pointer',
+                              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+                              background: isSelected ? 'rgba(109,74,255,0.2)' : 'rgba(255,255,255,0.05)',
+                              border: isSelected ? '1px solid #6D4AFF' : '1px solid rgba(255,255,255,0.1)',
+                              transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+                              transition: 'all 0.2s',
+                              boxShadow: isSelected ? '0 0 12px rgba(109,74,255,0.3)' : 'none',
+                              fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+                            }}>
+                            <span style={{ fontSize: 18 }}>{mood.emoji}</span>
+                            <span style={{ color: isSelected ? '#A78BFA' : 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 600 }}>
+                              {mood.label}
+                            </span>
+                            <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10 }}>{mood.count}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {/* Share Mood button — appears after selecting a mood */}
+                    {selectedMood && !moodShared && (
+                      <button
+                        onClick={() => {
+                          setMoodShared(true);
+                          setTimeout(() => {
+                            setMoodShared(false);
+                            setSelectedMood(null);
+                          }, 2000);
+                        }}
+                        style={{
+                          marginTop: 12, width: '100%', padding: '11px 0',
+                          background: 'linear-gradient(135deg,#6D4AFF,#A78BFA)',
+                          border: 'none', borderRadius: 12, cursor: 'pointer',
+                          color: '#fff', fontSize: 14, fontWeight: 700,
+                          boxShadow: '0 4px 16px rgba(109,74,255,0.35)',
+                          transition: 'all 0.2s',
+                        }}
+                      >
+                        Share "{selectedMood}" with the circle ✨
+                      </button>
+                    )}
+                    {moodShared && (
+                      <div style={{
+                        marginTop: 12, textAlign: 'center',
+                        color: '#A78BFA', fontSize: 14, fontWeight: 600,
+                        padding: '10px 0',
+                      }}>
+                        💜 Shared anonymously with your circle
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>

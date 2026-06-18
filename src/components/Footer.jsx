@@ -32,6 +32,7 @@ const STYLES = `
   @media(max-width:768px){
     .sc-footer-grid { grid-template-columns:1fr !important; gap:40px !important; }
     .sc-footer-bottom { flex-direction:column !important; text-align:center !important; gap:8px !important; }
+    .sc-footer-root { padding-bottom: calc(72px + env(safe-area-inset-bottom,0px)) !important; }
   }
 `;
 
@@ -140,7 +141,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer style={{
+    <footer className="sc-footer-root" style={{
       background: 'linear-gradient(180deg,#140A38 0%,#0B0420 100%)',
       position: 'relative',
       overflow: 'hidden',

@@ -108,7 +108,7 @@ export default function SoulJourney() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: 'calc(100vh - 64px)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)' }}>
+      <div style={{ minHeight: 'calc(100vh - 64px)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', padding: '0 16px calc(80px + env(safe-area-inset-bottom,0px))' }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ width: 48, height: 48, border: '3px solid var(--border)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
           <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>Loading your journey…</p>
@@ -120,7 +120,7 @@ export default function SoulJourney() {
 
   if (error) {
     return (
-      <div style={{ minHeight: 'calc(100vh - 64px)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)' }}>
+      <div style={{ minHeight: 'calc(100vh - 64px)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', padding: '0 16px calc(80px + env(safe-area-inset-bottom,0px))' }}>
         <div style={{ textAlign: 'center' }}>
           <p style={{ color: '#EF4444', marginBottom: 12 }}>{error}</p>
           <button onClick={fetchData} style={{ background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 24px', cursor: 'pointer', fontSize: 14 }}>Retry</button>
@@ -130,7 +130,7 @@ export default function SoulJourney() {
   }
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'var(--bg)', padding: '32px 16px' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', background: 'var(--bg)', padding: '32px 16px calc(80px + env(safe-area-inset-bottom,0px))' }}>
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
 
         {/* Header */}

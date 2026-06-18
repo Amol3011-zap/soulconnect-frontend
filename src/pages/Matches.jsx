@@ -652,7 +652,7 @@ export default function Matches() {
         maxWidth: 1200, margin: '0 auto',
         padding: 'clamp(16px, 2.5vw, 28px)',
         paddingTop: 'calc(64px + 28px)',
-        paddingBottom: 60,
+        paddingBottom: 'clamp(60px, 8vw, 80px)',
       }}>
 
         {/* ════════════════════════════════════════
