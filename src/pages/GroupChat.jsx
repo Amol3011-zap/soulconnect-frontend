@@ -1,6 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../store/auth';
 
+// ── Animations style block ─────────────────────────────────────────────────────
+const GC_STYLES = `
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+  @keyframes gcFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  @keyframes gcPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
+  @keyframes gcFadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes gcShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
+  .gc-msg { animation: gcFadeUp 0.3s ease both; }
+  .gc-hover:hover { opacity: 0.8; transform: translateY(-1px); transition: all 0.2s; }
+  .gc-group-item:hover { background: rgba(255,255,255,0.04) !important; }
+  .gc-reaction:hover { background: rgba(109,74,255,0.2) !important; border-color: rgba(109,74,255,0.4) !important; cursor: pointer; }
+  .gc-icon-btn:hover { background: rgba(255,255,255,0.1) !important; }
+  @media (max-width: 768px) {
+    .gc-left-sidebar { display: none !important; }
+    .gc-right-sidebar { display: none !important; }
+    .gc-left-sidebar.gc-mobile-open { display: flex !important; position: fixed; top: 64px; left: 0; bottom: 0; z-index: 100; width: 280px; }
+  }
+`;
+
+// ── Deterministic floating particles ──────────────────────────────────────────
+const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
+  x: (5 + (i * 47 + i * i * 11) % 88),
+  y: (10 + (i * 31 + i * i * 7) % 80),
+  size: 4 + (i % 4) * 1.5,
+  color: i % 3 === 0 ? '#F5B841' : i % 3 === 1 ? '#6D4AFF' : '#A78BFA',
+  opacity: 0.15 + (i % 4) * 0.05,
+  duration: 3 + (i % 5),
+  delay: i * 0.4,
+}));
+
 // ── Demo groups ────────────────────────────────────────────────────────────────
 const DEMO_GROUPS = [
   {
@@ -81,6 +111,15 @@ const MEMBERS = {
   ],
 };
 
+// ── Reactions list ─────────────────────────────────────────────────────────────
+const REACTIONS = [
+  { emoji: '🤗', label: 'I Relate' },
+  { emoji: '💜', label: 'Sending Support' },
+  { emoji: '🌱', label: 'Proud Of You' },
+  { emoji: '🙏', label: 'Holding Space' },
+  { emoji: '✨', label: 'Inspiring' },
+];
+
 // ── Demo seed messages per group ───────────────────────────────────────────────
 function seedMessages(groupId) {
   const members = MEMBERS[groupId] || [];
@@ -131,6 +170,7 @@ function seedMessages(groupId) {
   const now = Date.now();
   return (seeds[groupId] || []).map((msg, i) => {
     const member = members.find(m => m.id === msg.from);
+    const reaction = REACTIONS[i % REACTIONS.length];
     return {
       id: `seed_${i}`,
       from: msg.from,
@@ -140,6 +180,7 @@ function seedMessages(groupId) {
       text: msg.text,
       time: new Date(now - (seeds[groupId].length - i) * 4 * 60000),
       isMe: false,
+      reaction: { ...reaction, count: 10 + ((i * 13 + 7) % 31) },
     };
   });
 }
@@ -191,20 +232,21 @@ function getGroupReply(groupId, userText) {
   };
 }
 
-// ── Create Group Modal ─────────────────────────────────────────────────────────
+// ── PROBLEM OPTIONS ────────────────────────────────────────────────────────────
 const PROBLEM_OPTIONS = [
-  { value: 'anxiety',    label: 'Anxiety & Panic',    emoji: '😰' },
-  { value: 'depression', label: 'Depression',          emoji: '🌧️' },
-  { value: 'breakup',    label: 'Breakup & Heartbreak',emoji: '💔' },
-  { value: 'loneliness', label: 'Loneliness',          emoji: '🌿' },
-  { value: 'work_stress',label: 'Work Stress',         emoji: '💼' },
-  { value: 'grief',      label: 'Grief & Loss',        emoji: '🕯️' },
-  { value: 'anger',      label: 'Anger Management',    emoji: '😤' },
-  { value: 'confidence', label: 'Confidence',          emoji: '📉' },
-  { value: 'sleep',      label: 'Sleep Problems',      emoji: '😴' },
-  { value: 'trauma',     label: 'Trauma & PTSD',       emoji: '⚠️' },
+  { value: 'anxiety',    label: 'Anxiety & Panic',     emoji: '😰' },
+  { value: 'depression', label: 'Depression',           emoji: '🌧️' },
+  { value: 'breakup',    label: 'Breakup & Heartbreak', emoji: '💔' },
+  { value: 'loneliness', label: 'Loneliness',           emoji: '🌿' },
+  { value: 'work_stress',label: 'Work Stress',          emoji: '💼' },
+  { value: 'grief',      label: 'Grief & Loss',         emoji: '🕯️' },
+  { value: 'anger',      label: 'Anger Management',     emoji: '😤' },
+  { value: 'confidence', label: 'Confidence',           emoji: '📉' },
+  { value: 'sleep',      label: 'Sleep Problems',       emoji: '😴' },
+  { value: 'trauma',     label: 'Trauma & PTSD',        emoji: '⚠️' },
 ];
 
+// ── Create Group Modal ─────────────────────────────────────────────────────────
 function CreateGroupModal({ onClose, onCreate }) {
   const [name, setName] = useState('');
   const [problem, setProblem] = useState('');
@@ -223,89 +265,186 @@ function CreateGroupModal({ onClose, onCreate }) {
       members: 1,
       online: 1,
       description: description.trim() || `A support group for ${chosen?.label}.`,
-      grad: 'linear-gradient(135deg,#7c3aed,#2563eb)',
-      color: '#7c3aed',
+      grad: 'linear-gradient(135deg,#6D4AFF,#5B21B6)',
+      color: '#6D4AFF',
       isNew: true,
     });
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
-      onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="w-full max-w-md rounded-2xl p-6 shadow-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="font-bold text-lg" style={{ color: 'var(--text)' }}>Create a Group</h2>
-          <button onClick={onClose} className="w-8 h-8 rounded-xl flex items-center justify-center text-sm hover:opacity-60" style={{ background: 'var(--bg-subtle)', color: 'var(--text-muted)' }}>✕</button>
+    <div
+      onClick={e => e.target === e.currentTarget && onClose()}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 200,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+        background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
+      }}
+    >
+      <div style={{
+        width: '100%', maxWidth: 480,
+        background: '#140A38',
+        border: '1px solid rgba(109,74,255,0.3)',
+        borderRadius: 24, padding: 28,
+        boxShadow: '0 24px 80px rgba(0,0,0,0.6)',
+        fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+      }}>
+        {/* Modal header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+          <div>
+            <h2 style={{ color: '#fff', fontWeight: 800, fontSize: 20, margin: 0 }}>Create a Healing Circle</h2>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, margin: '4px 0 0' }}>Start a safe space for others</p>
+          </div>
+          <button onClick={onClose} className="gc-icon-btn" style={{
+            width: 32, height: 32, borderRadius: 10,
+            background: 'rgba(255,255,255,0.06)', border: 'none', color: 'rgba(255,255,255,0.5)',
+            cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>✕</button>
         </div>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Group Name</label>
-            <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Mumbai Anxiety Circle"
-              className="w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none"
-              style={{ background: 'var(--bg-subtle)', color: 'var(--text)', border: '1.5px solid var(--border)' }} />
-          </div>
+        {/* Group name */}
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 8, letterSpacing: '0.05em' }}>
+            GROUP NAME
+          </label>
+          <input
+            value={name} onChange={e => setName(e.target.value)}
+            placeholder="e.g. Mumbai Anxiety Circle"
+            style={{
+              width: '100%', padding: '12px 16px', borderRadius: 14,
+              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(109,74,255,0.25)',
+              color: '#fff', fontSize: 14, outline: 'none', boxSizing: 'border-box',
+              fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+            }}
+          />
+        </div>
 
-          <div>
-            <label className="block text-xs font-bold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Topic / Problem Area</label>
-            <div className="grid grid-cols-2 gap-2">
-              {PROBLEM_OPTIONS.map(opt => (
-                <button key={opt.value} onClick={() => setProblem(opt.value)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-left text-xs font-medium transition-all border"
-                  style={problem === opt.value
-                    ? { background: 'linear-gradient(135deg,rgba(124,58,237,0.15),rgba(37,99,235,0.1))', borderColor: '#7c3aed', color: '#7c3aed' }
-                    : { background: 'var(--bg-subtle)', borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
-                  <span>{opt.emoji}</span><span>{opt.label}</span>
-                </button>
-              ))}
-            </div>
+        {/* Topic */}
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 8, letterSpacing: '0.05em' }}>
+            TOPIC / PROBLEM AREA
+          </label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            {PROBLEM_OPTIONS.map(opt => (
+              <button key={opt.value} onClick={() => setProblem(opt.value)} style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '10px 12px', borderRadius: 12, textAlign: 'left', cursor: 'pointer',
+                fontSize: 12, fontWeight: 600, transition: 'all 0.2s',
+                background: problem === opt.value ? 'rgba(109,74,255,0.2)' : 'rgba(255,255,255,0.04)',
+                border: problem === opt.value ? '1px solid #6D4AFF' : '1px solid rgba(255,255,255,0.08)',
+                color: problem === opt.value ? '#A78BFA' : 'rgba(255,255,255,0.5)',
+                fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+              }}>
+                <span style={{ fontSize: 14 }}>{opt.emoji}</span>
+                <span>{opt.label}</span>
+              </button>
+            ))}
           </div>
+        </div>
 
-          <div>
-            <label className="block text-xs font-bold mb-1.5" style={{ color: 'var(--text-secondary)' }}>Description <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>(optional)</span></label>
-            <textarea value={description} onChange={e => setDescription(e.target.value)}
-              placeholder="What's this group about? Who should join?"
-              rows={2} className="w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none resize-none"
-              style={{ background: 'var(--bg-subtle)', color: 'var(--text)', border: '1.5px solid var(--border)' }} />
-          </div>
+        {/* Description */}
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 8, letterSpacing: '0.05em' }}>
+            DESCRIPTION <span style={{ color: 'rgba(255,255,255,0.3)', fontWeight: 400, fontSize: 11 }}>(optional)</span>
+          </label>
+          <textarea
+            value={description} onChange={e => setDescription(e.target.value)}
+            placeholder="What's this group about? Who should join?"
+            rows={2}
+            style={{
+              width: '100%', padding: '12px 16px', borderRadius: 14,
+              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(109,74,255,0.25)',
+              color: '#fff', fontSize: 14, outline: 'none', resize: 'none', boxSizing: 'border-box',
+              fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+            }}
+          />
+        </div>
 
-          {error && <p className="text-xs text-red-500">{error}</p>}
+        {error && <p style={{ color: '#F472B6', fontSize: 12, marginBottom: 12 }}>{error}</p>}
 
-          <div className="flex gap-2 pt-1">
-            <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all"
-              style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)', borderColor: 'var(--border)' }}>
-              Cancel
-            </button>
-            <button onClick={submit} className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
-              Create Group 🚀
-            </button>
-          </div>
+        {/* Buttons */}
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={onClose} style={{
+            flex: 1, padding: '12px', borderRadius: 14, fontSize: 14, fontWeight: 600, cursor: 'pointer',
+            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+            color: 'rgba(255,255,255,0.6)',
+            fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+          }}>Cancel</button>
+          <button onClick={submit} style={{
+            flex: 1, padding: '12px', borderRadius: 14, fontSize: 14, fontWeight: 700, cursor: 'pointer',
+            background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)', border: 'none', color: '#fff',
+            boxShadow: '0 4px 20px rgba(109,74,255,0.4)',
+            fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+          }}>Create Circle 🚀</button>
         </div>
       </div>
     </div>
   );
 }
 
-// ── Typing indicator ───────────────────────────────────────────────────────────
-function TypingIndicator({ name }) {
+// ── Lotus SVG ──────────────────────────────────────────────────────────────────
+function LotusIcon({ size = 44 }) {
   return (
-    <div className="flex items-end gap-2 px-4 py-1">
-      <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs text-white font-bold shrink-0"
-        style={{ background: '#7c3aed' }}>{name[0]}</div>
-      <div className="px-3 py-2 rounded-2xl rounded-bl-md" style={{ background: 'var(--bg-subtle)' }}>
-        <div className="flex gap-1 items-center h-3">
-          {[0,1,2].map(i => (
-            <div key={i} className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: `${i*0.15}s` }} />
+    <svg width={size} height={size} viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="22" cy="28" rx="6" ry="8" fill="rgba(109,74,255,0.5)" />
+      <ellipse cx="14" cy="24" rx="5" ry="7" fill="rgba(109,74,255,0.35)" transform="rotate(-25 14 24)" />
+      <ellipse cx="30" cy="24" rx="5" ry="7" fill="rgba(109,74,255,0.35)" transform="rotate(25 30 24)" />
+      <ellipse cx="9" cy="27" rx="4" ry="6" fill="rgba(167,139,250,0.25)" transform="rotate(-45 9 27)" />
+      <ellipse cx="35" cy="27" rx="4" ry="6" fill="rgba(167,139,250,0.25)" transform="rotate(45 35 27)" />
+      <ellipse cx="22" cy="22" rx="3" ry="3" fill="#F5B841" />
+      <ellipse cx="22" cy="19" rx="1.5" ry="2" fill="#F5B841" opacity="0.7" />
+    </svg>
+  );
+}
+
+// ── Meditation figure SVG ──────────────────────────────────────────────────────
+function MeditationFigure({ size = 50 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="25" cy="25" r="20" fill="rgba(109,74,255,0.1)" />
+      <circle cx="25" cy="25" r="14" fill="rgba(109,74,255,0.07)" />
+      <circle cx="25" cy="14" r="4" fill="rgba(167,139,250,0.7)" />
+      <path d="M25 18 Q18 26 20 32 Q25 34 30 32 Q32 26 25 18Z" fill="rgba(167,139,250,0.5)" />
+      <path d="M18 26 Q14 30 16 33" stroke="rgba(167,139,250,0.5)" strokeWidth="2" strokeLinecap="round" />
+      <path d="M32 26 Q36 30 34 33" stroke="rgba(167,139,250,0.5)" strokeWidth="2" strokeLinecap="round" />
+      <ellipse cx="25" cy="38" rx="8" ry="2" fill="rgba(109,74,255,0.3)" />
+      <circle cx="25" cy="25" r="18" stroke="rgba(109,74,255,0.15)" strokeWidth="1" strokeDasharray="3 3" />
+    </svg>
+  );
+}
+
+// ── Typing Indicator ───────────────────────────────────────────────────────────
+function TypingIndicator({ name, color }) {
+  return (
+    <div className="gc-msg" style={{ display: 'flex', alignItems: 'flex-end', gap: 10, padding: '4px 0' }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: '50%',
+        background: color || '#6D4AFF',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0,
+      }}>{name[0]}</div>
+      <div>
+        <div style={{
+          background: 'rgba(27,13,78,0.7)',
+          border: '1px solid rgba(109,74,255,0.15)',
+          borderRadius: '4px 18px 18px 18px',
+          padding: '12px 16px',
+          display: 'flex', gap: 5, alignItems: 'center',
+        }}>
+          {[0, 1, 2].map(i => (
+            <div key={i} style={{
+              width: 7, height: 7, borderRadius: '50%', background: '#A78BFA',
+              animation: `gcPulse 1.2s ease-in-out infinite`,
+              animationDelay: `${i * 0.2}s`,
+            }} />
           ))}
         </div>
+        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11, margin: '4px 0 0 4px' }}>{name} is typing...</p>
       </div>
-      <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{name} is typing...</span>
     </div>
   );
 }
 
-// ── Main Page ──────────────────────────────────────────────────────────────────
+// ── MAIN COMPONENT ─────────────────────────────────────────────────────────────
 export default function GroupChat() {
   const { user } = useAuthStore();
   const myName = user?.name || 'You';
@@ -317,11 +456,40 @@ export default function GroupChat() {
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const [typingName, setTypingName] = useState('');
-  const [mobileView, setMobileView] = useState('list'); // 'list' | 'chat' | 'info'
+  const [typingColor, setTypingColor] = useState('#6D4AFF');
   const [showCreate, setShowCreate] = useState(false);
   const [joinedGroups, setJoinedGroups] = useState(new Set(['g1']));
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedMood, setSelectedMood] = useState(null);
+  const [showCheckin, setShowCheckin] = useState(true);
+  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [showUpcomingCircle, setShowUpcomingCircle] = useState(true);
+  const [showPeopleSimilar, setShowPeopleSimilar] = useState(true);
   const bottomRef = useRef(null);
+  const messagesRef = useRef(null);
+
+  const MOODS = [
+    { emoji: '🙂', label: 'Calm', count: 7 },
+    { emoji: '😰', label: 'Anxious', count: 43 },
+    { emoji: '😔', label: 'Sad', count: 12 },
+    { emoji: '😴', label: 'Exhausted', count: 8 },
+    { emoji: '💔', label: 'Overwhelmed', count: 5 },
+    { emoji: '😤', label: 'Stressed', count: 11 },
+  ];
+
+  const COMMUNITY_ENERGY = [
+    { emoji: '😌', label: 'Calm', pct: 42, color: '#34C38F' },
+    { emoji: '🌟', label: 'Hopeful', pct: 31, color: '#00D4AA' },
+    { emoji: '😰', label: 'Anxious', pct: 18, color: '#F5B841' },
+    { emoji: '💔', label: 'Overwhelmed', pct: 9, color: '#F472B6' },
+  ];
+
+  const SIMILAR_PEOPLE = [
+    { initials: 'KA', color: '#6D4AFF' },
+    { initials: 'PR', color: '#F472B6' },
+    { initials: 'SO', color: '#34C38F' },
+    { initials: 'MV', color: '#F5B841' },
+  ];
 
   // Seed initial messages
   useEffect(() => {
@@ -331,12 +499,13 @@ export default function GroupChat() {
   }, []);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [chatHistory, typing, activeGroup]);
 
   const openGroup = (group) => {
     setActiveGroup(group);
-    setMobileView('chat');
   };
 
   const joinGroup = (groupId) => {
@@ -350,26 +519,29 @@ export default function GroupChat() {
     const myMsg = {
       id: Date.now(),
       from: 'me',
-      senderName: myName,
-      senderInitials: myInitials,
-      senderColor: '#7c3aed',
+      senderName: isAnonymous ? 'Anonymous' : myName,
+      senderInitials: isAnonymous ? 'AN' : myInitials,
+      senderColor: isAnonymous ? '#6D4AFF' : '#6D4AFF',
       text,
       time: new Date(),
       isMe: true,
+      reaction: null,
     };
     setChatHistory(prev => ({
       ...prev,
       [activeGroup.id]: [...(prev[activeGroup.id] || []), myMsg],
     }));
 
-    // Simulate a group member replying
     const delay = 1500 + Math.random() * 2000;
     const reply = getGroupReply(activeGroup.id, text);
     setTyping(true);
     setTypingName(reply.senderName);
+    setTypingColor(reply.senderColor);
     setTimeout(() => {
       setTyping(false);
       setTypingName('');
+      setTypingColor('#6D4AFF');
+      const reactionIdx = Math.floor(Math.random() * REACTIONS.length);
       setChatHistory(prev => ({
         ...prev,
         [activeGroup.id]: [...(prev[activeGroup.id] || []), {
@@ -381,6 +553,7 @@ export default function GroupChat() {
           text: reply.text,
           time: new Date(),
           isMe: false,
+          reaction: { ...REACTIONS[reactionIdx], count: 10 + Math.floor(Math.random() * 31) },
         }],
       }));
     }, delay);
@@ -391,222 +564,661 @@ export default function GroupChat() {
     setChatHistory(prev => ({ ...prev, [newGroup.id]: [] }));
     setJoinedGroups(prev => new Set([...prev, newGroup.id]));
     setActiveGroup(newGroup);
-    setMobileView('chat');
     setShowCreate(false);
   };
 
   const messages = chatHistory[activeGroup?.id] || [];
   const fmt = (d) => d?.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-
   const filteredGroups = groups.filter(g =>
     g.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     g.problem.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
   const isJoined = joinedGroups.has(activeGroup?.id);
 
   return (
-    <div className="flex overflow-hidden" style={{ height: '100dvh', background: 'var(--bg)' }}>
+    <>
+      <style>{GC_STYLES}</style>
 
-      {/* ── LEFT SIDEBAR ── */}
-      <div className={`flex-col w-full md:w-80 shrink-0 border-r ${mobileView !== 'list' ? 'hidden md:flex' : 'flex'}`}
-        style={{ borderColor: 'var(--border)', background: 'var(--bg-card)' }}>
-
-        {/* Header */}
-        <div className="px-4 pb-3" style={{ paddingTop: 'max(env(safe-area-inset-top,0px),20px)' }}>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="font-bold text-base" style={{ color: 'var(--text)' }}>Group Chats</h1>
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Find your people</p>
-            </div>
-            <button onClick={() => setShowCreate(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-white hover:opacity-90 transition-all"
-              style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
-              + New
-            </button>
-          </div>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: 'var(--text-muted)' }}>🔍</span>
-            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search groups..."
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm focus:outline-none"
-              style={{ background: 'var(--bg-subtle)', color: 'var(--text)', border: '1.5px solid var(--border)' }} />
-          </div>
-        </div>
-
-        {/* Group list */}
-        <div className="flex-1 overflow-y-auto px-3 pb-4">
-          {filteredGroups.map(g => {
-            const isActive = activeGroup?.id === g.id;
-            const joined = joinedGroups.has(g.id);
-            return (
-              <button key={g.id} onClick={() => openGroup(g)}
-                className="w-full flex items-center gap-3 px-3 py-3 rounded-2xl mb-1 text-left transition-all"
-                style={{
-                  background: isActive ? 'linear-gradient(135deg,rgba(124,58,237,0.12),rgba(37,99,235,0.08))' : 'transparent',
-                  border: isActive ? '1.5px solid rgba(124,58,237,0.2)' : '1.5px solid transparent',
-                }}>
-                {/* Group avatar */}
-                <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0"
-                  style={{ background: g.grad }}>
-                  {g.emoji}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-sm font-bold truncate" style={{ color: 'var(--text)' }}>{g.name}</span>
-                    {joined && (
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0 ml-1"
-                        style={{ background: 'rgba(5,150,105,0.12)', color: '#059669' }}>JOINED</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{g.members} members</span>
-                    <span className="w-1 h-1 rounded-full bg-green-400" />
-                    <span className="text-xs text-green-500">{g.online} online</span>
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+      {/* Floating particles */}
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
+        {PARTICLES.map((p, i) => (
+          <div key={i} style={{
+            position: 'absolute',
+            left: `${p.x}%`, top: `${p.y}%`,
+            width: p.size, height: p.size,
+            borderRadius: '50%',
+            background: p.color,
+            opacity: p.opacity,
+            animation: `gcFloat ${p.duration}s ease-in-out infinite`,
+            animationDelay: `${p.delay}s`,
+          }} />
+        ))}
       </div>
 
-      {/* ── MAIN CHAT AREA ── */}
-      <div className={`flex-1 flex flex-col min-w-0 ${mobileView === 'list' ? 'hidden md:flex' : 'flex'}`}>
+      {/* Root layout */}
+      <div style={{
+        display: 'flex', height: 'calc(100vh - 64px)', marginTop: 64,
+        background: '#0B0420', overflow: 'hidden', position: 'relative', zIndex: 1,
+        fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+      }}>
 
-        {/* Chat header */}
-        <div className="shrink-0 flex items-center gap-3 px-4 py-3 border-b"
-          style={{ background: 'var(--bg-card)', borderColor: 'var(--border)', paddingTop: 'max(env(safe-area-inset-top,0px),12px)' }}>
-          <button onClick={() => setMobileView('list')}
-            className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center text-lg active:scale-90 mr-1"
-            style={{ background: 'var(--bg-subtle)', color: 'var(--text)' }}>
-            ‹
-          </button>
-          <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0"
-            style={{ background: activeGroup?.grad }}>
-            {activeGroup?.emoji}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-sm" style={{ color: 'var(--text)' }}>{activeGroup?.name}</span>
+        {/* ══ LEFT SIDEBAR ═══════════════════════════════════════════════════════ */}
+        <div className="gc-left-sidebar" style={{
+          width: 260, flexShrink: 0, display: 'flex', flexDirection: 'column',
+          background: '#0D0525', borderRight: '1px solid rgba(109,74,255,0.15)',
+          height: '100%', overflowY: 'auto',
+        }}>
+          {/* Sidebar header */}
+          <div style={{ padding: '20px 16px 12px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div>
+                <h2 style={{ color: '#fff', fontWeight: 700, fontSize: 16, margin: 0 }}>Your Healing Circles</h2>
+                <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '3px 0 0' }}>Find your people</p>
+              </div>
+              <button onClick={() => setShowCreate(true)} className="gc-hover" style={{
+                background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)',
+                border: 'none', borderRadius: 10, color: '#fff',
+                fontSize: 12, fontWeight: 700, padding: '6px 12px', cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}>+ New</button>
             </div>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              {activeGroup?.members} members · {activeGroup?.online} online now
-            </p>
-          </div>
-          {/* Members row */}
-          <div className="hidden sm:flex items-center -space-x-1.5">
-            {(MEMBERS[activeGroup?.id] || []).slice(0, 4).map(m => (
-              <div key={m.id} className="w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs text-white font-bold"
-                style={{ background: m.color, borderColor: 'var(--bg-card)' }}>
-                {m.initials[0]}
-              </div>
-            ))}
-            {activeGroup?.members > 4 && (
-              <div className="w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold"
-                style={{ background: 'var(--bg-subtle)', color: 'var(--text-muted)', borderColor: 'var(--bg-card)' }}>
-                +{activeGroup.members - 4}
-              </div>
-            )}
-          </div>
-        </div>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto" style={{ background: 'var(--bg)' }}>
-          {/* Group info banner */}
-          <div className="mx-4 my-3 px-4 py-3 rounded-2xl text-center"
-            style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}>
-            <div className="text-2xl mb-1">{activeGroup?.emoji}</div>
-            <p className="font-bold text-sm mb-1" style={{ color: 'var(--text)' }}>{activeGroup?.name}</p>
-            <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>{activeGroup?.description}</p>
-            {!isJoined && (
-              <button onClick={() => joinGroup(activeGroup.id)}
-                className="mt-3 px-5 py-2 rounded-xl text-xs font-bold text-white hover:opacity-90 transition-all"
-                style={{ background: `linear-gradient(135deg,${activeGroup?.color},#2563eb)` }}>
-                Join this group
-              </button>
-            )}
-            {isJoined && (
-              <p className="mt-2 text-xs font-semibold" style={{ color: '#059669' }}>✓ You're a member</p>
-            )}
+            {/* Search */}
+            <div style={{ position: 'relative' }}>
+              <span style={{
+                position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
+                fontSize: 13, color: 'rgba(255,255,255,0.3)',
+              }}>🔍</span>
+              <input
+                value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Search circles..."
+                style={{
+                  width: '100%', padding: '10px 12px 10px 34px', borderRadius: 12, boxSizing: 'border-box',
+                  background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(109,74,255,0.2)',
+                  color: '#fff', fontSize: 13, outline: 'none',
+                  fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+                }}
+              />
+            </div>
           </div>
 
-          {/* Messages list */}
-          <div className="px-4 pb-4 space-y-3">
-            {messages.map((msg, i) => {
-              const isMe = msg.isMe;
-              const showSender = !isMe && (i === 0 || messages[i-1]?.from !== msg.from || messages[i-1]?.isMe);
+          {/* Group list */}
+          <div style={{ flex: 1, padding: '0 8px 12px' }}>
+            {filteredGroups.map(g => {
+              const isActive = activeGroup?.id === g.id;
+              const joined = joinedGroups.has(g.id);
               return (
-                <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} items-end gap-2`}>
-                  {!isMe && (
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
-                      style={{ background: msg.senderColor, opacity: showSender ? 1 : 0 }}>
-                      {msg.senderInitials[0]}
+                <button key={g.id} onClick={() => openGroup(g)}
+                  className={isActive ? '' : 'gc-group-item'}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '10px 10px', borderRadius: 14, marginBottom: 2,
+                    textAlign: 'left', cursor: 'pointer', border: 'none',
+                    background: isActive
+                      ? 'linear-gradient(135deg, rgba(109,74,255,0.2), rgba(167,139,250,0.1))'
+                      : 'transparent',
+                    borderLeft: isActive ? '3px solid #6D4AFF' : '3px solid transparent',
+                    transition: 'all 0.15s',
+                    fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+                  }}>
+                  {/* Group emoji circle */}
+                  <div style={{
+                    width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
+                    background: g.grad, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 15,
+                  }}>{g.emoji}</div>
+
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
+                      <span style={{
+                        color: '#fff', fontWeight: 700, fontSize: 13,
+                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        maxWidth: 120,
+                      }}>{g.name}</span>
+                      {joined && isActive && (
+                        <span style={{
+                          fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 20,
+                          background: 'rgba(109,74,255,0.25)', color: '#A78BFA', flexShrink: 0,
+                        }}>JOINED</span>
+                      )}
                     </div>
-                  )}
-                  <div className="max-w-[72%]">
-                    {showSender && !isMe && (
-                      <p className="text-xs font-semibold mb-0.5 ml-1" style={{ color: msg.senderColor }}>{msg.senderName}</p>
-                    )}
-                    <div className={`px-4 py-2.5 text-sm leading-relaxed ${isMe ? 'rounded-3xl rounded-br-md' : 'rounded-3xl rounded-bl-md'}`}
-                      style={isMe
-                        ? { background: 'linear-gradient(135deg,#7c3aed,#2563eb)', color: 'white' }
-                        : { background: 'var(--bg-card)', color: 'var(--text)', border: '1px solid var(--border)' }}>
-                      {msg.text}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11 }}>{g.members} members</span>
+                      <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 9 }}>•</span>
+                      <span style={{ color: '#34C38F', fontSize: 11 }}>{g.online} online</span>
                     </div>
-                    <p className={`text-xs mt-0.5 px-1 opacity-50 ${isMe ? 'text-right' : ''}`} style={{ color: 'var(--text-muted)' }}>
-                      {fmt(msg.time)}
-                    </p>
                   </div>
-                </div>
+                </button>
               );
             })}
-            {typing && <TypingIndicator name={typingName} />}
-            <div ref={bottomRef} />
+          </div>
+
+          {/* Healing Streak card */}
+          <div style={{
+            margin: '0 12px 16px',
+            background: 'linear-gradient(135deg, #1B0D4E, #2A1060)',
+            border: '1px solid rgba(245,184,65,0.25)',
+            borderRadius: 20, padding: 16,
+            display: 'flex', flexDirection: 'column', gap: 6,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                  <span style={{ fontSize: 16 }}>🔥</span>
+                  <span style={{ color: '#F5B841', fontWeight: 700, fontSize: 13 }}>Healing Streak</span>
+                </div>
+                <div style={{ color: '#F5B841', fontSize: 28, fontWeight: 800, lineHeight: 1 }}>14 days</div>
+                <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, margin: '6px 0 0' }}>
+                  Keep showing up for yourself
+                </p>
+              </div>
+              <LotusIcon size={44} />
+            </div>
+            {/* Progress dots */}
+            <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+              {[0,1,2,3,4,5,6].map(dot => (
+                <div key={dot} style={{
+                  width: 10, height: 10, borderRadius: '50%',
+                  background: dot < 6 ? '#F5B841' : 'rgba(245,184,65,0.2)',
+                  border: dot >= 6 ? '1px solid rgba(245,184,65,0.4)' : 'none',
+                }} />
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Input bar */}
-        {isJoined ? (
-          <div className="shrink-0 px-4 pt-3 border-t"
-            style={{ background: 'var(--bg-card)', borderColor: 'var(--border)', paddingBottom: 'max(env(safe-area-inset-bottom,0px),12px)' }}>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
-                style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
-                {myInitials}
+        {/* ══ CENTER CHAT ════════════════════════════════════════════════════════ */}
+        <div style={{
+          flex: 1, display: 'flex', flexDirection: 'column',
+          background: '#0B0420', minWidth: 0, height: '100%', overflow: 'hidden',
+        }}>
+          {/* Circle header — sticky */}
+          <div style={{
+            flexShrink: 0, display: 'flex', alignItems: 'center', gap: 12,
+            padding: '14px 20px',
+            background: 'rgba(11,4,32,0.95)', backdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(109,74,255,0.15)',
+            zIndex: 10,
+          }}>
+            {/* Emoji */}
+            <div style={{
+              width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
+              background: activeGroup?.grad,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
+            }}>{activeGroup?.emoji}</div>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ color: '#fff', fontWeight: 700, fontSize: 16 }}>{activeGroup?.name}</span>
               </div>
-              <input value={input} onChange={e => setInput(e.target.value)}
-                onKeyPress={e => e.key === 'Enter' && sendMessage()}
-                placeholder={`Message ${activeGroup?.name}...`}
-                className="flex-1 px-4 py-2.5 rounded-2xl text-sm focus:outline-none"
-                style={{ background: 'var(--bg-subtle)', color: 'var(--text)', border: '1.5px solid var(--border)' }} />
-              <button onClick={sendMessage} disabled={!input.trim() || typing}
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0 transition-all hover:opacity-90 active:scale-95 disabled:opacity-40"
-                style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
-                  <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12 }}>
+                  {activeGroup?.members} members •
+                </span>
+                <div style={{
+                  width: 7, height: 7, borderRadius: '50%', background: '#34C38F',
+                  animation: 'gcPulse 2s ease-in-out infinite',
+                }} />
+                <span style={{ color: '#34C38F', fontSize: 12 }}>{activeGroup?.online} online</span>
+              </div>
             </div>
-            <p className="text-center text-xs mt-2" style={{ color: 'var(--text-muted)' }}>
-              🔒 Anonymous & safe · Be kind, be real
+
+            {/* Action icon buttons */}
+            <div style={{ display: 'flex', gap: 6 }}>
+              {['ℹ️', '👥', '⋯'].map(icon => (
+                <button key={icon} className="gc-icon-btn" style={{
+                  width: 28, height: 28, borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.06)', border: 'none',
+                  color: 'rgba(255,255,255,0.6)', fontSize: icon === '⋯' ? 16 : 13,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.15s',
+                }}>{icon}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Scrollable messages area */}
+          <div ref={messagesRef} style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+
+            {/* Emotional Check-in card */}
+            <div style={{ margin: 16, marginBottom: 0 }}>
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(27,13,78,0.85), rgba(20,10,56,0.9))',
+                border: '1px solid rgba(109,74,255,0.3)', borderRadius: 20, padding: 20,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <div>
+                    <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 16, margin: 0 }}>
+                      How are you feeling right now?
+                    </h3>
+                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, margin: '4px 0 0' }}>
+                      Your feelings matter. Share anonymously.
+                    </p>
+                  </div>
+                  <button onClick={() => setShowCheckin(v => !v)} style={{
+                    background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: 8,
+                    color: 'rgba(255,255,255,0.4)', fontSize: 12, cursor: 'pointer',
+                    padding: '4px 8px',
+                  }}>{showCheckin ? '▲' : '▼'}</button>
+                </div>
+
+                {showCheckin && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
+                    {MOODS.map(mood => {
+                      const isSelected = selectedMood === mood.label;
+                      return (
+                        <button key={mood.label} onClick={() => setSelectedMood(isSelected ? null : mood.label)}
+                          style={{
+                            padding: '10px 16px', borderRadius: 12, cursor: 'pointer',
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+                            background: isSelected ? 'rgba(109,74,255,0.2)' : 'rgba(255,255,255,0.05)',
+                            border: isSelected ? '1px solid #6D4AFF' : '1px solid rgba(255,255,255,0.1)',
+                            transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+                            transition: 'all 0.2s',
+                            boxShadow: isSelected ? '0 0 12px rgba(109,74,255,0.3)' : 'none',
+                            fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+                          }}>
+                          <span style={{ fontSize: 18 }}>{mood.emoji}</span>
+                          <span style={{ color: isSelected ? '#A78BFA' : 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 600 }}>
+                            {mood.label}
+                          </span>
+                          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10 }}>{mood.count}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Daily Reflection card */}
+            <div style={{ margin: '12px 16px' }}>
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(20,10,56,0.8), rgba(27,13,78,0.7))',
+                border: '1px solid rgba(109,74,255,0.25)', borderRadius: 14, padding: '14px 18px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+              }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                    <span style={{ fontSize: 15 }}>🌱</span>
+                    <span style={{ fontWeight: 700, fontSize: 14, color: '#A78BFA' }}>Daily Reflection</span>
+                  </div>
+                  <p style={{ color: '#fff', fontSize: 14, margin: 0, lineHeight: 1.5 }}>
+                    "What's one small thing you're proud of yourself for today?"
+                  </p>
+                  <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '4px 0 0' }}>
+                    Share openly or anonymously
+                  </p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, flexShrink: 0 }}>
+                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>128 shared today</span>
+                  <div style={{ display: 'flex' }}>
+                    {[{ c: '#6D4AFF', i: 'KA' }, { c: '#F472B6', i: 'PR' }, { c: '#34C38F', i: 'SO' }, { c: '#F5B841', i: 'MV' }].map((av, idx) => (
+                      <div key={idx} style={{
+                        width: 22, height: 22, borderRadius: '50%', background: av.c,
+                        border: '1.5px solid #0B0420',
+                        marginLeft: idx === 0 ? 0 : -7,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 8, fontWeight: 700, color: '#fff',
+                        zIndex: 4 - idx,
+                      }}>{av.i[0]}</div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Messages list */}
+            <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {messages.map((msg, i) => {
+                const isMe = msg.isMe;
+                const showSender = !isMe && (i === 0 || messages[i - 1]?.from !== msg.from || messages[i - 1]?.isMe);
+                return (
+                  <div key={msg.id} className="gc-msg" style={{
+                    display: 'flex', flexDirection: isMe ? 'row-reverse' : 'row',
+                    alignItems: 'flex-start', gap: 10,
+                  }}>
+                    {/* Avatar */}
+                    {!isMe && (
+                      <div style={{
+                        width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
+                        background: msg.senderColor,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 12, fontWeight: 700, color: '#fff',
+                        opacity: showSender ? 1 : 0,
+                        marginTop: showSender ? 0 : 0,
+                      }}>{msg.senderInitials[0]}</div>
+                    )}
+
+                    <div style={{ maxWidth: '72%', display: 'flex', flexDirection: 'column', alignItems: isMe ? 'flex-end' : 'flex-start' }}>
+                      {/* Sender name + time */}
+                      {showSender && !isMe && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                          <span style={{ color: msg.senderColor, fontWeight: 700, fontSize: 12 }}>{msg.senderName}</span>
+                          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>{fmt(msg.time)}</span>
+                        </div>
+                      )}
+                      {isMe && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>{fmt(msg.time)}</span>
+                        </div>
+                      )}
+
+                      {/* Bubble */}
+                      <div style={{
+                        padding: '12px 16px',
+                        borderRadius: isMe ? '18px 4px 18px 18px' : '4px 18px 18px 18px',
+                        background: isMe
+                          ? 'linear-gradient(135deg, rgba(109,74,255,0.35), rgba(91,33,182,0.25))'
+                          : 'rgba(27,13,78,0.7)',
+                        border: '1px solid rgba(109,74,255,0.15)',
+                        color: 'rgba(255,255,255,0.9)', fontSize: 14, lineHeight: 1.6,
+                      }}>{msg.text}</div>
+
+                      {/* Reaction pill */}
+                      {msg.reaction && (
+                        <div className="gc-reaction" style={{
+                          display: 'inline-flex', alignItems: 'center', gap: 4,
+                          marginTop: 6,
+                          padding: '3px 8px', borderRadius: 20,
+                          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                          fontSize: 11, color: 'rgba(255,255,255,0.5)',
+                          cursor: 'pointer', transition: 'all 0.15s',
+                        }}>
+                          <span>{msg.reaction.emoji}</span>
+                          <span>{msg.reaction.label}</span>
+                          <span style={{ color: 'rgba(255,255,255,0.35)', marginLeft: 2 }}>{msg.reaction.count}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Own avatar */}
+                    {isMe && (
+                      <div style={{
+                        width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
+                        background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 12, fontWeight: 700, color: '#fff',
+                        marginTop: 0,
+                      }}>{myInitials}</div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {typing && <TypingIndicator name={typingName} color={typingColor} />}
+
+              {/* Join prompt if not joined */}
+              {!isJoined && (
+                <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                  <div style={{
+                    display: 'inline-block',
+                    background: 'rgba(27,13,78,0.6)', backdropFilter: 'blur(16px)',
+                    border: '1px solid rgba(109,74,255,0.2)', borderRadius: 20,
+                    padding: '20px 28px',
+                  }}>
+                    <div style={{ fontSize: 28, marginBottom: 8 }}>{activeGroup?.emoji}</div>
+                    <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: '0 0 4px' }}>{activeGroup?.name}</p>
+                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, margin: '0 0 14px', maxWidth: 260 }}>
+                      {activeGroup?.description}
+                    </p>
+                    <button onClick={() => joinGroup(activeGroup?.id)} style={{
+                      background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)',
+                      border: 'none', borderRadius: 12, color: '#fff',
+                      fontSize: 13, fontWeight: 700, padding: '10px 24px', cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(109,74,255,0.4)',
+                    }}>Join this circle</button>
+                  </div>
+                </div>
+              )}
+
+              <div ref={bottomRef} />
+            </div>
+          </div>
+
+          {/* Chat input bar */}
+          <div style={{
+            flexShrink: 0,
+            background: 'rgba(11,4,32,0.97)', backdropFilter: 'blur(20px)',
+            borderTop: '1px solid rgba(109,74,255,0.15)', padding: '12px 16px',
+          }}>
+            {isJoined ? (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  {/* Anonymous toggle */}
+                  <button onClick={() => setIsAnonymous(v => !v)} style={{
+                    padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer',
+                    background: isAnonymous ? 'rgba(109,74,255,0.25)' : 'rgba(255,255,255,0.06)',
+                    color: isAnonymous ? '#A78BFA' : 'rgba(255,255,255,0.4)',
+                    fontSize: 12, fontWeight: 600, flexShrink: 0, transition: 'all 0.2s',
+                    fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+                  }}>👤 Anonymous</button>
+
+                  {/* Input field + emoji icons */}
+                  <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center' }}>
+                    <input
+                      value={input}
+                      onChange={e => setInput(e.target.value)}
+                      onKeyPress={e => e.key === 'Enter' && sendMessage()}
+                      placeholder="Share your thoughts... (You're in a safe space)"
+                      style={{
+                        flex: 1, padding: '12px 80px 12px 16px', borderRadius: 20, border: 'none', outline: 'none',
+                        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(109,74,255,0.2)',
+                        color: '#fff', fontSize: 14,
+                        fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+                        width: '100%', boxSizing: 'border-box',
+                      }}
+                    />
+                    <div style={{
+                      position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                      display: 'flex', gap: 8, alignItems: 'center',
+                    }}>
+                      <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, padding: 2 }}>😊</button>
+                      <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, padding: 2 }}>💜</button>
+                    </div>
+                  </div>
+
+                  {/* Send button */}
+                  <button onClick={sendMessage} disabled={!input.trim() || typing} style={{
+                    width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
+                    background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)',
+                    border: 'none', cursor: input.trim() && !typing ? 'pointer' : 'not-allowed',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 4px 16px rgba(109,74,255,0.5)',
+                    opacity: input.trim() && !typing ? 1 : 0.4,
+                    transition: 'all 0.2s',
+                  }}>
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+                      <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                </div>
+
+                <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.25)', fontSize: 11, margin: '8px 0 0' }}>
+                  🔒 Anonymous &amp; safe • Be kind, be real
+                </p>
+              </>
+            ) : (
+              <div style={{ textAlign: 'center' }}>
+                <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, margin: '0 0 10px' }}>
+                  Join this circle to participate in the conversation
+                </p>
+                <button onClick={() => joinGroup(activeGroup?.id)} style={{
+                  background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)',
+                  border: 'none', borderRadius: 14, color: '#fff',
+                  fontSize: 14, fontWeight: 700, padding: '10px 28px', cursor: 'pointer',
+                  boxShadow: '0 4px 16px rgba(109,74,255,0.4)',
+                }}>Join Circle</button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ══ RIGHT SIDEBAR ══════════════════════════════════════════════════════ */}
+        <div className="gc-right-sidebar" style={{
+          width: 300, flexShrink: 0,
+          background: '#0D0525', borderLeft: '1px solid rgba(109,74,255,0.15)',
+          overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 14,
+        }}>
+
+          {/* Card 1 — Community Energy */}
+          <div style={{
+            background: 'rgba(27,13,78,0.6)', backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(109,74,255,0.2)', borderRadius: 22, padding: 18,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
+              <div>
+                <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>Community Energy</h3>
+                <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '3px 0 0' }}>Live mood of the circle</p>
+              </div>
+              <LotusIcon size={32} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {COMMUNITY_ENERGY.map(item => (
+                <div key={item.label}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ fontSize: 13 }}>{item.emoji}</span>
+                      <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>{item.label}</span>
+                    </div>
+                    <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, fontWeight: 600 }}>{item.pct}%</span>
+                  </div>
+                  <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.08)' }}>
+                    <div style={{
+                      height: '100%', borderRadius: 3, background: item.color,
+                      width: `${item.pct}%`, transition: 'width 0.5s ease',
+                    }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Card 2 — Upcoming Circle */}
+          {showUpcomingCircle && (
+            <div style={{
+              background: 'rgba(27,13,78,0.6)', backdropFilter: 'blur(16px)',
+              border: '1px solid rgba(109,74,255,0.2)', borderRadius: 22, padding: 18,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>Upcoming Circle</h3>
+                <button onClick={() => setShowUpcomingCircle(false)} className="gc-icon-btn" style={{
+                  background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%',
+                  width: 24, height: 24, cursor: 'pointer', color: 'rgba(255,255,255,0.4)', fontSize: 12,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>✕</button>
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(109,74,255,0.15), rgba(20,10,56,0.8))',
+                borderRadius: 14, padding: 14,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                      <span style={{ fontSize: 16 }}>🌙</span>
+                      <span style={{ color: '#fff', fontWeight: 700, fontSize: 14 }}>Breathwork Session</span>
+                    </div>
+                    <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12, margin: 0 }}>Tonight • 8:00 PM</p>
+                    <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '2px 0 0' }}>with Maya</p>
+                  </div>
+                  <MeditationFigure size={50} />
+                </div>
+
+                {/* Going avatars */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                  <div style={{ display: 'flex' }}>
+                    {[{ c: '#6D4AFF', i: 'A' }, { c: '#F472B6', i: 'B' }, { c: '#34C38F', i: 'C' }].map((av, idx) => (
+                      <div key={idx} style={{
+                        width: 22, height: 22, borderRadius: '50%', background: av.c,
+                        border: '1.5px solid #1B0D4E', marginLeft: idx === 0 ? 0 : -7,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 9, fontWeight: 700, color: '#fff',
+                      }}>{av.i}</div>
+                    ))}
+                  </div>
+                  <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12 }}>12 going</span>
+                </div>
+
+                <button style={{
+                  width: '100%', padding: '10px', borderRadius: 12, border: 'none', cursor: 'pointer',
+                  background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)', color: '#fff',
+                  fontSize: 13, fontWeight: 700, boxShadow: '0 4px 14px rgba(109,74,255,0.35)',
+                  fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+                }}>Join Circle</button>
+              </div>
+            </div>
+          )}
+
+          {/* Card 3 — People Similar To You */}
+          {showPeopleSimilar && (
+            <div style={{
+              background: 'rgba(27,13,78,0.6)', backdropFilter: 'blur(16px)',
+              border: '1px solid rgba(109,74,255,0.2)', borderRadius: 22, padding: 18,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>People Similar To You</h3>
+                <button onClick={() => setShowPeopleSimilar(false)} className="gc-icon-btn" style={{
+                  background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%',
+                  width: 24, height: 24, cursor: 'pointer', color: 'rgba(255,255,255,0.4)', fontSize: 12,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>✕</button>
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '0 0 14px' }}>
+                Connect with others on a similar journey
+              </p>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
+                <div style={{ display: 'flex' }}>
+                  {SIMILAR_PEOPLE.map((av, idx) => (
+                    <div key={idx} style={{
+                      width: 40, height: 40, borderRadius: '50%', background: av.c,
+                      border: '2px solid #0D0525', marginLeft: idx === 0 ? 0 : -10,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 13, fontWeight: 700, color: '#fff',
+                    }}>{av.initials[0]}</div>
+                  ))}
+                </div>
+                <div style={{
+                  width: 40, height: 40, borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.08)', border: '2px solid #0D0525',
+                  marginLeft: -10,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.5)',
+                }}>+6</div>
+              </div>
+
+              <button style={{
+                width: '100%', padding: '10px', borderRadius: 12, cursor: 'pointer',
+                background: 'transparent', border: '1px solid rgba(109,74,255,0.4)',
+                color: '#A78BFA', fontSize: 13, fontWeight: 700,
+                fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+              }}>Find My Match</button>
+            </div>
+          )}
+
+          {/* Card 4 — Need Support Right Now */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(244,114,182,0.1), rgba(109,74,255,0.1))',
+            border: '1px solid rgba(244,114,182,0.2)', borderRadius: 22, padding: 18,
+          }}>
+            <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 13, margin: '0 0 6px' }}>
+              Need Support Right Now?
+            </h3>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, margin: '0 0 14px' }}>
+              You're not alone. Help is always here.
             </p>
+            <button style={{
+              width: '100%', padding: '10px', borderRadius: 12, cursor: 'pointer',
+              background: 'rgba(109,74,255,0.2)', border: '1px solid rgba(109,74,255,0.4)',
+              color: '#fff', fontSize: 13, fontWeight: 600,
+              fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+            }}>🎧 Crisis Resources</button>
           </div>
-        ) : (
-          <div className="shrink-0 px-4 py-4 border-t text-center"
-            style={{ background: 'var(--bg-card)', borderColor: 'var(--border)' }}>
-            <p className="text-sm mb-2" style={{ color: 'var(--text-muted)' }}>Join this group to participate in the conversation</p>
-            <button onClick={() => joinGroup(activeGroup?.id)}
-              className="px-6 py-2.5 rounded-xl text-sm font-bold text-white hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg,#7c3aed,#2563eb)' }}>
-              Join Group
-            </button>
-          </div>
-        )}
+        </div>
       </div>
 
       {/* Create group modal */}
       {showCreate && <CreateGroupModal onClose={() => setShowCreate(false)} onCreate={handleCreate} />}
-    </div>
+    </>
   );
 }
