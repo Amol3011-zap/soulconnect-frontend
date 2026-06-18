@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
+import Footer from '../components/Footer';
 
 // ── Static Data (preserved) ───────────────────────────────────────────────────
 const QUOTES = [
@@ -1189,6 +1190,7 @@ export default function Matches() {
         </div>
 
       </div>
+      <Footer />
     </div>
   );
 }

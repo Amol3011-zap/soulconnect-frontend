@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { healerAPI, journeyAPI } from '../services/api';
+import Footer from '../components/Footer';
 
 // ── Data ───────────────────────────────────────────────────────────────────────
 const DEMO_HEALERS = [
@@ -1578,6 +1579,7 @@ export default function Healers() {
       {showAssessment && (
         <AssessmentModal onClose={() => setShowAssessment(false)} />
       )}
+      <Footer />
     </>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { meetupAPI } from '../services/api';
+import Footer from '../components/Footer';
 
 // ─── DEMO DATA (extended with premium fields) ───────────────────────────────
 const DEMO_MEETUPS = [
@@ -1318,6 +1319,7 @@ export default function Meetups() {
         </div>
 
       </div>
+      <Footer />
     </>
   );
 }

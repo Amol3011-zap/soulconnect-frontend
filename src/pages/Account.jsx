@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { userAPI, authAPI } from '../services/api';
 import ThemeToggle from '../components/ThemeToggle';
+import Footer from '../components/Footer';
 
 const PROBLEM_LABELS = {
   anxiety: 'Anxiety', depression: 'Depression', ocd_intrusive_thoughts: 'OCD',
@@ -183,17 +184,19 @@ export default function Account() {
         <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
           {[
             { icon: '🔑', label: 'Change Password', sub: 'Update your login password', action: () => setShowChangePw(v => !v) },
-            { icon: '🔒', label: 'Privacy & Safety', sub: 'Control who sees your info', action: () => {} },
+            { icon: '🔒', label: 'Privacy & Safety', sub: 'Community rules & safety policy', action: () => navigate('/safety') },
+            { icon: '📋', label: 'Community Rules', sub: 'Guidelines for our community', action: () => navigate('/community-rules') },
+            { icon: '🆘', label: 'Crisis Resources', sub: '24/7 helplines & emergency support', action: () => navigate('/crisis-support'), crisis: true },
+            { icon: '🚩', label: 'Report a Concern', sub: 'Report users, guides or content', action: () => navigate('/report') },
             { icon: '🔔', label: 'Notifications', sub: 'Manage alerts', action: () => {} },
-            { icon: '🆘', label: 'Crisis Resources', sub: '24/7 helplines & support', action: () => {} },
             { icon: '💬', label: 'Help & Support', sub: 'Contact the team', action: () => {} },
-          ].map(({ icon, label, sub, action }, i, arr) => (
+          ].map(({ icon, label, sub, action, crisis }, i, arr) => (
             <button key={label} onClick={action}
               className="w-full flex items-center gap-4 px-5 py-4 text-left transition-colors hover:opacity-80"
               style={{ borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
               <span className="text-xl shrink-0">{icon}</span>
               <div className="flex-1">
-                <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{label}</p>
+                <p className="text-sm font-semibold" style={{ color: crisis ? '#DC2626' : 'var(--text)' }}>{label}</p>
                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{sub}</p>
               </div>
               <span style={{ color: 'var(--text-muted)' }}>›</span>
@@ -248,6 +251,7 @@ export default function Account() {
           SoulConnect v1.0 · Your data is private & encrypted
         </p>
       </div>
+      <Footer />
     </div>
   );
 }

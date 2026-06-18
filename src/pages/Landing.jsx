@@ -830,11 +830,14 @@ export default function Landing() {
               {[
                 { label:'Terms', to:'/terms' },
                 { label:'Privacy', to:'/terms#privacy' },
-              ].map((lk,i) => (
+                { label:'Safety Policy', to:'/safety' },
+                { label:'Community Rules', to:'/community-rules' },
+                { label:'Crisis Support 🆘', to:'/crisis-support', crisis: true },
+              ].map((lk,i,arr) => (
                 <React.Fragment key={i}>
-                  <Link to={lk.to} style={{ fontSize:13, color:'#1a3d2e', fontWeight:500, textDecoration:'none' }}
+                  <Link to={lk.to} style={{ fontSize:13, color: lk.crisis ? '#DC2626' : '#1a3d2e', fontWeight: lk.crisis ? 700 : 500, textDecoration:'none' }}
                     onMouseEnter={e=>{ e.currentTarget.style.color=P; }}
-                    onMouseLeave={e=>{ e.currentTarget.style.color='#1a3d2e'; }}>{lk.label}</Link>
+                    onMouseLeave={e=>{ e.currentTarget.style.color= lk.crisis ? '#DC2626' : '#1a3d2e'; }}>{lk.label}</Link>
                   <span style={{ color:'#C8C8C0', fontSize:13 }}>·</span>
                 </React.Fragment>
               ))}

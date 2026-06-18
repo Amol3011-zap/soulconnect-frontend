@@ -244,7 +244,9 @@ export default function Navbar() {
                     { label: '⭐  Go Premium',    to: '/premium', hint: 'Unlock all features', accent: true },
                     { label: '📔  Soul Journal',  to: '/mood',    hint: 'Daily reflection' },
                     { label: '🧘  Healers',       to: '/healers', hint: 'Book a session' },
-                  ].map(({ label, to, hint, accent }) => (
+                    { label: '🛡️  Safety & Trust', to: '/safety',  hint: 'Community rules & policies' },
+                    { label: '🆘  Crisis Support', to: '/crisis-support', hint: '24/7 emergency resources', crisis: true },
+                  ].map(({ label, to, hint, accent, crisis }) => (
                     <button key={to}
                       onClick={() => { navigate(to); setProfileOpen(false); }}
                       className="sc-dropdown-item"
@@ -255,7 +257,7 @@ export default function Navbar() {
                         background: 'none', cursor: 'pointer',
                       }}
                     >
-                      <span style={{ fontSize: 13, color: accent ? '#6D4AFF' : '#374151', fontWeight: 600, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>{label}</span>
+                      <span style={{ fontSize: 13, color: crisis ? '#DC2626' : accent ? '#6D4AFF' : '#374151', fontWeight: 600, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>{label}</span>
                       <span style={{ fontSize: 10, color: '#9CA3AF', marginTop: 1 }}>{hint}</span>
                     </button>
                   ))}
