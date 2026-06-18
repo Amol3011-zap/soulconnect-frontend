@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { journeyAPI } from '../services/api';
 
 const MOODS = [
   { score: 1,  emoji: '😭', label: 'Terrible',  color: '#ef4444' },
@@ -184,6 +185,7 @@ export default function MoodTracker() {
     const updated = [...entries.filter(e => e.date !== today), entry].sort((a, b) => a.date.localeCompare(b.date));
     setEntries(updated);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    journeyAPI.logActivity({ activity_type: 'check_in', duration_minutes: 0, intensity: Math.round(selectedMood / 10 * 10), notes: 'Auto-logged from mood check-in' }).catch(() => {});
     setSubmitted(true);
     setActiveTab('progress');
   };

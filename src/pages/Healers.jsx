@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { healerAPI } from '../services/api';
+import { healerAPI, journeyAPI } from '../services/api';
 
 // ── Data ───────────────────────────────────────────────────────────────────────
 const DEMO_HEALERS = [
@@ -353,6 +353,7 @@ function BookingModal({ healer, grad, onClose, onConfirm }) {
     if (!selectedSlot) { setError('Please choose an available time slot'); return; }
     if (!description.trim()) { setError('Please describe your situation in a few words'); return; }
     setError('');
+    journeyAPI.logActivity({ activity_type: 'healer_booking', duration_minutes: 0, intensity: 8, notes: 'Auto-logged from healer booking' }).catch(() => {});
     setStep(2);
   };
 

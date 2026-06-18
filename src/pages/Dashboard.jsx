@@ -5,6 +5,7 @@ import { useThemeStore } from '../store/theme';
 import ThemeToggle from '../components/ThemeToggle';
 import ActivitySuggestions from '../components/ActivitySuggestions';
 import GuidedHealing from '../components/GuidedHealing';
+import { journeyAPI } from '../services/api';
 
 // ── Demo match — one chatbot persona shown to every new user ───────────────────
 const DEMO_MATCHES = [
@@ -422,6 +423,7 @@ export default function Dashboard() {
   const [searchFocused, setSearchFocused]     = useState(false);
   const [selectedMood, setSelectedMood]       = useState(null);
   const bottomRef = useRef(null);
+  const chatLoggedRef = useRef(false);
 
   // Pre-select match from Matches page
   useEffect(() => {
@@ -456,6 +458,11 @@ export default function Dashboard() {
     setTimeout(() => {
       setTyping(false);
       setMessages(prev => [...prev, { id: msgId + 1, from: 'bot', text: response, time: new Date() }]);
+      // Auto-log chat_session once per component mount (silent, no UI feedback)
+      if (!chatLoggedRef.current) {
+        chatLoggedRef.current = true;
+        journeyAPI.logActivity({ activity_type: 'chat_session', duration_minutes: 0, intensity: 5, notes: 'Auto-logged from chat' }).catch(() => {});
+      }
     }, delay);
   };
 
