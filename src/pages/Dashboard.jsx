@@ -172,10 +172,8 @@ function getBotResponse(userText, problem, state, matchName) {
 
 // ── Keyframe CSS ──────────────────────────────────────────────────────────────
 const DASH_STYLES = `
-  @media (max-width: 640px) {
-    .dash-page-bg { padding: 0 !important; align-items: stretch !important; }
-    .dash-box { border-radius: 0 !important; height: 100dvh !important; box-shadow: none !important; }
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
+
   @keyframes dotBounce {
     0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
     40% { transform: translateY(-6px); opacity: 1; }
@@ -185,60 +183,180 @@ const DASH_STYLES = `
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes pulseGreen {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(125,211,160,0.0); }
-    50%       { box-shadow: 0 0 0 4px rgba(125,211,160,0.25); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(52,195,143,0.0); }
+    50%       { box-shadow: 0 0 0 4px rgba(52,195,143,0.3); }
   }
-  .dash-scroll::-webkit-scrollbar { width: 4px; }
-  .dash-scroll::-webkit-scrollbar-track { background: transparent; }
-  .dash-scroll::-webkit-scrollbar-thumb { background: rgba(109,94,245,0.18); border-radius: 4px; }
-  .dash-msg-enter { animation: slideInChat 0.25s ease forwards; }
+  @keyframes dcFloat {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+  }
+  @keyframes dcPulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.4; transform:scale(1.8); }
+  }
+  @keyframes dcFadeUp {
+    from { opacity:0; transform:translateY(10px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes dcBreath {
+    0%,100% { transform:scale(1); }
+    50% { transform:scale(1.04); }
+  }
+  .dc-msg { animation: dcFadeUp 0.3s ease both; }
+  .dc-hover:hover { transform:translateY(-2px); transition:transform 0.2s ease; }
+  .dc-scroll::-webkit-scrollbar { width: 4px; }
+  .dc-scroll::-webkit-scrollbar-track { background: transparent; }
+  .dc-scroll::-webkit-scrollbar-thumb { background: rgba(109,74,255,0.18); border-radius: 4px; }
+  .dc-msg-enter { animation: slideInChat 0.25s ease forwards; }
+  @media (max-width: 900px) {
+    .dc-layout { grid-template-columns: 1fr !important; }
+    .dc-sidebar { display: none !important; }
+    .dc-right { display: none !important; }
+  }
 `;
 
-// ── Background pattern (light) ────────────────────────────────────────────────
-function BgParticles() {
-  return null; // no heavy particles on light theme
+// ── Lotus SVG helper ──────────────────────────────────────────────────────────
+function LotusSmall({ size = 24 }) {
+  return (
+    <svg viewBox="0 0 32 32" style={{ width: size, height: size }}>
+      <ellipse cx="16" cy="18" rx="4" ry="7" fill="none" stroke="#A78BFA" strokeWidth="1.4" />
+      <ellipse cx="16" cy="18" rx="4" ry="7" fill="none" stroke="#A78BFA" strokeWidth="1.4" transform="rotate(45,16,18)" />
+      <ellipse cx="16" cy="18" rx="4" ry="7" fill="none" stroke="#A78BFA" strokeWidth="1.4" transform="rotate(-45,16,18)" />
+      <ellipse cx="16" cy="18" rx="4" ry="7" fill="none" stroke="#A78BFA" strokeWidth="1.4" transform="rotate(90,16,18)" />
+      <circle cx="16" cy="17" r="3.5" fill="#F5B841" opacity="0.9" />
+      <circle cx="16" cy="17" r="2" fill="#FFD77A" />
+    </svg>
+  );
+}
+
+// ── Welcome Meditation SVG ────────────────────────────────────────────────────
+function WelcomeMeditation() {
+  return (
+    <svg viewBox="0 0 280 200" style={{ width: '100%', height: '100%', minHeight: 200, display: 'block' }}>
+      <defs>
+        <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#EDE5FF" />
+          <stop offset="60%" stopColor="#DDD0FF" />
+          <stop offset="100%" stopColor="#D4C6FF" />
+        </radialGradient>
+        <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(255,220,180,0.6)" />
+          <stop offset="40%" stopColor="rgba(180,140,255,0.35)" />
+          <stop offset="65%" stopColor="transparent" />
+        </radialGradient>
+        <filter id="blur8">
+          <feGaussianBlur stdDeviation="8" />
+        </filter>
+      </defs>
+      {/* Background */}
+      <rect width="280" height="200" fill="url(#bgGrad)" />
+      {/* Sacred geometry — concentric circles */}
+      {[20,40,60,80,100,120].map(r => (
+        <circle key={r} cx="140" cy="95" r={r} fill="none" stroke="rgba(109,74,255,0.18)" strokeWidth="0.8" />
+      ))}
+      {/* 12 spokes */}
+      {Array.from({length:12}).map((_,i) => {
+        const angle = (i * 30) * Math.PI / 180;
+        return (
+          <line
+            key={i}
+            x1={140 + 20 * Math.cos(angle)} y1={95 + 20 * Math.sin(angle)}
+            x2={140 + 120 * Math.cos(angle)} y2={95 + 120 * Math.sin(angle)}
+            stroke="rgba(109,74,255,0.1)" strokeWidth="0.8"
+          />
+        );
+      })}
+      {/* Radial glow */}
+      <ellipse cx="140" cy="100" rx="80" ry="70" fill="url(#glowGrad)" filter="url(#blur8)" opacity="0.8" />
+      {/* Lotus petals at bottom */}
+      {[-60,-30,0,30,60].map((deg,i) => {
+        const angle = (deg - 90) * Math.PI / 180;
+        const cx = 140 + 36 * Math.cos(angle);
+        const cy = 160 + 36 * Math.sin(angle);
+        return (
+          <ellipse
+            key={i}
+            cx={cx} cy={cy} rx="14" ry="28"
+            fill="rgba(196,181,253,0.4)"
+            transform={`rotate(${deg}, ${cx}, ${cy})`}
+          />
+        );
+      })}
+      {/* Meditating figure */}
+      {/* Legs/base */}
+      <ellipse cx="140" cy="153" rx="38" ry="12" fill="#3D2B8E" opacity="0.9" />
+      {/* Left knee */}
+      <ellipse cx="112" cy="148" rx="14" ry="9" fill="#3D2B8E" opacity="0.85" />
+      {/* Right knee */}
+      <ellipse cx="168" cy="148" rx="14" ry="9" fill="#3D2B8E" opacity="0.85" />
+      {/* Torso */}
+      <rect x="130" y="118" width="20" height="30" rx="8" fill="#3D2B8E" opacity="0.9" />
+      {/* Left arm */}
+      <path d="M130 128 Q112 138 112 148" stroke="#3D2B8E" strokeWidth="8" fill="none" strokeLinecap="round" />
+      {/* Right arm */}
+      <path d="M150 128 Q168 138 168 148" stroke="#3D2B8E" strokeWidth="8" fill="none" strokeLinecap="round" />
+      {/* Neck */}
+      <rect x="135" y="109" width="10" height="12" rx="4" fill="#3D2B8E" />
+      {/* Head */}
+      <circle cx="140" cy="96" r="14" fill="#3D2B8E" />
+      {/* Hair bun */}
+      <ellipse cx="140" cy="84" rx="8" ry="5" fill="#2D1F6B" />
+      <circle cx="140" cy="80" r="4" fill="#2D1F6B" />
+      {/* Gold sparkle dots — animated */}
+      {[
+        {x:70, y:40, delay:'0s'}, {x:200, y:30, delay:'0.5s'},
+        {x:240, y:80, delay:'1s'}, {x:60, y:130, delay:'1.5s'},
+        {x:210, y:140, delay:'0.8s'}, {x:90, y:170, delay:'1.2s'},
+      ].map((dot, i) => (
+        <circle
+          key={i}
+          cx={dot.x} cy={dot.y} r="3"
+          fill="#F5B841"
+          style={{ animation: `dcFloat 3s ease infinite`, animationDelay: dot.delay }}
+        />
+      ))}
+    </svg>
+  );
 }
 
 // ── Safety Notice ─────────────────────────────────────────────────────────────
 function SafetyNotice({ onDismiss }) {
   return (
     <div style={{
-      margin: '14px 16px 6px',
-      borderRadius: 16,
-      background: '#FFFBEB',
-      border: '1px solid #FDE68A',
+      margin: '0 24px 8px',
+      borderRadius: 14,
+      background: 'rgba(255,251,235,0.95)',
+      border: '1px solid rgba(253,230,138,0.8)',
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: 10,
+      padding: '10px 14px',
     }}>
-      <div style={{ padding: '12px 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-            <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>⚠️</span>
-            <div>
-              <p style={{ margin: '0 0 3px', fontSize: 11, fontWeight: 700, color: '#92400E' }}>
-                Safety &amp; Privacy Notice
-              </p>
-              <p style={{ margin: 0, fontSize: 11, color: '#78350F', lineHeight: 1.6 }}>
-                Never share your phone number, address, or social media with matches.
-                Your safety is our priority. If you feel unsafe,{' '}
-                <span style={{ fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
-                  visit our Safety Center
-                </span>.
-                This is a peer support space — not a substitute for professional care.
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onDismiss}
-            aria-label="Dismiss safety notice"
-            style={{
-              flexShrink: 0, width: 44, height: 44, borderRadius: '50%',
-              background: '#FEF3C7', border: '1px solid #FDE68A',
-              color: '#92400E', fontSize: 14, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-            ✕
-          </button>
-        </div>
+      <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>⚠️</span>
+      <div style={{ flex: 1 }}>
+        <p style={{ margin: '0 0 2px', fontSize: 11, fontWeight: 700, color: '#92400E' }}>
+          Safety &amp; Privacy Notice
+        </p>
+        <p style={{ margin: 0, fontSize: 11, color: '#78350F', lineHeight: 1.6 }}>
+          Never share your phone number, address, or social media with matches.
+          Your safety is our priority. If you feel unsafe,{' '}
+          <span style={{ fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}>
+            visit our Safety Center
+          </span>.
+          This is a peer support space — not a substitute for professional care.
+        </p>
       </div>
+      <button
+        onClick={onDismiss}
+        aria-label="Dismiss safety notice"
+        style={{
+          flexShrink: 0, width: 24, height: 24, borderRadius: '50%',
+          background: 'rgba(146,64,14,0.1)', border: 'none',
+          color: '#92400E', fontSize: 12, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+        ✕
+      </button>
     </div>
   );
 }
@@ -246,21 +364,23 @@ function SafetyNotice({ onDismiss }) {
 // ── Typing indicator ──────────────────────────────────────────────────────────
 function TypingIndicator({ grad }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '4px 16px', alignItems: 'flex-end', gap: 8 }}>
+    <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '4px 0 4px 0', alignItems: 'flex-end', gap: 10, marginBottom: 16 }}>
       <div style={{
-        width: 28, height: 28, borderRadius: '50%',
-        background: grad || 'linear-gradient(135deg,#6D5EF5,#8B5CF6)',
+        width: 36, height: 36, borderRadius: '50%',
+        background: grad || 'linear-gradient(135deg, #7c3aed, #6d28d9)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 10, color: '#fff', fontWeight: 700, flexShrink: 0,
+        fontSize: 11, color: '#fff', fontWeight: 700, flexShrink: 0,
       }}>
-        P
+        PR
       </div>
       <div style={{
-        padding: '10px 16px', borderRadius: '20px 20px 20px 4px',
-        background: '#F5F3FF',
-        border: '1px solid #EDE9FE',
+        padding: '14px 18px',
+        borderRadius: '4px 20px 20px 20px',
+        background: '#FFFFFF',
+        border: '1px solid rgba(109,74,255,0.1)',
+        boxShadow: '0 2px 12px rgba(109,74,255,0.07)',
       }}>
-        <div style={{ display: 'flex', gap: 4, alignItems: 'center', height: 14 }}>
+        <div style={{ display: 'flex', gap: 5, alignItems: 'center', height: 14 }}>
           {[0, 1, 2].map(i => (
             <div
               key={i}
@@ -279,23 +399,28 @@ function TypingIndicator({ grad }) {
 
 // ── Main Dashboard ────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const { logout }    = useAuthStore();
-  const navigate      = useNavigate();
-  const location      = useLocation();
+  const { logout, user } = useAuthStore();
+  const navigate         = useNavigate();
+  const location         = useLocation();
 
   const [matches]              = useState(DEMO_MATCHES);
   const [activeMatch, setActiveMatch]         = useState(DEMO_MATCHES[0]);
-  const [chatHistory, setChatHistory]         = useState({});
-  const [conversationState, setConversationState] = useState({});
+  const [messages, setMessages]               = useState([
+    { id: 'seed', from: 'bot', text: DEMO_MATCHES[0].last_message, time: new Date() },
+  ]);
   const [input, setInput]                     = useState('');
   const [typing, setTyping]                   = useState(false);
+  const [conversationState, setConversationState] = useState({
+    [DEMO_MATCHES[0].id]: { userMessageCount: 0, mood: 'unknown', hasOpenedUp: false, askedAboutTherapist: false },
+  });
   const [safetyDismissed, setSafetyDismissed] = useState({});
   const [showActivity, setShowActivity]       = useState(false);
   const [rightTab, setRightTab]               = useState('activities');
-  const [mainTab, setMainTab]                 = useState('chat'); // 'chat' | 'relief' | 'healing'
+  const [mainTab, setMainTab]                 = useState('chat');
   const [mobileView, setMobileView]           = useState('list');
   const [searchQuery, setSearchQuery]         = useState('');
   const [searchFocused, setSearchFocused]     = useState(false);
+  const [selectedMood, setSelectedMood]       = useState(null);
   const bottomRef = useRef(null);
 
   // Pre-select match from Matches page
@@ -306,43 +431,18 @@ export default function Dashboard() {
     }
   }, [location.state]);
 
-  // Init chat history
-  useEffect(() => {
-    const initHistory = {};
-    const initState   = {};
-    DEMO_MATCHES.forEach(m => {
-      initHistory[m.id] = [
-        {
-          id: 1, from: 'bot',
-          text: `Hi! 👋 I'm ${m.name}. SoulConnect just matched us and I'm honestly really glad — I don't always find it easy to connect with new people, but something about this felt right 😊`,
-          time: new Date(Date.now() - 5 * 60000),
-        },
-        {
-          id: 2, from: 'bot',
-          text: `How are you doing today? And I mean that genuinely — not looking for "fine, thanks". What's actually going on with you? 💙`,
-          time: new Date(Date.now() - 4 * 60000),
-        },
-      ];
-      initState[m.id] = { userMessageCount: 0, mood: 'unknown', hasOpenedUp: false, askedAboutTherapist: false };
-    });
-    setChatHistory(initHistory);
-    setConversationState(initState);
-  }, []);
-
+  // Scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [chatHistory, typing, activeMatch]);
+  }, [messages, typing, activeMatch]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || typing) return;
-    const text  = input.trim();
+  const sendMessage = async (overrideText) => {
+    const text = (overrideText || input).trim();
+    if (!text || typing) return;
     setInput('');
     const msgId = Date.now();
 
-    setChatHistory(prev => ({
-      ...prev,
-      [activeMatch.id]: [...(prev[activeMatch.id] || []), { id: msgId, from: 'me', text, time: new Date() }],
-    }));
+    setMessages(prev => [...prev, { id: msgId, from: 'me', text, time: new Date() }]);
 
     const currentState = conversationState[activeMatch.id] || {
       userMessageCount: 0, mood: 'unknown', hasOpenedUp: false, askedAboutTherapist: false,
@@ -355,747 +455,826 @@ export default function Dashboard() {
     setTyping(true);
     setTimeout(() => {
       setTyping(false);
-      setChatHistory(prev => ({
-        ...prev,
-        [activeMatch.id]: [...(prev[activeMatch.id] || []), { id: msgId + 1, from: 'bot', text: response, time: new Date() }],
-      }));
+      setMessages(prev => [...prev, { id: msgId + 1, from: 'bot', text: response, time: new Date() }]);
     }, delay);
   };
 
-  const messages        = chatHistory[activeMatch?.id] || [];
-  const filteredMatches = matches.filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()));
-  const fmt             = (d) => d?.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  const fmt = (d) => d?.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
 
-  // ── Colour constants — Light theme ─────────────────────────────────────────
-  const SIDEBAR_BG   = '#FFFFFF';
-  const CHAT_BG      = '#FAFAFD';
-  const BORDER_COLOR = '#EDE9FE';
-  const GOLD         = '#6D5EF5';
+  // Greeting based on time
+  const hour = new Date().getHours();
+  const timeGreeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+  const timeEmoji = hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
+
+  // First name
+  const firstName = user?.full_name ? user.full_name.split(' ')[0] : 'Friend';
+
+  // Daily affirmation quotes
+  const AFFIRMATIONS = [
+    "You are enough, exactly as you are right now. Healing is not linear, and every small step matters.",
+    "Be gentle with yourself. You are a child of the universe, no less than the trees and the stars.",
+    "Within you right now is the power to do things you never dreamed possible. This power becomes available as you change your beliefs.",
+    "You don't have to be positive all the time. It's perfectly okay to feel sad, angry, annoyed, frustrated, scared and anxious.",
+    "Healing takes courage, and we all have courage, even if we have to dig a little to find it.",
+    "You are braver than you believe, stronger than you seem, and more loved than you know.",
+    "Every day is a new beginning. Take a deep breath, smile, and start again.",
+  ];
+  const todayAffirmation = AFFIRMATIONS[new Date().getDay()];
+
+  // Conversation cards data
+  const convCards = [
+    {
+      id: 'priya', name: 'Priya', sub: 'AI Companion', initials: 'PR',
+      grad: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
+      online: true, badge: { text: 'AI Companion', color: '#34C38F', bg: 'rgba(52,195,143,0.1)' },
+      time: 'Just now', lastMsg: 'How was your day today? 💙', unread: 0,
+    },
+    {
+      id: 'anxiety', name: 'Anxiety Support Circle', sub: 'Group', initials: '👥',
+      grad: 'linear-gradient(135deg, #7C3AED, #4338CA)',
+      online: false, badge: null,
+      time: '9:30 AM', lastMsg: 'Riya: Thank you everyone, this...', unread: 4,
+    },
+    {
+      id: 'mindful', name: 'Mindfulness Group', sub: 'Group', initials: '🌿',
+      grad: 'linear-gradient(135deg, #059669, #10B981)',
+      online: false, badge: null,
+      time: 'Yesterday', lastMsg: 'Aman: Great session today 🙏', unread: 0,
+    },
+    {
+      id: 'healing', name: 'Healing Circle', sub: 'Group', initials: '💗',
+      grad: 'linear-gradient(135deg, #BE185D, #EC4899)',
+      online: false, badge: null,
+      time: 'Yesterday', lastMsg: 'Neha: Sending love to all 💜', unread: 0,
+    },
+  ];
+
+  const moodChips = [
+    { emoji: '😰', label: 'Anxious' },
+    { emoji: '😔', label: 'Sad' },
+    { emoji: '💔', label: 'Hurt' },
+    { emoji: '😴', label: 'Tired' },
+    { emoji: '🙂', label: 'Calm' },
+  ];
+
+  const quickStarters = [
+    '🌱 I had a difficult day',
+    '💜 I need support',
+    '🧘 Help me calm down',
+    '✨ I want to reflect',
+  ];
+
+  const userInitials = user?.full_name
+    ? user.full_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2)
+    : 'ME';
 
   return (
     <>
       <style>{DASH_STYLES}</style>
 
-      {/* Page background */}
-      <div className="dash-page-bg" style={{
-        minHeight: '100dvh',
-        background: '#FAFAFD',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '16px',
-        boxSizing: 'border-box',
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-      }}>
-
-      {/* Chat box container */}
-      <div className="dash-box" style={{
-        display: 'flex',
-        overflow: 'hidden',
-        width: '100%',
-        maxWidth: 1100,
-        height: 'calc(100dvh - 32px)',
-        background: '#FFFFFF',
-        borderRadius: 20,
-        boxShadow: '0 0 0 1px #EDE9FE, 0 8px 48px rgba(109,94,245,0.1)',
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-      }}>
-
-        {/* ── LEFT SIDEBAR ────────────────────────────────────────────────── */}
+      {/* Fixed layout — 3 columns */}
+      <div
+        className="dc-layout"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          marginTop: 64,
+          display: 'grid',
+          gridTemplateColumns: '280px 1fr 300px',
+          height: 'calc(100vh - 64px)',
+          background: '#FAF7FF',
+          fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
+          overflow: 'hidden',
+        }}
+      >
+        {/* ─────────────────── LEFT SIDEBAR ─────────────────────────────────── */}
         <div
-          className={mobileView === 'chat' ? 'hidden md:flex' : 'flex'}
+          className="dc-sidebar"
           style={{
+            background: '#FFFFFF',
+            borderRight: '1px solid rgba(109,74,255,0.1)',
+            display: 'flex',
             flexDirection: 'column',
-            width: '100%',
-            maxWidth: 320,
-            flexShrink: 0,
-            borderRight: `1px solid ${BORDER_COLOR}`,
-            background: SIDEBAR_BG,
-            display: mobileView === 'chat' ? 'none' : 'flex',
+            overflow: 'hidden',
           }}
         >
-          {/* Logo area */}
-          <div style={{ padding: 'max(env(safe-area-inset-top,0px),20px) 20px 12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{
-                  width: 34, height: 34, borderRadius: 12,
-                  background: 'transparent',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                  <img src="/logo-navbar.png" alt="SoulConnect" style={{ height: 34, width: 34, objectFit: 'contain', borderRadius: 8 }} />
+          {/* Top section */}
+          <div style={{ padding: '20px 16px 12px', flexShrink: 0 }}>
+            {/* Logo row */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+              <LotusSmall size={28} />
+              <div style={{ lineHeight: 1 }}>
+                <div style={{ fontSize: 18, fontWeight: 700, color: '#1A1333', lineHeight: 1.2 }}>SoulConnect</div>
+                <div style={{ fontSize: 9, color: '#6B7280', letterSpacing: '0.15em', marginTop: 2, textTransform: 'uppercase' }}>
+                  Heal · Connect · Grow
                 </div>
-                <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 36, width: 'auto', objectFit: 'contain', maxWidth: 160 }} />
               </div>
-              <ThemeToggle />
             </div>
 
-            {/* Search bar */}
+            {/* New Conversation button */}
+            <button
+              style={{
+                width: '100%',
+                background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)',
+                color: '#fff',
+                fontWeight: 700,
+                borderRadius: 14,
+                padding: '12px',
+                fontSize: 14,
+                boxShadow: '0 4px 16px rgba(109,74,255,0.3)',
+                border: 'none',
+                cursor: 'pointer',
+                marginBottom: 12,
+                fontFamily: 'inherit',
+              }}
+            >
+              ✨ New Conversation
+            </button>
+
+            {/* Search input */}
             <div style={{ position: 'relative' }}>
               <span style={{
                 position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
-                fontSize: 13, color: 'rgba(196,181,253,0.4)',
+                fontSize: 13, color: '#9CA3AF', pointerEvents: 'none',
               }}>🔍</span>
               <input
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
-                placeholder="Search matches..."
+                placeholder="Search conversations..."
                 style={{
                   width: '100%', boxSizing: 'border-box',
-                  paddingLeft: 36, paddingRight: 14, paddingTop: 10, paddingBottom: 10,
-                  borderRadius: 14, fontSize: 13,
+                  padding: '10px 14px 10px 36px',
                   background: '#F5F3FF',
-                  color: '#1F2937',
-                  border: searchFocused
-                    ? `1.5px solid #6D5EF5`
-                    : '1.5px solid #EDE9FE',
+                  border: searchFocused ? '1px solid #6D4AFF' : '1px solid rgba(109,74,255,0.15)',
+                  borderRadius: 12,
+                  fontSize: 13,
+                  color: '#1A1333',
                   outline: 'none',
+                  fontFamily: 'inherit',
                   transition: 'border-color 0.2s',
                 }}
               />
             </div>
           </div>
 
-          {/* Demo notice */}
-          <div style={{
-            margin: '0 12px 12px',
-            padding: '10px 14px',
-            borderRadius: 14,
-            background: '#F5F3FF',
-            border: '1px solid #EDE9FE',
-            display: 'flex', alignItems: 'center', gap: 10,
-          }}>
-            <span style={{ fontSize: 14 }}>✨</span>
-            <div>
-              <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#6D5EF5' }}>Demo Active</p>
-              <p style={{ margin: 0, fontSize: 10, color: '#9CA3AF', lineHeight: 1.4 }}>
-                Chat with Priya — a real-feeling AI companion
-              </p>
+          {/* Conversation cards — scrollable */}
+          <div
+            className="dc-scroll"
+            style={{ flex: 1, overflowY: 'auto' }}
+          >
+            <div style={{ padding: '8px 16px', fontSize: 10, fontWeight: 700, color: '#6B7280', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              RECENT
             </div>
-          </div>
-
-          {/* Match list */}
-          <div className="dash-scroll" style={{ flex: 1, overflowY: 'auto', padding: '0 10px' }}>
-            {filteredMatches.map(m => {
-              const isActive = activeMatch?.id === m.id;
+            {convCards.map((card, idx) => {
+              const isSelected = idx === 0; // Priya is selected by default
               return (
-                <button
-                  key={m.id}
-                  onClick={() => { setActiveMatch(m); setMobileView('chat'); }}
+                <div
+                  key={card.id}
+                  onClick={() => idx === 0 && setMobileView('chat')}
                   style={{
-                    width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-                    padding: '11px 12px', borderRadius: 16, marginBottom: 4,
-                    textAlign: 'left', cursor: 'pointer',
-                    background: isActive
-                      ? '#F5F3FF'
+                    padding: '12px 16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    cursor: 'pointer',
+                    background: isSelected
+                      ? 'linear-gradient(135deg, rgba(109,74,255,0.08), rgba(167,139,250,0.04))'
                       : 'transparent',
-                    border: isActive
-                      ? '1.5px solid #EDE9FE'
-                      : '1.5px solid transparent',
-                    borderLeft: isActive ? '3px solid #6D5EF5' : '3px solid transparent',
-                    transition: 'all 0.2s ease',
-                    boxShadow: isActive ? '0 2px 12px rgba(109,94,245,0.08)' : 'none',
+                    borderLeft: isSelected ? '3px solid #6D4AFF' : '3px solid transparent',
+                    transition: 'background 0.2s',
                   }}
+                  onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(109,74,255,0.04)'; }}
+                  onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
                 >
+                  {/* Avatar */}
                   <div style={{ position: 'relative', flexShrink: 0 }}>
                     <div style={{
-                      width: 44, height: 44, borderRadius: 14,
-                      background: m.grad,
+                      width: 44, height: 44, borderRadius: '50%',
+                      background: card.grad,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 13, fontWeight: 700, color: '#fff',
-                      boxShadow: isActive ? '0 2px 8px rgba(109,94,245,0.2)' : 'none',
+                      fontSize: typeof card.initials === 'string' && card.initials.length <= 2 ? 13 : 18,
+                      fontWeight: 700, color: '#fff',
                     }}>
-                      {m.initials}
+                      {card.initials}
                     </div>
-                    <div style={{
-                      position: 'absolute', bottom: -1, right: -1,
-                      width: 11, height: 11, borderRadius: '50%',
-                      background: m.online ? '#34d399' : '#6b7280',
-                      border: '2px solid #08020f',
-                      animation: m.online ? 'pulseGreen 2.5s ease-in-out infinite' : 'none',
-                    }} />
+                    {card.online && (
+                      <div style={{
+                        position: 'absolute', bottom: 1, right: 1,
+                        width: 10, height: 10, borderRadius: '50%',
+                        background: '#34C38F',
+                        border: '2px solid white',
+                        animation: 'pulseGreen 2s infinite',
+                      }} />
+                    )}
                   </div>
+                  {/* Text */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
-                        <span style={{
-                          fontSize: 13, fontWeight: 700, color: '#1F2937',
-                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                        }}>{m.name}</span>
-                        {m.isDemo && (
+                        <span style={{ fontSize: 14, fontWeight: 700, color: '#1A1333', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {card.name}
+                        </span>
+                        {card.badge && (
                           <span style={{
-                            fontSize: 8, fontWeight: 700, padding: '2px 5px', borderRadius: 6,
-                            background: '#F5F3FF', color: '#6D5EF5',
-                            flexShrink: 0,
-                          }}>DEMO</span>
+                            background: card.badge.bg, color: card.badge.color,
+                            fontSize: 10, fontWeight: 600,
+                            padding: '2px 7px', borderRadius: 20, flexShrink: 0,
+                          }}>
+                            {card.badge.text}
+                          </span>
                         )}
                       </div>
-                      <span style={{ fontSize: 10, color: '#9CA3AF', flexShrink: 0, marginLeft: 4 }}>
-                        {m.last_time}
-                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0, marginLeft: 4 }}>
+                        {card.unread > 0 && (
+                          <span style={{
+                            width: 16, height: 16, borderRadius: '50%',
+                            background: '#6D4AFF', color: '#fff',
+                            fontSize: 10, fontWeight: 700,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          }}>
+                            {card.unread}
+                          </span>
+                        )}
+                        <span style={{ fontSize: 11, color: '#6B7280' }}>{card.time}</span>
+                      </div>
                     </div>
                     <p style={{
-                      margin: 0, fontSize: 11,
-                      color: '#9CA3AF',
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    }}>{m.last_message}</p>
+                      margin: 0, fontSize: 12, color: '#6B7280',
+                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                    }}>
+                      {card.lastMsg}
+                    </p>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
 
-          {/* Bottom actions */}
-          <div style={{
-            padding: `16px 16px max(env(safe-area-inset-bottom,0px),16px)`,
-            borderTop: `1px solid ${BORDER_COLOR}`,
-          }}>
-            <button
+          {/* Talk to a Healer card */}
+          <div style={{ flexShrink: 0, padding: '0 12px 0', position: 'relative' }}>
+            <div
               onClick={() => navigate('/healers')}
               style={{
-                width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-                padding: '12px 16px', borderRadius: 14, cursor: 'pointer',
-                background: 'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
-                border: 'none', marginBottom: 8,
-                boxShadow: '0 4px 14px rgba(109,94,245,0.3)',
+                background: 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+                borderRadius: 20,
+                padding: 16,
+                overflow: 'hidden',
+                position: 'relative',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
-              <span style={{ fontSize: 20 }}>🧘</span>
-              <div style={{ textAlign: 'left' }}>
-                <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: '#fff' }}>Talk to a Healer</p>
-                <p style={{ margin: 0, fontSize: 10, color: 'rgba(255,255,255,0.75)' }}>Book a professional session</p>
+              {/* Floating glow orb */}
+              <div style={{
+                position: 'absolute', right: -20, bottom: -20,
+                width: 80, height: 80,
+                background: 'rgba(255,255,255,0.1)',
+                borderRadius: '50%',
+              }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 3 }}>Talk to a Healer</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>Book a professional session</div>
               </div>
-            </button>
-            <button
-              onClick={() => { logout(); navigate('/'); }}
-              style={{
-                width: '100%', padding: '8px', borderRadius: 10,
-                background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: 11, fontWeight: 500,
-                color: '#9CA3AF',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = '#6B7280'}
-              onMouseLeave={e => e.currentTarget.style.color = '#9CA3AF'}
-            >
-              Sign out
+              <div style={{
+                position: 'relative', zIndex: 1,
+                width: 32, height: 32, borderRadius: '50%',
+                background: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#6D4AFF', fontWeight: 700, fontSize: 18, flexShrink: 0,
+              }}>
+                →
+              </div>
+            </div>
+          </div>
+
+          {/* User profile row */}
+          <div style={{
+            borderTop: '1px solid rgba(109,74,255,0.08)',
+            padding: '14px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            flexShrink: 0,
+          }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: '50%',
+              background: 'linear-gradient(135deg, #F5B841, #E89B20)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0,
+            }}>
+              {userInitials}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1333', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {user?.full_name || 'My Account'}
+              </div>
+              <div style={{ fontSize: 11, color: '#6D4AFF', cursor: 'pointer' }}>View profile ›</div>
+            </div>
+            <button style={{
+              width: 28, height: 28, borderRadius: '50%',
+              background: 'rgba(109,74,255,0.08)',
+              border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 14, color: '#6B7280',
+            }}>
+              ⋯
             </button>
           </div>
         </div>
 
-        {/* ── MAIN CHAT AREA ──────────────────────────────────────────────── */}
-        <div
-          style={{
-            flex: 1,
-            display: mobileView === 'list' ? 'none' : 'flex',
-            flexDirection: 'column',
-            minWidth: 0,
-            position: 'relative',
-            background: CHAT_BG,
-          }}
-        >
-          {/* Background particles */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-            <BgParticles />
-          </div>
-
-          {/* Chat header */}
+        {/* ─────────────────── CENTER CHAT AREA ─────────────────────────────── */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#FAF7FF',
+          overflow: 'hidden',
+        }}>
+          {/* Chat Header */}
           <div style={{
+            background: 'rgba(250,247,255,0.97)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(109,74,255,0.1)',
+            padding: '14px 24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
             flexShrink: 0,
-            display: 'flex', alignItems: 'center', gap: 12,
-            padding: `max(env(safe-area-inset-top,0px),12px) 16px 12px`,
-            borderBottom: `1px solid ${BORDER_COLOR}`,
-            background: '#FFFFFF',
-            position: 'relative', zIndex: 10,
+            zIndex: 10,
           }}>
-            {/* Mobile back button */}
-            <button
-              onClick={() => setMobileView('list')}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                width: 36, height: 36, borderRadius: '50%',
-                background: '#F5F3FF',
-                border: '1px solid #EDE9FE',
-                color: '#6D5EF5', fontSize: 20,
-                cursor: 'pointer',
-                marginRight: 4,
-              }}
-              className="md:hidden"
-            >
-              ‹
-            </button>
-
-            {/* Match avatar with glow */}
+            {/* Avatar */}
             <div style={{ position: 'relative', flexShrink: 0 }}>
               <div style={{
-                position: 'absolute', inset: -3, borderRadius: '50%',
-                background: activeMatch?.grad || '#7c3aed',
-                opacity: 0.3, filter: 'blur(8px)',
-              }} />
-              <div style={{
-                position: 'relative',
-                width: 40, height: 40, borderRadius: '50%',
-                background: activeMatch?.grad,
+                width: 42, height: 42, borderRadius: '50%',
+                background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 13, fontWeight: 700, color: '#fff',
               }}>
-                {activeMatch?.initials}
+                PR
               </div>
-              {activeMatch?.online && (
-                <div style={{
-                  position: 'absolute', bottom: 0, right: 0,
-                  width: 10, height: 10, borderRadius: '50%',
-                  background: '#34d399',
-                  border: '2px solid #06010f',
-                  animation: 'pulseGreen 2.5s ease-in-out infinite',
-                }} />
-              )}
+              <div style={{
+                position: 'absolute', bottom: 1, right: 1,
+                width: 10, height: 10, borderRadius: '50%',
+                background: '#34C38F', border: '2px solid white',
+                animation: 'pulseGreen 2s infinite',
+              }} />
             </div>
-
             {/* Name + status */}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
-                <span style={{ fontWeight: 700, fontSize: 14, color: '#ffffff' }}>
-                  {activeMatch?.name}
+                <span style={{ fontSize: 16, fontWeight: 700, color: '#1A1333' }}>Priya</span>
+                <span style={{
+                  background: 'rgba(52,195,143,0.1)', color: '#34C38F',
+                  fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 20,
+                }}>
+                  AI Companion
                 </span>
-                {activeMatch?.online && (
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#34d399', fontWeight: 500 }}>
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399', display: 'inline-block', animation: 'pulseGreen 2s infinite' }} />
-                    online
-                  </span>
-                )}
-                {activeMatch?.isDemo && (
-                  <span style={{
-                    fontSize: 8, fontWeight: 700, padding: '2px 6px', borderRadius: 6,
-                    background: '#F5F3FF', color: '#6D5EF5',
-                  }}>AI DEMO</span>
-                )}
               </div>
-              <p style={{ margin: 0, fontSize: 11, color: '#9CA3AF' }}>
-                {PROBLEM_LABELS[activeMatch?.primary_problem]} · {activeMatch?.match_score}% match
-                {activeMatch?.isDemo && ' · AI companion'}
-              </p>
+              <div style={{ fontSize: 12, color: '#6B7280' }}>Your healing companion</div>
             </div>
-
             {/* Action buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <button
-                onClick={() => { setShowActivity(true); setRightTab('activities'); }}
-                style={{
-                  display: 'none',
-                  alignItems: 'center', gap: 6,
-                  padding: '7px 12px', borderRadius: 12,
-                  fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                  background: showActivity && rightTab === 'activities'
-                    ? 'linear-gradient(135deg,#7c3aed,#2563eb)'
-                    : 'rgba(255,255,255,0.06)',
-                  color: showActivity && rightTab === 'activities' ? '#fff' : 'rgba(196,181,253,0.7)',
-                  border: showActivity && rightTab === 'activities'
-                    ? 'none'
-                    : '1px solid rgba(255,255,255,0.08)',
-                  boxShadow: showActivity && rightTab === 'activities'
-                    ? '0 0 16px rgba(124,58,237,0.4)'
-                    : 'none',
-                }}
-                className="hidden md:flex"
-              >
-                💡 Activities
-              </button>
-              <button
-                onClick={() => { setShowActivity(true); setRightTab('healing'); }}
-                style={{
-                  display: 'none',
-                  alignItems: 'center', gap: 6,
-                  padding: '7px 12px', borderRadius: 12,
-                  fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                  background: showActivity && rightTab === 'healing'
-                    ? `linear-gradient(135deg,${GOLD},#a855f7)`
-                    : 'rgba(255,255,255,0.06)',
-                  color: showActivity && rightTab === 'healing' ? '#fff' : 'rgba(196,181,253,0.7)',
-                  border: showActivity && rightTab === 'healing'
-                    ? 'none'
-                    : '1px solid rgba(255,255,255,0.08)',
-                  boxShadow: showActivity && rightTab === 'healing'
-                    ? `0 0 16px rgba(212,175,55,0.35)`
-                    : 'none',
-                }}
-                className="hidden md:flex"
-              >
-                🌟 Healing
-              </button>
-              <button style={{
-                width: 32, height: 32, borderRadius: 10,
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: 'rgba(196,181,253,0.6)', fontSize: 16, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>⋯</button>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {['☆', '🔊', '⋯'].map((icon, i) => (
+                <button key={i} style={{
+                  width: 32, height: 32, borderRadius: 10,
+                  background: 'rgba(109,74,255,0.07)',
+                  border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 14, color: '#6D4AFF',
+                }}>
+                  {icon}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* ── TAB BAR ── */}
-          <div style={{
-            flexShrink: 0,
-            display: 'flex',
-            gap: 4,
-            padding: '8px 12px',
-            borderBottom: `1px solid ${BORDER_COLOR}`,
-            background: '#FFFFFF',
-            position: 'relative', zIndex: 10,
-          }}>
-            {[
-              { key: 'chat',    icon: '💬', label: 'Chat' },
-              { key: 'relief',  icon: '⚡', label: 'Quick Relief' },
-              { key: 'healing', icon: '🌟', label: 'Guided Healing' },
-            ].map(t => (
-              <button key={t.key} onClick={() => setMainTab(t.key)} style={{
-                flex: 1,
-                padding: '9px 6px',
-                borderRadius: 10,
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: 'pointer',
-                border: 'none',
-                transition: 'all 0.2s ease',
-                background: mainTab === t.key ? '#F5F3FF' : 'transparent',
-                color: mainTab === t.key ? '#6D5EF5' : '#9CA3AF',
-                borderBottom: mainTab === t.key ? `2px solid #6D5EF5` : '2px solid transparent',
+          {/* Messages area */}
+          <div
+            className="dc-scroll"
+            style={{ flex: 1, overflowY: 'auto', padding: '0 24px 16px' }}
+          >
+            {/* Welcome Hero Card — only shown when messages empty */}
+            {messages.length === 0 && (
+              <div style={{
+                background: 'linear-gradient(135deg, #F8F4FF 0%, #EDE5FF 40%, #E4D8FF 100%)',
+                borderRadius: 20,
+                margin: '16px 0',
+                overflow: 'hidden',
+                minHeight: 200,
+                display: 'flex',
               }}>
-                {t.icon} {t.label}
+                {/* Left */}
+                <div style={{ flex: '0 0 55%', padding: '24px 28px' }}>
+                  <div style={{
+                    fontSize: 22, fontWeight: 700, color: '#1A1333',
+                    fontFamily: "'Playfair Display', Georgia, serif",
+                    marginBottom: 8,
+                  }}>
+                    {timeEmoji} {timeGreeting}, {firstName}
+                  </div>
+                  <p style={{ fontSize: 13, color: '#6B7280', maxWidth: 280, lineHeight: 1.6, margin: '0 0 14px' }}>
+                    I'm here to listen, understand and support you on your healing journey.
+                  </p>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1333', marginBottom: 10 }}>
+                    How are you feeling right now?
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {moodChips.map(chip => (
+                      <button
+                        key={chip.label}
+                        onClick={() => setSelectedMood(chip.label)}
+                        style={{
+                          padding: '7px 14px',
+                          borderRadius: 50,
+                          background: selectedMood === chip.label ? 'rgba(109,74,255,0.15)' : 'rgba(255,255,255,0.7)',
+                          border: selectedMood === chip.label ? '1.5px solid #6D4AFF' : '1.5px solid rgba(109,74,255,0.2)',
+                          color: selectedMood === chip.label ? '#6D4AFF' : '#4B5563',
+                          fontSize: 13, fontWeight: 600,
+                          backdropFilter: 'blur(8px)',
+                          WebkitBackdropFilter: 'blur(8px)',
+                          cursor: 'pointer',
+                          fontFamily: 'inherit',
+                          boxShadow: selectedMood === chip.label ? '0 0 0 3px rgba(109,74,255,0.12)' : 'none',
+                          transition: 'all 0.2s',
+                        }}
+                      >
+                        {chip.emoji} {chip.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {/* Right — SVG */}
+                <div style={{ flex: '0 0 45%' }}>
+                  <WelcomeMeditation />
+                </div>
+              </div>
+            )}
+
+            {/* Date separator */}
+            {messages.length > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '16px 0 12px' }}>
+                <span style={{
+                  background: 'rgba(109,74,255,0.08)', color: '#9CA3AF',
+                  fontSize: 11, padding: '4px 14px', borderRadius: 20,
+                }}>
+                  Today
+                </span>
+              </div>
+            )}
+
+            {/* Safety notice */}
+            {!safetyDismissed[activeMatch?.id] && messages.length > 0 && (
+              <SafetyNotice onDismiss={() => setSafetyDismissed(prev => ({ ...prev, [activeMatch.id]: true }))} />
+            )}
+
+            {/* Messages */}
+            {messages.map((msg) => {
+              const isMe = msg.from === 'me';
+              return (
+                <div
+                  key={msg.id}
+                  className="dc-msg"
+                  style={{
+                    display: 'flex',
+                    justifyContent: isMe ? 'flex-end' : 'flex-start',
+                    alignItems: 'flex-end',
+                    gap: 10,
+                    marginBottom: 16,
+                  }}
+                >
+                  {!isMe && (
+                    <div style={{
+                      width: 36, height: 36, borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 11, fontWeight: 700, color: '#fff', flexShrink: 0,
+                    }}>
+                      PR
+                    </div>
+                  )}
+                  <div style={{ maxWidth: '65%' }}>
+                    <div style={{
+                      padding: '14px 18px',
+                      fontSize: 14,
+                      lineHeight: 1.65,
+                      ...(isMe ? {
+                        background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)',
+                        borderRadius: '20px 4px 20px 20px',
+                        color: '#ffffff',
+                        boxShadow: '0 2px 12px rgba(109,74,255,0.25)',
+                      } : {
+                        background: '#FFFFFF',
+                        border: '1px solid rgba(109,74,255,0.1)',
+                        borderRadius: '4px 20px 20px 20px',
+                        color: '#1A1333',
+                        boxShadow: '0 2px 12px rgba(109,74,255,0.07)',
+                      }),
+                    }}>
+                      {msg.text}
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: isMe ? 'flex-end' : 'flex-start',
+                      gap: 4,
+                      marginTop: 4,
+                    }}>
+                      <span style={{
+                        fontSize: 11,
+                        color: isMe ? 'rgba(255,255,255,0.6)' : '#9CA3AF',
+                      }}>
+                        {fmt(msg.time)}
+                      </span>
+                      {isMe && (
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>✓✓</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {typing && <TypingIndicator grad={activeMatch?.grad} />}
+            <div ref={bottomRef} />
+          </div>
+
+          {/* Quick Starters */}
+          <div style={{
+            padding: '8px 24px',
+            display: 'flex',
+            gap: 8,
+            overflowX: 'auto',
+            flexShrink: 0,
+            background: '#FAF7FF',
+          }}>
+            {quickStarters.map((starter) => (
+              <button
+                key={starter}
+                onClick={() => { setInput(starter.slice(starter.indexOf(' ') + 1)); sendMessage(starter.slice(starter.indexOf(' ') + 1)); }}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: 50,
+                  border: '1.5px solid rgba(109,74,255,0.2)',
+                  background: '#fff',
+                  fontSize: 12, fontWeight: 600, color: '#4B5563',
+                  cursor: 'pointer', whiteSpace: 'nowrap',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#6D4AFF'; e.currentTarget.style.color = '#6D4AFF'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(109,74,255,0.2)'; e.currentTarget.style.color = '#4B5563'; }}
+              >
+                {starter}
               </button>
             ))}
           </div>
 
-          {/* Messages scroll area */}
-          <div
-            className="dash-scroll"
-            style={{
-              display: mainTab === 'chat' ? undefined : 'none',
-              flex: 1, overflowY: 'auto',
-              position: 'relative', zIndex: 1,
-            }}
-          >
-            {/* Safety notice */}
-            {!safetyDismissed[activeMatch?.id] && (
+          {/* Input area */}
+          <div style={{
+            background: '#FFFFFF',
+            borderTop: '1px solid rgba(109,74,255,0.1)',
+            padding: '14px 24px',
+            flexShrink: 0,
+          }}>
+            {/* Safety banner — shown above input when not dismissed */}
+            {!safetyDismissed[activeMatch?.id] && messages.length === 0 && (
               <SafetyNotice onDismiss={() => setSafetyDismissed(prev => ({ ...prev, [activeMatch.id]: true }))} />
             )}
 
-            {/* Match reason banner */}
-            <div style={{
-              margin: '12px 16px',
-              padding: '12px 16px',
-              borderRadius: 14,
-              background: '#F5F3FF',
-              border: '1px solid #EDE9FE',
-              textAlign: 'center',
-            }}>
-              <p style={{ margin: '0 0 3px', fontSize: 11, fontWeight: 600, color: '#6D5EF5' }}>
-                ✨ Why you were matched
-              </p>
-              <p style={{ margin: 0, fontSize: 11, fontStyle: 'italic', color: '#6B7280' }}>
-                "{activeMatch?.match_reason}"
-              </p>
-            </div>
-
-            {/* Messages */}
-            <div style={{ padding: '0 16px 16px' }}>
-              {messages.map((msg, i) => {
-                const isMe      = msg.from === 'me';
-                const showAvatar = !isMe && (i === 0 || messages[i - 1]?.from === 'me');
-                return (
-                  <div
-                    key={msg.id}
-                    className="dash-msg-enter"
-                    style={{
-                      display: 'flex',
-                      justifyContent: isMe ? 'flex-end' : 'flex-start',
-                      alignItems: 'flex-end',
-                      gap: 8,
-                      marginBottom: 6,
-                    }}
-                  >
-                    {/* Bot avatar */}
-                    {!isMe && (
-                      <div style={{
-                        width: 28, height: 28, borderRadius: '50%',
-                        background: activeMatch?.grad,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 10, fontWeight: 700, color: '#fff',
-                        flexShrink: 0,
-                        opacity: showAvatar ? 1 : 0,
-                      }}>
-                        {activeMatch?.initials?.[0]}
-                      </div>
-                    )}
-
-                    {/* Bubble */}
-                    <div style={{ maxWidth: '70%', position: 'relative' }} className="group">
-                      <div style={{
-                        padding: '11px 16px',
-                        fontSize: 13,
-                        lineHeight: 1.65,
-                        borderRadius: isMe
-                          ? '20px 20px 4px 20px'
-                          : '20px 20px 20px 4px',
-                        ...(isMe ? {
-                          background: 'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
-                          color: '#ffffff',
-                          boxShadow: '0 2px 12px rgba(109,94,245,0.25)',
-                        } : {
-                          background: '#F5F3FF',
-                          border: '1px solid #EDE9FE',
-                          color: '#1F2937',
-                        }),
-                      }}>
-                        {msg.text}
-                      </div>
-                      {/* Timestamp on hover */}
-                      <p style={{
-                        margin: '3px 4px 0',
-                        fontSize: 10,
-                        textAlign: isMe ? 'right' : 'left',
-                        color: GOLD,
-                        opacity: 0,
-                        transition: 'opacity 0.2s',
-                      }}
-                        onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-                        onMouseLeave={e => e.currentTarget.style.opacity = '0'}
-                        className="group-hover-timestamp"
-                      >
-                        {fmt(msg.time)}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-
-              {typing && <TypingIndicator grad={activeMatch?.grad} />}
-              <div ref={bottomRef} />
-            </div>
-          </div>
-
-          {/* Relief tab content */}
-          {mainTab === 'relief' && (
-            <div className="dash-scroll" style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
-              <ActivitySuggestions
-                problemType={activeMatch?.primary_problem || 'anxiety'}
-                matchName={activeMatch?.name}
-                onActivityComplete={() => {}}
-              />
-            </div>
-          )}
-
-          {/* Healing tab content */}
-          {mainTab === 'healing' && (
-            <div className="dash-scroll" style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
-              <GuidedHealing
-                problemType={activeMatch?.primary_problem || 'anxiety'}
-                matchName={activeMatch?.name || 'Your Match'}
-                userId={activeMatch?.id}
-              />
-            </div>
-          )}
-
-          {/* Input bar — only in chat tab */}
-          {mainTab === 'chat' && <div style={{
-            flexShrink: 0,
-            padding: `12px 16px max(env(safe-area-inset-bottom,0px),12px)`,
-            borderTop: `1px solid ${BORDER_COLOR}`,
-            background: '#FFFFFF',
-            position: 'relative', zIndex: 10,
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              {/* Emoji button */}
-              <button style={{
-                width: 38, height: 38, borderRadius: 12, flexShrink: 0,
-                background: '#F5F3FF',
-                border: '1px solid #EDE9FE',
-                fontSize: 17, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                😊
-              </button>
-
-              {/* Text input */}
+            {/* Input row */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyPress={e => e.key === 'Enter' && sendMessage()}
-                placeholder={`Message ${activeMatch?.name}...`}
+                placeholder="Share what's on your mind..."
                 style={{
                   flex: 1,
-                  padding: '11px 16px',
-                  borderRadius: 20,
-                  fontSize: 13,
                   background: '#F5F3FF',
-                  color: '#1F2937',
-                  border: '1.5px solid #EDE9FE',
+                  border: '1.5px solid rgba(109,74,255,0.15)',
+                  borderRadius: 16,
+                  padding: '14px 18px',
+                  fontSize: 14,
+                  color: '#1A1333',
                   outline: 'none',
+                  fontFamily: 'inherit',
                   transition: 'border-color 0.2s',
                 }}
-                onFocus={e => e.target.style.borderColor = '#6D5EF5'}
-                onBlur={e => e.target.style.borderColor = '#EDE9FE'}
+                onFocus={e => e.target.style.borderColor = '#6D4AFF'}
+                onBlur={e => e.target.style.borderColor = 'rgba(109,74,255,0.15)'}
               />
-
               {/* Send button */}
               <button
-                onClick={sendMessage}
+                onClick={() => sendMessage()}
                 disabled={!input.trim() || typing}
                 style={{
-                  width: 42, height: 42, borderRadius: 14, flexShrink: 0,
-                  background: 'linear-gradient(135deg, #6D5EF5, #8B5CF6)',
+                  width: 44, height: 44, borderRadius: '50%', flexShrink: 0,
+                  background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)',
                   border: 'none', cursor: input.trim() && !typing ? 'pointer' : 'default',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: input.trim() && !typing ? '0 4px 16px rgba(109,94,245,0.35)' : 'none',
-                  opacity: !input.trim() || typing ? 0.4 : 1,
+                  boxShadow: input.trim() && !typing ? '0 4px 16px rgba(109,74,255,0.4)' : 'none',
+                  opacity: !input.trim() || typing ? 0.45 : 1,
                   transition: 'all 0.2s ease',
                 }}
               >
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
                   <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
             </div>
-            <p style={{ textAlign: 'center', fontSize: 10, marginTop: 8, color: '#9CA3AF' }}>
-              🔒 Anonymous &amp; encrypted ·{' '}
-              <span style={{ textDecoration: 'underline', cursor: 'pointer', color: '#6D5EF5' }}>Report</span>
-            </p>
-          </div>}
-        </div>
-
-        {/* ── RIGHT PANEL ─────────────────────────────────────────────────── */}
-        {showActivity && (
-          <div
-            className="hidden lg:flex"
-            style={{
-              flexDirection: 'column',
-              width: 300,
-              flexShrink: 0,
-              borderLeft: `1px solid ${BORDER_COLOR}`,
-              background: '#FAFAFD',
-              overflowY: 'auto',
-            }}
-          >
-            {/* Panel header */}
-            <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '14px 14px 12px',
-              borderBottom: `1px solid ${BORDER_COLOR}`,
-              flexShrink: 0,
-              background: '#FFFFFF',
-            }}>
-              <div style={{
-                display: 'flex', gap: 3, padding: 3,
-                borderRadius: 12,
-                background: '#F5F3FF',
-                border: '1px solid #EDE9FE',
-              }}>
-                <button
-                  onClick={() => setRightTab('activities')}
-                  style={{
-                    padding: '6px 12px', borderRadius: 9,
-                    fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                    border: 'none',
-                    background: rightTab === 'activities' ? 'linear-gradient(135deg,#6D5EF5,#8B5CF6)' : 'transparent',
-                    color: rightTab === 'activities' ? '#fff' : '#9CA3AF',
-                    transition: 'all 0.2s',
-                  }}>
-                  ⚡ Relief
+            {/* Bottom action row */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button style={{
+                  width: 32, height: 32, borderRadius: '50%',
+                  background: 'rgba(109,74,255,0.07)', border: 'none',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 16, cursor: 'pointer', color: '#6D4AFF',
+                }}>
+                  +
                 </button>
-                <button
-                  onClick={() => setRightTab('healing')}
-                  style={{
-                    padding: '6px 12px', borderRadius: 9,
-                    fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                    border: 'none',
-                    background: rightTab === 'healing' ? 'linear-gradient(135deg,#6D5EF5,#A78BFA)' : 'transparent',
-                    color: rightTab === 'healing' ? '#fff' : '#9CA3AF',
-                    transition: 'all 0.2s',
-                  }}>
-                  🌟 Healing
+                <button style={{
+                  padding: '6px 14px', borderRadius: 20,
+                  background: 'rgba(109,74,255,0.07)', border: 'none',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#6D4AFF',
+                  gap: 5, fontFamily: 'inherit',
+                }}>
+                  🎤 Voice note
                 </button>
               </div>
-              <button
-                onClick={() => setShowActivity(false)}
-                style={{
-                  width: 28, height: 28, borderRadius: 8,
-                  background: '#F5F3FF',
-                  border: '1px solid #EDE9FE',
-                  color: '#6B7280', fontSize: 11,
-                  cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                ✕
-              </button>
-            </div>
-
-            {/* Panel content */}
-            <div className="dash-scroll" style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
-              {rightTab === 'activities' && (
-                <>
-                  <ActivitySuggestions
-                    problemType={activeMatch?.primary_problem || 'anxiety'}
-                    matchName={activeMatch?.name}
-                    onActivityComplete={() => {}}
-                  />
-                  <div style={{
-                    borderRadius: 16, overflow: 'hidden', marginTop: 14,
-                    background: 'linear-gradient(135deg, #F5F3FF, #EDE9FE)',
-                    border: '1px solid #DDD6FE',
-                  }}>
-                    <div style={{ padding: 16 }}>
-                      <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 700, color: '#1F2937' }}>Need more support?</p>
-                      <p style={{ margin: '0 0 12px', fontSize: 11, color: '#6B7280' }}>Chat with a verified therapist or counsellor.</p>
-                      <button
-                        onClick={() => navigate('/healers')}
-                        style={{
-                          width: '100%', padding: '9px', borderRadius: 12,
-                          fontSize: 12, fontWeight: 700, color: '#fff',
-                          background: 'linear-gradient(135deg,#6D5EF5,#8B5CF6)',
-                          border: 'none', cursor: 'pointer',
-                          boxShadow: '0 4px 14px rgba(109,94,245,0.3)',
-                        }}>
-                        Browse Healers →
-                      </button>
-                    </div>
-                  </div>
-                  <div style={{
-                    borderRadius: 16, overflow: 'hidden', marginTop: 12,
-                    background: '#FFFFFF',
-                    border: '1px solid #EDE9FE',
-                  }}>
-                    <div style={{ padding: 16 }}>
-                      <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 700, color: '#1F2937' }}>🫂 Join a Circle</p>
-                      <p style={{ margin: '0 0 12px', fontSize: 11, color: '#6B7280' }}>Small group sessions for your challenge.</p>
-                      <button
-                        onClick={() => navigate('/meetups')}
-                        style={{
-                          width: '100%', padding: '9px', borderRadius: 12,
-                          fontSize: 12, fontWeight: 600, color: '#6D5EF5',
-                          background: '#F5F3FF',
-                          border: '1px solid #EDE9FE',
-                          cursor: 'pointer',
-                        }}>
-                        See Upcoming Circles
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {rightTab === 'healing' && (
-                <GuidedHealing
-                  problemType={activeMatch?.primary_problem || 'anxiety'}
-                  matchName={activeMatch?.name || 'Your Match'}
-                  userId={activeMatch?.id}
-                />
-              )}
+              <p style={{ fontSize: 10, color: '#9CA3AF', margin: 0 }}>
+                🔒 Anonymous &amp; encrypted
+              </p>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+
+        {/* ─────────────────── RIGHT WELLNESS PANEL ─────────────────────────── */}
+        <div
+          className="dc-right dc-scroll"
+          style={{
+            background: '#FFFFFF',
+            borderLeft: '1px solid rgba(109,74,255,0.1)',
+            overflowY: 'auto',
+            padding: '20px 16px',
+          }}
+        >
+          {/* Card 1 — Your Wellness Journey */}
+          <div style={{
+            background: '#fff',
+            borderRadius: 16,
+            border: '1px solid rgba(109,74,255,0.1)',
+            padding: 18,
+            marginBottom: 14,
+            boxShadow: '0 2px 20px rgba(109,74,255,0.08)',
+          }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1333', marginBottom: 14 }}>
+              Your Wellness Journey
+            </div>
+            {/* Current Mood */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>
+                Current Mood
+              </div>
+              <span style={{
+                background: 'rgba(109,74,255,0.08)',
+                borderRadius: 20, padding: '5px 12px',
+                fontSize: 13, fontWeight: 600, color: '#1A1333',
+              }}>
+                {selectedMood ? `${moodChips.find(m => m.label === selectedMood)?.emoji || ''} ${selectedMood}` : '🙂 Calm'}
+              </span>
+            </div>
+            {/* Today's Check-in */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <span style={{ fontSize: 12, color: '#6B7280' }}>Today's Check-in</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#6D4AFF' }}>3 / 5</span>
+              </div>
+              <div style={{ height: 6, borderRadius: 3, background: 'rgba(109,74,255,0.1)', overflow: 'hidden' }}>
+                <div style={{ width: '60%', height: '100%', background: 'linear-gradient(90deg, #6D4AFF, #A78BFA)', borderRadius: 3 }} />
+              </div>
+            </div>
+            {/* Weekly Progress */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <span style={{ fontSize: 12, color: '#6B7280' }}>Weekly Progress</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#6D4AFF' }}>72%</span>
+              </div>
+              <div style={{ height: 6, borderRadius: 3, background: 'rgba(109,74,255,0.1)', overflow: 'hidden' }}>
+                <div style={{ width: '72%', height: '100%', background: 'linear-gradient(90deg, #6D4AFF, #A78BFA)', borderRadius: 3 }} />
+              </div>
+            </div>
+            {/* Current Stage */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 3 }}>Current Stage</div>
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#6D4AFF' }}>Healing ✨</span>
+              </div>
+              <LotusSmall size={20} />
+            </div>
+          </div>
+
+          {/* Card 2 — Daily Affirmation */}
+          <div style={{
+            background: 'linear-gradient(135deg, #F8F4FF, #F3EEFF)',
+            borderRadius: 16,
+            border: '1px solid rgba(109,74,255,0.1)',
+            padding: 18,
+            marginBottom: 14,
+            boxShadow: '0 2px 20px rgba(109,74,255,0.08)',
+          }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1333', marginBottom: 10 }}>
+              Daily Affirmation
+            </div>
+            <div style={{ fontSize: 48, color: '#A78BFA', lineHeight: 0.5, marginBottom: 8 }}>"</div>
+            <p style={{
+              fontSize: 14, color: '#4B5563', fontStyle: 'italic',
+              lineHeight: 1.7, margin: '0 0 12px',
+            }}>
+              {todayAffirmation}
+            </p>
+            <div style={{ textAlign: 'center', fontSize: 18 }}>💜</div>
+          </div>
+
+          {/* Card 3 — Tools For You */}
+          <div style={{
+            background: '#fff',
+            borderRadius: 16,
+            border: '1px solid rgba(109,74,255,0.1)',
+            padding: 18,
+            marginBottom: 14,
+            boxShadow: '0 2px 20px rgba(109,74,255,0.08)',
+          }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1333', marginBottom: 12 }}>
+              Tools For You
+            </div>
+            {[
+              { icon: '🧘', title: '2-Min Calm Breathing', sub: 'Relax your mind' },
+              { icon: '📔', title: 'Reflection Journal', sub: 'Write your thoughts' },
+              { icon: '🎵', title: 'Soothing Music', sub: 'Calm your soul' },
+            ].map((tool, i, arr) => (
+              <div
+                key={tool.title}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '11px 0',
+                  borderBottom: i < arr.length - 1 ? '1px solid rgba(109,74,255,0.06)' : 'none',
+                  cursor: 'pointer',
+                  borderRadius: 10,
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(109,74,255,0.04)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <div style={{
+                  width: 36, height: 36, borderRadius: '50%',
+                  background: 'rgba(109,74,255,0.08)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 18, flexShrink: 0,
+                }}>
+                  {tool.icon}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1333', marginBottom: 2 }}>{tool.title}</div>
+                  <div style={{ fontSize: 11, color: '#6B7280' }}>{tool.sub}</div>
+                </div>
+                <span style={{ color: '#A78BFA', fontSize: 16 }}>›</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Card 4 — Need Immediate Support */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(244,114,182,0.06), rgba(255,200,210,0.08))',
+            borderRadius: 16,
+            border: '1px solid rgba(244,114,182,0.2)',
+            padding: 18,
+            marginBottom: 14,
+            boxShadow: '0 2px 20px rgba(109,74,255,0.08)',
+          }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#BE185D', marginBottom: 6 }}>
+              Need immediate support?
+            </div>
+            <p style={{ fontSize: 12, color: '#6B7280', margin: '0 0 14px', lineHeight: 1.5 }}>
+              You are not alone. Help is always here.
+            </p>
+            <button style={{
+              width: '100%',
+              background: 'linear-gradient(135deg, #F472B6, #EC4899)',
+              color: '#fff', fontWeight: 700,
+              borderRadius: 12, padding: '10px',
+              fontSize: 13, border: 'none', cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}>
+              📞 View Crisis Resources
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );
