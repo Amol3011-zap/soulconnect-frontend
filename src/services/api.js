@@ -103,3 +103,14 @@ export const paymentAPI = {
   createOrder: (amount, description) => api.post('/payments/create-order', { amount, description }),
   verifyPayment: (data) => api.post('/payments/verify', data),
 };
+
+export const dashboardAPI = {
+  getStats: () => api.get('/dashboard/stats').catch(err => {
+    const status = err?.response?.status;
+    if (status === 401) throw { type: 'auth', message: 'Session expired. Please log in again.' };
+    throw { type: 'network', message: 'Could not load dashboard stats.' };
+  }),
+  sessionStart: (type) => api.post(`/dashboard/session/start/${type}`).catch(() => {}),
+  sessionEnd: () => api.post('/dashboard/session/end').catch(() => {}),
+  getLive: () => api.get('/dashboard/live').catch(() => ({ data: { souls_healing_now: 847 } })),
+};
