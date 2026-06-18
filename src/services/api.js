@@ -83,6 +83,12 @@ export const challengesAPI = {
     if (status === 401) throw { type: 'auth', message: 'Session expired. Please log in again.' };
     throw { type: 'network', message: 'Could not load weekly summary.' };
   }),
+
+  getLeaderboard: () => api.get('/challenges/leaderboard').catch(err => {
+    const status = err?.response?.status;
+    if (status === 401) throw { type: 'auth', message: 'Session expired. Please log in again.' };
+    throw { type: 'network', message: 'Could not load leaderboard.' };
+  }),
 };
 
 export const journeyAPI = {
