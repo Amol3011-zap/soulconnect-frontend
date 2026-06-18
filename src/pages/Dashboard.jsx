@@ -1243,61 +1243,6 @@ export default function Dashboard() {
             padding: '20px 16px',
           }}
         >
-          {/* Card 1 — Your Wellness Journey */}
-          <div style={{
-            background: '#fff',
-            borderRadius: 16,
-            border: '1px solid rgba(109,74,255,0.1)',
-            padding: 18,
-            marginBottom: 14,
-            boxShadow: '0 2px 20px rgba(109,74,255,0.08)',
-          }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#1A1333', marginBottom: 14 }}>
-              Your Wellness Journey
-            </div>
-            {/* Current Mood */}
-            <div style={{ marginBottom: 12 }}>
-              <div style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>
-                Current Mood
-              </div>
-              <span style={{
-                background: 'rgba(109,74,255,0.08)',
-                borderRadius: 20, padding: '5px 12px',
-                fontSize: 13, fontWeight: 600, color: '#1A1333',
-              }}>
-                {selectedMood ? `${moodChips.find(m => m.label === selectedMood)?.emoji || ''} ${selectedMood}` : '🙂 Calm'}
-              </span>
-            </div>
-            {/* Today's Check-in */}
-            <div style={{ marginBottom: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: 12, color: '#6B7280' }}>Today's Check-in</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#6D4AFF' }}>3 / 5</span>
-              </div>
-              <div style={{ height: 6, borderRadius: 3, background: 'rgba(109,74,255,0.1)', overflow: 'hidden' }}>
-                <div style={{ width: '60%', height: '100%', background: 'linear-gradient(90deg, #6D4AFF, #A78BFA)', borderRadius: 3 }} />
-              </div>
-            </div>
-            {/* Weekly Progress */}
-            <div style={{ marginBottom: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: 12, color: '#6B7280' }}>Weekly Progress</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#6D4AFF' }}>72%</span>
-              </div>
-              <div style={{ height: 6, borderRadius: 3, background: 'rgba(109,74,255,0.1)', overflow: 'hidden' }}>
-                <div style={{ width: '72%', height: '100%', background: 'linear-gradient(90deg, #6D4AFF, #A78BFA)', borderRadius: 3 }} />
-              </div>
-            </div>
-            {/* Current Stage */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 3 }}>Current Stage</div>
-                <span style={{ fontSize: 13, fontWeight: 700, color: '#6D4AFF' }}>Healing ✨</span>
-              </div>
-              <LotusSmall size={20} />
-            </div>
-          </div>
-
           {/* Card 2 — Daily Affirmation */}
           <div style={{
             background: 'linear-gradient(135deg, #F8F4FF, #F3EEFF)',
