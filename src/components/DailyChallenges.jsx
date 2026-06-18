@@ -79,22 +79,37 @@ function ChallengeCard({ challenge, onComplete, completing }) {
   );
 }
 
+const DEMO_DATA = {
+  cycle_day: 1,
+  theme: 'Mindfulness Basics',
+  challenges: [
+    { id: 'breathing_3min',    name: '3-Min Breathing',    description: 'Deep breathing to calm your mind',          type: 'breathing',  duration: 3,  points: 30,  icon: '🌬️', difficulty: 'easy',   completed: false, streak_bonus: 0 },
+    { id: 'gratitude_journal', name: 'Gratitude Journal',  description: "Write 3 things you're grateful for today",  type: 'gratitude',  duration: 5,  points: 50,  icon: '📔', difficulty: 'easy',   completed: false, streak_bonus: 0 },
+    { id: 'meditation_5min',   name: '5-Min Meditation',   description: 'Guided meditation for peace and clarity',    type: 'meditation', duration: 5,  points: 70,  icon: '🧘', difficulty: 'medium', completed: false, streak_bonus: 0 },
+  ],
+  completed: 0, total: 3,
+  points_earned_today: 0, points_remaining: 150,
+  current_streak: 0, longest_streak: 0, total_points: 0,
+};
+
 export default function DailyChallenges({ compact = false }) {
   const { token } = useAuthStore();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [completing, setCompleting] = useState(null);
   const [toast, setToast] = useState(null);
-  const [showAll, setShowAll] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
 
   const load = async () => {
-    if (!token) return;
+    if (!token) { setData(DEMO_DATA); setIsDemo(true); setLoading(false); return; }
     try {
       setLoading(true);
       const res = await challengesAPI.getToday();
       setData(res.data);
+      setIsDemo(false);
     } catch {
-      // silent fail
+      setData(DEMO_DATA);
+      setIsDemo(true);
     } finally {
       setLoading(false);
     }
@@ -104,12 +119,30 @@ export default function DailyChallenges({ compact = false }) {
 
   const handleComplete = async (challengeId) => {
     setCompleting(challengeId);
+    const challenge = data.challenges.find(c => c.id === challengeId);
+    const pts = (challenge?.points || 30) + (challenge?.streak_bonus || 0);
+
+    if (isDemo) {
+      // Demo mode: just update local state
+      await new Promise(r => setTimeout(r, 600));
+      setData(prev => ({
+        ...prev,
+        challenges: prev.challenges.map(c => c.id === challengeId ? { ...c, completed: true } : c),
+        completed: prev.completed + 1,
+        points_earned_today: prev.points_earned_today + pts,
+        points_remaining: Math.max(0, prev.points_remaining - pts),
+      }));
+      setToast(`+${pts} pts · ${challenge?.name} done! 🎉`);
+      setTimeout(() => setToast(null), 3000);
+      setCompleting(null);
+      return;
+    }
+
     try {
       const res = await challengesAPI.complete(challengeId);
       const result = res.data;
       setToast(`+${result.total_points} pts · ${result.challenge_name} done! 🎉`);
       setTimeout(() => setToast(null), 3000);
-      // Update local state optimistically
       setData(prev => ({
         ...prev,
         challenges: prev.challenges.map(c => c.id === challengeId ? { ...c, completed: true } : c),
@@ -139,7 +172,7 @@ export default function DailyChallenges({ compact = false }) {
     );
   }
 
-  if (!data) return null;
+  if (!data) setData(DEMO_DATA);
 
   const { challenges, completed, total, current_streak, longest_streak, total_points, points_remaining, cycle_day, theme } = data;
   const pct = Math.round((completed / total) * 100);
