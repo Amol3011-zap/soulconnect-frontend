@@ -94,133 +94,321 @@ function DiyaIcon() {
   );
 }
 
-// ── Meditation Scene (right side of Hero) ────────────────────────────────────
+// ── Meditation Scene — Cinematic Spiritual Artwork ───────────────────────────
 function MeditationScene() {
-  return (
-    <div style={{
-      position: 'relative',
-      width: '100%',
-      height: '100%',
-      minHeight: 280,
-      borderRadius: '0 20px 20px 0',
-      overflow: 'hidden',
-      background: 'linear-gradient(180deg, #2A1060 0%, #6B2060 35%, #C44B20 65%, #8B3050 100%)',
-    }}>
-      {/* Central glowing orb */}
-      <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -52%)',
-        width: 280, height: 280,
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(255,180,60,0.7) 0%, rgba(255,80,20,0.4) 30%, transparent 65%)',
-        filter: 'blur(10px)',
-        animation: 'pulseGlow 3s ease-in-out infinite',
-      }} />
+  const particles = [
+    { cx: 155, cy: 195, r: 2.2, color: 'rgba(255,220,80,0.9)',  dur: '3.2s', delay: '0s'    },
+    { cx: 430, cy: 175, r: 1.8, color: 'rgba(255,200,60,0.8)',  dur: '2.8s', delay: '0.4s'  },
+    { cx: 215, cy: 145, r: 1.5, color: 'rgba(255,240,140,0.75)',dur: '3.5s', delay: '0.8s'  },
+    { cx: 390, cy: 160, r: 2.0, color: 'rgba(255,180,60,0.85)', dur: '2.5s', delay: '0.2s'  },
+    { cx: 130, cy: 120, r: 1.3, color: 'rgba(220,180,255,0.8)', dur: '4.0s', delay: '1.0s'  },
+    { cx: 470, cy: 205, r: 1.6, color: 'rgba(255,220,100,0.75)',dur: '3.0s', delay: '0.6s'  },
+    { cx: 105, cy: 255, r: 1.1, color: 'rgba(255,160,80,0.65)', dur: '2.6s', delay: '1.4s'  },
+    { cx: 500, cy: 240, r: 1.4, color: 'rgba(245,184,65,0.75)', dur: '3.8s', delay: '0.3s'  },
+    { cx: 180, cy: 90,  r: 1.0, color: 'rgba(200,150,255,0.7)', dur: '4.2s', delay: '1.2s'  },
+    { cx: 420, cy: 100, r: 1.2, color: 'rgba(255,200,80,0.7)',  dur: '3.4s', delay: '0.7s'  },
+    { cx: 355, cy: 265, r: 1.5, color: 'rgba(255,220,100,0.65)',dur: '2.9s', delay: '0.5s'  },
+    { cx: 250, cy: 260, r: 1.2, color: 'rgba(200,160,255,0.7)', dur: '3.6s', delay: '0.9s'  },
+    { cx: 310, cy: 130, r: 1.0, color: 'rgba(255,240,120,0.6)', dur: '3.1s', delay: '1.6s'  },
+    { cx: 80,  cy: 200, r: 0.9, color: 'rgba(255,200,100,0.6)', dur: '4.5s', delay: '1.8s'  },
+  ];
 
-      {/* Sacred geometry SVG */}
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: 460, overflow: 'hidden' }}>
       <svg
-        viewBox="0 0 400 340"
-        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-        preserveAspectRatio="xMidYMid meet"
+        viewBox="0 0 600 460"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }}
+        preserveAspectRatio="xMidYMid slice"
         aria-hidden="true"
       >
         <defs>
-          <radialGradient id="skyGrad" cx="50%" cy="40%" r="55%">
-            <stop offset="0%" stopColor="rgba(255,160,60,0.18)" />
-            <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
-        </defs>
-        <rect width="400" height="340" fill="url(#skyGrad)" />
+          {/* Sky — deep purple → indigo → magenta → orange → gold */}
+          <linearGradient id="hSky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#080118" />
+            <stop offset="18%"  stopColor="#130535" />
+            <stop offset="38%"  stopColor="#2D0860" />
+            <stop offset="55%"  stopColor="#6B155A" />
+            <stop offset="72%"  stopColor="#B83A18" />
+            <stop offset="85%"  stopColor="#E06018" />
+            <stop offset="100%" stopColor="#F0921A" />
+          </linearGradient>
 
-        {/* 7 concentric circles */}
-        {[40, 80, 120, 160, 200, 240, 280].map((r, i) => (
-          <circle
-            key={i}
-            cx="200" cy="150"
-            r={r}
+          {/* Lake water */}
+          <linearGradient id="hLake" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#D05818" stopOpacity="0.55" />
+            <stop offset="30%"  stopColor="#6B155A" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#060010" stopOpacity="0.95" />
+          </linearGradient>
+
+          {/* Mandala radial glow */}
+          <radialGradient id="hMandalaGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="rgba(255,190,70,0.3)"  />
+            <stop offset="35%"  stopColor="rgba(210,110,40,0.18)" />
+            <stop offset="65%"  stopColor="rgba(150,50,200,0.12)" />
+            <stop offset="100%" stopColor="transparent"            />
+          </radialGradient>
+
+          {/* Figure halo glow */}
+          <radialGradient id="hFigureGlow" cx="50%" cy="55%" r="50%">
+            <stop offset="0%"   stopColor="rgba(255,170,60,0.55)"  />
+            <stop offset="30%"  stopColor="rgba(210,90,40,0.35)"   />
+            <stop offset="60%"  stopColor="rgba(140,30,160,0.2)"   />
+            <stop offset="100%" stopColor="transparent"             />
+          </radialGradient>
+
+          {/* Vignette overlay */}
+          <radialGradient id="hVignette" cx="50%" cy="50%" r="70%">
+            <stop offset="0%"   stopColor="transparent"        />
+            <stop offset="100%" stopColor="rgba(4,0,12,0.72)"  />
+          </radialGradient>
+
+          {/* Fog layer */}
+          <linearGradient id="hFog" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="rgba(190,140,255,0)"    />
+            <stop offset="50%"  stopColor="rgba(190,130,220,0.07)" />
+            <stop offset="100%" stopColor="rgba(180,120,200,0)"    />
+          </linearGradient>
+
+          {/* Soft glow filter */}
+          <filter id="hSoftGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="6" result="b" />
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="hBlur12"><feGaussianBlur stdDeviation="12" /></filter>
+          <filter id="hBlur24"><feGaussianBlur stdDeviation="24" /></filter>
+          <filter id="hBlur48"><feGaussianBlur stdDeviation="48" /></filter>
+        </defs>
+
+        {/* ── SKY BASE ── */}
+        <rect width="600" height="460" fill="url(#hSky)" />
+
+        {/* ── ATMOSPHERIC GLOWS ── */}
+        {/* Sunset horizon bloom */}
+        <ellipse cx="300" cy="330" rx="260" ry="110" fill="rgba(255,130,40,0.22)" filter="url(#hBlur48)" />
+        {/* Upper purple atmosphere */}
+        <ellipse cx="290" cy="160" rx="210" ry="130" fill="rgba(110,20,190,0.16)" filter="url(#hBlur48)" />
+        {/* Pink mid-tone glow */}
+        <ellipse cx="360" cy="240" rx="180" ry="90"  fill="rgba(220,55,120,0.13)" filter="url(#hBlur24)" />
+        {/* Left warm accent */}
+        <ellipse cx="80"  cy="350" rx="120" ry="70"  fill="rgba(255,100,30,0.12)" filter="url(#hBlur24)" />
+
+        {/* ── BACK MOUNTAINS (most distant, lightest) ── */}
+        <path d="M-10,300 L60,220 L120,255 L185,185 L250,225 L320,175 L385,215 L450,190 L520,220 L610,245 L610,390 L-10,390 Z"
+          fill="rgba(35,8,70,0.5)" />
+        {/* Thin glow on mountain ridgeline */}
+        <path d="M-10,300 L60,220 L120,255 L185,185 L250,225 L320,175 L385,215 L450,190 L520,220 L610,245"
+          fill="none" stroke="rgba(220,100,60,0.25)" strokeWidth="1.5" />
+
+        {/* ── MID MOUNTAINS ── */}
+        <path d="M-10,330 L50,268 L110,295 L170,238 L240,275 L305,228 L368,265 L435,242 L500,268 L565,250 L610,272 L610,395 L-10,395 Z"
+          fill="rgba(20,4,50,0.68)" />
+        <path d="M-10,330 L50,268 L110,295 L170,238 L240,275 L305,228 L368,265 L435,242 L500,268 L565,250 L610,272"
+          fill="none" stroke="rgba(200,80,40,0.18)" strokeWidth="1" />
+
+        {/* ── FOREGROUND MOUNTAINS ── */}
+        <path d="M-10,360 L40,320 L85,342 L138,305 L200,335 L270,310 L338,328 L408,312 L468,338 L530,318 L610,348 L610,405 L-10,405 Z"
+          fill="rgba(10,2,28,0.82)" />
+
+        {/* ── LAKE / WATER ── */}
+        <rect x="0" y="395" width="600" height="65" fill="url(#hLake)" />
+        {/* Water horizontal shimmer lines */}
+        {[0,1,2,3,4,5,6,7].map(i => (
+          <line key={i} x1="0" y1={402 + i * 7} x2="600" y2={402 + i * 7}
+            stroke="rgba(255,160,70,0.055)" strokeWidth="1.2" />
+        ))}
+        {/* Reflected mandala glow in lake */}
+        <ellipse cx="300" cy="430" rx="160" ry="28" fill="rgba(255,140,55,0.18)" filter="url(#hBlur12)" />
+        <ellipse cx="300" cy="445" rx="90"  ry="14" fill="rgba(255,100,40,0.12)" filter="url(#hBlur12)" />
+
+        {/* ── SACRED GEOMETRY MANDALA ── */}
+        {/* Outer ambient glow */}
+        <circle cx="300" cy="220" r="230" fill="url(#hMandalaGlow)" />
+
+        {/* 10 concentric rings */}
+        {[28, 52, 78, 104, 128, 152, 172, 192, 210, 226].map((r, i) => (
+          <circle key={i} cx="300" cy="220" r={r}
             fill="none"
-            stroke="rgba(255,180,60,0.25)"
-            strokeWidth="0.8"
+            stroke={`rgba(245,185,62,${Math.max(0.08, 0.52 - i * 0.044)})`}
+            strokeWidth={i < 2 ? 1.4 : i < 5 ? 1.0 : 0.7}
           />
         ))}
 
-        {/* 8 radiating lines, 120px long */}
-        {Array.from({ length: 8 }, (_, i) => {
-          const angle = (i * 45 - 90) * Math.PI / 180;
+        {/* 24 radiating spokes */}
+        {Array.from({ length: 24 }, (_, i) => {
+          const a = (i * 15 - 90) * Math.PI / 180;
+          const inner = i % 3 === 0 ? 28 : i % 3 === 1 ? 52 : 78;
           return (
-            <line
-              key={i}
-              x1="200" y1="150"
-              x2={200 + 120 * Math.cos(angle)}
-              y2={150 + 120 * Math.sin(angle)}
-              stroke="rgba(255,180,60,0.15)"
-              strokeWidth="1"
+            <line key={i}
+              x1={300 + inner * Math.cos(a)} y1={220 + inner * Math.sin(a)}
+              x2={300 + 226 * Math.cos(a)}   y2={220 + 226 * Math.sin(a)}
+              stroke={`rgba(245,185,62,${i % 3 === 0 ? 0.18 : 0.09})`}
+              strokeWidth={i % 3 === 0 ? 0.9 : 0.5}
             />
           );
         })}
 
-        {/* Mountain silhouette behind figure */}
-        <polygon
-          points="80,280 155,195 200,230 245,185 320,280"
-          fill="rgba(8,2,20,0.55)"
-        />
+        {/* Star of David (two triangles) at r=104 */}
+        {(() => {
+          const cx = 300, cy = 220, r = 104;
+          const tri = (offset) => Array.from({ length: 3 }, (_, j) => {
+            const a = (j * 120 + offset - 90) * Math.PI / 180;
+            return `${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`;
+          }).join(' ');
+          return (<>
+            <polygon points={tri(0)}   fill="none" stroke="rgba(245,185,62,0.22)" strokeWidth="0.9" />
+            <polygon points={tri(60)}  fill="none" stroke="rgba(245,185,62,0.22)" strokeWidth="0.9" />
+          </>);
+        })()}
 
-        {/* Tree foliage left */}
-        <ellipse cx="55" cy="240" rx="38" ry="55" fill="rgba(5,1,15,0.7)" />
-        <ellipse cx="75" cy="260" rx="28" ry="40" fill="rgba(5,1,15,0.6)" />
-        <rect x="68" y="280" width="10" height="30" fill="rgba(5,1,15,0.6)" />
+        {/* Inner 8-pointed star */}
+        {Array.from({ length: 4 }, (_, i) => {
+          const a1 = (i * 45 - 90) * Math.PI / 180;
+          const a2 = (i * 45 + 90) * Math.PI / 180;
+          return (
+            <line key={i}
+              x1={300 + 52 * Math.cos(a1)} y1={220 + 52 * Math.sin(a1)}
+              x2={300 + 52 * Math.cos(a2)} y2={220 + 52 * Math.sin(a2)}
+              stroke="rgba(245,185,62,0.32)" strokeWidth="0.9"
+            />
+          );
+        })}
 
-        {/* Tree foliage right */}
-        <ellipse cx="345" cy="240" rx="38" ry="55" fill="rgba(5,1,15,0.7)" />
-        <ellipse cx="325" cy="260" rx="28" ry="40" fill="rgba(5,1,15,0.6)" />
-        <rect x="322" y="280" width="10" height="30" fill="rgba(5,1,15,0.6)" />
+        {/* Lotus petals (8 petals at r=38) */}
+        {Array.from({ length: 8 }, (_, i) => {
+          const a = (i * 45) * Math.PI / 180;
+          const px = 300 + 38 * Math.cos(a), py = 220 + 38 * Math.sin(a);
+          return (
+            <ellipse key={i} cx={px} cy={py} rx="16" ry="9"
+              fill="rgba(245,185,62,0.06)"
+              stroke="rgba(245,185,62,0.28)" strokeWidth="0.8"
+              transform={`rotate(${i * 45}, ${px}, ${py})`}
+            />
+          );
+        })}
 
-        {/* Meditating figure silhouette in lotus position */}
-        {/* Body base / crossed legs */}
-        <ellipse cx="200" cy="278" rx="48" ry="14" fill="#0D0320" />
-        {/* Left knee */}
-        <ellipse cx="165" cy="270" rx="30" ry="12" fill="#0D0320" transform="rotate(-10,165,270)" />
-        {/* Right knee */}
-        <ellipse cx="235" cy="270" rx="30" ry="12" fill="#0D0320" transform="rotate(10,235,270)" />
+        {/* Mandala jewel nodes at ring intersections */}
+        {Array.from({ length: 12 }, (_, i) => {
+          const a = (i * 30 - 90) * Math.PI / 180;
+          const r = i % 2 === 0 ? 128 : 172;
+          return (
+            <circle key={i}
+              cx={300 + r * Math.cos(a)} cy={220 + r * Math.sin(a)}
+              r={i % 2 === 0 ? 2.8 : 1.8}
+              fill={`rgba(255,210,80,${i % 2 === 0 ? 0.75 : 0.5})`}
+              filter="url(#hSoftGlow)"
+            />
+          );
+        })}
+
+        {/* Center jewel */}
+        <circle cx="300" cy="220" r="14" fill="rgba(255,210,80,0.2)" stroke="rgba(245,185,62,0.65)" strokeWidth="1.3" />
+        <circle cx="300" cy="220" r="7"  fill="rgba(255,230,110,0.85)" />
+        <circle cx="300" cy="220" r="3"  fill="rgba(255,255,200,0.95)" />
+
+        {/* ── FIGURE RADIAL HALO ── */}
+        <circle cx="300" cy="345" r="200" fill="url(#hFigureGlow)" />
+
+        {/* ── FOG / ATMOSPHERIC HAZE ── */}
+        <rect x="0" y="300" width="600" height="95" fill="url(#hFog)" opacity="0.7" />
+        <ellipse cx="300" cy="365" rx="260" ry="35" fill="rgba(200,140,230,0.045)" filter="url(#hBlur12)" />
+
+        {/* ── LEFT TREES ── */}
+        <ellipse cx="22"  cy="310" rx="52" ry="80"  fill="rgba(4,0,12,0.82)" />
+        <ellipse cx="48"  cy="335" rx="40" ry="62"  fill="rgba(4,0,12,0.78)" />
+        <ellipse cx="8"   cy="348" rx="32" ry="55"  fill="rgba(4,0,12,0.82)" />
+        <ellipse cx="72"  cy="358" rx="28" ry="48"  fill="rgba(4,0,12,0.75)" />
+        <rect    x="50"   y="370" width="14" height="50" fill="rgba(4,0,12,0.72)" />
+        <rect    x="16"   y="382" width="10" height="38" fill="rgba(4,0,12,0.7)"  />
+
+        {/* ── RIGHT TREES ── */}
+        <ellipse cx="578" cy="310" rx="52" ry="80"  fill="rgba(4,0,12,0.82)" />
+        <ellipse cx="552" cy="335" rx="40" ry="62"  fill="rgba(4,0,12,0.78)" />
+        <ellipse cx="592" cy="348" rx="32" ry="55"  fill="rgba(4,0,12,0.82)" />
+        <ellipse cx="528" cy="358" rx="28" ry="48"  fill="rgba(4,0,12,0.75)" />
+        <rect    x="536"  y="370" width="14" height="50" fill="rgba(4,0,12,0.72)" />
+        <rect    x="574"  y="382" width="10" height="38" fill="rgba(4,0,12,0.7)"  />
+
+        {/* ── LIGHT RAYS from sunset (subtle) ── */}
+        {Array.from({ length: 7 }, (_, i) => {
+          const a = ((i * 25) - 65) * Math.PI / 180;
+          return (
+            <line key={i}
+              x1="300" y1="330"
+              x2={300 + 340 * Math.cos(a)} y2={330 + 340 * Math.sin(a)}
+              stroke={`rgba(255,200,80,${0.025 - i * 0.002})`}
+              strokeWidth={16 - i * 2}
+            />
+          );
+        })}
+
+        {/* ── MEDITATING FIGURE ── */}
+        {/* Ground shadow */}
+        <ellipse cx="300" cy="415" rx="75" ry="11" fill="rgba(0,0,0,0.45)" filter="url(#hBlur12)" />
+        {/* Aura / subtle halo */}
+        <circle cx="300" cy="355" r="88" fill="rgba(180,90,255,0.07)" filter="url(#hBlur12)" />
+
+        {/* Base seated platform */}
+        <ellipse cx="300" cy="407" rx="66" ry="15" fill="rgba(6,1,18,0.95)" />
+
+        {/* Legs — lotus position */}
+        <ellipse cx="256" cy="397" rx="44" ry="14" fill="#060112" transform="rotate(-14,256,397)" />
+        <ellipse cx="344" cy="397" rx="44" ry="14" fill="#060112" transform="rotate(14,344,397)" />
+        <ellipse cx="300" cy="400" rx="56" ry="15" fill="#060112" />
+
         {/* Torso */}
-        <ellipse cx="200" cy="248" rx="22" ry="26" fill="#0D0320" />
-        {/* Left arm resting */}
-        <path d="M178,258 Q158,265 162,278" fill="none" stroke="#0D0320" strokeWidth="12" strokeLinecap="round" />
-        {/* Right arm resting */}
-        <path d="M222,258 Q242,265 238,278" fill="none" stroke="#0D0320" strokeWidth="12" strokeLinecap="round" />
+        <ellipse cx="300" cy="366" rx="26" ry="32" fill="#060112" />
+        <path d="M274,400 Q277,350 300,338 Q323,350 326,400 Z" fill="#060112" />
+
+        {/* Shoulders */}
+        <ellipse cx="274" cy="360" rx="16" ry="13" fill="#060112" transform="rotate(-18,274,360)" />
+        <ellipse cx="326" cy="360" rx="16" ry="13" fill="#060112" transform="rotate(18,326,360)" />
+
+        {/* Arms resting down on knees */}
+        <path d="M274,362 Q255,378 250,398" fill="none" stroke="#060112" strokeWidth="15" strokeLinecap="round" />
+        <path d="M326,362 Q345,378 350,398" fill="none" stroke="#060112" strokeWidth="15" strokeLinecap="round" />
+
+        {/* Hands */}
+        <circle cx="249" cy="399" r="8" fill="#060112" />
+        <circle cx="351" cy="399" r="8" fill="#060112" />
+
         {/* Neck */}
-        <rect x="194" y="222" width="12" height="14" rx="6" fill="#0D0320" />
+        <rect x="293" y="335" width="14" height="16" rx="6" fill="#060112" />
+
         {/* Head */}
-        <circle cx="200" cy="214" r="16" fill="#0D0320" />
+        <circle cx="300" cy="325" r="21" fill="#060112" />
+
         {/* Hair bun */}
-        <ellipse cx="200" cy="200" rx="8" ry="6" fill="#0D0320" />
-        <circle cx="200" cy="196" r="4" fill="#0D0320" />
+        <ellipse cx="300" cy="307" rx="11" ry="8"  fill="#060112" />
+        <circle  cx="300" cy="302" r="6"            fill="#060112" />
 
-        {/* Water / lake reflection */}
-        <rect x="0" y="295" width="400" height="45" fill="url(#waterGrad)" opacity="0.7" />
-        <defs>
-          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="transparent" />
-            <stop offset="100%" stopColor="rgba(100,20,80,0.6)" />
-          </linearGradient>
-        </defs>
+        {/* Subtle inner glow on figure edges (backlit) */}
+        <circle cx="300" cy="325" r="22" fill="none"
+          stroke="rgba(255,160,60,0.12)" strokeWidth="3" filter="url(#hBlur12)" />
+        <ellipse cx="300" cy="370" rx="28" ry="34" fill="none"
+          stroke="rgba(200,100,255,0.08)" strokeWidth="4" filter="url(#hBlur12)" />
 
-        {/* Floating light particles */}
-        {[
-          { cx: 140, cy: 190, r: 2.5, color: 'rgba(255,220,80,0.8)' },
-          { cx: 265, cy: 175, r: 2,   color: 'rgba(255,200,60,0.7)' },
-          { cx: 175, cy: 160, r: 1.8, color: 'rgba(255,240,140,0.6)' },
-          { cx: 230, cy: 195, r: 2.2, color: 'rgba(255,180,60,0.75)' },
-          { cx: 155, cy: 215, r: 1.5, color: 'rgba(255,140,80,0.6)' },
-          { cx: 250, cy: 210, r: 1.8, color: 'rgba(255,220,100,0.65)' },
-        ].map((p, i) => (
+        {/* ── FLOATING PARTICLES ── */}
+        {particles.map((p, i) => (
           <circle key={i} cx={p.cx} cy={p.cy} r={p.r} fill={p.color}>
-            <animate attributeName="cy" values={`${p.cy};${p.cy - 14};${p.cy}`} dur={`${2.2 + i * 0.4}s`} repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0.6;1;0.6" dur={`${2.2 + i * 0.4}s`} repeatCount="indefinite" />
+            <animate attributeName="cy"
+              values={`${p.cy};${p.cy - 20};${p.cy}`}
+              dur={p.dur} begin={p.delay} repeatCount="indefinite" />
+            <animate attributeName="opacity"
+              values="0.45;1;0.45"
+              dur={p.dur} begin={p.delay} repeatCount="indefinite" />
           </circle>
         ))}
+
+        {/* ── VIGNETTE ── */}
+        <rect width="600" height="460" fill="url(#hVignette)" />
       </svg>
+
+      {/* Gradient blend into left text panel */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, bottom: 0, width: '28%',
+        background: 'linear-gradient(90deg, rgba(14,5,42,0.88) 0%, rgba(14,5,42,0.45) 60%, transparent 100%)',
+        pointerEvents: 'none',
+      }} />
     </div>
   );
 }
@@ -334,6 +522,20 @@ export default function Matches() {
         @media (max-width: 600px) {
           .sc-three-col  { grid-template-columns: 1fr !important; }
           .sc-stats-grid { grid-template-columns: 1fr 1fr !important; }
+        }
+        /* Hero responsive */
+        @media (max-width: 768px) {
+          .sc-hero-grid { grid-template-columns: 1fr !important; min-height: 420px !important; }
+          .sc-hero-art  {
+            position: absolute !important; inset: 0 !important;
+            opacity: 0.55 !important; z-index: 0 !important;
+            width: 100% !important; height: 100% !important;
+          }
+          .sc-hero-text {
+            position: relative !important; z-index: 1 !important;
+            background: linear-gradient(160deg, rgba(12,4,36,0.93) 0%, rgba(12,4,36,0.75) 100%) !important;
+            padding: 32px 24px 28px !important;
+          }
         }
         @media (prefers-reduced-motion: reduce) {
           .sc-anim-1, .sc-anim-2, .sc-anim-3,
@@ -455,19 +657,25 @@ export default function Matches() {
         {/* ════════════════════════════════════════
             HERO CARD
         ════════════════════════════════════════ */}
-        <div className="sc-anim-1" style={{
-          background: 'linear-gradient(135deg, #0F0535 0%, #1A0A3E 60%, #0C0228 100%)',
-          border: '1px solid rgba(120,70,220,0.4)',
-          borderRadius: 20,
+        <div className="sc-anim-1 sc-hero-grid" style={{
+          background: '#0C0228',
+          border: '1px solid rgba(120,70,220,0.38)',
+          borderRadius: 24,
           overflow: 'hidden',
           marginBottom: 16,
           display: 'grid',
-          gridTemplateColumns: '55% 45%',
-          minHeight: 320,
+          gridTemplateColumns: '40% 60%',
+          minHeight: 470,
+          position: 'relative',
         }}>
-          {/* Left Column */}
-          <div style={{ padding: '36px 40px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0 }}>
-            {/* Badge */}
+          {/* Left Column — Text panel */}
+          <div className="sc-hero-text" style={{
+            padding: '42px 36px 38px',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center',
+            position: 'relative', zIndex: 2,
+            background: 'linear-gradient(90deg, rgba(12,2,40,0.97) 0%, rgba(12,2,40,0.88) 72%, rgba(12,2,40,0.0) 100%)',
+          }}>
+            {/* Gold badge */}
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
               fontSize: 11, fontWeight: 700, color: '#F5B841',
@@ -475,51 +683,50 @@ export default function Matches() {
               padding: '5px 14px', borderRadius: 20,
               border: '1px solid rgba(245,184,65,0.4)',
               background: 'rgba(245,184,65,0.1)',
-              marginBottom: 18,
-              alignSelf: 'flex-start',
+              marginBottom: 20, alignSelf: 'flex-start',
             }}>
               ✦ YOUR DAILY INTENTION
             </div>
 
             {/* Headline */}
             <h1 style={{
-              margin: '0 0 10px',
-              fontSize: 38, fontWeight: 800, lineHeight: 1.2,
-              color: '#fff',
-              letterSpacing: '-0.02em',
+              margin: '0 0 8px',
+              fontSize: 'clamp(28px, 2.6vw, 40px)', fontWeight: 800, lineHeight: 1.18,
+              color: '#fff', letterSpacing: '-0.02em',
             }}>
               Your healing journey
             </h1>
             <h1 style={{
-              margin: '0 0 16px',
-              fontSize: 38, fontWeight: 700, lineHeight: 1.2,
-              color: '#A78BFA',
-              fontStyle: 'italic',
-              letterSpacing: '-0.02em',
+              margin: '0 0 18px',
+              fontSize: 'clamp(28px, 2.6vw, 40px)', fontWeight: 700, lineHeight: 1.18,
+              color: '#A78BFA', fontStyle: 'italic', letterSpacing: '-0.02em',
             }}>
               continues today.
             </h1>
 
             {/* Quote */}
             <p style={{
-              margin: '0 0 24px',
-              fontSize: 14, lineHeight: 1.6,
-              color: 'rgba(255,255,255,0.55)',
-              maxWidth: 400,
+              margin: '0 0 26px',
+              fontSize: 14, lineHeight: 1.65,
+              color: 'rgba(255,255,255,0.52)',
             }}>
               "I am safe. I am loved. I belong here."
             </p>
 
-            {/* Buttons */}
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 28 }}>
+            {/* Glassmorphism Buttons */}
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 30 }}>
               <button
                 onClick={() => navigate('/meetups')}
                 style={{
-                  padding: '12px 24px', borderRadius: 12,
+                  padding: '12px 22px', borderRadius: 12,
                   fontSize: 14, fontWeight: 700,
-                  background: 'linear-gradient(135deg, #7C3AED, #5B21B6)',
-                  color: '#fff', border: 'none', cursor: 'pointer',
-                  boxShadow: '0 6px 20px rgba(124,58,237,0.45)',
+                  background: 'rgba(110,50,220,0.65)',
+                  backdropFilter: 'blur(14px)',
+                  WebkitBackdropFilter: 'blur(14px)',
+                  color: '#fff',
+                  border: '1px solid rgba(170,120,255,0.45)',
+                  cursor: 'pointer',
+                  boxShadow: '0 6px 22px rgba(100,40,210,0.45), inset 0 1px 0 rgba(255,255,255,0.1)',
                   letterSpacing: '-0.01em',
                 }}>
                 Continue Your Journey →
@@ -527,37 +734,42 @@ export default function Matches() {
               <button
                 onClick={() => navigate('/mood')}
                 style={{
-                  padding: '12px 24px', borderRadius: 12,
+                  padding: '12px 22px', borderRadius: 12,
                   fontSize: 14, fontWeight: 700,
-                  background: 'transparent',
+                  background: 'rgba(255,255,255,0.07)',
+                  backdropFilter: 'blur(14px)',
+                  WebkitBackdropFilter: 'blur(14px)',
                   color: '#fff',
-                  border: '1px solid rgba(255,255,255,0.25)',
+                  border: '1px solid rgba(255,255,255,0.2)',
                   cursor: 'pointer',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
                 }}>
                 Today's Challenge
               </button>
             </div>
 
             {/* Stats row */}
-            <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
               {[
-                { icon: '🔥', val: String(user?.streak || 7),   label: 'Day Streak'  },
-                { icon: '🌙', val: 'Stage 2',                    label: 'Healing'     },
-                { icon: '⚡', val: '847',                        label: 'Soul Points' },
+                { icon: '🔥', val: String(user?.streak || 7), label: 'Day Streak'  },
+                { icon: '🌙', val: 'Stage 2',                  label: 'Healing'     },
+                { icon: '⚡', val: '847',                      label: 'Soul Points' },
               ].map((s, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                   <span style={{ fontSize: 20 }}>{s.icon}</span>
                   <div>
                     <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', lineHeight: 1 }}>{s.val}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>{s.label}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.42)', fontWeight: 500, marginTop: 1 }}>{s.label}</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Column — Meditation Scene */}
-          <MeditationScene />
+          {/* Right Column — Cinematic Meditation Artwork */}
+          <div className="sc-hero-art" style={{ position: 'relative' }}>
+            <MeditationScene />
+          </div>
         </div>
 
         {/* ════════════════════════════════════════
