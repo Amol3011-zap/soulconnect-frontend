@@ -5,6 +5,7 @@ import { useThemeStore } from '../store/theme';
 import ThemeToggle from '../components/ThemeToggle';
 import ActivitySuggestions from '../components/ActivitySuggestions';
 import GuidedHealing from '../components/GuidedHealing';
+import DailyChallenges from '../components/DailyChallenges';
 import { journeyAPI } from '../services/api';
 
 // ── Demo match — one chatbot persona shown to every new user ───────────────────
@@ -966,8 +967,8 @@ export default function Dashboard() {
           )}
 
           {mainTab === 'healing' && (
-            <div className="dc-scroll" style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
-              <GuidedHealing problem={activeMatch?.primary_problem} />
+            <div className="dc-scroll" style={{ flex: 1, overflowY: 'auto', padding: '8px 16px' }}>
+              <DailyChallenges />
             </div>
           )}
 

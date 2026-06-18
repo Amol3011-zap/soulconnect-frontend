@@ -61,6 +61,13 @@ export const adminAPI = {
   getStats: () => api.get('/admin/stats'),
 };
 
+export const challengesAPI = {
+  getToday: () => api.get('/challenges/today'),
+  complete: (challengeId, actualDuration = null) =>
+    api.post(`/challenges/complete/${challengeId}`, { actual_duration: actualDuration }),
+  getWeeklySummary: () => api.get('/challenges/weekly-summary'),
+};
+
 export const journeyAPI = {
   logActivity: (data) => api.post('/journey/activity', data),
   getProgress: () => api.get('/journey/progress'),
