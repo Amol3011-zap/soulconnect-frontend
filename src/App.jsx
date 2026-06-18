@@ -29,7 +29,7 @@ function AppInner() {
   const isHealer = role === 'healer' || user?.role === 'healer';
 
   // Pages that manage their own header/nav
-  const hideNav = location.pathname === '/chat' || location.pathname === '/groups' || location.pathname === '/' || isHealer;
+  const hideNav = location.pathname === '/chat' || location.pathname === '/groups' || location.pathname === '/' || location.pathname === '/mood' || isHealer;
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
