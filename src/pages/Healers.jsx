@@ -672,78 +672,282 @@ const HEALER_STYLES = `
 
 // ── Meditation SVG Illustration ────────────────────────────────────────────────
 function MeditationIllustration() {
+  // Deterministic particles (no Math.random)
+  const particles = [
+    { cx: 80,  cy: 60,  r: 2.5, color: '#F5B841', o: 0.75, dur: '3.2s', del: '0s'    },
+    { cx: 460, cy: 80,  r: 2.0, color: '#F5B841', o: 0.55, dur: '4.1s', del: '0.5s'  },
+    { cx: 55,  cy: 180, r: 1.8, color: '#A78BFA', o: 0.6,  dur: '3.7s', del: '0.9s'  },
+    { cx: 495, cy: 155, r: 2.2, color: '#F5B841', o: 0.7,  dur: '2.9s', del: '0.3s'  },
+    { cx: 105, cy: 100, r: 1.5, color: '#C4B5FD', o: 0.5,  dur: '4.4s', del: '1.1s'  },
+    { cx: 440, cy: 110, r: 1.8, color: '#F5B841', o: 0.65, dur: '3.5s', del: '0.7s'  },
+    { cx: 130, cy: 45,  r: 1.3, color: '#A78BFA', o: 0.45, dur: '5.0s', del: '1.4s'  },
+    { cx: 420, cy: 50,  r: 1.6, color: '#F5B841', o: 0.6,  dur: '3.8s', del: '0.4s'  },
+    { cx: 65,  cy: 270, r: 1.4, color: '#C4B5FD', o: 0.4,  dur: '4.6s', del: '1.7s'  },
+    { cx: 480, cy: 250, r: 2.0, color: '#F5B841', o: 0.55, dur: '3.3s', del: '0.2s'  },
+    { cx: 170, cy: 30,  r: 1.2, color: '#A78BFA', o: 0.5,  dur: '4.8s', del: '2.0s'  },
+    { cx: 370, cy: 28,  r: 1.5, color: '#F5B841', o: 0.65, dur: '3.6s', del: '0.8s'  },
+  ];
+
+  const CX = 275, CY = 200; // mandala center
+
   return (
-    <svg viewBox="0 0 300 320" width="100%" height="100%" style={{ display: 'block' }} aria-hidden="true">
-      {/* Radial glow */}
-      <defs>
-        <radialGradient id="glow" cx="50%" cy="48%" r="50%">
-          <stop offset="0%" stopColor="rgba(109,74,255,0.25)" />
-          <stop offset="100%" stopColor="transparent" />
-        </radialGradient>
-        <radialGradient id="bodyGrad" cx="50%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#5B21B6" />
-          <stop offset="100%" stopColor="#3D2B8E" />
-        </radialGradient>
-      </defs>
-      <ellipse cx="150" cy="154" rx="100" ry="100" fill="url(#glow)" />
+    <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: 480 }}>
+      <svg
+        viewBox="0 0 550 500"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }}
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+      >
+        <defs>
+          {/* Sky / background gradient */}
+          <linearGradient id="hiBg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stopColor="#FFFFFF" />
+            <stop offset="35%"  stopColor="#F5F0FF" />
+            <stop offset="100%" stopColor="#EDE5FF" />
+          </linearGradient>
 
-      {/* Mandala circles */}
-      {[28,56,84,112,140,168,196,224].map((r, i) => (
-        <circle key={i} cx="150" cy="154" r={r} fill="none" stroke="rgba(109,74,255,0.12)" strokeWidth="1" />
-      ))}
+          {/* Central chest glow */}
+          <radialGradient id="hiChestGlow" cx="50%" cy="55%" r="45%">
+            <stop offset="0%"   stopColor="rgba(255,240,210,0.9)"  />
+            <stop offset="30%"  stopColor="rgba(200,170,255,0.45)" />
+            <stop offset="65%"  stopColor="rgba(167,139,250,0.15)" />
+            <stop offset="100%" stopColor="transparent"             />
+          </radialGradient>
 
-      {/* Spokes */}
-      {Array.from({ length: 16 }, (_, i) => {
-        const angle = (i * 22.5) * Math.PI / 180;
-        return (
-          <line key={i}
-            x1={150 + 28 * Math.cos(angle)} y1={154 + 28 * Math.sin(angle)}
-            x2={150 + 224 * Math.cos(angle)} y2={154 + 224 * Math.sin(angle)}
-            stroke="rgba(109,74,255,0.08)" strokeWidth="0.8"
+          {/* Outer ambient glow */}
+          <radialGradient id="hiAmbient" cx="50%" cy="42%" r="50%">
+            <stop offset="0%"   stopColor="rgba(196,181,253,0.35)" />
+            <stop offset="60%"  stopColor="rgba(167,139,250,0.12)" />
+            <stop offset="100%" stopColor="transparent"             />
+          </radialGradient>
+
+          {/* Figure gradient — rich dark purple silhouette */}
+          <linearGradient id="hiFig" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#2D1B69" />
+            <stop offset="100%" stopColor="#1E1046" />
+          </linearGradient>
+
+          {/* Lotus base gradient */}
+          <radialGradient id="hiLotus" cx="50%" cy="60%" r="55%">
+            <stop offset="0%"   stopColor="rgba(196,181,253,0.5)"  />
+            <stop offset="50%"  stopColor="rgba(167,139,250,0.25)" />
+            <stop offset="100%" stopColor="transparent"             />
+          </radialGradient>
+
+          {/* Soft blur filter */}
+          <filter id="hiBlur8"><feGaussianBlur stdDeviation="8" /></filter>
+          <filter id="hiBlur16"><feGaussianBlur stdDeviation="16" /></filter>
+          <filter id="hiBlur30"><feGaussianBlur stdDeviation="30" /></filter>
+          <filter id="hiGlow">
+            <feGaussianBlur stdDeviation="4" result="b" />
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        {/* Background */}
+        <rect width="550" height="500" fill="url(#hiBg)" />
+
+        {/* Outer ambient halo */}
+        <ellipse cx={CX} cy={CY} rx="280" ry="240" fill="url(#hiAmbient)" />
+
+        {/* ── SACRED GEOMETRY MANDALA ── */}
+        {/* 12 concentric rings, decreasing opacity outward */}
+        {[22,44,66,88,110,132,154,176,198,218,236,252].map((r, i) => (
+          <circle key={i} cx={CX} cy={CY} r={r}
+            fill="none"
+            stroke={`rgba(109,74,255,${Math.max(0.04, 0.22 - i * 0.016)})`}
+            strokeWidth={i < 3 ? 1.2 : i < 7 ? 0.9 : 0.6}
           />
-        );
-      })}
+        ))}
 
-      {/* Lotus petals at base */}
-      {[-60,-30,0,30,60].map((angle, i) => {
-        const rad = (angle - 90) * Math.PI / 180;
-        const cx = 150 + 40 * Math.cos(rad);
-        const cy = 248 + 40 * Math.sin(rad);
-        return (
-          <ellipse key={i} cx={cx} cy={cy} rx="22" ry="36"
-            transform={`rotate(${angle}, ${cx}, ${cy})`}
-            fill={i % 2 === 0 ? 'rgba(167,139,250,0.2)' : 'rgba(196,181,253,0.3)'}
-          />
-        );
-      })}
+        {/* 24 radiating spokes */}
+        {Array.from({ length: 24 }, (_, i) => {
+          const a = (i * 15) * Math.PI / 180;
+          const inner = i % 3 === 0 ? 22 : i % 3 === 1 ? 44 : 66;
+          return (
+            <line key={i}
+              x1={CX + inner * Math.cos(a)} y1={CY + inner * Math.sin(a)}
+              x2={CX + 252 * Math.cos(a)}   y2={CY + 252 * Math.sin(a)}
+              stroke={`rgba(109,74,255,${i % 3 === 0 ? 0.12 : 0.06})`}
+              strokeWidth={i % 3 === 0 ? 0.8 : 0.4}
+            />
+          );
+        })}
 
-      {/* Body — lotus position */}
-      {/* Base/crossed legs */}
-      <ellipse cx="150" cy="256" rx="52" ry="18" fill="url(#bodyGrad)" />
-      {/* Torso */}
-      <rect x="136" y="192" width="28" height="66" rx="14" fill="url(#bodyGrad)" />
-      {/* Left arm */}
-      <path d="M136,218 Q112,228 108,244" stroke="#3D2B8E" strokeWidth="12" strokeLinecap="round" fill="none" />
-      <circle cx="108" cy="246" r="8" fill="#3D2B8E" />
-      {/* Right arm */}
-      <path d="M164,218 Q188,228 192,244" stroke="#3D2B8E" strokeWidth="12" strokeLinecap="round" fill="none" />
-      <circle cx="192" cy="246" r="8" fill="#3D2B8E" />
-      {/* Head */}
-      <circle cx="150" cy="182" r="22" fill="url(#bodyGrad)" />
-      {/* Hair bun */}
-      <ellipse cx="150" cy="162" rx="10" ry="8" fill="#2D1B6E" />
-      <circle cx="150" cy="157" r="5" fill="#2D1B6E" />
+        {/* Two overlapping triangles (Star of David) at r=110 */}
+        {[0, 60].map((offset, ti) => {
+          const pts = Array.from({ length: 3 }, (_, j) => {
+            const a = (j * 120 + offset - 90) * Math.PI / 180;
+            return `${CX + 110 * Math.cos(a)},${CY + 110 * Math.sin(a)}`;
+          }).join(' ');
+          return <polygon key={ti} points={pts} fill="none" stroke="rgba(109,74,255,0.14)" strokeWidth="0.9" />;
+        })}
 
-      {/* Golden dots */}
-      {[
-        {cx:80,cy:90,r:3,o:0.7},{cx:220,cy:80,r:2,o:0.5},{cx:60,cy:180,r:2.5,o:0.6},
-        {cx:240,cy:170,r:3,o:0.8},{cx:100,cy:50,r:2,o:0.5},{cx:200,cy:45,r:2.5,o:0.6},
-        {cx:70,cy:130,r:2,o:0.4},{cx:230,cy:120,r:2,o:0.5},
-      ].map((d, i) => (
-        <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#F5B841" opacity={d.o}
-          style={{ animation: `hFloat ${2 + i * 0.3}s ease-in-out infinite` }} />
-      ))}
-    </svg>
+        {/* Second star at r=66 */}
+        {[0, 60].map((offset, ti) => {
+          const pts = Array.from({ length: 3 }, (_, j) => {
+            const a = (j * 120 + offset - 90) * Math.PI / 180;
+            return `${CX + 66 * Math.cos(a)},${CY + 66 * Math.sin(a)}`;
+          }).join(' ');
+          return <polygon key={`s2-${ti}`} points={pts} fill="none" stroke="rgba(109,74,255,0.1)" strokeWidth="0.7" />;
+        })}
+
+        {/* 8-point inner flower petals at r=44 */}
+        {Array.from({ length: 8 }, (_, i) => {
+          const a = (i * 45) * Math.PI / 180;
+          const px = CX + 44 * Math.cos(a), py = CY + 44 * Math.sin(a);
+          return (
+            <ellipse key={i} cx={px} cy={py} rx="18" ry="10"
+              fill="rgba(167,139,250,0.06)"
+              stroke="rgba(109,74,255,0.16)" strokeWidth="0.7"
+              transform={`rotate(${i * 45}, ${px}, ${py})`}
+            />
+          );
+        })}
+
+        {/* Jewel nodes at r=132 and r=198 */}
+        {Array.from({ length: 12 }, (_, i) => {
+          const a = (i * 30 - 90) * Math.PI / 180;
+          const r2 = i % 2 === 0 ? 132 : 176;
+          return (
+            <circle key={i}
+              cx={CX + r2 * Math.cos(a)} cy={CY + r2 * Math.sin(a)}
+              r={i % 2 === 0 ? 3.2 : 2.0}
+              fill={`rgba(167,139,250,${i % 2 === 0 ? 0.7 : 0.45})`}
+              filter="url(#hiGlow)"
+            />
+          );
+        })}
+
+        {/* Center jewel */}
+        <circle cx={CX} cy={CY} r="16" fill="rgba(196,181,253,0.2)" stroke="rgba(109,74,255,0.4)" strokeWidth="1.2" />
+        <circle cx={CX} cy={CY} r="8"  fill="rgba(196,181,253,0.6)" />
+        <circle cx={CX} cy={CY} r="4"  fill="rgba(255,255,255,0.9)" />
+
+        {/* ── LOTUS PETALS (large, behind figure) ── */}
+        {/* Bottom wide lotus — 7 petals fanning outward */}
+        {Array.from({ length: 7 }, (_, i) => {
+          const spread = 180; // degrees total
+          const a = (-spread / 2 + (i * spread / 6)) * Math.PI / 180;
+          const pr = 90;
+          const px = CX + pr * Math.cos(a - Math.PI / 2);
+          const py = 390 + pr * Math.sin(a - Math.PI / 2) * 0.4;
+          const rotation = (a * 180 / Math.PI) - 90;
+          return (
+            <ellipse key={i} cx={px} cy={py}
+              rx={i === 3 ? 35 : i === 2 || i === 4 ? 30 : 24}
+              ry={i === 3 ? 70 : i === 2 || i === 4 ? 60 : 48}
+              fill={i % 2 === 0 ? 'rgba(196,181,253,0.28)' : 'rgba(167,139,250,0.22)'}
+              stroke="rgba(167,139,250,0.35)"
+              strokeWidth="0.6"
+              transform={`rotate(${rotation}, ${px}, ${py})`}
+              filter="url(#hiBlur8)"
+            />
+          );
+        })}
+
+        {/* Second layer of lotus petals (smaller, on top) */}
+        {Array.from({ length: 5 }, (_, i) => {
+          const spread = 140;
+          const a = (-spread / 2 + (i * spread / 4)) * Math.PI / 180;
+          const pr = 55;
+          const px = CX + pr * Math.cos(a - Math.PI / 2);
+          const py = 400 + pr * Math.sin(a - Math.PI / 2) * 0.3;
+          return (
+            <ellipse key={i} cx={px} cy={py}
+              rx={i === 2 ? 22 : 17} ry={i === 2 ? 46 : 36}
+              fill="rgba(216,207,255,0.35)"
+              stroke="rgba(167,139,250,0.45)"
+              strokeWidth="0.7"
+              transform={`rotate(${(-spread / 2 + (i * spread / 4))}, ${px}, ${py})`}
+            />
+          );
+        })}
+
+        {/* Lotus base glow */}
+        <ellipse cx={CX} cy={415} rx="160" ry="55" fill="url(#hiLotus)" filter="url(#hiBlur16)" />
+
+        {/* ── CHEST / AURA GLOW ── */}
+        <ellipse cx={CX} cy={CY + 20} rx="220" ry="200" fill="url(#hiChestGlow)" />
+
+        {/* Chakra points glow — subtle vertical dots */}
+        {[0, 38, 72, 104, 130, 155].map((dy, i) => (
+          <circle key={i} cx={CX} cy={CY + 60 - dy} r={i === 0 ? 6 : 4}
+            fill={['rgba(255,200,80,0.8)','rgba(220,180,255,0.7)','rgba(180,140,255,0.65)','rgba(200,160,255,0.6)','rgba(167,139,250,0.55)','rgba(196,181,253,0.5)'][i]}
+            filter="url(#hiGlow)"
+          >
+            <animate attributeName="opacity" values={`${0.4 + i*0.05};0.9;${0.4 + i*0.05}`} dur={`${2.2 + i*0.4}s`} repeatCount="indefinite" />
+          </circle>
+        ))}
+
+        {/* ── MEDITATING FIGURE ── */}
+        {/* Ground shadow */}
+        <ellipse cx={CX} cy={448} rx="85" ry="14" fill="rgba(109,74,255,0.1)" filter="url(#hiBlur8)" />
+
+        {/* Leg base — lotus position */}
+        <ellipse cx={CX} cy={436} rx="72" ry="20" fill="url(#hiFig)" />
+        {/* Left knee */}
+        <ellipse cx={CX - 52} cy={424} rx="46" ry="16" fill="url(#hiFig)" transform={`rotate(-12,${CX-52},424)`} />
+        {/* Right knee */}
+        <ellipse cx={CX + 52} cy={424} rx="46" ry="16" fill="url(#hiFig)" transform={`rotate(12,${CX+52},424)`} />
+        {/* Seat fill */}
+        <ellipse cx={CX} cy={428} rx="65" ry="19" fill="url(#hiFig)" />
+
+        {/* Torso */}
+        <ellipse cx={CX} cy={388} rx="28" ry="40" fill="url(#hiFig)" />
+        <path d={`M${CX-28},428 Q${CX-30},370 ${CX},354 Q${CX+30},370 ${CX+28},428 Z`} fill="url(#hiFig)" />
+
+        {/* Shoulders */}
+        <ellipse cx={CX - 28} cy={382} rx="18" ry="15" fill="url(#hiFig)" transform={`rotate(-20,${CX-28},382)`} />
+        <ellipse cx={CX + 28} cy={382} rx="18" ry="15" fill="url(#hiFig)" transform={`rotate(20,${CX+28},382)`} />
+
+        {/* Arms resting */}
+        <path d={`M${CX-28},385 Q${CX-50},400 ${CX-58},422`} fill="none" stroke="#1E1046" strokeWidth="18" strokeLinecap="round" />
+        <path d={`M${CX+28},385 Q${CX+50},400 ${CX+58},422`} fill="none" stroke="#1E1046" strokeWidth="18" strokeLinecap="round" />
+        <circle cx={CX - 58} cy={423} r="10" fill="url(#hiFig)" />
+        <circle cx={CX + 58} cy={423} r="10" fill="url(#hiFig)" />
+
+        {/* Neck */}
+        <rect x={CX - 8} y="344" width="16" height="18" rx="7" fill="url(#hiFig)" />
+
+        {/* Head */}
+        <circle cx={CX} cy="330" r="26" fill="url(#hiFig)" />
+
+        {/* Hair bun */}
+        <ellipse cx={CX} cy="307" rx="12" ry="9"  fill="#1E1046" />
+        <circle  cx={CX} cy="301" r="7"            fill="#1E1046" />
+        <circle  cx={CX} cy="297" r="4"            fill="#1E1046" />
+
+        {/* Backlit outline glow */}
+        <circle cx={CX} cy="330" r="28" fill="none" stroke="rgba(196,181,253,0.2)" strokeWidth="4" filter="url(#hiBlur8)" />
+        <ellipse cx={CX} cy="390" rx="32" ry="44" fill="none" stroke="rgba(167,139,250,0.15)" strokeWidth="5" filter="url(#hiBlur8)" />
+
+        {/* ── FLOATING PARTICLES ── */}
+        {particles.map((p, i) => (
+          <circle key={i} cx={p.cx} cy={p.cy} r={p.r} fill={p.color} opacity={p.o}>
+            <animate attributeName="cy" values={`${p.cy};${p.cy - 16};${p.cy}`} dur={p.dur} begin={p.del} repeatCount="indefinite" />
+            <animate attributeName="opacity" values={`${p.o * 0.5};${p.o};${p.o * 0.5}`} dur={p.dur} begin={p.del} repeatCount="indefinite" />
+          </circle>
+        ))}
+
+        {/* Sparkle crosses */}
+        {[
+          { cx: 100, cy: 75,  size: 6, color: 'rgba(167,139,250,0.7)', dur: '3.0s' },
+          { cx: 450, cy: 95,  size: 5, color: 'rgba(245,184,65,0.8)',  dur: '3.8s' },
+          { cx: 75,  cy: 210, size: 4, color: 'rgba(196,181,253,0.65)',dur: '4.2s' },
+          { cx: 475, cy: 200, size: 5, color: 'rgba(245,184,65,0.7)',  dur: '2.9s' },
+        ].map((s, i) => (
+          <g key={i} opacity={0.8}>
+            <line x1={s.cx - s.size} y1={s.cy} x2={s.cx + s.size} y2={s.cy} stroke={s.color} strokeWidth="1.2" strokeLinecap="round">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur={s.dur} begin={`${i * 0.6}s`} repeatCount="indefinite" />
+            </line>
+            <line x1={s.cx} y1={s.cy - s.size} x2={s.cx} y2={s.cy + s.size} stroke={s.color} strokeWidth="1.2" strokeLinecap="round">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur={s.dur} begin={`${i * 0.6}s`} repeatCount="indefinite" />
+            </line>
+          </g>
+        ))}
+      </svg>
+    </div>
   );
 }
 
@@ -982,43 +1186,51 @@ export default function Healers() {
         <div className="h-main" style={{ flex: 1, overflowY: 'auto', padding: '0 32px 60px' }}>
 
           {/* ── HERO ── */}
-          <div className="h-anim-1" style={{
+          <div className="h-hero-grid h-anim-1" style={{
             borderRadius: 24, overflow: 'hidden', marginBottom: 28, marginTop: 20,
             border: '1px solid rgba(109,74,255,0.12)',
-            display: 'grid', gridTemplateColumns: '52% 48%',
-            minHeight: 280,
-          }} className="h-hero-grid h-anim-1">
+            boxShadow: '0 4px 32px rgba(109,74,255,0.08)',
+            display: 'grid', gridTemplateColumns: '40% 60%',
+            minHeight: 480,
+            background: 'linear-gradient(135deg, #FFFDFE 0%, #F8F4FF 35%, #F3EEFF 100%)',
+          }}>
             {/* Left */}
             <div style={{
-              background: 'linear-gradient(135deg, #FAF7FF 0%, #F0EBFF 40%, #E8DFFF 100%)',
-              padding: '40px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'center',
+              padding: '48px 40px', display: 'flex', flexDirection: 'column', justifyContent: 'center',
             }}>
-              <p style={{ fontSize: 11, color: '#6D4AFF', fontWeight: 700, letterSpacing: '0.1em', margin: '0 0 12px', textTransform: 'uppercase' }}>
+              <p style={{ fontSize: 11, color: '#6D4AFF', fontWeight: 700, letterSpacing: '0.1em', margin: '0 0 16px', textTransform: 'uppercase' }}>
                 ✦ YOUR HEALING COMPANION
               </p>
               <h1 style={{
-                fontSize: 36, fontWeight: 800, color: '#1A1333',
-                fontFamily: 'Playfair Display, Georgia, serif', lineHeight: 1.2, margin: 0,
-              }}>Find the right guide</h1>
-              <h1 style={{
-                fontSize: 36, fontWeight: 800, color: '#6D4AFF',
-                fontFamily: 'Playfair Display, Georgia, serif', lineHeight: 1.2, margin: '0 0 14px',
-              }}>for your healing journey.</h1>
-              <p style={{ fontSize: 14, color: '#6B7280', maxWidth: 420, lineHeight: 1.6, margin: '0 0 24px' }}>
+                fontSize: 'clamp(32px,3.2vw,48px)', fontWeight: 700, color: '#1A1333',
+                fontFamily: 'Playfair Display, Georgia, serif',
+                lineHeight: 1.08, margin: 0,
+                letterSpacing: '-0.01em',
+              }}>
+                Find the right guide<br />
+                <span style={{ color: '#1A1333' }}>for your healing</span><br />
+                <span style={{ color: '#1A1333' }}>journey</span>
+              </h1>
+              <p style={{ fontSize: 14, color: '#6B7280', maxWidth: 360, lineHeight: 1.65, margin: '18px 0 28px' }}>
                 Connect with verified wellness professionals and healing guides who truly understand your journey.
               </p>
               {/* Stats */}
-              <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginBottom: 20 }}>
+              <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap', marginBottom: 24 }}>
                 {[
-                  { icon: '👤', val: '500+', label: 'Verified Guides' },
-                  { icon: '📋', val: '10K+', label: 'Sessions Booked' },
-                  { icon: '⭐', val: '4.8★', label: 'Average Rating' },
+                  { icon: '👤', val: '500+', label: 'Verified Guides'  },
+                  { icon: '📋', val: '10K+', label: 'Sessions Booked'  },
+                  { icon: '⭐', val: '4.8★', label: 'Average Rating'   },
                 ].map(stat => (
-                  <div key={stat.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ fontSize: 16 }}>{stat.icon}</span>
+                  <div key={stat.label} style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                    <div style={{
+                      width: 34, height: 34, borderRadius: '50%',
+                      background: 'rgba(109,74,255,0.08)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 15,
+                    }}>{stat.icon}</div>
                     <div>
-                      <div style={{ fontSize: 16, fontWeight: 800, color: '#1A1333', lineHeight: 1 }}>{stat.val}</div>
-                      <div style={{ fontSize: 12, color: '#6B7280' }}>{stat.label}</div>
+                      <div style={{ fontSize: 17, fontWeight: 800, color: '#1A1333', lineHeight: 1 }}>{stat.val}</div>
+                      <div style={{ fontSize: 11, color: '#9CA3AF', marginTop: 2 }}>{stat.label}</div>
                     </div>
                   </div>
                 ))}
@@ -1027,19 +1239,26 @@ export default function Healers() {
               <div style={{ display: 'flex', gap: 6 }}>
                 {[0,1,2].map(i => (
                   <div key={i} style={{
-                    width: i === 0 ? 20 : 8, height: 8, borderRadius: 4,
-                    background: i === 0 ? '#6D4AFF' : 'rgba(109,74,255,0.2)',
-                    transition: 'width 0.3s',
+                    width: i === 0 ? 22 : 8, height: 8, borderRadius: 4,
+                    background: i === 0 ? '#6D4AFF' : 'rgba(109,74,255,0.18)',
                   }} />
                 ))}
               </div>
             </div>
 
-            {/* Right — Illustration */}
+            {/* Right — Full premium illustration */}
             <div style={{
-              background: 'linear-gradient(180deg, #E8DFFF 0%, #D4C6FF 40%, #C4B5FD 70%, #F3F0FF 100%)',
-              position: 'relative', overflow: 'hidden', minHeight: 280,
+              position: 'relative', overflow: 'hidden',
+              background: 'linear-gradient(160deg, #F8F4FF 0%, #EDE5FF 30%, #E4D8FF 60%, #F0EAFF 100%)',
             }}>
+              {/* Soft radial bloom behind the figure */}
+              <div style={{
+                position: 'absolute', top: '8%', left: '15%',
+                width: '70%', height: '75%',
+                background: 'radial-gradient(ellipse, rgba(255,240,210,0.65) 0%, rgba(196,181,253,0.3) 40%, transparent 70%)',
+                filter: 'blur(24px)',
+                pointerEvents: 'none',
+              }} />
               <MeditationIllustration />
             </div>
           </div>
