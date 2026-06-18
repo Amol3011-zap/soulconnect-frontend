@@ -852,10 +852,60 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Messages area */}
+          {/* ── TAB BAR ── */}
+          <div style={{
+            display: 'flex',
+            gap: 4,
+            padding: '10px 24px 0',
+            borderBottom: '1px solid rgba(109,74,255,0.1)',
+            background: 'rgba(250,247,255,0.97)',
+            flexShrink: 0,
+          }}>
+            {[
+              { id: 'chat',       label: '💬 Chat'          },
+              { id: 'activities', label: '⚡ Quick Relief'   },
+              { id: 'healing',    label: '🌿 Challenges'     },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setMainTab(tab.id)}
+                style={{
+                  padding: '9px 18px',
+                  borderRadius: '10px 10px 0 0',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  fontFamily: 'inherit',
+                  background: mainTab === tab.id ? '#fff' : 'transparent',
+                  color: mainTab === tab.id ? '#6D4AFF' : '#6B7280',
+                  borderBottom: mainTab === tab.id ? '2px solid #6D4AFF' : '2px solid transparent',
+                  transition: 'all 0.18s',
+                  marginBottom: -1,
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* ── TAB CONTENT ── */}
+          {mainTab === 'activities' && (
+            <div className="dc-scroll" style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
+              <ActivitySuggestions problem={activeMatch?.primary_problem} />
+            </div>
+          )}
+
+          {mainTab === 'healing' && (
+            <div className="dc-scroll" style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
+              <GuidedHealing problem={activeMatch?.primary_problem} />
+            </div>
+          )}
+
+          {/* Messages area — only shown when mainTab === 'chat' */}
           <div
             className="dc-scroll"
-            style={{ flex: 1, overflowY: 'auto', padding: '0 24px 16px' }}
+            style={{ flex: mainTab === 'chat' ? 1 : 0, overflowY: 'auto', padding: '0 24px 16px', display: mainTab === 'chat' ? 'block' : 'none' }}
           >
             {/* Welcome Hero Card — only shown when messages empty */}
             {messages.length === 0 && (
@@ -1002,8 +1052,8 @@ export default function Dashboard() {
             <div ref={bottomRef} />
           </div>
 
-          {/* Quick Starters */}
-          <div style={{
+          {/* Quick Starters — only in chat tab */}
+          {mainTab !== 'chat' ? null : <div style={{
             padding: '8px 24px',
             display: 'flex',
             gap: 8,
@@ -1031,10 +1081,10 @@ export default function Dashboard() {
                 {starter}
               </button>
             ))}
-          </div>
+          </div>}
 
-          {/* Input area */}
-          <div style={{
+          {/* Input area — chat tab only */}
+          {mainTab === 'chat' && <div style={{
             background: '#FFFFFF',
             borderTop: '1px solid rgba(109,74,255,0.1)',
             padding: '14px 24px',
@@ -1111,7 +1161,7 @@ export default function Dashboard() {
                 🔒 Anonymous &amp; encrypted
               </p>
             </div>
-          </div>
+          </div>}
         </div>
 
         {/* ─────────────────── RIGHT WELLNESS PANEL ─────────────────────────── */}
