@@ -1024,7 +1024,7 @@ export default function Matches() {
 
             {/* View Full Journey */}
             <button
-              onClick={() => navigate('/meetups')}
+              onClick={() => navigate('/journey')}
               style={{
                 marginTop: 20, width: '100%',
                 padding: '11px', borderRadius: 12,
