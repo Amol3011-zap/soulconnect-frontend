@@ -57,8 +57,10 @@ function AppInner() {
     </>
   );
 
-  // Show safety onboarding overlay for logged-in regular users who haven't acknowledged
-  const showOnboarding = token && !isHealer && !onboardingDone;
+  // Show safety onboarding for ALL first-time visitors (logged-in or not),
+  // except healers and safety pages (which already have full crisis UI)
+  const isSafetyPage = HIDE_FLOAT_PATHS.includes(location.pathname);
+  const showOnboarding = !isHealer && !onboardingDone && !isSafetyPage;
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
