@@ -146,8 +146,8 @@ function LeftPanel({ role }) {
         {/* Stats */}
         <div className="flex gap-8">
           {(isHealer
-            ? [['500+', 'Healers'], ['10K+', 'Sessions'], ['4.9★', 'Avg Rating']]
-            : [['10K+', 'Members'], ['95%', 'Feel Better'], ['Safe', '& Anonymous']]
+            ? [['Pre-Launch', 'Platform'], ['Building', 'Together'], ['Community', 'First']]
+            : [['Early', 'Access'], ['Building', 'In Public'], ['Community', 'First']]
           ).map(([val, label]) => (
             <div key={label}>
               <div className="font-bold text-xl" style={{ color: highlightColor }}>{val}</div>

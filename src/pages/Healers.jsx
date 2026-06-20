@@ -1219,9 +1219,9 @@ export default function Healers() {
               {/* Stats */}
               <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap', marginBottom: 24 }}>
                 {[
-                  { icon: '👤', val: '500+', label: 'Verified Guides'  },
-                  { icon: '📋', val: '10K+', label: 'Sessions Booked'  },
-                  { icon: '⭐', val: '4.8★', label: 'Average Rating'   },
+                  { icon: '🌱', val: 'Early',     label: 'Access Platform' },
+                  { icon: '💜', val: 'Building',  label: 'In Public'       },
+                  { icon: '🤝', val: 'Community', label: 'First'           },
                 ].map(stat => (
                   <div key={stat.label} style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                     <div style={{

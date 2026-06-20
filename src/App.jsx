@@ -26,6 +26,7 @@ import GuideTerms from './pages/GuideTerms';
 import CommunityRules from './pages/CommunityRules';
 import ReportConcern from './pages/ReportConcern';
 import SafetyOnboarding, { useNeedsOnboarding } from './pages/SafetyOnboarding';
+import About from './pages/About';
 
 import Navbar from './components/Navbar';
 import SafetyFloatButton from './components/SafetyFloatButton';
@@ -54,6 +55,7 @@ function AppInner() {
       <Route path="/guide-terms" element={<GuideTerms />} />
       <Route path="/community-rules" element={<CommunityRules />} />
       <Route path="/report" element={<ReportConcern />} />
+      <Route path="/about" element={<About />} />
     </>
   );
 

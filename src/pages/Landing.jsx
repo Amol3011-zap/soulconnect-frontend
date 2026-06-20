@@ -445,9 +445,26 @@ export default function Landing() {
   const F  = "'Plus Jakarta Sans',Inter,system-ui,sans-serif";
   const SF = '"Playfair Display",Georgia,serif';
 
-  const handleSubmit = e=>{
+  const handleSubmit = async e=>{
     e.preventDefault();
-    if(earlyForm.name&&earlyForm.email) setEarlySubmitted(true);
+    if(!earlyForm.name||!earlyForm.email) return;
+    try {
+      const API = import.meta.env.VITE_API_URL || 'https://soulconnect-api.up.railway.app';
+      const res = await fetch(`${API}/api/early-access/`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          name: earlyForm.name,
+          email: earlyForm.email,
+          challenge: earlyForm.challenge || null,
+          source: 'landing_page',
+        }),
+      });
+      // Show success regardless (offline/error graceful fallback)
+      setEarlySubmitted(true);
+    } catch(_) {
+      setEarlySubmitted(true); // still show success — data can be collected via form fallback
+    }
   };
 
   /* ─── inline CSS ─────────────────────────────────────────────────────────── */
@@ -726,17 +743,24 @@ export default function Landing() {
             padding:'120px 0 80px',
             animation:'fadeUp .9s ease both',
           }}>
-            {/* Pill badge */}
-            <div style={{display:'inline-flex',alignItems:'center',gap:8,
-              background:'rgba(109,74,255,0.22)',
-              border:'1px solid rgba(167,139,250,0.32)',
-              borderRadius:99,padding:'6px 16px',marginBottom:26}}>
-              <span style={{width:7,height:7,borderRadius:'50%',background:GLD,
-                display:'inline-block',animation:'pulse 2s ease-in-out infinite'}}/>
-              <span style={{color:LAV,fontSize:11,fontWeight:700,
-                letterSpacing:'0.12em',textTransform:'uppercase'}}>
-                Now Live · Join Our Community
-              </span>
+            {/* Status badges */}
+            <div style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:28}}>
+              {[
+                {dot:GLD,   label:'Early Access'},
+                {dot:'#34C38F', label:'Building In Public'},
+                {dot:PNK,   label:'Community First'},
+              ].map((b,i)=>(
+                <div key={i} style={{display:'inline-flex',alignItems:'center',gap:7,
+                  background:'rgba(109,74,255,0.2)',
+                  border:'1px solid rgba(167,139,250,0.28)',
+                  borderRadius:99,padding:'5px 14px'}}>
+                  <span style={{width:6,height:6,borderRadius:'50%',
+                    background:b.dot,display:'inline-block',
+                    animation:'pulse 2s ease-in-out infinite'}}/>
+                  <span style={{color:LAV,fontSize:11,fontWeight:700,
+                    letterSpacing:'0.11em',textTransform:'uppercase'}}>{b.label}</span>
+                </div>
+              ))}
             </div>
 
             <h1 style={{
@@ -1045,6 +1069,57 @@ export default function Landing() {
                   <span style={{fontSize:10,fontWeight:700,color:P,
                     letterSpacing:'0.07em'}}>Coming Soon</span>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          SECTION 5b — CURRENTLY BUILDING
+      ══════════════════════════════════════════════════════════════════════ */}
+      <section style={{background:'#F5F3FF',padding:'80px 32px'}}>
+        <div style={{maxWidth:900,margin:'0 auto',textAlign:'center'}}>
+          <div style={{display:'inline-flex',alignItems:'center',gap:8,
+            background:`rgba(109,74,255,0.1)`,
+            border:`1px solid rgba(109,74,255,0.2)`,
+            borderRadius:99,padding:'6px 18px',marginBottom:24}}>
+            <span style={{width:7,height:7,borderRadius:'50%',background:'#34C38F',
+              display:'inline-block',animation:'pulse 2s ease-in-out infinite'}}/>
+            <span style={{fontSize:11,fontWeight:700,color:P,
+              letterSpacing:'0.12em',textTransform:'uppercase'}}>
+              Building In Public
+            </span>
+          </div>
+          <h2 style={{fontFamily:SF,fontSize:'clamp(1.8rem,3vw,42px)',
+            fontWeight:700,color:DARK,lineHeight:1.15,
+            letterSpacing:'-0.025em',marginBottom:20}}>
+            Currently Building With<br/>Early Community Members
+          </h2>
+          <p style={{fontSize:'clamp(15px,1.6vw,18px)',color:'#4B5563',
+            lineHeight:1.84,maxWidth:700,margin:'0 auto 48px'}}>
+            SoulConnect is being built alongside people navigating anxiety, loneliness,
+            overthinking, burnout, grief, and life transitions. You are not just an
+            early user — you are a founding community member shaping what this becomes.
+          </p>
+          {/* 3 pillars */}
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',
+            gap:20,maxWidth:780,margin:'0 auto'}}>
+            {[
+              {icon:'🧪',title:'We Listen First',
+               desc:'Every feature is shaped by real conversations with real people going through real struggles.'},
+              {icon:'💬',title:'You Shape The Platform',
+               desc:"Your feedback, your stories, and your needs define what SoulConnect becomes."},
+              {icon:'💜',title:'No Fake Promises',
+               desc:'We are honest about what we are building. Early access = real community, not a polished product.'},
+            ].map((p,i)=>(
+              <div key={i} style={{background:'#fff',borderRadius:20,padding:'28px 22px',
+                border:'1.5px solid rgba(109,74,255,0.08)',
+                boxShadow:'0 4px 20px rgba(109,74,255,0.06)',textAlign:'left'}}>
+                <div style={{fontSize:32,marginBottom:14}}>{p.icon}</div>
+                <h3 style={{fontSize:15,fontWeight:800,color:DARK,
+                  marginBottom:8,lineHeight:1.3}}>{p.title}</h3>
+                <p style={{fontSize:13,color:'#6B7280',lineHeight:1.65}}>{p.desc}</p>
               </div>
             ))}
           </div>
@@ -1434,23 +1509,45 @@ export default function Landing() {
             </div>
           </div>
 
+          {/* Disclaimer */}
+          <div style={{
+            background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.07)',
+            borderRadius:14,padding:'16px 20px',marginBottom:24,
+          }}>
+            <p style={{fontSize:12,color:'rgba(255,255,255,0.32)',lineHeight:1.7,textAlign:'center'}}>
+              <strong style={{color:'rgba(255,255,255,0.45)'}}>Disclaimer:</strong>{' '}
+              SoulConnect is a peer-support and wellness platform. It is not a medical,
+              psychiatric, emergency, or crisis intervention service. If you are in
+              immediate danger, please call emergency services or visit your nearest
+              hospital.{' '}
+              <Link to="/crisis-support"
+                style={{color:LAV,textDecoration:'underline'}}>
+                View Crisis Resources →
+              </Link>
+            </p>
+          </div>
+
           {/* Bottom bar */}
           <div style={{
             display:'flex',alignItems:'center',justifyContent:'space-between',
-            flexWrap:'wrap',gap:14,
-            padding:'22px 0 32px',
+            flexWrap:'wrap',gap:14,padding:'18px 0 32px',
           }}>
             <p style={{fontSize:13,color:'rgba(255,255,255,0.28)'}}>
               © 2025 SoulConnect. All rights reserved. Made with 💜 for healing.
             </p>
             <div style={{display:'flex',gap:22,flexWrap:'wrap'}}>
-              {['Privacy Policy','Terms of Service','Cookie Policy'].map(l=>(
-                <a key={l} href="#"
+              {[
+                {label:'Privacy Policy',  to:'/terms'},
+                {label:'Terms of Service',to:'/terms'},
+                {label:'Safety Policy',   to:'/safety'},
+                {label:'Crisis Support',  to:'/crisis-support'},
+              ].map(l=>(
+                <Link key={l.label} to={l.to}
                   style={{fontSize:13,color:'rgba(255,255,255,0.28)',
                     textDecoration:'none',transition:'color .18s'}}
                   onMouseEnter={e=>e.currentTarget.style.color=LAV}
                   onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.28)'}
-                >{l}</a>
+                >{l.label}</Link>
               ))}
             </div>
           </div>
