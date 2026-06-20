@@ -478,6 +478,43 @@ export default function Landing() {
     @keyframes pulse  {0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
     @keyframes orbDrift{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-14px)}}
     @keyframes shimmer{0%{background-position:200% center}to{background-position:-200% center}}
+    @keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    @keyframes badgeGlow{
+      0%,100%{box-shadow:0 0 0 0 rgba(109,74,255,0),0 4px 24px rgba(109,74,255,0.18);}
+      50%{box-shadow:0 0 0 8px rgba(109,74,255,0.06),0 8px 36px rgba(109,74,255,0.32);}
+    }
+    .l-trust-badge{
+      display:inline-flex;align-items:center;gap:10px;
+      background:rgba(109,74,255,0.12);
+      border:1px solid rgba(109,74,255,0.25);
+      backdrop-filter:blur(14px);
+      border-radius:999px;
+      padding:12px 24px;
+      cursor:default;
+      animation:badgeFloat 5s ease-in-out infinite, badgeGlow 5s ease-in-out infinite;
+    }
+    .l-trust-badge-dot{
+      width:8px;height:8px;border-radius:50%;
+      background:linear-gradient(135deg,#6D4AFF,#A78BFA);
+      animation:pulse 2.5s ease-in-out infinite;
+      flex-shrink:0;
+    }
+    .l-trust-badge-rocket{font-size:16px;line-height:1;}
+    .l-trust-badge-text{
+      font-size:14px;font-weight:600;
+      color:#A78BFA;
+      letter-spacing:0.01em;white-space:nowrap;
+    }
+    .l-trust-badge-sep{
+      width:1px;height:14px;
+      background:rgba(167,139,250,0.35);
+      flex-shrink:0;
+    }
+    .l-trust-badge-label{
+      font-size:13px;font-weight:500;
+      color:rgba(167,139,250,0.75);
+      white-space:nowrap;
+    }
 
     /* Nav link */
     .l-nav-a{
@@ -580,6 +617,7 @@ export default function Landing() {
       .l-hero-grid{grid-template-columns:1fr!important;min-height:auto!important;}
       .l-hero-illus{height:420px!important;order:-1;}
       .l-hero-text{text-align:center;align-items:center!important;}
+      .l-trust-badge{max-width:90vw;flex-wrap:wrap;justify-content:center;}
       .l-hero-pills{justify-content:center!important;}
       .l-hero-btns{justify-content:center!important;}
       .l-struggle-grid{grid-template-columns:repeat(3,1fr)!important;}
@@ -743,25 +781,25 @@ export default function Landing() {
             padding:'120px 0 80px',
             animation:'fadeUp .9s ease both',
           }}>
-            {/* Status badges */}
-            <div style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:28}}>
-              {[
-                {dot:GLD,   label:'Early Access'},
-                {dot:'#34C38F', label:'Building In Public'},
-                {dot:PNK,   label:'Community First'},
-              ].map((b,i)=>(
-                <div key={i} style={{display:'inline-flex',alignItems:'center',gap:7,
-                  background:'rgba(109,74,255,0.2)',
-                  border:'1px solid rgba(167,139,250,0.28)',
-                  borderRadius:99,padding:'5px 14px'}}>
-                  <span style={{width:6,height:6,borderRadius:'50%',
-                    background:b.dot,display:'inline-block',
-                    animation:'pulse 2s ease-in-out infinite'}}/>
-                  <span style={{color:LAV,fontSize:11,fontWeight:700,
-                    letterSpacing:'0.11em',textTransform:'uppercase'}}>{b.label}</span>
-                </div>
-              ))}
+            {/* ── Primary trust badge ── */}
+            <div className="l-trust-badge" style={{marginBottom:20}}>
+              <span className="l-trust-badge-dot"/>
+              <span className="l-trust-badge-rocket">🚀</span>
+              <span className="l-trust-badge-text">Early Access</span>
+              <span className="l-trust-badge-sep"/>
+              <span className="l-trust-badge-label">Building With Our First Community Members</span>
             </div>
+
+            {/* ── Optional subtext ── */}
+            <p style={{
+              fontSize:13,fontWeight:500,
+              color:'rgba(167,139,250,0.62)',
+              lineHeight:1.7,marginBottom:26,
+              maxWidth:460,
+            }}>
+              We're building SoulConnect alongside our first community members,
+              wellness practitioners, and support circle hosts.
+            </p>
 
             <h1 style={{
               fontFamily:SF,
