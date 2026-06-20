@@ -225,7 +225,7 @@ export default function Chat() {
           <ActivitySuggestions
             problemType={problem}
             matchName={matchName}
-            onActivityComplete={(data) => console.log('Activity completed:', data)}
+            onActivityComplete={() => {}}
           />
         </div>
       )}

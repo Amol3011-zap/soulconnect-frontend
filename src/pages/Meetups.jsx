@@ -903,7 +903,7 @@ export default function Meetups() {
               AS
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1333' }}>Amol Sharma</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1333' }}>Community Host</div>
               <div style={{ fontSize: 11, color: '#6D4AFF', cursor: 'pointer' }}>View profile ›</div>
             </div>
             <button style={{
