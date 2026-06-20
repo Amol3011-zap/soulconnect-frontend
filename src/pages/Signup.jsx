@@ -795,6 +795,13 @@ export default function Signup() {
                 <Link to="/terms" target="_blank" className="font-semibold hover:underline" style={{ color: '#2d6a4f' }}>Terms</Link>{' '}&{' '}
                 <Link to="/terms#privacy" target="_blank" className="font-semibold hover:underline" style={{ color: '#2d6a4f' }}>Privacy Policy</Link>
               </p>
+              <div className="mt-4 p-3 rounded-xl text-xs text-gray-500 text-center leading-relaxed"
+                style={{ background: '#F9FAFB', border: '1px solid #E5E7EB' }}>
+                ⚕️ <strong>Disclaimer:</strong> SoulConnect is a peer-support and wellness platform.
+                We do not provide medical, psychiatric, psychological, or emergency services.
+                If you are in crisis, please call emergency services or visit{' '}
+                <Link to="/crisis-support" className="underline" style={{ color: '#6D4AFF' }}>Crisis Resources</Link>.
+              </div>
             </div>
           )}
         </div>

@@ -3,38 +3,8 @@ import { healerAPI, journeyAPI } from '../services/api';
 import Footer from '../components/Footer';
 
 // ── Data ───────────────────────────────────────────────────────────────────────
-const DEMO_HEALERS = [
-  {
-    id: 1, name: 'Dr. Priya Sharma', avatar_url: null, initials: 'PS',
-    specializations: ['Anxiety', 'Depression', 'Trauma'],
-    bio: 'Helps with anxiety, panic attacks, overthinking and self-worth.',
-    hourly_rate: 1200, total_rating: 4.9, review_count: 134, experience_years: 8,
-    session_type: 'Video & Chat', languages: ['English', 'Hindi'],
-    badge: 'Top Rated', badge_color: '#F5B841',
-    grad: 'linear-gradient(135deg,#7C3AED,#5B21B6)',
-    match: 89,
-  },
-  {
-    id: 2, name: 'Rahul Mehta', avatar_url: null, initials: 'RM',
-    specializations: ['Relationships', 'Grief', 'Life Transitions'],
-    bio: 'Specialises in relationship healing, grieving, and life transitions.',
-    hourly_rate: 800, total_rating: 4.7, review_count: 89, experience_years: 5,
-    session_type: 'Video', languages: ['English', 'Hindi'],
-    badge: 'Most Popular', badge_color: '#6D4AFF',
-    grad: 'linear-gradient(135deg,#0891B2,#0E7490)',
-    match: 92,
-  },
-  {
-    id: 3, name: 'Meera Nair', avatar_url: null, initials: 'MN',
-    specializations: ['Mindfulness', 'Stress', 'Sleep'],
-    bio: 'Combines yoga, breathwork and mindfulness for deep healing.',
-    hourly_rate: 600, total_rating: 4.8, review_count: 67, experience_years: 6,
-    session_type: 'Video & In-person', languages: ['English', 'Malayalam'],
-    badge: 'New', badge_color: '#34C38F',
-    grad: 'linear-gradient(135deg,#34C38F,#059669)',
-    match: 85,
-  },
-];
+// No demo/fake healers — show empty state when no real healers are available
+const DEMO_HEALERS = [];
 
 const ISSUE_OPTIONS = [
   'Anxiety & Panic Attacks', 'Depression', 'Relationship Issues', 'Grief & Loss',
@@ -593,7 +563,7 @@ function BookingModal({ healer, grad, onClose, onConfirm }) {
           }}>
             <span style={{ fontSize: 14, flexShrink: 0 }}>🔒</span>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: '#6B7280', margin: 0 }}>
-              Everything you share is strictly confidential and only visible to <strong>{healer.name}</strong>. We follow full HIPAA-aligned privacy practices.
+              Everything you share is strictly confidential and only visible to <strong>{healer.name}</strong>. Your privacy is our priority.
             </p>
           </div>
 
@@ -638,7 +608,7 @@ function AssessmentModal({ onClose }) {
           border: '1px solid rgba(109,74,255,0.12)',
         }}>
           <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.6, margin: 0 }}>
-            Our AI-powered assessment takes less than 2 minutes and will match you with guides who truly understand your journey and needs.
+            Our short assessment takes less than 2 minutes and helps us match you with guides who understand your journey and needs.
           </p>
         </div>
         <button onClick={onClose} style={{
@@ -1303,116 +1273,46 @@ export default function Healers() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1A1333', fontFamily: 'Playfair Display, Georgia, serif', margin: 0 }}>
-                  Recommended guides for you
+                  Professional Guides
                 </h2>
                 <span style={{
-                  background: 'rgba(52,195,143,0.1)', color: '#34C38F',
-                  border: '1px solid rgba(52,195,143,0.3)', fontSize: 11, fontWeight: 700,
+                  background: 'rgba(109,74,255,0.08)', color: '#6D4AFF',
+                  border: '1px solid rgba(109,74,255,0.2)', fontSize: 11, fontWeight: 700,
                   padding: '3px 10px', borderRadius: 20,
-                }}>AI Matched</span>
+                }}>Coming Soon</span>
               </div>
-              <button style={{ fontSize: 13, color: '#6D4AFF', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>View all</button>
             </div>
-            <p style={{ fontSize: 14, color: '#6B7280', margin: '0 0 16px' }}>Based on your journey, goals and preferences</p>
+            <p style={{ fontSize: 14, color: '#6B7280', margin: '0 0 16px' }}>We are onboarding our first professional guides. Check back soon.</p>
 
-            <div className="h-guide-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
-              {displayHealers.slice(0, 3).map((healer, idx) => {
-                const match = healer.match || MATCH_SCORES[idx] || 85;
-                const grad = healer.grad || 'linear-gradient(135deg,#6D4AFF,#5B21B6)';
-                const badgeColors = {
-                  'Top Rated': { bg: 'rgba(245,184,65,0.12)', color: '#D97706', border: 'rgba(245,184,65,0.3)' },
-                  'Most Popular': { bg: 'rgba(109,74,255,0.1)', color: '#6D4AFF', border: 'rgba(109,74,255,0.25)' },
-                  'New': { bg: 'rgba(52,195,143,0.1)', color: '#34C38F', border: 'rgba(52,195,143,0.25)' },
-                };
-                const bc = badgeColors[healer.badge] || badgeColors['New'];
-                return (
-                  <div key={healer.id} className="h-hover" style={{
-                    background: 'white', borderRadius: 20,
-                    border: '1px solid rgba(109,74,255,0.1)',
-                    boxShadow: '0 2px 16px rgba(109,74,255,0.07)',
-                    padding: 20, position: 'relative',
-                    display: 'flex', flexDirection: 'column',
-                  }}>
-                    {/* Avatar + heart */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                      <div style={{
-                        width: 64, height: 64, borderRadius: '50%', background: grad,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 20, fontWeight: 700, color: 'white',
-                        border: '2px solid white', boxShadow: '0 4px 12px rgba(109,74,255,0.2)',
-                      }}>{healer.initials}</div>
-                      <div style={{
-                        width: 28, height: 28, borderRadius: '50%', cursor: 'pointer',
-                        background: 'rgba(109,74,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 13,
-                      }}>🤍</div>
-                    </div>
-
-                    {/* Badge */}
-                    {healer.badge && (
-                      <span style={{
-                        display: 'inline-block', fontSize: 10, fontWeight: 700,
-                        padding: '3px 9px', borderRadius: 20, marginBottom: 8,
-                        background: bc.bg, color: bc.color, border: `1px solid ${bc.border}`,
-                      }}>{healer.badge}</span>
-                    )}
-
-                    <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1A1333', margin: '0 0 3px' }}>{healer.name}</h3>
-                    <p style={{ fontSize: 12, color: '#6D4AFF', fontWeight: 600, margin: '0 0 6px' }}>
-                      {idx === 0 ? 'Clinical Psychologist' : idx === 1 ? 'Counselling Psychologist' : 'Yoga Therapist & Coach'}
-                    </p>
-
-                    {/* Stars */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
-                      <span style={{ color: '#F59E0B', fontSize: 12 }}>⭐</span>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: '#1A1333' }}>{healer.total_rating?.toFixed(1)}</span>
-                      <span style={{ fontSize: 11, color: '#9CA3AF' }}>({healer.review_count} reviews)</span>
-                    </div>
-
-                    {/* Specialty tags */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
-                      {(healer.specializations || []).slice(0, 3).map(s => (
-                        <span key={s} style={{
-                          background: 'rgba(109,74,255,0.06)', color: '#6D4AFF',
-                          fontSize: 10, padding: '3px 8px', borderRadius: 20, fontWeight: 500,
-                        }}>{s}</span>
-                      ))}
-                    </div>
-
-                    {/* Meta */}
-                    <p style={{ fontSize: 11, color: '#6B7280', margin: '0 0 8px' }}>
-                      🕐 {healer.experience_years} yrs experience · 📹 {healer.session_type} · 🌐 {(healer.languages || []).join(', ')}
-                    </p>
-
-                    {/* Bio */}
-                    <p style={{
-                      fontSize: 12, color: '#4B5563', lineHeight: 1.5, margin: '0 0 12px',
-                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                    }}>{healer.bio}</p>
-
-                    {/* Match score */}
-                    <div style={{ marginBottom: 12 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: '#34C38F' }}>{match}% Match</span>
-                      </div>
-                      <div style={{ height: 4, borderRadius: 2, background: 'rgba(52,195,143,0.15)', overflow: 'hidden' }}>
-                        <div style={{
-                          height: '100%', borderRadius: 2,
-                          width: `${match}%`,
-                          background: 'linear-gradient(90deg, #34C38F, #10B981)',
-                        }} />
-                      </div>
-                    </div>
-
-                    {/* Book button */}
-                    <button onClick={() => openBooking(healer, grad)} style={{
-                      width: '100%', padding: '9px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700,
-                      background: 'linear-gradient(135deg, #34C38F, #10B981)', color: 'white',
-                      border: 'none', cursor: 'pointer', marginTop: 'auto',
-                    }}>Book Session +</button>
-                  </div>
-                );
-              })}
+            {/* Coming Soon empty state */}
+            <div style={{
+              background: 'linear-gradient(135deg,rgba(109,74,255,0.04),rgba(167,139,250,0.06))',
+              border: '1.5px dashed rgba(109,74,255,0.18)',
+              borderRadius: 20, padding: '52px 32px', textAlign: 'center',
+            }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>🌱</div>
+              <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1A1333', margin: '0 0 10px', fontFamily: 'Playfair Display, Georgia, serif' }}>
+                Guides Coming Soon
+              </h3>
+              <p style={{ fontSize: 14, color: '#6B7280', lineHeight: 1.7, maxWidth: 400, margin: '0 auto 20px' }}>
+                We are carefully selecting and verifying our first professional wellness guides.
+                Every guide will be reviewed before going live — no shortcuts.
+              </p>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+                {['Clinical Psychologists','Counselling Therapists','Yoga & Breathwork Guides','Mindfulness Coaches'].map(t => (
+                  <span key={t} style={{
+                    background: 'rgba(109,74,255,0.07)', color: '#6D4AFF',
+                    fontSize: 12, fontWeight: 600, padding: '6px 14px', borderRadius: 20,
+                    border: '1px solid rgba(109,74,255,0.15)',
+                  }}>{t}</span>
+                ))}
+              </div>
+              <p style={{ fontSize: 12, color: '#9CA3AF', marginTop: 20 }}>
+                Are you a wellness professional?{' '}
+                <a href="mailto:guides@soulconnect.health" style={{ color: '#6D4AFF', fontWeight: 600 }}>
+                  Apply to be a Guide →
+                </a>
+              </p>
             </div>
           </div>
 
@@ -1540,7 +1440,7 @@ export default function Healers() {
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap',
           }}>
             {[
-              { icon: '✅', text: 'All guides are verified & trusted' },
+              { icon: '🔍', text: 'All guides reviewed before going live' },
               { icon: '🛡', text: 'Safe, private & judgment-free space' },
               { icon: '💜', text: '10K+ souls healed' },
               { icon: '🔒', text: 'Secure payments & easy booking' },

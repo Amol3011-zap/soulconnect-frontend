@@ -27,12 +27,21 @@ import CommunityRules from './pages/CommunityRules';
 import ReportConcern from './pages/ReportConcern';
 import SafetyOnboarding, { useNeedsOnboarding } from './pages/SafetyOnboarding';
 import About from './pages/About';
+import CookiePolicy from './pages/CookiePolicy';
+import Accessibility from './pages/Accessibility';
+import Contact from './pages/Contact';
 
 import Navbar from './components/Navbar';
 import SafetyFloatButton from './components/SafetyFloatButton';
 
 // Pages where the SafetyFloatButton is redundant (already have full crisis UI)
 const HIDE_FLOAT_PATHS = ['/crisis-support', '/safety', '/report', '/community-rules', '/guide-terms'];
+
+// ─── LAUNCH GATE ──────────────────────────────────────────────────────────────
+// Set to TRUE when you're ready to open the app to users.
+// While FALSE, ALL post-login routes redirect back to the landing page.
+const LAUNCH_READY = false;
+// ──────────────────────────────────────────────────────────────────────────────
 
 function AppInner() {
   const { token, user, role } = useAuthStore();
@@ -56,6 +65,9 @@ function AppInner() {
       <Route path="/community-rules" element={<CommunityRules />} />
       <Route path="/report" element={<ReportConcern />} />
       <Route path="/about" element={<About />} />
+      <Route path="/cookies" element={<CookiePolicy />} />
+      <Route path="/accessibility" element={<Accessibility />} />
+      <Route path="/contact" element={<Contact />} />
     </>
   );
 
@@ -71,10 +83,10 @@ function AppInner() {
         <SafetyOnboarding onComplete={() => setOnboardingDone(true)} />
       )}
 
-      {token && !hideNav && <Navbar />}
+      {token && !hideNav && LAUNCH_READY && <Navbar />}
 
       {/* Top nav spacer — pushes content down on desktop when top navbar is visible */}
-      <div style={{ paddingTop: token && !hideNav ? 80 : 0 }}>
+      <div style={{ paddingTop: token && !hideNav && LAUNCH_READY ? 80 : 0 }}>
 
       <Routes>
         <Route path="/" element={<Landing />} />
@@ -82,7 +94,7 @@ function AppInner() {
         {/* Trust & Safety — always accessible */}
         {safetyRoutes}
 
-        {!token ? (
+        {!token || !LAUNCH_READY ? (
           <>
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />

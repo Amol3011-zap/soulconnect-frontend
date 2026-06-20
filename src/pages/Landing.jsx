@@ -15,7 +15,7 @@ const NAV_LINKS = [
   { label: 'About Us',     href: '/about',  isRoute: true  },
   { label: 'How It Works', href: '#how',    isRoute: false },
   { label: 'Resources',    href: '#trust',  isRoute: false },
-  { label: 'Contact',      href: '#cta',    isRoute: false },
+  { label: 'Contact',      href: '/contact', isRoute: true  },
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -788,10 +788,9 @@ export default function Landing() {
           {/* Logo */}
           <Link to="/" style={{display:'flex', alignItems:'center', gap:10,
             textDecoration:'none', flexShrink:0, marginRight:36}}>
-            <div style={{width:42, height:42, borderRadius:13,
-              background:`linear-gradient(135deg,${P},${LAV})`,
-              display:'flex', alignItems:'center', justifyContent:'center',
-              fontSize:21, boxShadow:`0 4px 18px rgba(109,74,255,0.45)`}}>🪷</div>
+            <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect"
+              style={{height:44, width:'auto', display:'block',
+                filter:'drop-shadow(0 4px 14px rgba(109,74,255,0.5))'}}/>
             <div>
               <div style={{fontSize:18, fontWeight:800, color:'#fff',
                 letterSpacing:'-0.02em', lineHeight:1.1}}>
@@ -1765,11 +1764,9 @@ export default function Landing() {
             {/* Logo */}
             <Link to="/" style={{display:'flex', alignItems:'center', gap:10,
               textDecoration:'none', flexShrink:0}}>
-              <div style={{width:36, height:36, borderRadius:10,
-                background:`linear-gradient(135deg,${P},${LAV})`,
-                display:'flex', alignItems:'center', justifyContent:'center',
-                fontSize:17, boxShadow:`0 4px 14px rgba(109,74,255,0.4)`,
-                animation:'glowBreathe 6s ease-in-out infinite'}}>🪷</div>
+              <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect"
+                style={{height:36, width:'auto', display:'block',
+                  filter:'drop-shadow(0 3px 10px rgba(109,74,255,0.45)) brightness(1.05)'}}/>
               <div style={{fontSize:14, fontWeight:800, color:'rgba(255,255,255,0.7)',
                 letterSpacing:'-0.01em'}}>
                 Soul<span style={{color:LAV}}>Connect</span>
@@ -1785,7 +1782,9 @@ export default function Landing() {
                 {label:'Resources',          href:'#trust',        isRoute:false},
                 {label:'Privacy Policy',     to:'/terms',          isRoute:true},
                 {label:'Terms of Service',   to:'/terms',          isRoute:true},
-                {label:'Contact',            href:'#cta',          isRoute:false},
+                {label:'Contact',            to:'/contact',        isRoute:true},
+                {label:'Cookie Policy',      to:'/cookies',        isRoute:true},
+                {label:'Accessibility',      to:'/accessibility',  isRoute:true},
               ].map((l,i,arr)=>(
                 <React.Fragment key={l.label}>
                   {l.isRoute
