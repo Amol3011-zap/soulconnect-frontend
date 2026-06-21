@@ -30,6 +30,7 @@ import About from './pages/About';
 import CookiePolicy from './pages/CookiePolicy';
 import Accessibility from './pages/Accessibility';
 import Contact from './pages/Contact';
+import Privacy from './pages/Privacy';
 
 import Navbar from './components/Navbar';
 import SafetyFloatButton from './components/SafetyFloatButton';
@@ -68,6 +69,7 @@ function AppInner() {
       <Route path="/cookies" element={<CookiePolicy />} />
       <Route path="/accessibility" element={<Accessibility />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/privacy" element={<Privacy />} />
     </>
   );
 

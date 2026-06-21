@@ -1,18 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const P = '#6D4AFF';
-const DARK = '#1A1333';
-const GRAY = '#4B5563';
-const LIGHT_GRAY = '#9CA3AF';
+const P = '#A78BFA';
+const BG = 'linear-gradient(155deg,#06011A 0%,#130530 40%,#1E0848 70%,#06011A 100%)';
 
 const h2Style = {
-  fontSize: 'clamp(17px,2.2vw,20px)', fontWeight: 700, color: DARK,
+  fontSize: 'clamp(17px,2.2vw,20px)', fontWeight: 700, color: '#E9D5FF',
   fontFamily: 'Playfair Display, Georgia, serif', margin: '40px 0 10px',
-  paddingBottom: 8, borderBottom: '1px solid rgba(109,74,255,0.1)',
+  paddingBottom: 8, borderBottom: '1px solid rgba(167,139,250,0.15)',
 };
-const pStyle = { fontSize: 15, color: GRAY, lineHeight: 1.85, marginBottom: 14 };
-const liStyle = { fontSize: 15, color: GRAY, lineHeight: 1.85, marginBottom: 6 };
+const pStyle  = { fontSize: 15, color: 'rgba(255,255,255,0.65)', lineHeight: 1.85, marginBottom: 14 };
+const liStyle = { fontSize: 15, color: 'rgba(255,255,255,0.65)', lineHeight: 1.85, marginBottom: 6 };
 
 const sections = [
   {
@@ -136,7 +134,7 @@ const sections = [
 
 export default function TermsPrivacy() {
   return (
-    <div style={{ minHeight: '100vh', background: '#FAF7F2', fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: BG, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '64px 24px' }}>
 
         <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
@@ -145,10 +143,10 @@ export default function TermsPrivacy() {
 
         {/* Header */}
         <div style={{ marginBottom: 48 }}>
-          <h1 style={{ fontSize: 'clamp(28px,4vw,42px)', fontWeight: 800, color: DARK, fontFamily: 'Playfair Display, Georgia, serif', marginBottom: 8 }}>
+          <h1 style={{ fontSize: 'clamp(28px,4vw,42px)', fontWeight: 800, color: '#fff', fontFamily: 'Playfair Display, Georgia, serif', marginBottom: 8 }}>
             Terms &amp; Conditions
           </h1>
-          <p style={{ fontSize: 14, color: LIGHT_GRAY, marginBottom: 20 }}>Effective Date: June 2026</p>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginBottom: 20 }}>Effective Date: June 2026</p>
           <p style={pStyle}>
             Welcome to SoulConnect. By accessing our website, joining the waitlist, or interacting with our platform, you agree to these Terms &amp; Conditions. If you do not agree with these Terms, please do not use the website.
           </p>
@@ -169,8 +167,8 @@ export default function TermsPrivacy() {
         ))}
 
         {/* Contact */}
-        <div style={{ marginTop: 48, padding: '24px 28px', background: 'rgba(109,74,255,0.04)', border: '1px solid rgba(109,74,255,0.12)', borderRadius: 16 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: DARK, marginBottom: 10 }}>Contact</h2>
+        <div style={{ marginTop: 48, padding: '24px 28px', background: 'rgba(109,74,255,0.1)', border: '1px solid rgba(167,139,250,0.2)', borderRadius: 16 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#E9D5FF', marginBottom: 10 }}>Contact</h2>
           <p style={pStyle}>
             For questions regarding these Terms &amp; Conditions, please contact:{' '}
             <a href="mailto:community@soulconnect.health" style={{ color: P, fontWeight: 600 }}>

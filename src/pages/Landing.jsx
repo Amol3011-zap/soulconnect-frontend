@@ -1757,7 +1757,7 @@ export default function Landing() {
                 {label:'About Us',           to:'/about',          isRoute:true},
                 {label:'How It Works',       href:'#how',          isRoute:false},
                 {label:'Resources',          href:'#trust',        isRoute:false},
-                {label:'Privacy Policy',     to:'/terms',          isRoute:true},
+                {label:'Privacy Policy',     to:'/privacy',        isRoute:true},
                 {label:'Terms of Service',   to:'/terms',          isRoute:true},
                 {label:'Contact',            to:'/contact',        isRoute:true},
                 {label:'Cookie Policy',      to:'/cookies',        isRoute:true},
