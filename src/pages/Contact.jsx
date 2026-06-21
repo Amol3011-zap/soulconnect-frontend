@@ -8,7 +8,7 @@ export default function Contact() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Opens mail client as fallback — replace with API call when backend ready
-    const mailto = `mailto:hello@soulconnect.health?subject=${encodeURIComponent(form.subject || 'Contact from website')}&body=${encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`)}`;
+    const mailto = `mailto:community@soulconnect.health?subject=${encodeURIComponent(form.subject || 'Contact from website')}&body=${encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`)}`;
     window.location.href = mailto;
     setSubmitted(true);
   };
@@ -66,7 +66,7 @@ export default function Contact() {
             <div style={{ textAlign: 'center', padding: '32px 0' }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>💜</div>
               <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1A1333', marginBottom: 10 }}>Message sent!</h3>
-              <p style={{ fontSize: 15, color: '#6B7280' }}>Your email client should have opened. If not, email us at <strong>hello@soulconnect.health</strong></p>
+              <p style={{ fontSize: 15, color: '#6B7280' }}>Your email client should have opened. If not, email us at <strong>community@soulconnect.health</strong></p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -109,7 +109,7 @@ export default function Contact() {
                 Send Message →
               </button>
               <p style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center' }}>
-                Or email us directly at <strong>hello@soulconnect.health</strong>
+                Or email us directly at <strong>community@soulconnect.health</strong>
               </p>
             </form>
           )}

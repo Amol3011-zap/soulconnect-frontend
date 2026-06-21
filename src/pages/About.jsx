@@ -51,21 +51,21 @@ const roadmap = [
   {
     phase: "Phase 2",
     label: "Community",
-    timing: "Q3 2025",
+    timing: "Q3 2026",
     desc: "Launching support circles, community matching, and healing journal features.",
     active: false,
   },
   {
     phase: "Phase 3",
     label: "Growth",
-    timing: "Q4 2025",
+    timing: "Q4 2026",
     desc: "Mood tracking, guided challenges, wellness guides, and group events.",
     active: false,
   },
   {
     phase: "Phase 4",
     label: "Scale",
-    timing: "2026",
+    timing: "2027",
     desc: "Expanding to verified wellness guides, regional communities, and mobile apps.",
     active: false,
   },
@@ -127,7 +127,9 @@ export default function About() {
         >
           {/* Logo */}
           <Link to="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 26 }}>🪷</span>
+            <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect"
+              style={{ height: 40, width: "auto", display: "block",
+                filter: "drop-shadow(0 3px 10px rgba(109,74,255,0.45))" }} />
             <span
               style={{
                 fontFamily: "'Playfair Display', serif",

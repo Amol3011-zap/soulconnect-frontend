@@ -131,8 +131,7 @@ function AppInner() {
       </Routes>
       </div>
 
-      {/* Global floating safety button — visible on all pages except landing & safety pages */}
-      {!hideFloat && !showOnboarding && <SafetyFloatButton />}
+      {/* SafetyFloatButton disabled pre-launch */}
     </div>
   );
 }
