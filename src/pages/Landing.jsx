@@ -1821,7 +1821,7 @@ export default function Landing() {
             <div style={{display:'flex', gap:8, alignItems:'center'}}>
               {[
                 {
-                  label:'Instagram', href:'#',
+                  label:'Instagram', href:'https://www.instagram.com/soulconnect.health',
                   svg:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" strokeWidth="2"/>
                     <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="2"/>
