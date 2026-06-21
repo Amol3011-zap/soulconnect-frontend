@@ -1827,7 +1827,7 @@ export default function Landing() {
           {/* Copyright */}
           <p style={{fontSize:11, color:'rgba(255,255,255,0.15)',
             textAlign:'center', paddingBottom:22}}>
-            © 2025 SoulConnect. All rights reserved. Made with 💜 for healing.
+            © 2026 SoulConnect. All rights reserved. Made with 💜 for healing.
           </p>
 
         </div>
