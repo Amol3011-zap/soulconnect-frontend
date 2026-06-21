@@ -897,7 +897,7 @@ export default function Landing() {
           maxWidth:1440, margin:'0 auto',
           display:'grid', gridTemplateColumns:'50fr 50fr',
           minHeight:850, position:'relative', zIndex:1,
-          padding:'0 32px',
+          padding:'0 0 0 32px',
         }}>
           {/* LEFT — Text */}
           <div className="l-hero-text" style={{
@@ -983,8 +983,8 @@ export default function Landing() {
           <div className="l-hero-illus" style={{
             position:'relative',
             animation:'floatY 10s ease-in-out infinite',
-            marginRight:'-32px',
-            marginLeft:'-40px',
+            marginLeft:'-20px',
+            overflow:'hidden',
           }}>
             <HeroIllustration/>
           </div>
