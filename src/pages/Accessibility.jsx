@@ -65,8 +65,8 @@ export default function Accessibility() {
         <h2 style={h2Style}>Contact</h2>
         <p style={pStyle}>
           Email:{' '}
-          <a href="mailto:accessibility@soulconnect.health" style={{ color: P, fontWeight: 600 }}>
-            accessibility@soulconnect.health
+          <a href="mailto:community@soulconnect.health" style={{ color: P, fontWeight: 600 }}>
+            community@soulconnect.health
           </a>
         </p>
         <p style={pStyle}>
