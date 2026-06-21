@@ -1726,10 +1726,6 @@ export default function Landing() {
               SoulConnect is a peer-support and wellness platform — not a medical,
               psychiatric, or emergency service. If you are in immediate danger,
               please call emergency services or visit your nearest hospital.{' '}
-              <Link to="/crisis-support"
-                style={{color:LAV, textDecoration:'underline'}}>
-                Crisis Resources →
-              </Link>
             </p>
           </div>
 

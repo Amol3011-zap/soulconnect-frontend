@@ -22,7 +22,6 @@ import GroupChat from './pages/GroupChat';
 import Onboarding from './pages/Onboarding';
 import SoulJourney from './pages/SoulJourney';
 import SafetyPolicy from './pages/SafetyPolicy';
-import CrisisSupport from './pages/CrisisSupport';
 import GuideTerms from './pages/GuideTerms';
 import CommunityRules from './pages/CommunityRules';
 import ReportConcern from './pages/ReportConcern';
@@ -37,7 +36,7 @@ import Navbar from './components/Navbar';
 import SafetyFloatButton from './components/SafetyFloatButton';
 
 // Pages where the SafetyFloatButton is redundant (already have full crisis UI)
-const HIDE_FLOAT_PATHS = ['/crisis-support', '/safety', '/report', '/community-rules', '/guide-terms'];
+const HIDE_FLOAT_PATHS = ['/safety', '/report', '/community-rules', '/guide-terms'];
 
 // ─── LAUNCH GATE ──────────────────────────────────────────────────────────────
 // Set to TRUE when you're ready to open the app to users.
@@ -62,7 +61,6 @@ function AppInner() {
   const safetyRoutes = (
     <>
       <Route path="/safety" element={<SafetyPolicy />} />
-      <Route path="/crisis-support" element={<CrisisSupport />} />
       <Route path="/guide-terms" element={<GuideTerms />} />
       <Route path="/community-rules" element={<CommunityRules />} />
       <Route path="/report" element={<ReportConcern />} />
