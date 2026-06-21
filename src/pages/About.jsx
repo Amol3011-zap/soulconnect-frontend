@@ -773,7 +773,9 @@ export default function About() {
               marginBottom: 16,
             }}
           >
-            <span style={{ fontSize: 20 }}>🪷</span>
+            <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect"
+              style={{ height: 32, width: "auto", display: "block",
+                filter: "drop-shadow(0 3px 10px rgba(109,74,255,0.45))" }} />
             <span
               style={{
                 fontFamily: "'Playfair Display', serif",
