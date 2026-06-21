@@ -646,7 +646,19 @@ export default function About() {
                 paddingTop: 24,
               }}
             >
-              SoulConnect was born from a personal experience — watching people I loved struggle silently with anxiety, loneliness, and grief, not because they lacked strength, but because they lacked community. I built SoulConnect because I believe the world needs more spaces where people feel genuinely understood. We are pre-launch, building in public, and we are building this with you — the early community who believed in this before it even existed. Thank you for being here.
+              SoulConnect started with a simple observation: many people go through life's hardest moments feeling completely alone.
+            </p>
+            <p style={{ fontSize: "clamp(15px, 1.5vw, 18px)", color: "#3D2C6E", lineHeight: 1.85, margin: "0 0 24px" }}>
+              Whether it's anxiety, heartbreak, grief, burnout, loneliness, or major life changes, support often feels difficult to find. Traditional social platforms connect us to everyone, but not always to the people who truly understand what we're experiencing.
+            </p>
+            <p style={{ fontSize: "clamp(15px, 1.5vw, 18px)", color: "#3D2C6E", lineHeight: 1.85, margin: "0 0 24px" }}>
+              I created SoulConnect to make meaningful connection easier. A place where people facing similar challenges can find each other, share their stories, support one another, and grow together through guided healing journeys.
+            </p>
+            <p style={{ fontSize: "clamp(15px, 1.5vw, 18px)", color: "#3D2C6E", lineHeight: 1.85, margin: "0 0 32px" }}>
+              We're currently building SoulConnect in public, alongside our early community. Every piece of feedback, every conversation, and every person who joins helps shape what this platform becomes.
+            </p>
+            <p style={{ fontSize: "clamp(15px, 1.5vw, 18px)", color: "#3D2C6E", lineHeight: 1.85, margin: "0 0 32px" }}>
+              Thank you for being part of the journey.
             </p>
             <p
               style={{
@@ -658,7 +670,7 @@ export default function About() {
                 fontStyle: "italic",
               }}
             >
-              — The SoulConnect Team
+              — Founder, SoulConnect
             </p>
           </div>
         </div>
