@@ -1716,38 +1716,7 @@ export default function Landing() {
 
         <div style={{maxWidth:1440, margin:'0 auto', position:'relative', zIndex:1}}>
 
-          {/* ── Crisis strip ── */}
-          <div style={{
-            padding:'14px 0',
-            borderBottom:'1px solid rgba(255,255,255,0.05)',
-            display:'flex', alignItems:'center', justifyContent:'center', gap:20,
-            flexWrap:'wrap',
-          }}>
-            <span style={{fontSize:12, color:'rgba(255,255,255,0.3)'}}>
-              🆘 In crisis? Help is always available:
-            </span>
-            <Link to="/crisis-support" style={{
-              fontSize:12, fontWeight:700, color:LAV,
-              textDecoration:'none', padding:'4px 14px',
-              background:'rgba(109,74,255,0.12)',
-              border:'1px solid rgba(167,139,250,0.2)',
-              borderRadius:99, transition:'all .18s',
-            }}
-              onMouseEnter={e=>{e.currentTarget.style.background='rgba(109,74,255,0.25)';}}
-              onMouseLeave={e=>{e.currentTarget.style.background='rgba(109,74,255,0.12)';}}
-            >
-              Crisis Resources →
-            </Link>
-            <Link to="/safety" style={{
-              fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.38)',
-              textDecoration:'none', transition:'color .18s',
-            }}
-              onMouseEnter={e=>e.currentTarget.style.color=LAV}
-              onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.38)'}
-            >
-              Safety Policy
-            </Link>
-          </div>
+          {/* ── Crisis strip — disabled pre-launch ── */}
 
           {/* ── Disclaimer ── */}
           <div style={{padding:'16px 0', borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
