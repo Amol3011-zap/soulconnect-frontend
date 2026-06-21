@@ -1,349 +1,185 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const SECTIONS_TERMS = [
+const P = '#6D4AFF';
+const DARK = '#1A1333';
+const GRAY = '#4B5563';
+const LIGHT_GRAY = '#9CA3AF';
+
+const h2Style = {
+  fontSize: 'clamp(17px,2.2vw,20px)', fontWeight: 700, color: DARK,
+  fontFamily: 'Playfair Display, Georgia, serif', margin: '40px 0 10px',
+  paddingBottom: 8, borderBottom: '1px solid rgba(109,74,255,0.1)',
+};
+const pStyle = { fontSize: 15, color: GRAY, lineHeight: 1.85, marginBottom: 14 };
+const liStyle = { fontSize: 15, color: GRAY, lineHeight: 1.85, marginBottom: 6 };
+
+const sections = [
   {
-    title: '1. Services',
-    content: `SoulConnect provides wellness, personal development, spiritual, and complementary healing services, including but not limited to:`,
-    list: [
-      'Reiki Healing', 'Energy Healing', 'Spiritual Guidance', 'Meditation',
-      'Mindfulness Practices', 'Life Coaching', 'Relationship Coaching',
-      'Emotional Wellness Support', 'Workshops and Courses',
-    ],
-    footer: 'All services are educational, spiritual, and wellness-oriented in nature.',
-  },
-  {
-    title: '2. No Medical or Mental Health Treatment',
-    content: 'SoulConnect does not provide:',
-    list: [
-      'Medical diagnosis', 'Medical treatment', 'Psychiatric care',
-      'Psychological treatment', 'Emergency mental health services',
-    ],
-    footer: 'Nothing on this website or within any session should be considered medical, psychological, legal, or financial advice. If you have a physical or mental health condition, you should seek advice from a qualified healthcare professional.',
-  },
-  {
-    title: '3. No Guarantees',
-    content: 'Results vary from person to person. SoulConnect makes no guarantees regarding:',
-    list: [
-      'Healing outcomes', 'Emotional outcomes', 'Relationship outcomes',
-      'Financial outcomes', 'Spiritual outcomes', 'Personal growth outcomes',
-    ],
-    footer: 'Testimonials represent individual experiences only.',
-  },
-  {
-    title: '4. User Responsibility',
-    content: 'You acknowledge that you are fully responsible for:',
-    list: [
-      'Your decisions', 'Your actions', 'Your health choices',
-      'Your interpretation of information provided',
-    ],
-    footer: 'You participate voluntarily and at your own discretion.',
-  },
-  {
-    title: '5. Emergency Situations',
-    content: 'SoulConnect is not an emergency service. If you are experiencing:',
-    list: [
-      'Suicidal thoughts', 'Self-harm thoughts',
-      'Medical emergencies', 'Mental health crises',
-    ],
-    footer: 'Contact emergency services or an appropriate healthcare provider immediately.',
-    warning: true,
-  },
-  {
-    title: '6. Session Policies',
-    content: 'Clients must provide accurate information when booking. SoulConnect reserves the right to refuse or discontinue services where appropriate.',
-  },
-  {
-    title: '7. Payments',
-    content: 'All payments are due before services are provided unless otherwise agreed. Prices may change without notice.',
-  },
-  {
-    title: '8. Cancellation Policy',
-    list: [
-      'Cancellations made at least 24 hours before a session may be rescheduled.',
-      'Late cancellations may be charged in full.',
-      'No-shows may be charged in full.',
+    title: '1. About SoulConnect',
+    body: [
+      'SoulConnect is an early-stage community platform currently in development.',
+      'Our mission is to help people connect with others experiencing similar life challenges, share experiences, participate in guided wellness activities, and build meaningful support networks.',
+      'At this stage, SoulConnect primarily operates as a waitlist and informational platform while future features are being developed.',
     ],
   },
   {
-    title: '9. Intellectual Property',
-    content: 'All website content, materials, videos, courses, meditations, logos, graphics, and written content belong to SoulConnect. You may not copy, reproduce, sell, or distribute content without written permission.',
+    title: '2. Eligibility',
+    body: [
+      'You must be at least 18 years old to use SoulConnect or join the waitlist.',
+      'By using the website, you confirm that you meet this requirement.',
+    ],
+  },
+  {
+    title: '3. Waitlist Participation',
+    body: ['Joining the SoulConnect waitlist does not guarantee:'],
+    list: [
+      'Access to future platform features',
+      'Membership approval',
+      'Specific launch dates',
+      'Pricing or subscription terms',
+      'Availability in all locations',
+    ],
+    footer: 'SoulConnect may modify, delay, or discontinue features at any time.',
+  },
+  {
+    title: '4. Acceptable Use',
+    body: ['You agree not to:'],
+    list: [
+      'Violate any applicable laws',
+      'Attempt unauthorized access to the website',
+      'Interfere with website functionality',
+      'Submit false or misleading information',
+      'Use the platform for spam or fraudulent activity',
+      'Upload harmful code, malware, or malicious content',
+    ],
+  },
+  {
+    title: '5. Wellness Information Disclaimer',
+    body: [
+      'Content provided on SoulConnect is intended for informational, educational, and community-support purposes only.',
+      'Nothing on this website should be considered:',
+    ],
+    list: [
+      'Medical advice',
+      'Psychological advice',
+      'Mental health treatment',
+      'Psychiatric care',
+      'Legal advice',
+      'Financial advice',
+    ],
+    footer: 'Always seek guidance from qualified professionals regarding your individual circumstances.',
+  },
+  {
+    title: '6. Emergency Situations',
+    body: ['SoulConnect is not an emergency service.', 'If you are experiencing:'],
+    list: [
+      'Suicidal thoughts',
+      'Thoughts of self-harm',
+      'A mental health crisis',
+      'A medical emergency',
+    ],
+    footer: 'Please contact local emergency services, a crisis hotline, or a qualified healthcare professional immediately.',
+  },
+  {
+    title: '7. Intellectual Property',
+    body: [
+      'All SoulConnect content, branding, logos, graphics, text, designs, and website materials are owned by SoulConnect and protected by applicable intellectual property laws.',
+      'You may not reproduce, distribute, modify, or commercially exploit any content without prior written permission.',
+    ],
+  },
+  {
+    title: '8. Privacy',
+    body: [
+      'Information submitted through the website, including waitlist registrations, is handled in accordance with our Privacy Policy.',
+      'By joining the waitlist, you consent to receiving communications related to SoulConnect updates, announcements, and launch information.',
+      'You may unsubscribe from communications at any time.',
+    ],
+  },
+  {
+    title: '9. No Guarantees',
+    body: ['SoulConnect makes no guarantees regarding:'],
+    list: [
+      'Future platform availability',
+      'Specific features',
+      'Community outcomes',
+      'Wellness outcomes',
+      'Personal results',
+    ],
+    footer: 'Any future testimonials or success stories represent individual experiences and may not reflect typical results.',
   },
   {
     title: '10. Limitation of Liability',
-    content: 'To the maximum extent permitted by law, SoulConnect shall not be liable for:',
+    body: ['To the maximum extent permitted by law, SoulConnect shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from:'],
     list: [
-      'Personal injury', 'Emotional distress', 'Medical outcomes',
-      'Financial losses', 'Relationship outcomes', 'Indirect or consequential damages',
+      'Use of the website',
+      'Reliance on website content',
+      'Website interruptions',
+      'Technical errors',
+      'Future platform participation',
     ],
-    footer: 'arising from use of the website or services.',
+    footer: 'Your use of SoulConnect is at your own risk.',
   },
   {
-    title: '11. Indemnification',
-    content: 'You agree to indemnify and hold harmless SoulConnect, its owners, practitioners, employees, and affiliates from claims arising from your participation in services or reliance on information provided.',
+    title: '11. Changes to These Terms',
+    body: [
+      'SoulConnect may update these Terms & Conditions from time to time.',
+      'Any updates will be posted on this page with a revised effective date.',
+      'Continued use of the website constitutes acceptance of the updated Terms.',
+    ],
   },
   {
-    title: '12. Changes',
-    content: 'SoulConnect may modify these Terms at any time. Continued use of services constitutes acceptance of updated Terms.',
-  },
-  {
-    title: '13. Governing Law',
-    content: 'These Terms shall be governed by the laws of the jurisdiction in which SoulConnect is legally established.',
+    title: '12. Governing Law',
+    body: ['These Terms shall be governed and interpreted in accordance with the laws applicable in the jurisdiction where SoulConnect operates.'],
   },
 ];
-
-const SECTIONS_PRIVACY = [
-  {
-    title: 'Information We Collect',
-    content: 'We may collect:',
-    list: [
-      'Name', 'Email address', 'Phone number', 'Billing information',
-      'Booking details', 'Messages submitted through forms',
-      'Information voluntarily shared during sessions',
-    ],
-  },
-  {
-    title: 'How We Use Information',
-    content: 'We use information to:',
-    list: [
-      'Schedule appointments', 'Provide services', 'Process payments',
-      'Communicate with clients', 'Improve our services', 'Meet legal obligations',
-    ],
-  },
-  {
-    title: 'Payment Information',
-    content: 'Payments are processed through secure third-party providers. SoulConnect does not store complete credit card information on its servers.',
-  },
-  {
-    title: 'Confidentiality',
-    content: 'Information shared during sessions is treated with respect and discretion. However, confidentiality cannot be guaranteed for internet communications, email systems, or third-party platforms.',
-  },
-  {
-    title: 'Cookies',
-    content: 'Our website may use cookies to:',
-    list: [
-      'Improve user experience', 'Analyze website traffic', 'Remember preferences',
-    ],
-    footer: 'You may disable cookies through your browser settings.',
-  },
-  {
-    title: 'Third-Party Services',
-    content: 'We may use third-party providers such as:',
-    list: [
-      'Payment processors', 'Scheduling platforms',
-      'Email marketing services', 'Video conferencing tools',
-    ],
-    footer: 'These providers have their own privacy policies.',
-  },
-  {
-    title: 'Data Security',
-    content: 'We implement reasonable safeguards to protect information. No method of electronic transmission or storage can be guaranteed completely secure.',
-  },
-  {
-    title: 'Data Retention',
-    content: 'We retain information only as long as reasonably necessary for business, legal, and operational purposes.',
-  },
-  {
-    title: 'Your Rights',
-    content: 'You have the right to:',
-    list: [
-      'Access your personal data', 'Request correction of inaccurate data',
-      'Request deletion of your data', 'Withdraw consent at any time',
-    ],
-    footer: 'To exercise these rights, contact us at Support@soulconnect.health',
-  },
-  {
-    title: "Children's Privacy",
-    content: 'Services are not intended for children under 18 without parental or legal guardian consent.',
-  },
-  {
-    title: 'Updates',
-    content: 'This Privacy Policy may be updated periodically. Continued use of our services indicates acceptance of any revisions.',
-  },
-  {
-    title: 'Contact',
-    content: 'For privacy-related questions or requests, please contact us at support@soulconnect.health',
-  },
-];
-
-function Section({ section }) {
-  return (
-    <div className="mb-6">
-      <h3 className="text-base font-bold mb-2" style={{ color: 'var(--text)' }}>
-        {section.title}
-      </h3>
-      {section.warning && (
-        <div className="flex items-center gap-2 px-3 py-2 rounded-xl mb-3 text-xs font-semibold"
-          style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#dc2626' }}>
-          ⚠️ If you are in crisis, please call emergency services immediately.
-        </div>
-      )}
-      {section.content && (
-        <p className="text-sm leading-relaxed mb-2" style={{ color: 'var(--text-secondary)' }}>
-          {section.content}
-        </p>
-      )}
-      {section.list && (
-        <ul className="space-y-1.5 mb-2 ml-2">
-          {section.list.map((item, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
-              <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#2d6a4f' }} />
-              {item}
-            </li>
-          ))}
-        </ul>
-      )}
-      {section.footer && (
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-          {section.footer}
-        </p>
-      )}
-    </div>
-  );
-}
 
 export default function TermsPrivacy() {
-  const location = useLocation();
-  const [activeTab, setActiveTab] = useState(
-    location.hash === '#privacy' ? 'privacy' : 'terms'
-  );
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [activeTab]);
-
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+    <div style={{ minHeight: '100vh', background: '#FAF7F2', fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: '64px 24px' }}>
 
-      {/* Header */}
-      <div style={{ background: 'linear-gradient(160deg, #1a3d2e 0%, #1e4d38 50%, #152e23 100%)' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px 32px' }}>
-          {/* Back nav */}
-          <Link to="/signup"
-            className="inline-flex items-center gap-2 text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
-            style={{ color: 'rgba(255,255,255,0.7)' }}>
-            ← Back to Sign Up
-          </Link>
+        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
+          ← Back to Home
+        </Link>
 
-          {/* Logo */}
-          <div className="flex items-center mb-5">
-            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 60, width: 'auto', objectFit: 'contain', maxWidth: 260, borderRadius: 10 }} />
-          </div>
-
-          <h1 style={{ color: 'white', fontSize: 28, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.3px' }}>
-            Legal Documents
+        {/* Header */}
+        <div style={{ marginBottom: 48 }}>
+          <h1 style={{ fontSize: 'clamp(28px,4vw,42px)', fontWeight: 800, color: DARK, fontFamily: 'Playfair Display, Georgia, serif', marginBottom: 8 }}>
+            Terms &amp; Conditions
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14 }}>
-            Effective Date: June 1, 2025 · Please read carefully before using SoulConnect.
+          <p style={{ fontSize: 14, color: LIGHT_GRAY, marginBottom: 20 }}>Effective Date: June 2026</p>
+          <p style={pStyle}>
+            Welcome to SoulConnect. By accessing our website, joining the waitlist, or interacting with our platform, you agree to these Terms &amp; Conditions. If you do not agree with these Terms, please do not use the website.
           </p>
         </div>
-      </div>
 
-      {/* Tab switcher */}
-      <div style={{ background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, zIndex: 20 }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px', display: 'flex', gap: 4 }}>
-          {[
-            { id: 'terms', label: '📋 Terms & Conditions' },
-            { id: 'privacy', label: '🔒 Privacy Policy' },
-          ].map(({ id, label }) => (
-            <button key={id} onClick={() => setActiveTab(id)}
-              className="text-sm font-semibold transition-all"
-              style={{
-                padding: '14px 20px',
-                borderBottom: activeTab === id ? '2px solid #1a3d2e' : '2px solid transparent',
-                color: activeTab === id ? '#1a3d2e' : 'var(--text-muted)',
-                background: 'none',
-                cursor: 'pointer',
-              }}>
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 24px 64px' }}>
-
-        {activeTab === 'terms' && (
-          <div>
-            <div className="mb-8 p-5 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-              <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text)' }}>
-                SoulConnect Terms &amp; Conditions
-              </h2>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                Welcome to SoulConnect. By accessing this website, booking a session, purchasing a service,
-                enrolling in a program, or using any content provided by SoulConnect, you agree to these
-                Terms &amp; Conditions. If you do not agree with these Terms, please discontinue use of the
-                website and services.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-              {SECTIONS_TERMS.map((section, i) => (
-                <div key={i}>
-                  <Section section={section} />
-                  {i < SECTIONS_TERMS.length - 1 && (
-                    <div className="mb-6" style={{ height: 1, background: 'var(--border-subtle)' }} />
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Contact */}
-            <div className="mt-6 p-5 rounded-2xl" style={{ background: 'linear-gradient(135deg,rgba(45,106,79,0.08),rgba(26,61,46,0.06))', border: '1px solid rgba(45,106,79,0.2)' }}>
-              <p className="text-sm font-semibold mb-1" style={{ color: '#1a3d2e' }}>📩 Contact</p>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                For any questions about these Terms, email us at{' '}
-                <a href="mailto:Support@soulconnect.health" className="font-semibold hover:underline" style={{ color: '#1a3d2e' }}>
-                  Support@soulconnect.health
-                </a>
-              </p>
-            </div>
+        {/* Sections */}
+        {sections.map((s, i) => (
+          <div key={i}>
+            <h2 style={h2Style}>{s.title}</h2>
+            {s.body.map((t, j) => <p key={j} style={pStyle}>{t}</p>)}
+            {s.list && (
+              <ul style={{ paddingLeft: 24, margin: '4px 0 14px' }}>
+                {s.list.map((item, j) => <li key={j} style={liStyle}>{item}</li>)}
+              </ul>
+            )}
+            {s.footer && <p style={pStyle}>{s.footer}</p>}
           </div>
-        )}
+        ))}
 
-        {activeTab === 'privacy' && (
-          <div>
-            <div className="mb-8 p-5 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-              <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text)' }}>
-                SoulConnect Privacy Policy
-              </h2>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                SoulConnect respects your privacy and is committed to protecting your personal information.
-                This policy explains what we collect, how we use it, and your rights regarding your data.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-2xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-              {SECTIONS_PRIVACY.map((section, i) => (
-                <div key={i}>
-                  <Section section={section} />
-                  {i < SECTIONS_PRIVACY.length - 1 && (
-                    <div className="mb-6" style={{ height: 1, background: 'var(--border-subtle)' }} />
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 p-5 rounded-2xl" style={{ background: 'linear-gradient(135deg,rgba(45,106,79,0.08),rgba(26,61,46,0.06))', border: '1px solid rgba(45,106,79,0.2)' }}>
-              <p className="text-sm font-semibold mb-1" style={{ color: '#1a3d2e' }}>📩 Privacy Contact</p>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                For privacy-related questions, email us at{' '}
-                <a href="mailto:Support@soulconnect.health" className="font-semibold hover:underline" style={{ color: '#1a3d2e' }}>
-                  Support@soulconnect.health
-                </a>
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Back to signup CTA */}
-        <div className="mt-8 flex justify-center">
-          <Link to="/signup"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>
-            ← Back to Sign Up
-          </Link>
+        {/* Contact */}
+        <div style={{ marginTop: 48, padding: '24px 28px', background: 'rgba(109,74,255,0.04)', border: '1px solid rgba(109,74,255,0.12)', borderRadius: 16 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: DARK, marginBottom: 10 }}>Contact</h2>
+          <p style={pStyle}>
+            For questions regarding these Terms &amp; Conditions, please contact:{' '}
+            <a href="mailto:community@soulconnect.health" style={{ color: P, fontWeight: 600 }}>
+              community@soulconnect.health
+            </a>
+          </p>
+          <p style={{ ...pStyle, marginBottom: 0 }}>
+            We appreciate your interest in SoulConnect and thank you for being part of our early community.
+          </p>
         </div>
 
       </div>
