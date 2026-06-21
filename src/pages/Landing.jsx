@@ -551,8 +551,8 @@ export default function Landing() {
     e.preventDefault();
     if(!earlyForm.name||!earlyForm.email) return;
     try {
-      const API = import.meta.env.VITE_API_URL || 'https://soulconnect-backend-production.up.railway.app';
-      const res = await fetch(`${API}/api/early-access/`, {
+      const BASE = (import.meta.env.VITE_API_URL || 'https://soulconnect-backend-production.up.railway.app/api').replace(/\/+$/, '');
+      const res = await fetch(`${BASE}/early-access/`, {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
