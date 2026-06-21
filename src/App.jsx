@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './store/auth';
 import { useThemeStore } from './store/theme';
@@ -149,4 +150,11 @@ function App() {
   );
 }
 
-export default App;
+export default function AppWithAnalytics() {
+  return (
+    <>
+      <App />
+      <Analytics />
+    </>
+  );
+}
