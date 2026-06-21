@@ -96,7 +96,8 @@ function AppInner() {
 
         {!token || !LAUNCH_READY ? (
           <>
-            <Route path="/signup" element={<Signup />} />
+            {/* Signup disabled pre-launch */}
+            <Route path="/signup" element={<Navigate to="/" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/terms" element={<TermsPrivacy />} />
