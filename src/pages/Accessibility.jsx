@@ -1,74 +1,78 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+const P = '#6D4AFF';
+const DARK = '#1A1333';
+const GRAY = '#4B5563';
+const LIGHT_GRAY = '#9CA3AF';
+
+const h2Style = { fontSize: 'clamp(18px,2.5vw,22px)', fontWeight: 700, color: DARK, fontFamily: 'Playfair Display, Georgia, serif', margin: '40px 0 12px' };
+const pStyle = { fontSize: 16, color: GRAY, lineHeight: 1.8, marginBottom: 16 };
+
 export default function Accessibility() {
   return (
     <div style={{ minHeight: '100vh', background: '#FAF7F2', fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '64px 24px' }}>
 
-        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#6D4AFF', fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
+        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
           ← Back to Home
         </Link>
 
-        <h1 style={{ fontSize: 'clamp(28px,4vw,42px)', fontWeight: 800, color: '#1A1333', fontFamily: 'Playfair Display, Georgia, serif', marginBottom: 8 }}>
+        <h1 style={{ fontSize: 'clamp(28px,4vw,42px)', fontWeight: 800, color: DARK, fontFamily: 'Playfair Display, Georgia, serif', marginBottom: 8 }}>
           Accessibility Statement
         </h1>
-        <p style={{ fontSize: 14, color: '#9CA3AF', marginBottom: 48 }}>Last updated: June 2026</p>
+        <p style={{ fontSize: 14, color: LIGHT_GRAY, marginBottom: 48 }}>Last Updated: June 2026</p>
 
-        <p style={{ fontSize: 16, color: '#4B5563', lineHeight: 1.8, marginBottom: 40 }}>
-          SoulConnect is committed to making our platform accessible to everyone, including people with disabilities.
-          We believe healing and support should be available to all — regardless of ability.
+        <p style={pStyle}>
+          At SoulConnect, we believe that support, connection, and healing should be accessible to everyone. We are committed to improving the accessibility of our platform and creating an inclusive experience for all users.
         </p>
 
-        {[
-          {
-            title: 'Our Commitment',
-            body: 'We aim to meet WCAG 2.1 Level AA accessibility standards across our web platform. We are an early-stage platform and are continuously improving accessibility as we build.',
-          },
-          {
-            title: 'Current Accessibility Features',
-            list: [
-              'Semantic HTML structure with proper heading hierarchy',
-              'Keyboard navigation support for all interactive elements',
-              'Visible focus indicators on all focusable elements',
-              'Sufficient colour contrast ratios for text and UI elements',
-              'Alt text on all meaningful images',
-              'ARIA labels on icon-only buttons',
-              'Responsive design that works on screen readers',
-              'Text sizing that respects browser/OS font size preferences',
-            ],
-          },
-          {
-            title: 'Known Limitations',
-            body: 'As an early-access platform still in development, some areas of the app may not yet fully meet WCAG standards. We are actively working to identify and address these gaps.',
-          },
-          {
-            title: 'Report an Accessibility Issue',
-            body: 'If you encounter a barrier or need assistance using SoulConnect, please contact us. We take accessibility feedback seriously and aim to respond within 5 business days.',
-          },
-          {
-            title: 'Contact',
-            body: 'Email: accessibility@soulconnect.health\nWe welcome your feedback and are committed to improving your experience.',
-          },
-        ].map((s, i) => (
-          <div key={i} style={{ marginBottom: 40 }}>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1A1333', marginBottom: 12 }}>{s.title}</h2>
-            {s.body && <p style={{ fontSize: 15, color: '#4B5563', lineHeight: 1.8, whiteSpace: 'pre-line', marginBottom: s.list ? 12 : 0 }}>{s.body}</p>}
-            {s.list && (
-              <ul style={{ paddingLeft: 20, margin: 0 }}>
-                {s.list.map((item, j) => (
-                  <li key={j} style={{ fontSize: 15, color: '#4B5563', lineHeight: 1.8, marginBottom: 6 }}>{item}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
+        <h2 style={h2Style}>Our Commitment</h2>
+        <p style={pStyle}>
+          We are working toward conformance with the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA and continuously review our platform to identify and address accessibility barriers.
+        </p>
 
-        <div style={{ borderTop: '1px solid rgba(109,74,255,0.1)', paddingTop: 32, display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-          <Link to="/terms" style={{ color: '#6D4AFF', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Privacy Policy</Link>
-          <Link to="/safety" style={{ color: '#6D4AFF', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Safety Policy</Link>
-          <Link to="/report" style={{ color: '#6D4AFF', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Report a Concern</Link>
-        </div>
+        <h2 style={h2Style}>Accessibility Features</h2>
+        <p style={{ ...pStyle, marginBottom: 8 }}>SoulConnect currently includes:</p>
+        <ul style={{ paddingLeft: 24, margin: '0 0 24px' }}>
+          {[
+            'Semantic HTML structure and logical heading hierarchy',
+            'Keyboard-accessible navigation and interactive elements',
+            'Visible focus indicators',
+            'Responsive layouts across devices and screen sizes',
+            'Alternative text for meaningful images',
+            'ARIA labels where appropriate',
+            'Support for browser and operating system text scaling',
+            'Colour contrast considerations for readability',
+          ].map((item, i) => (
+            <li key={i} style={{ fontSize: 16, color: GRAY, lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
+          ))}
+        </ul>
+
+        <h2 style={h2Style}>Ongoing Improvements</h2>
+        <p style={pStyle}>
+          SoulConnect is an early-stage platform and accessibility is an ongoing priority. We regularly review feedback and make improvements as the platform evolves.
+        </p>
+
+        <h2 style={h2Style}>Report an Accessibility Issue</h2>
+        <p style={pStyle}>
+          If you experience difficulty accessing any part of SoulConnect or would like to suggest an improvement, we encourage you to contact us.
+        </p>
+        <p style={pStyle}>
+          We aim to acknowledge accessibility-related requests within 5 business days.
+        </p>
+
+        <h2 style={h2Style}>Contact</h2>
+        <p style={pStyle}>
+          Email:{' '}
+          <a href="mailto:accessibility@soulconnect.health" style={{ color: P, fontWeight: 600 }}>
+            accessibility@soulconnect.health
+          </a>
+        </p>
+        <p style={pStyle}>
+          We welcome your feedback and appreciate your help in making SoulConnect more accessible for everyone.
+        </p>
+
       </div>
     </div>
   );
