@@ -426,7 +426,21 @@
     <a href="#main" class="sr-only" style="position:absolute;top:8px;left:8px;padding:8px 16px;background:#8b5cf6;color:#fff;border-radius:8px;font-weight:700;z-index:9999;text-decoration:none;">
       Skip to main content
     </a>
-    <div id="root"></div>
+    <div id="root">
+      <!-- App shell: shows instantly before JS loads, removed once React mounts -->
+      <div id="app-shell" style="
+        position:fixed;inset:0;z-index:9999;
+        background:linear-gradient(155deg,#06011A 0%,#130530 40%,#1E0848 70%,#06011A 100%);
+        display:flex;align-items:center;justify-content:center;
+        font-family:'Plus Jakarta Sans',Inter,sans-serif;
+      ">
+        <div style="text-align:center;">
+          <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect" style="height:48px;margin-bottom:24px;opacity:0.9;" />
+          <div style="width:36px;height:36px;margin:0 auto;border-radius:50%;border:3px solid rgba(167,139,250,0.2);border-top-color:#A78BFA;animation:spin .8s linear infinite;"></div>
+        </div>
+      </div>
+      <style>#app-shell{transition:opacity .2s ease}@keyframes spin{to{transform:rotate(360deg)}}</style>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

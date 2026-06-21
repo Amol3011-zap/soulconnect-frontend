@@ -139,7 +139,15 @@ function AppInner() {
 
 function App() {
   const { init } = useThemeStore();
-  useEffect(() => { init(); }, []);
+  useEffect(() => {
+    init();
+    // Remove the HTML app shell now that React has mounted
+    const shell = document.getElementById('app-shell');
+    if (shell) {
+      shell.style.opacity = '0';
+      setTimeout(() => shell.remove(), 200);
+    }
+  }, []);
 
   return (
     <BrowserRouter>
