@@ -983,6 +983,8 @@ export default function Landing() {
           <div className="l-hero-illus" style={{
             position:'relative',
             animation:'floatY 10s ease-in-out infinite',
+            marginRight:'-32px',
+            marginLeft:'-40px',
           }}>
             <HeroIllustration/>
           </div>
