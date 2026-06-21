@@ -713,7 +713,7 @@ export default function Landing() {
     /* ── Responsive ── */
     @media(max-width:1100px){
       .l-hero-grid{grid-template-columns:1fr!important;min-height:auto!important;}
-      .l-hero-illus{height:460px!important;order:-1;}
+      .l-hero-illus{height:460px!important;order:-1;margin-left:-32px!important;width:100vw!important;}
       .l-hero-text{text-align:center;align-items:center!important;}
       .l-trust-badge{max-width:90vw;flex-wrap:wrap;justify-content:center;}
       .l-hero-pills{justify-content:center!important;}
