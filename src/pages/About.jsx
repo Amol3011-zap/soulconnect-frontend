@@ -537,18 +537,6 @@ export default function About() {
                 >
                   {i + 1}
                 </div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "1.5px",
-                    color: r.active ? "rgba(255,255,255,0.7)" : LAV,
-                    marginBottom: 6,
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {r.phase} · {r.timing}
-                </div>
                 <h3
                   style={{
                     fontFamily: "'Playfair Display', serif",
