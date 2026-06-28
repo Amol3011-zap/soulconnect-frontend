@@ -1,141 +1,574 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuthStore } from '../store/auth';
 import { useWeatherStore } from '../store/weather';
+import { useTinyWinsStore } from '../store/tinyWins';
+import { CATEGORY_META } from '../data/tinyWinsChallenges';
 import {
   Search, Bell, ChevronLeft, ChevronRight,
-  Heart, MessageCircle, Bookmark, Share2, Clock, Leaf
+  Heart, MessageCircle, Bookmark, Share2, Clock,
+  CheckCircle, Trophy, Zap, MoreHorizontal,
 } from 'lucide-react';
 import BreathingSession from '../components/BreathingSession';
 
-/* ─────────────────────────────── SVG COMPONENTS ─────────────────────────────── */
-
-function CrystalBall() {
+/* ─────────────────────────────────────────────────────────────────────────────
+   PARTICLES
+───────────────────────────────────────────────────────────────────────────── */
+function FloatingParticles({ count = 14 }) {
+  const particles = Array.from({ length: count }, (_, i) => ({
+    id: i,
+    size: 1.5 + (i % 3) * 0.8,
+    left: `${(i * 7.3 + 8) % 92}%`,
+    top:  `${(i * 11.7 + 4) % 88}%`,
+    duration: 8 + (i % 6) * 1.8,
+    delay: i * 0.55,
+    opacity: 0.12 + (i % 4) * 0.05,
+    color: i % 3 === 0 ? '#A78BFA' : i % 3 === 1 ? '#F4C542' : '#C4B5FD',
+  }));
   return (
-    <div style={{ position: 'relative', width: 200, height: 200 }}>
-      {/* Outer glow */}
+    <>
+      {particles.map(p => (
+        <div
+          key={p.id}
+          style={{
+            position: 'absolute',
+            width: p.size, height: p.size, borderRadius: '50%',
+            background: p.color,
+            opacity: p.opacity,
+            left: p.left, top: p.top,
+            animation: `particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite`,
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SOUL CLIMATE ORB  (premium 3-D glass sphere)
+───────────────────────────────────────────────────────────────────────────── */
+function SoulClimateOrb() {
+  return (
+    <div className="orb-float" style={{ position: 'relative', width: 220, height: 220, flexShrink: 0 }}>
+      {/* Ambient halo */}
       <div style={{
-        position: 'absolute', inset: -20,
+        position: 'absolute', inset: -28,
         borderRadius: '50%',
-        background: 'radial-gradient(ellipse, rgba(139,92,246,0.3) 0%, transparent 70%)',
-        animation: 'crystalPulse 3s ease-in-out infinite',
+        background: 'radial-gradient(ellipse, rgba(139,92,246,0.28) 0%, transparent 68%)',
+        filter: 'blur(12px)',
       }} />
-      {/* Main sphere */}
-      <svg viewBox="0 0 200 200" width="200" height="200" style={{ filter: 'drop-shadow(0 0 30px rgba(139,92,246,0.6))' }}>
+      {/* Ground reflection */}
+      <div style={{
+        position: 'absolute', bottom: -18, left: '50%', transform: 'translateX(-50%)',
+        width: 120, height: 18,
+        borderRadius: '50%',
+        background: 'radial-gradient(ellipse, rgba(168,85,247,0.45) 0%, transparent 70%)',
+        filter: 'blur(6px)',
+      }} />
+
+      <svg viewBox="0 0 220 220" width="220" height="220" style={{ filter: 'drop-shadow(0 0 36px rgba(139,92,246,0.65))' }}>
         <defs>
-          <radialGradient id="sphereGrad" cx="35%" cy="30%" r="65%">
-            <stop offset="0%" stopColor="#C4B5FD" stopOpacity="0.9" />
-            <stop offset="40%" stopColor="#7C3AED" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#1E0A3E" stopOpacity="0.95" />
+          <radialGradient id="orbBase" cx="36%" cy="28%" r="68%">
+            <stop offset="0%"   stopColor="#DDD6FE" stopOpacity="0.96" />
+            <stop offset="30%"  stopColor="#8B5CF6" stopOpacity="0.88" />
+            <stop offset="70%"  stopColor="#4C1D95" stopOpacity="0.92" />
+            <stop offset="100%" stopColor="#1A0A3E" stopOpacity="0.97" />
           </radialGradient>
-          <radialGradient id="cloudGrad" cx="50%" cy="40%" r="60%">
-            <stop offset="0%" stopColor="#E9D5FF" />
+          <radialGradient id="cloudFill" cx="50%" cy="38%" r="62%">
+            <stop offset="0%"   stopColor="#EDE9FE" />
             <stop offset="100%" stopColor="#A78BFA" />
           </radialGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          <radialGradient id="orbFloor" cx="50%" cy="100%" r="50%">
+            <stop offset="0%"   stopColor="rgba(168,85,247,0.5)" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+          <filter id="softGlow">
+            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
+          <filter id="cloudBlur">
+            <feGaussianBlur stdDeviation="1.5" result="blur" />
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <clipPath id="orbClip">
+            <circle cx="110" cy="110" r="94" />
+          </clipPath>
         </defs>
-        {/* Sphere background */}
-        <circle cx="100" cy="100" r="90" fill="url(#sphereGrad)" />
-        {/* Inner highlight */}
-        <ellipse cx="75" cy="72" rx="28" ry="18" fill="rgba(255,255,255,0.18)" />
-        {/* Cute cloud inside sphere */}
-        <g filter="url(#glow)">
-          <circle cx="88" cy="115" r="18" fill="url(#cloudGrad)" />
-          <circle cx="104" cy="107" r="22" fill="#D8B4FE" />
-          <circle cx="122" cy="113" r="16" fill="url(#cloudGrad)" />
-          <rect x="70" y="115" width="68" height="20" rx="10" fill="#D8B4FE" />
-          {/* Smiling face */}
-          <circle cx="97" cy="108" r="3" fill="#6D28D9" />
-          <circle cx="111" cy="108" r="3" fill="#6D28D9" />
-          <path d="M97 116 Q104 122 111 116" stroke="#6D28D9" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+
+        {/* Main sphere */}
+        <circle cx="110" cy="110" r="96" fill="url(#orbBase)" />
+
+        {/* Inner rim glow */}
+        <circle cx="110" cy="110" r="96" fill="none" stroke="rgba(196,181,253,0.25)" strokeWidth="1.5" />
+
+        {/* Specular highlight (top-left) */}
+        <ellipse cx="82" cy="72" rx="30" ry="20" fill="rgba(255,255,255,0.22)" transform="rotate(-15,82,72)" />
+        <ellipse cx="75" cy="65" rx="12" ry="7" fill="rgba(255,255,255,0.35)" transform="rotate(-15,75,65)" />
+
+        {/* Floor gradient inside */}
+        <ellipse cx="110" cy="196" rx="70" ry="20" fill="url(#orbFloor)" clipPath="url(#orbClip)" />
+
+        {/* Cloud body */}
+        <g filter="url(#cloudBlur)" clipPath="url(#orbClip)">
+          <circle cx="95"  cy="128" r="20" fill="url(#cloudFill)" opacity="0.95" />
+          <circle cx="113" cy="118" r="25" fill="#D8B4FE" opacity="0.9" />
+          <circle cx="133" cy="125" r="18" fill="url(#cloudFill)" opacity="0.9" />
+          <rect x="76" y="126" width="76" height="22" rx="11" fill="#D8B4FE" opacity="0.95" />
         </g>
-        {/* Sparkle stars */}
-        <g fill="#F4C542" filter="url(#glow)">
-          <polygon points="45,45 47,52 54,52 48,57 50,64 45,59 40,64 42,57 36,52 43,52" transform="scale(0.7) translate(20,20)" />
-          <polygon points="160,30 162,37 169,37 163,42 165,49 160,44 155,49 157,42 151,37 158,37" transform="scale(0.6) translate(10,10)" />
-          <circle cx="155" cy="65" r="3" opacity="0.8" />
-          <circle cx="40" cy="140" r="2.5" opacity="0.6" />
-          <circle cx="165" cy="150" r="2" opacity="0.5" />
+
+        {/* Cloud face */}
+        <circle cx="108" cy="119" r="3.5" fill="#5B21B6" />
+        <circle cx="120" cy="119" r="3.5" fill="#5B21B6" />
+        <path d="M107 128 Q114 135 122 128" stroke="#5B21B6" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+
+        {/* Stars/sparkles */}
+        <g filter="url(#softGlow)" fill="#F4C542">
+          <circle cx="52"  cy="52"  r="3" opacity="0.9" />
+          <circle cx="168" cy="40"  r="2" opacity="0.7" />
+          <circle cx="172" cy="82"  r="2.5" opacity="0.6" />
+          <circle cx="44"  cy="150" r="2" opacity="0.5" />
+          <circle cx="178" cy="155" r="1.8" opacity="0.5" />
         </g>
-        {/* Base platform glow */}
-        <ellipse cx="100" cy="185" rx="55" ry="10" fill="rgba(139,92,246,0.4)" />
-        <ellipse cx="100" cy="185" rx="35" ry="6" fill="rgba(168,85,247,0.6)" />
+        {/* Star cross at top-left */}
+        <g fill="#F4C542" opacity="0.85" filter="url(#softGlow)">
+          <rect x="47"  y="42" width="1.5" height="8" rx="1" transform="rotate(0,47,46)" />
+          <rect x="47"  y="42" width="1.5" height="8" rx="1" transform="rotate(90,47,46)" />
+        </g>
+
+        {/* Platform glow */}
+        <ellipse cx="110" cy="200" rx="58" ry="10" fill="rgba(139,92,246,0.45)" />
+        <ellipse cx="110" cy="200" rx="36" ry="6"  fill="rgba(168,85,247,0.65)" />
       </svg>
     </div>
   );
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   HEALING TREE  (premium with glow)
+───────────────────────────────────────────────────────────────────────────── */
+function HealingTreePremium({ totalWins = 0 }) {
+  // Determine tree level
+  const level = totalWins >= 500 ? 5 : totalWins >= 250 ? 4 : totalWins >= 100 ? 3 : totalWins >= 25 ? 2 : 1;
+  const levelLabel = ['Seedling', 'New Leaf', 'Flower', 'Butterfly', 'Golden Lotus'][level - 1];
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <svg viewBox="0 0 260 190" width="100%" height="170" style={{ display: 'block' }}>
+        <defs>
+          <radialGradient id="treeGlowPrem" cx="50%" cy="90%" r="55%">
+            <stop offset="0%"   stopColor="rgba(168,85,247,0.5)" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+          <radialGradient id="canopyGrad" cx="50%" cy="35%" r="60%">
+            <stop offset="0%"   stopColor="#9D4EDD" />
+            <stop offset="60%"  stopColor="#6D28D9" />
+            <stop offset="100%" stopColor="#3C096C" />
+          </radialGradient>
+          <radialGradient id="canopy2" cx="50%" cy="30%" r="60%">
+            <stop offset="0%"   stopColor="#A855F7" />
+            <stop offset="100%" stopColor="#4C1D95" />
+          </radialGradient>
+          <filter id="treeGlowFilter">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <radialGradient id="lotusGold2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="#FDE68A" />
+            <stop offset="100%" stopColor="#F59E0B" />
+          </radialGradient>
+        </defs>
+
+        {/* Ground glow */}
+        <ellipse cx="130" cy="174" rx="88" ry="14" fill="url(#treeGlowPrem)" />
+
+        {/* Trunk */}
+        <path d="M122,118 Q118,140 120,168 L140,168 Q138,140 138,118 Z"
+          fill="#6D28D9" opacity="0.85" />
+        {/* Trunk highlight */}
+        <path d="M124,125 Q122,148 124,165" stroke="rgba(196,181,253,0.2)" strokeWidth="2" fill="none" strokeLinecap="round" />
+
+        {/* Canopy layers (bottom up) */}
+        <ellipse cx="130" cy="96"  rx="76" ry="60" fill="url(#canopyGrad)" opacity="0.95" filter="url(#treeGlowFilter)" />
+        <ellipse cx="130" cy="76"  rx="62" ry="50" fill="url(#canopy2)"    opacity="0.9"  />
+        <ellipse cx="130" cy="58"  rx="48" ry="40" fill="#7C3AED"          opacity="0.88" />
+        <ellipse cx="130" cy="42"  rx="34" ry="30" fill="#9D4EDD"          opacity="0.85" />
+        <ellipse cx="130" cy="28"  rx="22" ry="22" fill="#A855F7"          opacity="0.82" />
+
+        {/* Glowing dots / berries */}
+        {[
+          [104,86,3],[155,80,3],[118,60,2.5],[143,65,2.5],[130,96,3],
+          [93,100,2.5],[166,95,2.5],[112,42,2],[148,46,2],[130,20,3],
+          [88,72,2],[172,88,2],[130,110,2.5],
+        ].map(([x,y,r],i) => (
+          <circle key={i} cx={x} cy={y} r={r} fill="#F4C542" opacity={0.55 + (i % 4) * 0.1}
+            style={{ filter: 'drop-shadow(0 0 3px rgba(244,197,66,0.8))' }} />
+        ))}
+
+        {/* Lotus at base */}
+        <ellipse cx="130" cy="170" rx="22" ry="9" fill="#F59E0B" opacity="0.6" />
+        <ellipse cx="130" cy="165" rx="14" ry="16" fill="rgba(251,191,36,0.55)" transform="rotate(-25,130,165)" />
+        <ellipse cx="130" cy="165" rx="14" ry="16" fill="rgba(251,191,36,0.55)" transform="rotate(25,130,165)" />
+        <ellipse cx="130" cy="165" rx="12" ry="14" fill="rgba(168,85,247,0.5)"  transform="rotate(-50,130,165)" />
+        <ellipse cx="130" cy="165" rx="12" ry="14" fill="rgba(168,85,247,0.5)"  transform="rotate(50,130,165)" />
+        <circle cx="130" cy="163" r="8" fill="url(#lotusGold2)" />
+        <circle cx="130" cy="163" r="5" fill="#FEF3C7" opacity="0.92" />
+      </svg>
+
+      {/* Level badge */}
+      <div style={{
+        position: 'absolute', top: 6, right: 6,
+        background: 'rgba(139,92,246,0.25)',
+        border: '1px solid rgba(139,92,246,0.45)',
+        borderRadius: 20, padding: '3px 10px',
+        fontSize: 10, fontWeight: 700, color: '#C4B5FD',
+      }}>
+        {levelLabel}
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TINY WIN HOME CARD  (horizontal, 3-column layout)
+───────────────────────────────────────────────────────────────────────────── */
+function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
+  if (!win) return null;
+  const meta = CATEGORY_META[win.category] || {};
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] }}
+      style={{
+        flex: 1, minWidth: 0,
+        background: isCompleted
+          ? 'linear-gradient(145deg, rgba(16,185,129,0.08), rgba(34,18,73,0.7))'
+          : 'rgba(34,18,73,0.72)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: isCompleted
+          ? '1px solid rgba(16,185,129,0.25)'
+          : '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 24,
+        padding: '18px 16px',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: isCompleted
+          ? '0 0 30px rgba(16,185,129,0.08), 0 8px 24px rgba(0,0,0,0.3)'
+          : '0 8px 24px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.03)',
+        transition: 'box-shadow 0.3s, border 0.3s',
+      }}
+    >
+      {/* Inner top highlight */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+      }} />
+
+      {/* Number badge */}
+      <div style={{
+        position: 'absolute', top: 14, left: 14,
+        width: 24, height: 24, borderRadius: '50%',
+        background: isCompleted
+          ? 'rgba(16,185,129,0.2)'
+          : `${meta.bg || 'rgba(139,92,246,0.15)'}`,
+        border: `1px solid ${isCompleted ? 'rgba(16,185,129,0.35)' : (meta.color ? meta.color + '44' : 'rgba(139,92,246,0.3)')}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 11, fontWeight: 700,
+        color: isCompleted ? '#10B981' : (meta.color || '#A78BFA'),
+      }}>
+        {isCompleted ? '✓' : index + 1}
+      </div>
+
+      {/* Category icon bubble */}
+      <div style={{
+        width: 54, height: 54, borderRadius: '50%',
+        background: meta.bg || 'rgba(139,92,246,0.15)',
+        border: `1px solid ${meta.color ? meta.color + '35' : 'rgba(139,92,246,0.25)'}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 26, margin: '8px auto 14px',
+        boxShadow: `0 0 20px ${meta.bg || 'rgba(139,92,246,0.1)'}`,
+      }}>
+        {meta.icon || '✨'}
+      </div>
+
+      {/* Title */}
+      <div style={{
+        fontSize: 14, fontWeight: 700,
+        color: isCompleted ? '#86EFAC' : '#fff',
+        marginBottom: 6, lineHeight: 1.35,
+        paddingLeft: 2,
+        textDecoration: isCompleted ? 'none' : 'none',
+      }}>
+        {win.title}
+      </div>
+
+      {/* Description */}
+      <p style={{
+        fontSize: 12, color: 'rgba(184,180,216,0.7)',
+        margin: '0 0 12px', lineHeight: 1.55,
+        display: '-webkit-box', WebkitLineClamp: 2,
+        WebkitBoxOrient: 'vertical', overflow: 'hidden',
+      }}>
+        {win.description}
+      </p>
+
+      {/* Duration pill */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 4,
+        marginBottom: 12,
+      }}>
+        <Clock size={11} color="#8A84B6" />
+        <span style={{ fontSize: 11, color: '#8A84B6', fontWeight: 500 }}>{win.duration}</span>
+      </div>
+
+      {/* Complete button */}
+      {isCompleted ? (
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 380, damping: 22 }}
+          style={{
+            width: '100%', padding: '8px 0', borderRadius: 12, textAlign: 'center',
+            background: 'rgba(16,185,129,0.15)',
+            border: '1px solid rgba(16,185,129,0.3)',
+            color: '#10B981', fontSize: 12, fontWeight: 600,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+          }}
+        >
+          <CheckCircle size={13} />
+          Completed
+        </motion.div>
+      ) : (
+        <motion.button
+          whileTap={{ scale: 0.96 }}
+          onClick={() => onComplete(win.id)}
+          style={{
+            width: '100%', padding: '8px 0', borderRadius: 12,
+            background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+            border: '1px solid rgba(168,85,247,0.3)',
+            color: '#fff', fontSize: 12, fontWeight: 600,
+            cursor: 'pointer', fontFamily: 'inherit',
+            boxShadow: '0 4px 14px rgba(124,58,237,0.35)',
+          }}
+        >
+          Complete ✓
+        </motion.button>
+      )}
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   AI INSIGHT BRAIN SVG  (premium)
+───────────────────────────────────────────────────────────────────────────── */
 function BrainIllustration() {
   return (
-    <svg viewBox="0 0 120 120" width="110" height="110" style={{ filter: 'drop-shadow(0 0 20px rgba(139,92,246,0.6))', flexShrink: 0 }}>
-      <defs>
-        <radialGradient id="brainGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#C4B5FD" />
-          <stop offset="100%" stopColor="#7C3AED" />
-        </radialGradient>
-      </defs>
-      <ellipse cx="60" cy="55" rx="38" ry="32" fill="url(#brainGrad)" opacity="0.9" />
-      <ellipse cx="44" cy="55" rx="22" ry="28" fill="#A78BFA" opacity="0.7" />
-      <ellipse cx="76" cy="55" rx="22" ry="28" fill="#8B5CF6" opacity="0.7" />
-      <path d="M60 27 Q60 40 60 55" stroke="#6D28D9" strokeWidth="2" fill="none" />
-      <path d="M38 40 Q50 50 38 65" stroke="#6D28D9" strokeWidth="1.5" fill="none" />
-      <path d="M82 40 Q70 50 82 65" stroke="#6D28D9" strokeWidth="1.5" fill="none" />
-      <path d="M42 55 Q60 48 78 55" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" fill="none" />
-      <line x1="60" y1="83" x2="60" y2="100" stroke="#8B5CF6" strokeWidth="3" strokeLinecap="round" />
-      <ellipse cx="60" cy="104" rx="18" ry="5" fill="rgba(139,92,246,0.4)" />
-      {[0, 60, 120, 180, 240, 300].map((angle, i) => {
-        const rad = (angle * Math.PI) / 180;
-        const x = 60 + 50 * Math.cos(rad);
-        const y = 60 + 50 * Math.sin(rad);
-        return <circle key={i} cx={x} cy={y} r="2" fill="#F4C542" opacity="0.7" />;
-      })}
-    </svg>
+    <div style={{ position: 'relative', flexShrink: 0 }}>
+      <div style={{
+        position: 'absolute', inset: -16,
+        borderRadius: '50%',
+        background: 'radial-gradient(ellipse, rgba(139,92,246,0.3) 0%, transparent 65%)',
+        filter: 'blur(8px)',
+      }} />
+      <svg viewBox="0 0 120 120" width="100" height="100" style={{ position: 'relative', filter: 'drop-shadow(0 0 18px rgba(139,92,246,0.6))' }}>
+        <defs>
+          <radialGradient id="brainG2" cx="50%" cy="40%" r="55%">
+            <stop offset="0%"   stopColor="#C4B5FD" />
+            <stop offset="60%"  stopColor="#7C3AED" />
+            <stop offset="100%" stopColor="#3C096C" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="52" rx="38" ry="32" fill="url(#brainG2)" opacity="0.95" />
+        <ellipse cx="44" cy="52" rx="22" ry="28" fill="#A78BFA" opacity="0.65" />
+        <ellipse cx="76" cy="52" rx="22" ry="28" fill="#8B5CF6" opacity="0.65" />
+        <path d="M60 24 Q60 38 60 52" stroke="rgba(196,181,253,0.4)" strokeWidth="1.5" fill="none" />
+        <path d="M38 38 Q50 48 38 62" stroke="rgba(196,181,253,0.3)" strokeWidth="1.2" fill="none" />
+        <path d="M82 38 Q70 48 82 62" stroke="rgba(196,181,253,0.3)" strokeWidth="1.2" fill="none" />
+        <path d="M42 52 Q60 46 78 52" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" fill="none" />
+        <line x1="60" y1="84" x2="60" y2="100" stroke="#8B5CF6" strokeWidth="3" strokeLinecap="round" />
+        <ellipse cx="60" cy="104" rx="20" ry="5" fill="rgba(139,92,246,0.3)" />
+        {[0, 60, 120, 180, 240, 300].map((angle, i) => {
+          const rad = (angle * Math.PI) / 180;
+          return <circle key={i} cx={60 + 50 * Math.cos(rad)} cy={60 + 50 * Math.sin(rad)} r="2.5" fill="#F4C542" opacity="0.65" />;
+        })}
+      </svg>
+    </div>
   );
 }
 
-function HealingTree() {
+/* ─────────────────────────────────────────────────────────────────────────────
+   WEEKLY STATS (donut + bars)
+───────────────────────────────────────────────────────────────────────────── */
+function WeeklyStatsCard({ weeklyStats }) {
+  const { total, daily = [], byCategory = {} } = weeklyStats || {};
+  const maxPossible = 21; // 7 days × 3 wins
+  const pct = Math.round(((total || 0) / maxPossible) * 100);
+
+  // Donut
+  const r = 28, circ = 2 * Math.PI * r;
+  const offset = circ * (1 - (pct / 100));
+
+  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  const barMax = Math.max(...(daily.map(d => d.count || 0)), 1);
+
   return (
-    <svg viewBox="0 0 260 180" width="100%" height="160" style={{ display: 'block', margin: '12px 0' }}>
-      <defs>
-        <radialGradient id="treeGlow" cx="50%" cy="80%" r="50%">
-          <stop offset="0%" stopColor="rgba(139,92,246,0.4)" />
-          <stop offset="100%" stopColor="transparent" />
-        </radialGradient>
-        <radialGradient id="leafGrad" cx="50%" cy="30%" r="60%">
-          <stop offset="0%" stopColor="#9D4EDD" />
-          <stop offset="100%" stopColor="#3C096C" />
-        </radialGradient>
-      </defs>
-      {/* Ground glow */}
-      <ellipse cx="130" cy="168" rx="80" ry="12" fill="url(#treeGlow)" />
-      {/* Trunk */}
-      <rect x="122" y="110" width="16" height="58" rx="8" fill="#6D28D9" opacity="0.8" />
-      {/* Main canopy layers */}
-      <ellipse cx="130" cy="90" rx="70" ry="55" fill="url(#leafGrad)" opacity="0.95" />
-      <ellipse cx="130" cy="70" rx="55" ry="45" fill="#7C3AED" opacity="0.9" />
-      <ellipse cx="130" cy="50" rx="40" ry="35" fill="#9D4EDD" opacity="0.85" />
-      <ellipse cx="130" cy="35" rx="28" ry="25" fill="#A855F7" opacity="0.8" />
-      {/* Glowing dots on tree */}
-      {[
-        [105, 80], [155, 75], [120, 55], [140, 60], [130, 90],
-        [95, 95], [165, 90], [110, 38], [150, 42], [130, 20],
-      ].map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r="3" fill="#F4C542" opacity={0.6 + (i % 3) * 0.1} />
-      ))}
-      {/* Lotus at base */}
-      <ellipse cx="130" cy="165" rx="20" ry="8" fill="#F59E0B" opacity="0.7" />
-      <ellipse cx="130" cy="160" rx="12" ry="14" fill="#FBBF24" opacity="0.5" transform="rotate(-20,130,160)" />
-      <ellipse cx="130" cy="160" rx="12" ry="14" fill="#FBBF24" opacity="0.5" transform="rotate(20,130,160)" />
-      <circle cx="130" cy="160" r="6" fill="#FDE68A" opacity="0.9" />
-    </svg>
+    <div style={{ ...CARD_STYLE }}>
+      <div style={SECTION_LABEL}>🔥 THIS WEEK</div>
+
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+        {/* Left: text + bars */}
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
+            {total || 0}
+          </div>
+          <div style={{ fontSize: 11, color: '#8A84B6', marginBottom: 12 }}>Tiny Wins Completed</div>
+
+          {/* Bar chart */}
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 36 }}>
+            {days.map((day, i) => {
+              const count = daily[i]?.count || 0;
+              const h = Math.max(4, Math.round((count / barMax) * 32));
+              return (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                  <div style={{
+                    width: 12, height: h, borderRadius: 3,
+                    background: count > 0
+                      ? 'linear-gradient(180deg, #A855F7, #7C3AED)'
+                      : 'rgba(255,255,255,0.08)',
+                    transition: 'height 0.6s ease',
+                    boxShadow: count > 0 ? '0 0 6px rgba(168,85,247,0.4)' : 'none',
+                  }} />
+                  <span style={{ fontSize: 9, color: '#8A84B6' }}>{day}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right: Donut */}
+        <div style={{ position: 'relative', width: 70, height: 70, flexShrink: 0 }}>
+          <svg width="70" height="70" style={{ transform: 'rotate(-90deg)' }}>
+            <circle cx="35" cy="35" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
+            <circle
+              cx="35" cy="35" r={r} fill="none"
+              stroke="url(#donutGrad)"
+              strokeWidth="6"
+              strokeDasharray={circ}
+              strokeDashoffset={offset}
+              strokeLinecap="round"
+              style={{ transition: 'stroke-dashoffset 0.8s ease' }}
+            />
+            <defs>
+              <linearGradient id="donutGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%"   stopColor="#F4C542" />
+                <stop offset="100%" stopColor="#F59E0B" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div style={{
+            position: 'absolute', inset: 0,
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+          }}>
+            <div style={{ fontSize: 14, fontWeight: 800, color: '#F4C542', lineHeight: 1 }}>{pct}%</div>
+            <div style={{ fontSize: 8, color: '#8A84B6', lineHeight: 1.3, textAlign: 'center' }}>Com-<br/>pletion</div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
-/* ─────────────────────────────── DATA ─────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   REFLECTION TOAST
+───────────────────────────────────────────────────────────────────────────── */
+function ReflectionToast({ text, onDismiss }) {
+  useEffect(() => {
+    const t = setTimeout(onDismiss, 4000);
+    return () => clearTimeout(t);
+  }, [onDismiss]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 60, scale: 0.94 }}
+      animate={{ opacity: 1, y: 0,  scale: 1 }}
+      exit={{  opacity: 0, y: 40, scale: 0.96 }}
+      transition={{ type: 'spring', stiffness: 280, damping: 26 }}
+      style={{
+        position: 'fixed', bottom: 32, left: '50%', transform: 'translateX(-50%)',
+        zIndex: 9999,
+        background: 'rgba(34,18,73,0.9)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        border: '1px solid rgba(168,85,247,0.3)',
+        borderRadius: 20,
+        padding: '14px 22px',
+        display: 'flex', alignItems: 'center', gap: 12,
+        boxShadow: '0 0 40px rgba(124,58,237,0.35), 0 16px 40px rgba(0,0,0,0.4)',
+        maxWidth: 360, minWidth: 260,
+      }}
+    >
+      <div style={{
+        width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
+        background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 16,
+        boxShadow: '0 0 12px rgba(124,58,237,0.5)',
+      }}>
+        💜
+      </div>
+      <p style={{
+        margin: 0, fontSize: 13, color: '#E2DEFF',
+        lineHeight: 1.5, fontStyle: 'italic', fontWeight: 400,
+      }}>
+        {text}
+      </p>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SHARED STYLE OBJECTS
+───────────────────────────────────────────────────────────────────────────── */
+const CARD_STYLE = {
+  background: 'rgba(34,18,73,0.72)',
+  backdropFilter: 'blur(24px)',
+  WebkitBackdropFilter: 'blur(24px)',
+  border: '1px solid rgba(255,255,255,0.08)',
+  borderRadius: 24,
+  padding: '20px 20px',
+  marginBottom: 14,
+  boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03)',
+  position: 'relative',
+  overflow: 'hidden',
+};
+
+const SECTION_LABEL = {
+  fontSize: 11, color: '#F4C542', fontWeight: 700,
+  textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 10,
+};
+
+const GLASS_BTN = {
+  background: 'rgba(255,255,255,0.07)',
+  border: '1px solid rgba(255,255,255,0.12)',
+  borderRadius: 12, color: '#E2DEFF',
+  cursor: 'pointer', padding: '8px 16px',
+  fontSize: 12, fontWeight: 600, fontFamily: 'Inter, sans-serif',
+};
+
+const PURPLE_BTN = {
+  background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+  border: 'none', borderRadius: 14, color: '#fff',
+  cursor: 'pointer', fontWeight: 700, fontSize: 14,
+  padding: '11px 24px',
+  boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
+  fontFamily: 'Inter, sans-serif',
+};
 
 const WEATHER_OPTIONS = [
   { id: 'clear-sky',  emoji: '☀️', label: 'Clear'      },
@@ -146,129 +579,127 @@ const WEATHER_OPTIONS = [
   { id: 'storm',      emoji: '⚡', label: 'Storm'      },
 ];
 
-const JOURNEY = [
-  { emoji: '🌅', title: 'Morning Meditation', sub: '72% Completed',       progress: 72,   color: '#F59E0B' },
-  { emoji: '📝', title: 'Gratitude Journal',  sub: 'Draft · 3 thoughts',  progress: null, color: '#8B5CF6' },
-  { emoji: '💨', title: 'Breathing Exercise', sub: '5 min · In Progress', progress: 40,   color: '#2DD4BF' },
-];
-
 const STORIES = [
   {
     name: 'Anonymous', avatar: '?', avatarColor: '#374151',
-    time: '2h ago', tag: 'Growth', color: '#10B981',
-    preview: 'Today I finally said no without feeling guilty.',
+    time: '2h ago', tag: 'Growth', tagColor: '#10B981',
+    preview: '"Today I finally said no without feeling guilty."',
     hearts: 128, comments: 32,
   },
   {
     name: 'Riya', avatar: 'R', avatarColor: '#7C3AED',
-    time: '9h ago', tag: 'Overthinking', color: '#8B5CF6',
-    preview: 'After weeks of overthinking, I chose to let it go.',
+    time: '5h ago', tag: 'Overthinking', tagColor: '#8B5CF6',
+    preview: '"After weeks of overthinking, I chose to let it go."',
     hearts: 96, comments: 18,
   },
   {
     name: 'Arjun', avatar: 'A', avatarColor: '#D97706',
-    time: '9h ago', tag: 'Motivation', color: '#F59E0B',
-    preview: 'Small steps every day really do change everything.',
+    time: '8h ago', tag: 'Motivation', tagColor: '#F59E0B',
+    preview: '"Small steps every day really do change everything."',
     hearts: 112, comments: 24,
   },
 ];
 
-/* ─────────────────────────────── STYLES ─────────────────────────────── */
-
-const glassBtn = {
-  background: 'rgba(255,255,255,0.07)',
-  border: '1px solid rgba(255,255,255,0.12)',
-  borderRadius: 10,
-  color: '#E2DEFF',
-  cursor: 'pointer',
-  padding: '8px 18px',
-  fontSize: 13,
-  fontWeight: 600,
-};
-
-const purpleGradBtn = {
-  background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-  border: 'none',
-  borderRadius: 12,
-  color: '#fff',
-  cursor: 'pointer',
-  fontWeight: 700,
-  fontSize: 15,
-  padding: '12px 28px',
-  boxShadow: '0 4px 20px rgba(139,92,246,0.4)',
-};
-
-const sectionLabel = {
-  fontSize: 11,
-  color: '#F4C542',
-  fontWeight: 700,
-  textTransform: 'uppercase',
-  letterSpacing: '0.1em',
-  marginBottom: 10,
-};
-
-/* ─────────────────────────────── MAIN COMPONENT ─────────────────────────────── */
-
+/* ─────────────────────────────────────────────────────────────────────────────
+   MAIN COMPONENT
+───────────────────────────────────────────────────────────────────────────── */
 export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { todayEntry, streak, submitWeather } = useWeatherStore();
+  const { todayEntry, submitWeather } = useWeatherStore();
+  const {
+    dailyWins, completedToday, checkAndRefresh, completeWin,
+    totalWins, showReflection, reflectionText, dismissReflection,
+    getWeeklyStats,
+  } = useTinyWinsStore();
 
   const userId    = user?.id || user?.user_id || 1;
   const firstName = user?.name?.split(' ')[0] || 'Friend';
+  const hour      = new Date().getHours();
+  const greeting  = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
 
-  const [showBreathing, setShowBreathing]   = useState(false);
-  const [breathingDone, setBreathingDone]   = useState(false);
-  const [selectedWeather, setSelectedWeather] = useState(todayEntry?.weatherId || null);
+  const [showBreathing, setShowBreathing] = useState(false);
+  const [breathingDone, setBreathingDone] = useState(false);
+  const [selectedWeather, setSelectedWeather] = useState(todayEntry?.weather || null);
 
-  const carouselRef = useRef(null);
+  // Initialize Tiny Wins for today
+  useEffect(() => {
+    const weatherId = todayEntry?.weather || 'clear-sky';
+    checkAndRefresh(weatherId);
+  }, [todayEntry?.weather]);
 
-  const hour     = new Date().getHours();
-  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
-
-  function handleWeatherSelect(id) {
+  const handleWeatherSelect = useCallback((id) => {
     setSelectedWeather(id);
     submitWeather(id, userId);
-  }
+  }, [userId, submitWeather]);
 
-  function handleCheckIn() {
+  const handleCheckIn = useCallback(() => {
     useWeatherStore.setState({ showModal: true });
-  }
+  }, []);
 
-  function scrollCarousel(dir) {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: dir * 200, behavior: 'smooth' });
-    }
-  }
+  const weeklyStats = getWeeklyStats();
+  const completedCount = completedToday.length;
+  const allDone = completedCount >= 3 && dailyWins.length > 0;
 
   return (
     <>
-      {/* ── Keyframe injection ── */}
+      {/* ── Global keyframes ── */}
       <style>{`
-        @keyframes crystalPulse {
-          0%, 100% { opacity: 0.6; transform: scale(1); }
-          50%       { opacity: 1;   transform: scale(1.08); }
+        @keyframes particleDrift {
+          0%,100% { transform: translate(0,0); }
+          33%      { transform: translate(6px,-10px); }
+          66%      { transform: translate(-4px,6px); }
         }
-        .home-main { margin-right: 290px; padding: 0; min-height: 100vh; background: #0D0B1A; }
+        @keyframes orbFloat {
+          0%,100% { transform: translateY(0px); }
+          50%      { transform: translateY(-14px); }
+        }
+        @keyframes healingFloat {
+          0%,100% { transform: translateY(0px); }
+          50%      { transform: translateY(-7px); }
+        }
+        @keyframes auroraShift {
+          0%,100% { opacity: 0.5; transform: scale(1); }
+          50%      { opacity: 0.8; transform: scale(1.06); }
+        }
+        .orb-float { animation: orbFloat 9s ease-in-out infinite; }
+        .healing-float { animation: healingFloat 7s ease-in-out 0.5s infinite; }
+        .home-main {
+          margin-right: 290px;
+          min-height: 100vh;
+          position: relative;
+        }
         .home-right-sidebar {
           position: fixed; right: 0; top: 0; bottom: 0; width: 290px;
-          background: #0D0B1A;
+          background: rgba(8,6,22,0.85);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
           border-left: 1px solid rgba(255,255,255,0.06);
-          overflow-y: auto; padding: 24px 20px; z-index: 50;
+          overflow-y: auto; padding: 24px 16px;
+          z-index: 50;
+          scrollbar-width: none;
         }
+        .home-right-sidebar::-webkit-scrollbar { display: none; }
         @media (max-width: 1100px) {
           .home-right-sidebar { display: none; }
           .home-main { margin-right: 0 !important; padding-bottom: 100px; }
         }
-        .carousel-hide-scroll::-webkit-scrollbar { display: none; }
-        .carousel-hide-scroll { scrollbar-width: none; }
-        .story-card:hover { transform: translateY(-2px); transition: transform 0.2s; }
-        .journey-card:hover { transform: translateY(-2px); transition: transform 0.2s; }
-        .weather-pill:hover { background: rgba(139,92,246,0.3) !important; }
-        .icon-btn:hover { background: rgba(255,255,255,0.12) !important; }
+        .weather-pill { transition: all 0.2s ease; }
+        .weather-pill:hover { background: rgba(139,92,246,0.25) !important; }
+        .icon-btn { transition: background 0.2s ease; }
+        .icon-btn:hover { background: rgba(255,255,255,0.14) !important; }
+        .story-card { transition: transform 0.22s ease, box-shadow 0.22s ease; }
+        .story-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 30px rgba(124,58,237,0.15) !important;
+        }
+        .sidebar-card-inner { transition: box-shadow 0.25s ease; }
+        .sidebar-card-inner:hover {
+          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 40px rgba(124,58,237,0.2) !important;
+        }
       `}</style>
 
-      {/* ── Breathing Session Overlay ── */}
+      {/* ── Breathing overlay ── */}
       <AnimatePresence>
         {showBreathing && (
           <BreathingSession
@@ -278,106 +709,133 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* ── Reflection toast ── */}
+      <AnimatePresence>
+        {showReflection && (
+          <ReflectionToast key="reflection" text={reflectionText} onDismiss={dismissReflection} />
+        )}
+      </AnimatePresence>
+
       {/* ════════════════════ MAIN CONTENT ════════════════════ */}
       <div className="home-main">
 
-        {/* ── TOP HEADER ── */}
-        <div style={{ padding: '20px 32px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          {/* Left: greeting */}
+        {/* Aurora background layers */}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 0 }}>
+          <div style={{
+            position: 'absolute', top: -100, left: '10%',
+            width: 500, height: 500, borderRadius: '50%',
+            background: 'radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, transparent 65%)',
+            animation: 'auroraShift 14s ease-in-out infinite',
+          }} />
+          <div style={{
+            position: 'absolute', top: 200, right: -100,
+            width: 400, height: 400, borderRadius: '50%',
+            background: 'radial-gradient(ellipse, rgba(168,85,247,0.08) 0%, transparent 65%)',
+            animation: 'auroraShift 18s ease-in-out 3s infinite',
+          }} />
+        </div>
+
+        {/* ── HEADER ── */}
+        <div style={{
+          padding: '24px 32px 0',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+          position: 'relative', zIndex: 1,
+        }}>
           <div>
-            <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', margin: 0, lineHeight: 1.2 }}>
+            <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', margin: 0, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
               {greeting}, {firstName} 👋
             </h1>
-            <p style={{ fontSize: 14, color: '#8A84B6', margin: '6px 0 0' }}>
+            <p style={{ fontSize: 14, color: 'rgba(184,180,216,0.65)', margin: '5px 0 0' }}>
               Take a deep breath. You've got this.
             </p>
           </div>
 
-          {/* Right: icons */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 4 }}>
-            {/* Search */}
-            <button
-              className="icon-btn"
-              style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
-            >
+            <button className="icon-btn" style={{
+              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)',
+              borderRadius: 12, width: 40, height: 40,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+            }}>
               <Search size={16} color="#B8B4D8" />
             </button>
 
-            {/* Bell with badge */}
             <div style={{ position: 'relative' }}>
-              <button
-                className="icon-btn"
-                style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
-              >
+              <button className="icon-btn" style={{
+                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)',
+                borderRadius: 12, width: 40, height: 40,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+              }}>
                 <Bell size={16} color="#B8B4D8" />
               </button>
               <span style={{
                 position: 'absolute', top: -5, right: -5,
                 background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
-                color: '#fff', fontSize: 10, fontWeight: 700,
+                color: '#fff', fontSize: 9, fontWeight: 700,
                 borderRadius: '50%', width: 18, height: 18,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                border: '2px solid #0D0B1A',
+                border: '2px solid #080812',
               }}>3</span>
             </div>
 
-            {/* Avatar */}
             <div style={{
-              width: 36, height: 36, borderRadius: '50%',
+              width: 38, height: 38, borderRadius: '50%',
               background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 15, fontWeight: 700, color: '#fff', cursor: 'pointer',
-              flexShrink: 0,
+              boxShadow: '0 0 14px rgba(124,58,237,0.5)',
             }}>
               {firstName[0]?.toUpperCase()}
             </div>
           </div>
         </div>
 
-        {/* ═══════════════════════════════════════════════════════════
-            SECTION 1 — SOUL CLIMATE CARD
-        ═══════════════════════════════════════════════════════════ */}
+        {/* ════════════════════════════════════════════════════════════
+            SECTION 1 — SOUL CLIMATE HERO CARD
+        ════════════════════════════════════════════════════════════ */}
         <div style={{
           margin: '20px 32px 16px',
-          background: 'linear-gradient(135deg, #1A0A3E 0%, #2D1260 50%, #1A0A3E 100%)',
-          border: '1px solid rgba(139,92,246,0.3)',
-          borderRadius: 24,
-          padding: 28,
+          background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
+          border: '1px solid rgba(139,92,246,0.2)',
+          borderRadius: 28,
+          padding: '28px 28px 24px',
           position: 'relative',
           overflow: 'hidden',
           display: 'grid',
           gridTemplateColumns: '1fr auto',
-          gap: 24,
+          gap: 20,
           alignItems: 'center',
+          boxShadow: '0 12px 48px rgba(0,0,0,0.5), 0 0 60px rgba(124,58,237,0.15)',
+          zIndex: 1,
         }}>
-          {/* Decorative background glow */}
+          {/* Floating particles inside card */}
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+            <FloatingParticles count={10} />
+          </div>
+          {/* Inner top highlight */}
           <div style={{
-            position: 'absolute', top: -60, right: 160, width: 300, height: 300,
-            borderRadius: '50%',
-            background: 'radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, transparent 70%)',
-            pointerEvents: 'none',
+            position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+            background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent)',
           }} />
 
-          {/* LEFT: text + button */}
+          {/* LEFT: text + check-in */}
           <div style={{ zIndex: 1 }}>
-            <div style={sectionLabel}>SOUL CLIMATE ⓘ</div>
-            <h2 style={{ fontSize: 28, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.25 }}>
+            <div style={SECTION_LABEL}>SOUL CLIMATE ⓘ</div>
+            <h2 style={{ fontSize: 26, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
               How is your mind<br />feeling today?
             </h2>
-            <p style={{ fontSize: 13, color: '#8A84B6', margin: '0 0 20px' }}>
+            <p style={{ fontSize: 13, color: 'rgba(184,180,216,0.65)', margin: '0 0 20px', lineHeight: 1.6 }}>
               Your check-in helps us support you better.
             </p>
-            <button onClick={handleCheckIn} style={purpleGradBtn}>
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={handleCheckIn}
+              style={{ ...PURPLE_BTN, fontSize: 13, padding: '10px 22px' }}
+            >
               {selectedWeather ? '✓ Checked In' : 'Check In'}
-            </button>
-          </div>
-
-          {/* RIGHT: crystal ball + weather pills */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, zIndex: 1 }}>
-            <CrystalBall />
+            </motion.button>
 
             {/* Weather pills */}
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 16, justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap', marginTop: 18 }}>
               {WEATHER_OPTIONS.map(opt => (
                 <button
                   key={opt.id}
@@ -386,19 +844,13 @@ export default function Home() {
                   style={{
                     display: 'flex', alignItems: 'center', gap: 5,
                     background: selectedWeather === opt.id
-                      ? 'rgba(139,92,246,0.35)'
-                      : 'rgba(255,255,255,0.08)',
+                      ? 'rgba(139,92,246,0.32)' : 'rgba(255,255,255,0.07)',
                     border: selectedWeather === opt.id
-                      ? '1px solid rgba(139,92,246,0.7)'
-                      : '1px solid rgba(255,255,255,0.12)',
-                    borderRadius: 20,
-                    padding: '6px 14px',
-                    fontSize: 12,
-                    color: '#E2DEFF',
-                    cursor: 'pointer',
-                    fontWeight: 500,
+                      ? '1px solid rgba(168,85,247,0.6)' : '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: 20, padding: '5px 12px',
+                    fontSize: 11, color: '#E2DEFF', cursor: 'pointer', fontWeight: 500,
                     whiteSpace: 'nowrap',
-                    transition: 'all 0.2s',
+                    boxShadow: selectedWeather === opt.id ? '0 0 12px rgba(124,58,237,0.3)' : 'none',
                   }}
                 >
                   <span>{opt.emoji}</span>
@@ -407,130 +859,99 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          {/* RIGHT: Orb */}
+          <div style={{ zIndex: 1, display: 'flex', justifyContent: 'center' }}>
+            <SoulClimateOrb />
+          </div>
         </div>
 
-        {/* ═══════════════════════════════════════════════════════════
-            SECTION 2 — AI INSIGHT CARD
-        ═══════════════════════════════════════════════════════════ */}
-        <div style={{
-          margin: '0 32px 16px',
-          background: 'linear-gradient(135deg, #160D30, #1E1060)',
-          border: '1px solid rgba(139,92,246,0.2)',
-          borderRadius: 24,
-          padding: '20px 24px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 20,
-        }}>
-          {/* Left: text */}
-          <div style={{ flex: 1 }}>
-            <div style={sectionLabel}>✦ AI INSIGHT</div>
-            <p style={{ fontSize: 14, color: '#E2DEFF', fontStyle: 'italic', lineHeight: 1.6, margin: '0 0 16px' }}>
-              "You've been feeling more positive this week. Keep practicing gratitude and mindfulness."
-            </p>
-            <button style={glassBtn}>View Details</button>
+        {/* ════════════════════════════════════════════════════════════
+            SECTION 2 — TINY WINS
+        ════════════════════════════════════════════════════════════ */}
+        <div style={{ margin: '0 32px 16px', position: 'relative', zIndex: 1 }}>
+
+          {/* Section header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div>
+              <div style={{ ...SECTION_LABEL, marginBottom: 2 }}>🌿 TINY WINS</div>
+              <div style={{ fontSize: 12, color: 'rgba(184,180,216,0.55)' }}>Small steps. Big change.</div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              {/* Progress dots */}
+              <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                <span style={{ fontSize: 11, color: '#8A84B6', marginRight: 4 }}>
+                  {completedCount} of {dailyWins.length} Completed
+                </span>
+                {dailyWins.map((_, i) => (
+                  <div key={i} style={{
+                    width: 8, height: 8, borderRadius: '50%',
+                    background: i < completedCount
+                      ? 'linear-gradient(135deg,#F4C542,#F59E0B)'
+                      : 'rgba(255,255,255,0.15)',
+                    boxShadow: i < completedCount ? '0 0 6px rgba(244,197,66,0.5)' : 'none',
+                  }} />
+                ))}
+              </div>
+              <button
+                onClick={() => navigate('/tiny-wins')}
+                style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
+              >
+                View All ›
+              </button>
+            </div>
           </div>
 
-          {/* Right: brain SVG */}
-          <BrainIllustration />
-        </div>
-
-        {/* ═══════════════════════════════════════════════════════════
-            SECTION 3 — CONTINUE YOUR JOURNEY
-        ═══════════════════════════════════════════════════════════ */}
-        <div style={{ margin: '0 32px 16px' }}>
-          {/* Header row */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <span style={{ ...sectionLabel, marginBottom: 0 }}>CONTINUE YOUR JOURNEY</span>
-            <button
-              onClick={() => navigate('/journal')}
-              style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
-            >
-              View All ›
-            </button>
-          </div>
-
-          {/* Carousel wrapper with arrows */}
-          <div style={{ position: 'relative' }}>
-            {/* Left arrow */}
-            <button
-              onClick={() => scrollCarousel(-1)}
-              style={{
-                position: 'absolute', left: -16, top: '50%', transform: 'translateY(-50%)',
-                zIndex: 2, width: 32, height: 32, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-              }}
-            >
-              <ChevronLeft size={16} color="#E2DEFF" />
-            </button>
-
-            {/* Scrollable row */}
-            <div
-              ref={carouselRef}
-              className="carousel-hide-scroll"
-              style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 4, scrollBehavior: 'smooth' }}
-            >
-              {JOURNEY.map((item, i) => (
-                <motion.div
-                  key={i}
-                  className="journey-card"
-                  whileHover={{ y: -2 }}
-                  style={{
-                    minWidth: 160, padding: 16, borderRadius: 18,
-                    background: '#211044', border: '1px solid rgba(255,255,255,0.07)',
-                    flexShrink: 0, cursor: 'pointer',
-                  }}
-                >
-                  {/* Emoji icon in colored circle */}
-                  <div style={{
-                    width: 40, height: 40, borderRadius: '50%',
-                    background: `${item.color}22`,
-                    border: `1px solid ${item.color}44`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 20, marginBottom: 10,
-                  }}>
-                    {item.emoji}
-                  </div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{item.title}</div>
-                  <div style={{ fontSize: 11, color: '#8A84B6', marginBottom: item.progress != null ? 10 : 0 }}>{item.sub}</div>
-
-                  {/* Progress bar */}
-                  {item.progress != null && (
-                    <div style={{ height: 4, borderRadius: 4, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
-                      <div style={{
-                        height: '100%', width: `${item.progress}%`,
-                        background: item.color, borderRadius: 4,
-                        transition: 'width 0.8s ease',
-                      }} />
-                    </div>
-                  )}
-                </motion.div>
+          {/* 3 win cards */}
+          {dailyWins.length > 0 ? (
+            <div style={{ display: 'flex', gap: 12 }}>
+              {dailyWins.map((win, i) => (
+                <HomeTinyWinCard
+                  key={win.id}
+                  win={win}
+                  index={i}
+                  isCompleted={completedToday.includes(win.id)}
+                  onComplete={completeWin}
+                />
               ))}
             </div>
+          ) : (
+            <div style={{
+              ...CARD_STYLE, textAlign: 'center', padding: '28px',
+              color: '#8A84B6', fontSize: 13,
+            }}>
+              Loading your personalized Tiny Wins...
+            </div>
+          )}
 
-            {/* Right arrow */}
-            <button
-              onClick={() => scrollCarousel(1)}
-              style={{
-                position: 'absolute', right: -16, top: '50%', transform: 'translateY(-50%)',
-                zIndex: 2, width: 32, height: 32, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-              }}
-            >
-              <ChevronRight size={16} color="#E2DEFF" />
-            </button>
-          </div>
+          {/* All done message */}
+          <AnimatePresence>
+            {allDone && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                style={{
+                  marginTop: 12, padding: '10px 16px', borderRadius: 14,
+                  background: 'rgba(139,92,246,0.1)',
+                  border: '1px solid rgba(139,92,246,0.2)',
+                  textAlign: 'center', fontSize: 13, color: '#C4B5FD',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                }}
+              >
+                <span>💜</span>
+                <span>Great job! You've completed all your Tiny Wins for today.</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* ═══════════════════════════════════════════════════════════
-            SECTION 4 — LATEST SOUL STORIES
-        ═══════════════════════════════════════════════════════════ */}
-        <div style={{ margin: '0 32px 24px' }}>
-          {/* Header row */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <span style={{ ...sectionLabel, marginBottom: 0 }}>LATEST SOUL STORIES</span>
+        {/* ════════════════════════════════════════════════════════════
+            SECTION 3 — LATEST SOUL STORIES
+        ════════════════════════════════════════════════════════════ */}
+        <div style={{ margin: '0 32px 32px', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+            <span style={{ ...SECTION_LABEL, marginBottom: 0 }}>LATEST SOUL STORIES</span>
             <button
               onClick={() => navigate('/stories')}
               style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
@@ -539,70 +960,84 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Stories row */}
           <div style={{ display: 'flex', gap: 12 }}>
             {STORIES.map((story, i) => (
               <motion.div
                 key={i}
                 className="story-card"
-                whileHover={{ y: -2 }}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
                 onClick={() => navigate('/stories')}
                 style={{
-                  flex: 1, minWidth: 0, background: '#211044',
-                  borderRadius: 20, padding: '16px',
-                  border: '1px solid rgba(255,255,255,0.07)', cursor: 'pointer',
+                  flex: 1, minWidth: 0,
+                  background: 'rgba(34,18,73,0.72)',
+                  backdropFilter: 'blur(24px)',
+                  WebkitBackdropFilter: 'blur(24px)',
+                  borderRadius: 22,
+                  padding: '16px',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  cursor: 'pointer',
+                  boxShadow: '0 8px 28px rgba(0,0,0,0.35)',
+                  position: 'relative', overflow: 'hidden',
                 }}
               >
-                {/* Top row: avatar + name + time + bookmark */}
+                {/* Inner top highlight */}
+                <div style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)',
+                }} />
+
+                {/* Top row */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                   <div style={{
-                    width: 32, height: 32, borderRadius: '50%',
+                    width: 34, height: 34, borderRadius: '50%',
                     background: story.avatarColor,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0,
+                    boxShadow: `0 0 10px ${story.avatarColor}55`,
                   }}>
                     {story.avatar}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{story.name}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {story.name}
+                    </div>
                     <div style={{ fontSize: 11, color: '#8A84B6' }}>{story.time}</div>
                   </div>
-                  <Bookmark size={14} color="#8A84B6" style={{ flexShrink: 0 }} />
+                  <MoreHorizontal size={14} color="#8A84B6" />
                 </div>
 
-                {/* Preview text */}
+                {/* Preview */}
                 <p style={{
-                  fontSize: 13, color: '#B8B4D8', lineHeight: 1.6,
-                  margin: '0 0 10px',
+                  fontSize: 13, color: '#B8B4D8', lineHeight: 1.6, margin: '0 0 10px',
                   display: '-webkit-box', WebkitLineClamp: 3,
                   WebkitBoxOrient: 'vertical', overflow: 'hidden',
                 }}>
-                  "{story.preview}"
+                  {story.preview}
                 </p>
 
-                {/* Tag pill */}
+                {/* Tag */}
                 <span style={{
                   display: 'inline-block',
-                  background: `${story.color}22`,
-                  border: `1px solid ${story.color}44`,
-                  color: story.color,
+                  background: `${story.tagColor}1A`,
+                  border: `1px solid ${story.tagColor}44`,
+                  color: story.tagColor,
                   fontSize: 11, fontWeight: 600, borderRadius: 20,
                   padding: '3px 10px', marginBottom: 10,
                 }}>
                   {story.tag}
                 </span>
 
-                {/* Bottom: hearts, comments, share */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                {/* Actions */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#8A84B6' }}>
-                    <Heart size={13} /> {story.hearts}
+                    <Heart size={12} /> {story.hearts}
                   </span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#8A84B6' }}>
-                    <MessageCircle size={13} /> {story.comments}
+                    <MessageCircle size={12} /> {story.comments}
                   </span>
-                  <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', color: '#8A84B6' }}>
-                    <Share2 size={13} />
-                  </span>
+                  <Bookmark size={13} color="#8A84B6" style={{ marginLeft: 'auto' }} />
                 </div>
               </motion.div>
             ))}
@@ -615,67 +1050,58 @@ export default function Home() {
       <div className="home-right-sidebar">
 
         {/* ── Card 1: Today's Focus ── */}
-        <div style={{
-          background: '#211044', border: '1px solid rgba(255,255,255,0.07)',
-          borderRadius: 20, padding: 20, marginBottom: 16,
-        }}>
-          <div style={sectionLabel}>TODAY'S FOCUS ⓘ</div>
+        <div className="sidebar-card-inner" style={{ ...CARD_STYLE }}>
+          <div style={SECTION_LABEL}>TODAY'S FOCUS ⓘ</div>
 
-          {/* Title row */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>Calm Your Mind</span>
-            <span style={{ fontSize: 36, lineHeight: 1 }}>🍃</span>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
+            <span style={{ fontSize: 15, fontWeight: 700, color: '#fff', flex: 1 }}>Calm Your Mind</span>
+            <span style={{ fontSize: 30, lineHeight: 1 }}>🍃</span>
           </div>
 
-          <p style={{ fontSize: 12, color: '#8A84B6', margin: '0 0 12px', lineHeight: 1.6 }}>
+          <p style={{ fontSize: 12, color: 'rgba(184,180,216,0.65)', margin: '0 0 12px', lineHeight: 1.6 }}>
             A 7-minute breathing exercise to help you relax and reset.
           </p>
 
-          {/* Pills */}
-          <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+          <div style={{ display: 'flex', gap: 7, marginBottom: 14 }}>
             {['⏱ 7 min', '🟢 Easy'].map(pill => (
               <span key={pill} style={{
-                background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 20, padding: '4px 12px', fontSize: 11, color: '#B8B4D8',
+                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)',
+                borderRadius: 20, padding: '3px 10px', fontSize: 11, color: '#B8B4D8',
               }}>
                 {pill}
               </span>
             ))}
           </div>
 
-          {/* Start Now button */}
-          <button
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             onClick={() => setShowBreathing(true)}
             style={{
-              ...purpleGradBtn,
-              width: '100%', padding: '11px', fontSize: 14, borderRadius: 12,
+              ...PURPLE_BTN,
+              width: '100%', padding: '10px', fontSize: 13, borderRadius: 13,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             }}
           >
             {breathingDone ? '✓ Completed' : '▶ Start Now'}
-          </button>
+          </motion.button>
         </div>
 
         {/* ── Card 2: Upcoming Session ── */}
-        <div style={{
-          background: '#211044', border: '1px solid rgba(255,255,255,0.07)',
-          borderRadius: 20, padding: 20, marginBottom: 16,
-        }}>
-          <div style={sectionLabel}>UPCOMING SESSION</div>
+        <div className="sidebar-card-inner" style={{ ...CARD_STYLE }}>
+          <div style={SECTION_LABEL}>UPCOMING SESSION</div>
 
-          {/* Content row */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Online Therapy</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Online Therapy</div>
               <div style={{ fontSize: 12, color: '#8A84B6', marginBottom: 6 }}>with Dr. Meera Sharma</div>
               <div style={{ fontSize: 12, color: '#B8B4D8' }}>📅 Tomorrow, 11:00 AM</div>
             </div>
-            {/* Doctor avatar */}
             <div style={{
-              width: 48, height: 48, borderRadius: '50%', flexShrink: 0,
+              width: 46, height: 46, borderRadius: '50%', flexShrink: 0,
               background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 22, fontWeight: 700, color: '#fff',
+              fontSize: 20, fontWeight: 700, color: '#fff',
+              boxShadow: '0 0 16px rgba(124,58,237,0.4)',
             }}>
               M
             </div>
@@ -683,43 +1109,43 @@ export default function Home() {
 
           <button
             onClick={() => navigate('/professionals')}
-            style={{ ...glassBtn, width: '100%', padding: '9px', textAlign: 'center', marginTop: 12 }}
+            style={{ ...GLASS_BTN, width: '100%', padding: '9px', textAlign: 'center', marginTop: 10, borderRadius: 13 }}
           >
             View Session
           </button>
         </div>
 
         {/* ── Card 3: Healing Tree ── */}
-        <div style={{
-          background: '#211044', border: '1px solid rgba(255,255,255,0.07)',
-          borderRadius: 20, padding: 20, marginBottom: 0,
-        }}>
-          {/* Header row */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 0 }}>
-            <span style={{ ...sectionLabel, marginBottom: 0 }}>HEALING TREE</span>
+        <div className="sidebar-card-inner" style={{ ...CARD_STYLE }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+            <span style={{ ...SECTION_LABEL, marginBottom: 0 }}>HEALING TREE</span>
             <span style={{
-              background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.4)',
+              background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.35)',
               color: '#C4B5FD', fontSize: 10, fontWeight: 700,
               borderRadius: 20, padding: '3px 10px',
             }}>
-              Level 3
+              {totalWins} wins
             </span>
           </div>
 
-          {/* Tree SVG */}
-          <HealingTree />
+          <div className="healing-float">
+            <HealingTreePremium totalWins={totalWins} />
+          </div>
 
-          <p style={{ fontSize: 13, color: '#B8B4D8', textAlign: 'center', margin: '0 0 12px' }}>
+          <p style={{ fontSize: 12, color: 'rgba(184,180,216,0.65)', textAlign: 'center', margin: '0 0 12px' }}>
             Keep nurturing your growth.
           </p>
 
           <button
             onClick={() => navigate('/profile')}
-            style={{ ...glassBtn, width: '100%', padding: '9px', textAlign: 'center' }}
+            style={{ ...GLASS_BTN, width: '100%', padding: '9px', textAlign: 'center', borderRadius: 13 }}
           >
             View Tree
           </button>
         </div>
+
+        {/* ── Card 4: This Week Stats ── */}
+        <WeeklyStatsCard weeklyStats={weeklyStats} />
 
       </div>{/* end .home-right-sidebar */}
     </>

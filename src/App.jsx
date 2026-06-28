@@ -32,6 +32,7 @@ const Privacy       = lazy(() => import('./pages/Privacy'));
 const Dashboard     = lazy(() => import('./pages/Dashboard'));    // /chat
 const Chat          = lazy(() => import('./pages/Chat'));          // /chat/:id
 const GroupChat     = lazy(() => import('./pages/GroupChat'));     // /groups
+const TinyWins      = lazy(() => import('./pages/TinyWins'));     // /tiny-wins
 
 // Dashboard pages (inside DashboardLayout)
 const Home          = lazy(() => import('./pages/Home'));
@@ -61,7 +62,7 @@ const LAUNCH_READY = import.meta.env.VITE_LAUNCH_READY === 'true';
 // Routes that use DashboardLayout
 const DASHBOARD_PATHS = [
   '/home', '/stories', '/community', '/messages', '/journal',
-  '/meditate', '/professionals', '/profile',
+  '/meditate', '/professionals', '/profile', '/tiny-wins',
   // legacy aliases still routed through layout
   '/dashboard', '/healers', '/meetups', '/premium',
   '/account', '/onboarding', '/journey',
@@ -170,6 +171,7 @@ function AppInner() {
                 <Route path="/meditate"      element={<Suspense fallback={<PageLoader />}><Meditate /></Suspense>} />
                 <Route path="/professionals" element={<Suspense fallback={<PageLoader />}><Professionals /></Suspense>} />
                 <Route path="/profile"       element={<Suspense fallback={<PageLoader />}><Profile /></Suspense>} />
+                <Route path="/tiny-wins"    element={<Suspense fallback={<PageLoader />}><TinyWins /></Suspense>} />
 
                 {/* Legacy pages inside layout */}
                 <Route path="/healers"       element={<Suspense fallback={<PageLoader />}><Healers /></Suspense>} />
