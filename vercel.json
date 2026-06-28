@@ -1,4 +1,9 @@
 {
+  "redirects": [
+    { "source": "/login", "destination": "/maintenance", "permanent": false },
+    { "source": "/signup", "destination": "/maintenance", "permanent": false },
+    { "source": "/register", "destination": "/maintenance", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/((?!assets|favicon|logo|og-image|manifest|robots|sitemap|brand|.*\\.[a-z]+$).*)", "destination": "/index.html" }
   ],
