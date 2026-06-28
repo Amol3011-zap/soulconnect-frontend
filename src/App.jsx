@@ -1,48 +1,92 @@
-import React, { useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'motion/react';
 import { useAuthStore } from './store/auth';
 import { useThemeStore } from './store/theme';
+import { useWeatherStore } from './store/weather';
+import EmotionWeatherModal from './components/emotional-weather/EmotionWeatherModal';
+import DashboardLayout from './components/DashboardLayout';
 
+// ── Eager imports (critical path) ────────────────────────────────────────────
 import Landing from './pages/Landing';
-import Signup from './pages/Signup';
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Matches from './pages/Matches';
-import ForgotPassword from './pages/ForgotPassword';
-import TermsPrivacy from './pages/TermsPrivacy';
-import Chat from './pages/Chat';
-import Healers from './pages/Healers';
-import Meetups from './pages/Meetups';
-import Premium from './pages/Premium';
-import Account from './pages/Account';
-import MoodTracker from './pages/MoodTracker';
 import HealerDashboard from './pages/HealerDashboard';
-import GroupChat from './pages/GroupChat';
-import Onboarding from './pages/Onboarding';
-import SoulJourney from './pages/SoulJourney';
-import SafetyPolicy from './pages/SafetyPolicy';
-import GuideTerms from './pages/GuideTerms';
-import CommunityRules from './pages/CommunityRules';
-import ReportConcern from './pages/ReportConcern';
 import SafetyOnboarding, { useNeedsOnboarding } from './pages/SafetyOnboarding';
-import About from './pages/About';
-import CookiePolicy from './pages/CookiePolicy';
-import Accessibility from './pages/Accessibility';
-import Contact from './pages/Contact';
-import Privacy from './pages/Privacy';
+
+// ── Lazy imports ──────────────────────────────────────────────────────────────
+const Signup        = lazy(() => import('./pages/Signup'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const TermsPrivacy  = lazy(() => import('./pages/TermsPrivacy'));
+const SafetyPolicy  = lazy(() => import('./pages/SafetyPolicy'));
+const GuideTerms    = lazy(() => import('./pages/GuideTerms'));
+const CommunityRules = lazy(() => import('./pages/CommunityRules'));
+const ReportConcern = lazy(() => import('./pages/ReportConcern'));
+const About         = lazy(() => import('./pages/About'));
+const CookiePolicy  = lazy(() => import('./pages/CookiePolicy'));
+const Accessibility = lazy(() => import('./pages/Accessibility'));
+const Contact       = lazy(() => import('./pages/Contact'));
+const Privacy       = lazy(() => import('./pages/Privacy'));
+
+// Full-screen experiences (no sidebar)
+const Dashboard     = lazy(() => import('./pages/Dashboard'));    // /chat
+const Chat          = lazy(() => import('./pages/Chat'));          // /chat/:id
+const GroupChat     = lazy(() => import('./pages/GroupChat'));     // /groups
+
+// Dashboard pages (inside DashboardLayout)
+const Home          = lazy(() => import('./pages/Home'));
+const Stories       = lazy(() => import('./pages/Stories'));
+const Community     = lazy(() => import('./pages/Community'));
+const Messages      = lazy(() => import('./pages/Messages'));
+const Journal       = lazy(() => import('./pages/MoodTracker'));
+const Meditate      = lazy(() => import('./pages/Meditations'));
+const Professionals = lazy(() => import('./pages/Professionals'));
+const Profile       = lazy(() => import('./pages/Profile'));
+
+// Legacy pages kept for backward compat
+const Healers       = lazy(() => import('./pages/Healers'));
+const Meetups       = lazy(() => import('./pages/Meetups'));
+const Premium       = lazy(() => import('./pages/Premium'));
+const Account       = lazy(() => import('./pages/Account'));
+const Onboarding    = lazy(() => import('./pages/Onboarding'));
+const SoulJourney   = lazy(() => import('./pages/SoulJourney'));
+const Matches       = lazy(() => import('./pages/Matches'));
 
 import Navbar from './components/Navbar';
-import SafetyFloatButton from './components/SafetyFloatButton';
+import MobileBottomNav from './components/MobileBottomNav';
 
-// Pages where the SafetyFloatButton is redundant (already have full crisis UI)
 const HIDE_FLOAT_PATHS = ['/safety', '/report', '/community-rules', '/guide-terms'];
+const LAUNCH_READY = import.meta.env.VITE_LAUNCH_READY === 'true';
 
-// ─── LAUNCH GATE ──────────────────────────────────────────────────────────────
-// Set to TRUE when you're ready to open the app to users.
-// While FALSE, ALL post-login routes redirect back to the landing page.
-const LAUNCH_READY = false;
-// ──────────────────────────────────────────────────────────────────────────────
+// Routes that use DashboardLayout
+const DASHBOARD_PATHS = [
+  '/home', '/stories', '/community', '/messages', '/journal',
+  '/meditate', '/professionals', '/profile',
+  // legacy aliases still routed through layout
+  '/dashboard', '/healers', '/meetups', '/premium',
+  '/account', '/onboarding', '/journey',
+  // old routes now redirected
+  '/mood', '/matches', '/circles', '/meditations', '/challenges', '/resources',
+];
+
+function PageLoader() {
+  return (
+    <div style={{
+      minHeight: '100vh', background: '#0D0B1A',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: '50%',
+        border: '2px solid rgba(139,92,246,0.2)',
+        borderTopColor: '#8B5CF6',
+        animation: 'spin 0.7s linear infinite',
+      }} />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+}
+
+const S = (C) => <Suspense fallback={<PageLoader />}><C /></Suspense>;
 
 function AppInner() {
   const { token, user, role } = useAuthStore();
@@ -50,89 +94,112 @@ function AppInner() {
   const isHealer = role === 'healer' || user?.role === 'healer';
   const needsOnboarding = useNeedsOnboarding();
   const [onboardingDone, setOnboardingDone] = useState(!needsOnboarding);
+  const { showModal, checkTodayAndInit } = useWeatherStore();
 
-  // Pages that manage their own header/nav
-  const hideNav = location.pathname === '/chat' || location.pathname === '/groups' || location.pathname === '/' || location.pathname === '/mood' || isHealer;
+  const userId = user?.id || user?.user_id;
+  useEffect(() => {
+    if (token && userId) checkTodayAndInit(userId);
+  }, [token, userId]);
 
-  // Hide float button on safety pages (they have their own UI) and landing
-  const hideFloat = HIDE_FLOAT_PATHS.includes(location.pathname) || location.pathname === '/';
+  const isDashboard = DASHBOARD_PATHS.some(p => location.pathname === p || location.pathname.startsWith(p + '/'));
+  const isFullScreen = location.pathname === '/chat' || location.pathname.startsWith('/chat/') || location.pathname === '/groups';
 
-  // Trust & safety routes accessible to everyone (logged-in or not)
+  const hideNav = location.pathname === '/' || isDashboard || isFullScreen || isHealer;
+  const hideBottomNav = location.pathname === '/' || isFullScreen || isDashboard || !LAUNCH_READY || isHealer;
+
+  const showOnboarding = false;
+
   const safetyRoutes = (
     <>
-      <Route path="/safety" element={<SafetyPolicy />} />
-      <Route path="/guide-terms" element={<GuideTerms />} />
-      <Route path="/community-rules" element={<CommunityRules />} />
-      <Route path="/report" element={<ReportConcern />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/cookies" element={<CookiePolicy />} />
-      <Route path="/accessibility" element={<Accessibility />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/safety"          element={<Suspense fallback={<PageLoader />}><SafetyPolicy /></Suspense>} />
+      <Route path="/guide-terms"     element={<Suspense fallback={<PageLoader />}><GuideTerms /></Suspense>} />
+      <Route path="/community-rules" element={<Suspense fallback={<PageLoader />}><CommunityRules /></Suspense>} />
+      <Route path="/report"          element={<Suspense fallback={<PageLoader />}><ReportConcern /></Suspense>} />
+      <Route path="/about"           element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
+      <Route path="/cookies"         element={<Suspense fallback={<PageLoader />}><CookiePolicy /></Suspense>} />
+      <Route path="/accessibility"   element={<Suspense fallback={<PageLoader />}><Accessibility /></Suspense>} />
+      <Route path="/contact"         element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
+      <Route path="/privacy"         element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
     </>
   );
 
-  // Show safety onboarding for ALL first-time visitors (logged-in or not),
-  // except healers and safety pages (which already have full crisis UI)
-  const isSafetyPage = HIDE_FLOAT_PATHS.includes(location.pathname);
-  const showOnboarding = false; // disabled pre-launch
-
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
-      {/* Safety onboarding gate — overlays everything for users who haven't acknowledged */}
-      {showOnboarding && (
-        <SafetyOnboarding onComplete={() => setOnboardingDone(true)} />
-      )}
+      {showOnboarding && <SafetyOnboarding onComplete={() => setOnboardingDone(true)} />}
 
       {token && !hideNav && LAUNCH_READY && <Navbar />}
 
-      {/* Top nav spacer — pushes content down on desktop when top navbar is visible */}
+      <AnimatePresence>
+        {token && LAUNCH_READY && showModal && <EmotionWeatherModal />}
+      </AnimatePresence>
+
       <div style={{ paddingTop: token && !hideNav && LAUNCH_READY ? 80 : 0 }}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          {safetyRoutes}
 
-      <Routes>
-        <Route path="/" element={<Landing />} />
+          {!token || !LAUNCH_READY ? (
+            <>
+              <Route path="/signup"          element={<Suspense fallback={<PageLoader />}><Signup /></Suspense>} />
+              <Route path="/login"           element={<Login />} />
+              <Route path="/forgot-password" element={<Suspense fallback={<PageLoader />}><ForgotPassword /></Suspense>} />
+              <Route path="/terms"           element={<Suspense fallback={<PageLoader />}><TermsPrivacy /></Suspense>} />
+              <Route path="*"                element={<Navigate to="/" replace />} />
+            </>
+          ) : isHealer ? (
+            <>
+              <Route path="/healer-dashboard" element={<HealerDashboard />} />
+              <Route path="*" element={<Navigate to="/healer-dashboard" replace />} />
+            </>
+          ) : (
+            <>
+              {/* Full-screen (no sidebar) */}
+              <Route path="/chat"          element={<Suspense fallback={<PageLoader />}><Dashboard /></Suspense>} />
+              <Route path="/chat/:matchId" element={<Suspense fallback={<PageLoader />}><Chat /></Suspense>} />
+              <Route path="/groups"        element={<Suspense fallback={<PageLoader />}><GroupChat /></Suspense>} />
+              <Route path="/terms"         element={<Suspense fallback={<PageLoader />}><TermsPrivacy /></Suspense>} />
 
-        {/* Trust & Safety — always accessible */}
-        {safetyRoutes}
+              {/* Dashboard routes — all inside persistent sidebar layout */}
+              <Route element={<DashboardLayout />}>
+                {/* Primary nav */}
+                <Route path="/home"          element={<Suspense fallback={<PageLoader />}><Home /></Suspense>} />
+                <Route path="/stories"       element={<Suspense fallback={<PageLoader />}><Stories /></Suspense>} />
+                <Route path="/community"     element={<Suspense fallback={<PageLoader />}><Community /></Suspense>} />
+                <Route path="/messages"      element={<Suspense fallback={<PageLoader />}><Messages /></Suspense>} />
+                <Route path="/journal"       element={<Suspense fallback={<PageLoader />}><Journal /></Suspense>} />
+                <Route path="/meditate"      element={<Suspense fallback={<PageLoader />}><Meditate /></Suspense>} />
+                <Route path="/professionals" element={<Suspense fallback={<PageLoader />}><Professionals /></Suspense>} />
+                <Route path="/profile"       element={<Suspense fallback={<PageLoader />}><Profile /></Suspense>} />
 
-        {!token || !LAUNCH_READY ? (
-          <>
-            {/* Signup disabled pre-launch */}
-            <Route path="/signup" element={<Navigate to="/" replace />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/terms" element={<TermsPrivacy />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </>
-        ) : isHealer ? (
-          <>
-            {/* Healers only see their request dashboard */}
-            <Route path="/healer-dashboard" element={<HealerDashboard />} />
-            <Route path="*" element={<Navigate to="/healer-dashboard" replace />} />
-          </>
-        ) : (
-          <>
-            {/* Regular user routes */}
-            <Route path="/terms" element={<TermsPrivacy />} />
-            <Route path="/dashboard" element={<Matches />} />
-            <Route path="/chat" element={<Dashboard />} />
-            <Route path="/matches" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/groups" element={<GroupChat />} />
-            <Route path="/chat/:matchId" element={<Chat />} />
-            <Route path="/healers" element={<Healers />} />
-            <Route path="/meetups" element={<Meetups />} />
-            <Route path="/premium" element={<Premium />} />
-            <Route path="/mood" element={<MoodTracker />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/journey" element={<SoulJourney />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </>
-        )}
-      </Routes>
+                {/* Legacy pages inside layout */}
+                <Route path="/healers"       element={<Suspense fallback={<PageLoader />}><Healers /></Suspense>} />
+                <Route path="/meetups"       element={<Suspense fallback={<PageLoader />}><Meetups /></Suspense>} />
+                <Route path="/premium"       element={<Suspense fallback={<PageLoader />}><Premium /></Suspense>} />
+                <Route path="/onboarding"    element={<Suspense fallback={<PageLoader />}><Onboarding /></Suspense>} />
+                <Route path="/journey"       element={<Suspense fallback={<PageLoader />}><SoulJourney /></Suspense>} />
+                <Route path="/dashboard"     element={<Suspense fallback={<PageLoader />}><Matches /></Suspense>} />
+
+                {/* Redirects from old routes */}
+                <Route path="/mood"          element={<Navigate to="/journal"       replace />} />
+                <Route path="/account"       element={<Navigate to="/profile"       replace />} />
+                <Route path="/matches"       element={<Navigate to="/home"          replace />} />
+                <Route path="/circles"       element={<Navigate to="/community"     replace />} />
+                <Route path="/meditations"   element={<Navigate to="/meditate"      replace />} />
+                <Route path="/challenges"    element={<Navigate to="/home"          replace />} />
+                <Route path="/resources"     element={<Navigate to="/home"          replace />} />
+              </Route>
+
+              <Route path="*" element={<Navigate to="/home" replace />} />
+            </>
+          )}
+        </Routes>
       </div>
 
-      {/* SafetyFloatButton disabled pre-launch */}
+      {token && !hideBottomNav && (
+        <div className="sc-bottom-nav">
+          <MobileBottomNav />
+        </div>
+      )}
     </div>
   );
 }
@@ -141,7 +208,6 @@ function App() {
   const { init } = useThemeStore();
   useEffect(() => {
     init();
-    // Remove the HTML app shell now that React has mounted
     const shell = document.getElementById('app-shell');
     if (shell) {
       shell.style.opacity = '0';
