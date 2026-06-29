@@ -15,6 +15,8 @@ import {
 import AICompanionCard from '../components/AICompanionCard';
 import AIInsightCard from '../components/AIInsightCard';
 import FloatingCompanion from '../components/FloatingCompanion';
+import TodaysReflectionModal from '../components/TodaysReflectionModal';
+import { useReflections } from '../hooks/useReflections';
 
 const CATEGORY_ICONS = {
   'Movement':          Activity,
@@ -652,6 +654,16 @@ export default function Home() {
   const [breathingDone, setBreathingDone] = useState(false);
   const [selectedWeather, setSelectedWeather] = useState(todayEntry?.weather || null);
 
+  // Today's Reflection modal
+  const [reflectionModalOpen, setReflectionModalOpen] = useState(false);
+  const [reflectionSavedToast, setReflectionSavedToast] = useState(false);
+  const { todayReflection, saveReflection, isExisting } = useReflections();
+
+  function handleReflectionSaved() {
+    setReflectionSavedToast(true);
+    setTimeout(() => setReflectionSavedToast(false), 4000);
+  }
+
   // Initialize Tiny Wins for today
   useEffect(() => {
     const weatherId = todayEntry?.weather || 'clear-sky';
@@ -744,12 +756,36 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* ── Reflection toast ── */}
+      {/* ── Tiny Wins reflection toast ── */}
       <AnimatePresence>
         {showReflection && (
           <ReflectionToast key="reflection" text={reflectionText} onDismiss={dismissReflection} />
         )}
       </AnimatePresence>
+
+      {/* ── Reflection saved success toast ── */}
+      <AnimatePresence>
+        {reflectionSavedToast && (
+          <ReflectionToast
+            key="refl-saved"
+            text="Reflection saved successfully. Keep showing up for yourself. 💜"
+            onDismiss={() => setReflectionSavedToast(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Today's Reflection modal ── */}
+      <TodaysReflectionModal
+        isOpen={reflectionModalOpen}
+        onClose={() => setReflectionModalOpen(false)}
+        onSaved={handleReflectionSaved}
+        saveReflection={saveReflection}
+        initialValue={todayReflection}
+        isExisting={isExisting}
+        userName={firstName}
+        winsToday={completedToday.length}
+        hasCheckedIn={Boolean(todayEntry)}
+      />
 
       {/* ════════════════════ MAIN CONTENT ════════════════════ */}
       <div className="home-main">
@@ -912,7 +948,7 @@ export default function Home() {
             firstName={firstName}
             greeting={greeting}
             checkedInDays={todayEntry ? 4 : 0}
-            onReflection={() => navigate('/stories')}
+            onReflection={() => setReflectionModalOpen(true)}
             onCheckIn={handleCheckIn}
           />
         </div>
@@ -1211,7 +1247,7 @@ export default function Home() {
 
       {/* ════════════════════ FLOATING COMPANION ════════════════════ */}
       <FloatingCompanion
-        onReflection={() => navigate('/stories')}
+        onReflection={() => setReflectionModalOpen(true)}
         onBreathing={() => setShowBreathing(true)}
         onEmotionalWeather={handleCheckIn}
         onSupport={() => navigate('/professionals')}
