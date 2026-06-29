@@ -1051,10 +1051,10 @@ export default function Dashboard() {
         ══════════════════════════════════════════ */}
         <aside className="dc-right-panel" style={{
           background: '#110C22',
-          height: '100vh', overflowY: 'auto',
-          padding: '20px 16px',
+          height: '100vh', overflow: 'hidden',
+          padding: '14px 12px',
           borderLeft: '1px solid rgba(139,92,246,0.08)',
-          scrollbarWidth: 'none',
+          display: 'flex', flexDirection: 'column', gap: 10,
         }}>
 
           {/* ── Card 1: Today's Reflection ── */}
@@ -1063,13 +1063,14 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.05 }}
             style={{
+              flex: '1 1 0', minHeight: 0, overflow: 'hidden',
               background: 'linear-gradient(145deg, #1A1033, #200E45)',
               border: '1px solid rgba(139,92,246,0.2)',
-              borderRadius: 22,
-              padding: '20px',
-              marginBottom: 14,
-              position: 'relative', overflow: 'hidden',
+              borderRadius: 18,
+              padding: '14px 16px',
+              position: 'relative',
               boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
             }}
           >
             {/* Top accent */}
@@ -1087,28 +1088,28 @@ export default function Dashboard() {
               filter: 'blur(16px)', pointerEvents: 'none',
             }} />
 
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#F4C542', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: '#F4C542', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>
               ✨ Today's Reflection
             </div>
 
             {/* Quote mark */}
-            <div style={{ fontSize: 28, color: 'rgba(139,92,246,0.4)', lineHeight: 1, marginBottom: 8, fontFamily: 'Georgia, serif' }}>❝</div>
+            <div style={{ fontSize: 22, color: 'rgba(139,92,246,0.4)', lineHeight: 1, marginBottom: 4, fontFamily: 'Georgia, serif' }}>❝</div>
 
             {/* Reflection lines */}
-            <div style={{ marginBottom: 18 }}>
+            <div style={{ flex: 1 }}>
               {todayReflection.lines.map((line, i) => (
                 <p key={i} style={{
                   margin: '0 0 2px',
-                  fontSize: i === 0 ? 17 : 15,
+                  fontSize: i === 0 ? 15 : 13,
                   fontWeight: i === 0 ? 700 : 400,
                   color: i === 0 ? '#E2DEFF' : 'rgba(196,181,253,0.75)',
-                  lineHeight: 1.5,
+                  lineHeight: 1.45,
                   fontStyle: i > 0 ? 'italic' : 'normal',
                 }}>{line}</p>
               ))}
             </div>
 
-            <div style={{ fontSize: 20 }}>💜</div>
+            <div style={{ fontSize: 18, marginTop: 8 }}>💜</div>
           </motion.div>
 
           {/* ── Card 2: Calm Sounds on Spotify ── */}
@@ -1117,24 +1118,25 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
             style={{
+              flex: '1 1 0', minHeight: 0, overflow: 'hidden',
               background: '#1A1033',
               border: '1px solid rgba(139,92,246,0.15)',
-              borderRadius: 22,
-              padding: '18px',
-              marginBottom: 14,
+              borderRadius: 18,
+              padding: '14px',
               boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+              display: 'flex', flexDirection: 'column',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <div style={{
-                  width: 28, height: 28, borderRadius: '50%',
+                  width: 24, height: 24, borderRadius: '50%',
                   background: '#1DB954',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 14,
+                  fontSize: 12,
                 }}>🎵</div>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#E2DEFF' }}>Calm Sounds on Spotify</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#E2DEFF' }}>Calm Sounds on Spotify</div>
                 </div>
               </div>
               <a
@@ -1150,42 +1152,38 @@ export default function Dashboard() {
               </a>
             </div>
 
-            <p style={{ fontSize: 11, color: 'rgba(139,116,230,0.55)', margin: '0 0 12px' }}>
-              Handpicked playlists to help you relax and breathe.
-            </p>
-
             {/* Playlist grid 2x2 */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 7, flex: 1, minHeight: 0 }}>
               {SPOTIFY_PLAYLISTS.map(pl => (
                 <a
                   key={pl.title}
                   href={pl.url}
                   target="_blank"
                   rel="noreferrer"
-                  style={{ textDecoration: 'none' }}
+                  style={{ textDecoration: 'none', minHeight: 0 }}
                 >
                   <motion.div
                     whileHover={{ scale: 1.03, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     style={{
                       background: pl.gradient,
-                      borderRadius: 14,
-                      padding: '14px 12px',
+                      borderRadius: 12,
+                      padding: '10px 10px',
                       position: 'relative', overflow: 'hidden',
-                      cursor: 'pointer', minHeight: 72,
+                      cursor: 'pointer', height: '100%',
                       display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
                       boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
                     }}
                   >
                     {/* Play button */}
                     <div style={{
-                      position: 'absolute', top: 10, right: 10,
-                      width: 26, height: 26, borderRadius: '50%',
+                      position: 'absolute', top: 8, right: 8,
+                      width: 22, height: 22, borderRadius: '50%',
                       background: '#1DB954',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 10,
+                      fontSize: 9,
                     }}>▶</div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>
                       {pl.title}
                     </div>
                   </motion.div>
@@ -1200,15 +1198,16 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 }}
             style={{
+              flexShrink: 0,
               background: '#1A1033',
               border: '1px solid rgba(139,92,246,0.15)',
-              borderRadius: 22,
-              padding: '18px',
+              borderRadius: 18,
+              padding: '14px',
               boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#E2DEFF' }}>Recommended Story</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#E2DEFF' }}>Recommended Story</div>
               <button
                 onClick={() => navigate('/stories')}
                 style={{
@@ -1219,13 +1218,13 @@ export default function Dashboard() {
               >View all</button>
             </div>
 
-            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
               {/* Story image */}
               <div style={{
-                width: 72, height: 72, borderRadius: 14, flexShrink: 0,
+                width: 56, height: 56, borderRadius: 12, flexShrink: 0,
                 background: 'linear-gradient(135deg,#1A0A3E,#4C1D95)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 28, overflow: 'hidden',
+                fontSize: 24, overflow: 'hidden',
                 boxShadow: '0 4px 14px rgba(0,0,0,0.4)',
               }}>🌅</div>
 
