@@ -183,7 +183,7 @@ export default function DashboardLayout() {
         {/* Logo */}
         <div className="dash-logo" onClick={() => navigate('/home')}>
           <img
-            src="/logo-icon.svg"
+            src="/logo-icon.png"
             alt="SoulConnect"
             style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: 'block' }}
           />

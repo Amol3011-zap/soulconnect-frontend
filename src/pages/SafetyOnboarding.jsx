@@ -491,7 +491,7 @@ export default function SafetyOnboarding({ onComplete }) {
       <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:480, padding:'24px 20px', maxHeight:'100vh', overflowY:'auto' }}>
         {/* Logo */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, marginBottom:20 }}>
-          <img src="/logo-icon.svg" alt="SoulConnect" style={{ width:34, height:34, borderRadius:10, boxShadow:'0 4px 14px rgba(109,74,255,0.35)', display:'block' }} />
+          <img src="/logo-icon.png" alt="SoulConnect" style={{ width:34, height:34, borderRadius:10, boxShadow:'0 4px 14px rgba(109,74,255,0.35)', display:'block' }} />
           <span style={{ fontSize:16, fontWeight:800, color:'#1e1b4b' }}>Soul<span style={{ color:'#6D4AFF' }}>Connect</span></span>
         </div>
 

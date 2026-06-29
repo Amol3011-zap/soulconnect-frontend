@@ -98,7 +98,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginRight: 44, flexShrink: 0 }}>
             <img
-              src="/logo-icon.svg"
+              src="/logo-icon.png"
               alt="SoulConnect"
               style={{ width: 40, height: 40, borderRadius: 12, flexShrink: 0, display: 'block', boxShadow: '0 4px 16px rgba(109,74,255,0.35)' }}
             />
