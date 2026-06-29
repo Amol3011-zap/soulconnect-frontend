@@ -1,14 +1,19 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {
+  useState, useEffect, useRef, useCallback, useMemo,
+} from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import {
   PenLine, Bookmark, Share2, MessageCircle, RefreshCw,
-  ChevronRight, Clock, Users, ChevronDown, AlertTriangle,
-  Tag, Smile, ArrowUpRight, Sparkles,
+  ChevronRight, Clock, ChevronDown, AlertTriangle,
+  Tag, Smile, ArrowUpRight, Sparkles, Search, MoreHorizontal,
+  Users, Send, X, Eye, EyeOff, Trash2, Flag,
 } from 'lucide-react';
 import { useAuthStore } from '../store/auth';
+import { useStoriesStore } from '../store/stories';
+import { STORIES_DB, REPLIES_DB } from '../data/storiesDB';
 
-/* ─── Design tokens ────────────────────────────────────────────────────────── */
+/* ─── Design tokens ──────────────────────────────────────────────────────────── */
 const BG       = '#080812';
 const CARD     = 'rgba(34,18,73,0.72)';
 const BORDER   = 'rgba(255,255,255,0.08)';
@@ -23,7 +28,7 @@ const GLASS_BTN = {
   cursor: 'pointer', fontFamily: 'Inter, sans-serif',
 };
 
-/* ─── Static data ───────────────────────────────────────────────────────────── */
+/* ─── Static data ────────────────────────────────────────────────────────────── */
 const PROMPTS = [
   'What do you wish someone understood about today?',
   "What's one small victory you're proud of?",
@@ -31,12 +36,31 @@ const PROMPTS = [
   'What are you feeling right now?',
   "What's something you wish you could say out loud?",
   'What would you tell your past self?',
+  'What does healing look like for you today?',
+  'When did you last feel truly at peace?',
+  'What is one thing you forgive yourself for?',
+  'What emotion have you been afraid to name?',
+  'What support did you wish you had gotten earlier?',
+  'What has your hardest chapter taught you?',
+  'What would you say to someone going through what you survived?',
+  'When did you last feel proud of yourself?',
+  'What does a good day look like for you now?',
+  'What boundary changed your life?',
+  'What does rest mean to you?',
+  'Which relationship has taught you the most?',
+  'What do you know now that your younger self needed to hear?',
+  'How has struggle made you more compassionate?',
+  'What small act of kindness do you still remember?',
+  'What do you wish mental health conversations talked about more?',
+  'When did you first realise you were going to be okay?',
+  'What gives you strength on the hardest days?',
+  'What would your future self thank you for today?',
 ];
 
 const VISIBILITY_OPTIONS = ['Anonymous', 'Public', 'Community Only'];
-const CATEGORIES = ['Growth', 'Anxiety', 'Grief', 'Burnout', 'Relationships', 'Gratitude', 'Motivation', 'Overthinking'];
-const MOODS = ['Hopeful', 'Overwhelmed', 'Grateful', 'Sad', 'Peaceful', 'Confused', 'Proud'];
-const TRIGGER_WARNINGS = ['None', 'Mental Health', 'Loss', 'Trauma', 'Relationship'];
+const CATEGORIES = ['Growth', 'Anxiety', 'Grief', 'Burnout', 'Relationships', 'Gratitude', 'Motivation', 'Overthinking', 'Depression', 'Meditation', 'Self Care'];
+const MOODS = ['Hopeful', 'Overwhelmed', 'Grateful', 'Sad', 'Peaceful', 'Confused', 'Proud', 'Angry', 'Numb', 'Relieved'];
+const TRIGGER_WARNINGS = ['None', 'Mental Health', 'Loss', 'Trauma', 'Relationship', 'Substance Use', 'Self-Harm'];
 
 const TRENDING = [
   { topic: 'Burnout',       count: '1.2K', emoji: '🔥', color: '#F97316' },
@@ -59,58 +83,28 @@ const FILTER_TABS = [
   { label: 'Latest',        emoji: '👀' },
 ];
 
-const STORIES = [
-  {
-    id: 1, name: 'Anonymous Soul', isAnon: true,
-    time: '2h ago', readTime: '2 min read',
-    category: 'Anxiety', categoryColor: '#3B82F6',
-    mood: 'Overwhelmed', moodEmoji: '😔',
-    preview: "Today I finally said no without feeling guilty. For years I've been saying yes to everything and everyone, putting myself last. Today something shifted inside me and I realised my peace matters too.",
-    understand: 128, support: 54, replies: 32, saved: false,
-  },
-  {
-    id: 2, name: 'Riya M.', isAnon: false, avatarColors: ['#7C3AED', '#A855F7'],
-    time: '5h ago', readTime: '3 min read',
-    category: 'Overthinking', categoryColor: '#8B5CF6',
-    mood: 'Hopeful', moodEmoji: '🌤',
-    preview: "After weeks of overthinking, I chose to let it go. It wasn't easy — my mind kept pulling me back. But I realized that not every thought deserves my full attention or my energy.",
-    understand: 96, support: 43, replies: 18, saved: true,
-  },
-  {
-    id: 3, name: 'Arjun K.', isAnon: false, avatarColors: ['#D97706', '#F59E0B'],
-    time: '9h ago', readTime: '2 min read',
-    category: 'Motivation', categoryColor: '#F59E0B',
-    mood: 'Proud', moodEmoji: '😊',
-    preview: "Small steps every day really do change everything. Six months ago I couldn't get out of bed. Today I went for a walk and it felt like flying. Recovery is not linear but it is real.",
-    understand: 112, support: 67, replies: 24, saved: false,
-  },
-  {
-    id: 4, name: 'Priya S.', isAnon: false, avatarColors: ['#EC4899', '#F472B6'],
-    time: '1d ago', readTime: '4 min read',
-    category: 'Anxiety', categoryColor: '#3B82F6',
-    mood: 'Peaceful', moodEmoji: '🌸',
-    preview: "Therapy changed my relationship with fear. I used to run from every anxious thought. Now I sit with them and breathe through them. It doesn't make them disappear — it makes me stronger.",
-    understand: 203, support: 88, replies: 41, saved: false,
-  },
-  {
-    id: 5, name: 'Anonymous Soul', isAnon: true,
-    time: '2d ago', readTime: '2 min read',
-    category: 'Grief', categoryColor: '#6366F1',
-    mood: 'Sad', moodEmoji: '🌧',
-    preview: "Missing you gets easier, but it never fully goes away. That's okay. I've learned that grief is just love with nowhere to go. I'm letting it flow instead of blocking it.",
-    understand: 341, support: 142, replies: 67, saved: true,
-  },
-  {
-    id: 6, name: 'Mehul D.', isAnon: false, avatarColors: ['#2DD4BF', '#06B6D4'],
-    time: '3d ago', readTime: '3 min read',
-    category: 'Burnout', categoryColor: '#F97316',
-    mood: 'Grateful', moodEmoji: '🙏',
-    preview: "I quit a job that was killing me slowly. Best decision of my life. Rest is not laziness. Rest is resistance. If you're burnt out, please know — you deserve to pause.",
-    understand: 178, support: 91, replies: 29, saved: false,
-  },
+const SUPPORT_REACTIONS = [
+  { key: 'understand',      emoji: '🤝', label: 'I Understand' },
+  { key: 'sendingSupport',  emoji: '💜', label: 'Sending Support' },
+  { key: 'notAlone',        emoji: '🌱', label: "You're Not Alone" },
+  { key: 'stayStrong',      emoji: '🙏', label: 'Stay Strong' },
 ];
 
-/* ─── SVG Illustrations ─────────────────────────────────────────────────────── */
+const CATEGORY_COLORS = {
+  'Anxiety': '#3B82F6',
+  'Burnout': '#F97316',
+  'Grief': '#6366F1',
+  'Growth': '#10B981',
+  'Relationships': '#A855F7',
+  'Gratitude': '#F4C542',
+  'Motivation': '#F59E0B',
+  'Overthinking': '#8B5CF6',
+  'Depression': '#6366F1',
+  'Meditation': '#2DD4BF',
+  'Self Care': '#EC4899',
+};
+
+/* ─── SVG Illustrations ──────────────────────────────────────────────────────── */
 function FeatherIllustration() {
   return (
     <svg viewBox="0 0 110 140" width="110" height="140" aria-hidden="true">
@@ -129,30 +123,23 @@ function FeatherIllustration() {
           <stop offset="100%" stopColor="#1A0A3E" />
         </linearGradient>
       </defs>
-      {/* Glow */}
       <ellipse cx="55" cy="70" rx="50" ry="55" fill="url(#feathrGlow)" />
-      {/* Feather shaft */}
       <path d="M55 15 Q48 65 42 118" stroke="url(#feathrGrad)" strokeWidth="2" fill="none" strokeLinecap="round" />
-      {/* Feather barbs left */}
       <path d="M54 20 Q38 30 30 42" stroke="#A78BFA" strokeWidth="1.2" fill="none" opacity="0.85" strokeLinecap="round" />
       <path d="M53 28 Q35 36 26 50" stroke="#A78BFA" strokeWidth="1.2" fill="none" opacity="0.8" strokeLinecap="round" />
       <path d="M52 37 Q32 43 24 58" stroke="#A78BFA" strokeWidth="1.1" fill="none" opacity="0.75" strokeLinecap="round" />
       <path d="M51 46 Q32 51 24 66" stroke="#9D4EDD" strokeWidth="1" fill="none" opacity="0.7" strokeLinecap="round" />
       <path d="M50 55 Q33 59 26 73" stroke="#9D4EDD" strokeWidth="1" fill="none" opacity="0.65" strokeLinecap="round" />
       <path d="M49 64 Q34 67 28 80" stroke="#7C3AED" strokeWidth="0.9" fill="none" opacity="0.55" strokeLinecap="round" />
-      {/* Feather barbs right */}
       <path d="M55 22 Q66 28 74 36" stroke="#C4B5FD" strokeWidth="1.2" fill="none" opacity="0.8" strokeLinecap="round" />
       <path d="M54 31 Q67 36 76 45" stroke="#C4B5FD" strokeWidth="1.1" fill="none" opacity="0.75" strokeLinecap="round" />
       <path d="M53 40 Q66 44 74 54" stroke="#A78BFA" strokeWidth="1" fill="none" opacity="0.7" strokeLinecap="round" />
       <path d="M52 50 Q64 53 72 63" stroke="#A78BFA" strokeWidth="1" fill="none" opacity="0.65" strokeLinecap="round" />
       <path d="M51 59 Q62 62 70 71" stroke="#9D4EDD" strokeWidth="0.9" fill="none" opacity="0.55" strokeLinecap="round" />
-      {/* Ink pot */}
       <path d="M30 108 Q30 100 40 100 L64 100 Q74 100 74 108 L70 128 Q70 132 55 132 Q40 132 34 128 Z" fill="url(#inkGrad)" />
       <path d="M34 103 Q55 108 74 103" stroke="rgba(139,92,246,0.4)" strokeWidth="1" fill="none" />
       <ellipse cx="55" cy="100" rx="14" ry="4" fill="rgba(139,92,246,0.35)" />
-      {/* Ink shimmer */}
       <ellipse cx="45" cy="118" rx="5" ry="3" fill="rgba(139,92,246,0.2)" transform="rotate(-10,45,118)" />
-      {/* Sparkles */}
       <circle cx="82" cy="28" r="2.5" fill="#F4C542" opacity="0.9" />
       <circle cx="18" cy="45" r="1.8" fill="#E9D5FF" opacity="0.7" />
       <circle cx="85" cy="70" r="1.5" fill="#A78BFA" opacity="0.6" />
@@ -177,8 +164,7 @@ function HeartChatIllustration() {
       <ellipse cx="50" cy="85" rx="36" ry="8" fill="rgba(139,92,246,0.25)" />
       <rect x="12" y="15" width="76" height="58" rx="18" fill="url(#chatBubbleGrad)" filter="url(#chatGlow)" />
       <path d="M38 73 L50 82 L62 73" fill="url(#chatBubbleGrad)" />
-      <path d="M50 45 C50 38 40 32 34 38 C28 44 34 52 50 60 C66 52 72 44 66 38 C60 32 50 38 50 45Z"
-        fill="rgba(255,255,255,0.92)" />
+      <path d="M50 45 C50 38 40 32 34 38 C28 44 34 52 50 60 C66 52 72 44 66 38 C60 32 50 38 50 45Z" fill="rgba(255,255,255,0.92)" />
       <rect x="12" y="15" width="76" height="58" rx="18" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
     </svg>
   );
@@ -202,18 +188,14 @@ function SunsetSilhouette() {
       </defs>
       <rect width="280" height="160" fill="url(#skyGrad)" />
       <ellipse cx="140" cy="135" rx="80" ry="40" fill="url(#sunGlow)" />
-      {/* Clouds */}
       <ellipse cx="60" cy="50" rx="30" ry="10" fill="rgba(124,58,237,0.35)" />
       <ellipse cx="210" cy="40" rx="22" ry="8" fill="rgba(168,85,247,0.3)" />
       <ellipse cx="170" cy="60" rx="18" ry="7" fill="rgba(196,181,253,0.2)" />
-      {/* Ground */}
       <path d="M0 130 Q140 115 280 130 L280 160 L0 160Z" fill="#0D0820" />
-      {/* Person silhouette */}
       <circle cx="140" cy="108" r="7" fill="#0D0820" />
       <path d="M140 115 L140 138" stroke="#0D0820" strokeWidth="5" strokeLinecap="round" />
       <path d="M125 125 L140 120 L155 125" stroke="#0D0820" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M140 138 L130 152 M140 138 L150 152" stroke="#0D0820" strokeWidth="4" strokeLinecap="round" />
-      {/* Stars */}
       <circle cx="30" cy="20" r="1.5" fill="#FDE68A" opacity="0.8" />
       <circle cx="80" cy="12" r="1" fill="#FDE68A" opacity="0.6" />
       <circle cx="200" cy="18" r="1.5" fill="#FDE68A" opacity="0.7" />
@@ -222,13 +204,13 @@ function SunsetSilhouette() {
   );
 }
 
-/* ─── Gradient Avatar ───────────────────────────────────────────────────────── */
+/* ─── Gradient Avatar ────────────────────────────────────────────────────────── */
 const AVATAR_PALETTES = [
   ['#7C3AED', '#A855F7'], ['#D97706', '#F59E0B'], ['#EC4899', '#F472B6'],
   ['#2DD4BF', '#06B6D4'], ['#10B981', '#34D399'], ['#6366F1', '#818CF8'],
 ];
 
-function GradientAvatar({ name, isAnon, size = 40 }) {
+export function GradientAvatar({ name, isAnon, size = 40 }) {
   if (isAnon) {
     return (
       <div style={{
@@ -242,7 +224,7 @@ function GradientAvatar({ name, isAnon, size = 40 }) {
       </div>
     );
   }
-  const pair = AVATAR_PALETTES[name.charCodeAt(0) % AVATAR_PALETTES.length];
+  const pair = AVATAR_PALETTES[(name || 'A').charCodeAt(0) % AVATAR_PALETTES.length];
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%', flexShrink: 0,
@@ -251,29 +233,54 @@ function GradientAvatar({ name, isAnon, size = 40 }) {
       fontSize: Math.round(size * 0.38), fontWeight: 700, color: '#fff',
       boxShadow: `0 0 12px ${pair[0]}55`,
     }}>
-      {name[0].toUpperCase()}
+      {(name || 'A')[0].toUpperCase()}
     </div>
   );
 }
 
-/* ─── Composer Card ─────────────────────────────────────────────────────────── */
+/* ─── Toast ──────────────────────────────────────────────────────────────────── */
+function Toast({ message, visible }) {
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 30 }}
+          transition={{ type: 'spring', stiffness: 280, damping: 24 }}
+          style={{
+            position: 'fixed', bottom: 90, left: '50%', transform: 'translateX(-50%)',
+            background: 'rgba(34,18,73,0.95)', backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(244,197,66,0.35)', borderRadius: 16,
+            color: GOLD, padding: '12px 24px', fontSize: 14, fontWeight: 600,
+            zIndex: 9999, whiteSpace: 'nowrap',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          }}
+        >
+          {message}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ─── Composer Card ──────────────────────────────────────────────────────────── */
 function ComposerCard({ onShare }) {
+  const { drafts, setDraft, clearDraft } = useStoriesStore();
+  const [focused, setFocused] = useState(false);
   const [promptIdx, setPromptIdx] = useState(0);
-  const [visibility, setVisibility] = useState('Anonymous');
-  const [category, setCategory] = useState('Category');
-  const [mood, setMood] = useState('Mood');
-  const [trigger, setTrigger] = useState('Trigger Warning');
   const [openDrop, setOpenDrop] = useState(null);
+  const textareaRef = useRef(null);
 
   useEffect(() => {
-    const t = setInterval(() => setPromptIdx(i => (i + 1) % PROMPTS.length), 4000);
+    const t = setInterval(() => setPromptIdx(i => (i + 1) % PROMPTS.length), 15000);
     return () => clearInterval(t);
   }, []);
 
-  const Dropdown = ({ id, icon: Icon, value, options, onSelect }) => (
+  const Dropdown = ({ id, icon: Icon, value, options, placeholder, onSelect }) => (
     <div style={{ position: 'relative' }}>
       <button
-        onClick={() => setOpenDrop(openDrop === id ? null : id)}
+        onClick={(e) => { e.stopPropagation(); setOpenDrop(openDrop === id ? null : id); }}
         style={{
           ...GLASS_BTN, display: 'flex', alignItems: 'center', gap: 6,
           padding: '6px 12px', fontSize: 12, fontWeight: 500, borderRadius: 20,
@@ -281,7 +288,7 @@ function ComposerCard({ onShare }) {
         }}
       >
         {Icon && <Icon size={12} color={TEXT_DIM} />}
-        <span style={{ color: TEXT_MID }}>{value}</span>
+        <span style={{ color: value ? '#C4B5FD' : TEXT_MID }}>{value || placeholder}</span>
         <ChevronDown size={11} color={TEXT_DIM} />
       </button>
       <AnimatePresence>
@@ -295,14 +302,14 @@ function ComposerCard({ onShare }) {
               position: 'absolute', top: 'calc(100% + 6px)', left: 0,
               background: 'rgba(20,10,50,0.98)', backdropFilter: 'blur(24px)',
               border: '1px solid rgba(139,92,246,0.25)', borderRadius: 14,
-              padding: '6px', zIndex: 100, minWidth: 160,
+              padding: '6px', zIndex: 200, minWidth: 160,
               boxShadow: '0 16px 40px rgba(0,0,0,0.5)',
             }}
           >
             {options.map(o => (
               <button
                 key={o}
-                onClick={() => { onSelect(o); setOpenDrop(null); }}
+                onClick={(e) => { e.stopPropagation(); onSelect(o); setOpenDrop(null); }}
                 style={{
                   display: 'block', width: '100%', textAlign: 'left',
                   background: 'none', border: 'none', padding: '8px 12px',
@@ -323,120 +330,142 @@ function ComposerCard({ onShare }) {
     </div>
   );
 
+  const handleShare = () => {
+    if (!drafts.content.trim()) {
+      textareaRef.current?.focus();
+      return;
+    }
+    onShare({
+      content: drafts.content,
+      visibility: drafts.visibility,
+      category: drafts.category,
+      mood: drafts.mood,
+      trigger: drafts.trigger,
+    });
+    clearDraft();
+    setFocused(false);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.06, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+      onClick={() => setOpenDrop(null)}
       style={{
         background: 'linear-gradient(145deg, rgba(26,10,62,0.96), rgba(45,16,96,0.92))',
         border: '1px solid rgba(139,92,246,0.22)',
         borderRadius: 24, padding: '22px 22px 20px',
-        marginBottom: 16, position: 'relative', overflow: 'hidden',
+        marginBottom: 16, position: 'relative', overflow: 'visible',
         boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 40px rgba(124,58,237,0.1)',
         display: 'grid', gridTemplateColumns: '1fr auto', gap: 16, alignItems: 'start',
       }}
-      onClick={() => setOpenDrop(null)}
     >
-      {/* Inner highlight */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent)' }} />
 
-      {/* Left: Text + controls */}
       <div>
         <div style={{ fontSize: 11, color: GOLD, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Share Your Story</div>
         <div style={{ fontSize: 13, color: TEXT_MID, marginBottom: 14 }}>Someone may need to hear what you've been through.</div>
 
         {/* Rotating prompt */}
-        <div style={{
-          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)',
-          borderRadius: 16, padding: '12px 14px', marginBottom: 14,
-          display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, cursor: 'text',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-            <Sparkles size={14} color={PURPLE} style={{ flexShrink: 0, marginTop: 2 }} />
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={promptIdx}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.3 }}
-                style={{ fontSize: 13, color: TEXT_MID, lineHeight: 1.55 }}
-              >
-                {PROMPTS[promptIdx]}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-          <button
-            onClick={e => { e.stopPropagation(); setPromptIdx(i => (i + 1) % PROMPTS.length); }}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, flexShrink: 0 }}
+        {!focused && (
+          <div
+            onClick={() => { setFocused(true); setTimeout(() => textareaRef.current?.focus(), 50); }}
+            style={{
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)',
+              borderRadius: 16, padding: '12px 14px', marginBottom: 14, cursor: 'text',
+              display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10,
+            }}
           >
-            <RefreshCw size={14} color={TEXT_DIM} />
-          </button>
-        </div>
-
-        {/* Controls row */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 16, alignItems: 'center' }}
-          onClick={e => e.stopPropagation()}>
-          {/* Visibility */}
-          <div style={{ position: 'relative' }}>
-            <button
-              onClick={() => setOpenDrop(openDrop === 'vis' ? null : 'vis')}
-              style={{
-                ...GLASS_BTN, display: 'flex', alignItems: 'center', gap: 6,
-                padding: '6px 12px', fontSize: 12, borderRadius: 20,
-              }}
-            >
-              <Users size={12} color={TEXT_DIM} />
-              <span style={{ color: TEXT_MID }}>{visibility}</span>
-              <ChevronDown size={11} color={TEXT_DIM} />
-            </button>
-            <AnimatePresence>
-              {openDrop === 'vis' && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                  style={{
-                    position: 'absolute', top: 'calc(100% + 6px)', left: 0, zIndex: 100,
-                    background: 'rgba(20,10,50,0.98)', backdropFilter: 'blur(24px)',
-                    border: '1px solid rgba(139,92,246,0.25)', borderRadius: 14,
-                    padding: '6px', minWidth: 150, boxShadow: '0 16px 40px rgba(0,0,0,0.5)',
-                  }}
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+              <Sparkles size={14} color={PURPLE} style={{ flexShrink: 0, marginTop: 2 }} />
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={promptIdx}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ fontSize: 13, color: TEXT_MID, lineHeight: 1.55 }}
                 >
-                  {VISIBILITY_OPTIONS.map(o => (
-                    <button key={o} onClick={() => { setVisibility(o); setOpenDrop(null); }}
-                      style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '8px 12px', fontSize: 13, color: visibility === o ? '#C4B5FD' : TEXT_MID, fontWeight: visibility === o ? 600 : 400, borderRadius: 10, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,92,246,0.15)'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'none'}
-                    >{o}</button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {PROMPTS[promptIdx]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+            <button
+              onClick={e => { e.stopPropagation(); setPromptIdx(i => (i + 1) % PROMPTS.length); }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, flexShrink: 0 }}
+            >
+              <RefreshCw size={14} color={TEXT_DIM} />
+            </button>
           </div>
+        )}
 
-          <Dropdown id="cat" icon={Tag} value={category} options={CATEGORIES} onSelect={setCategory} />
-          <Dropdown id="mood" icon={Smile} value={mood} options={MOODS} onSelect={setMood} />
-          <Dropdown id="trigger" icon={AlertTriangle} value={trigger} options={TRIGGER_WARNINGS} onSelect={setTrigger} />
+        {/* Textarea when focused */}
+        {focused && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            style={{ marginBottom: 14 }}
+          >
+            <textarea
+              ref={textareaRef}
+              value={drafts.content}
+              onChange={e => setDraft({ content: e.target.value })}
+              placeholder={PROMPTS[promptIdx]}
+              rows={5}
+              style={{
+                width: '100%', boxSizing: 'border-box',
+                background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(139,92,246,0.3)',
+                borderRadius: 16, padding: '12px 14px', resize: 'vertical',
+                fontFamily: 'Inter, sans-serif', fontSize: 14, color: '#E2DEFF',
+                lineHeight: 1.6, outline: 'none',
+              }}
+            />
+          </motion.div>
+        )}
+
+        {/* Controls row - always show when focused */}
+        {focused && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginBottom: 16, alignItems: 'center' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <Dropdown id="vis"     icon={Users}        value={drafts.visibility} options={VISIBILITY_OPTIONS} placeholder="Visibility" onSelect={v => setDraft({ visibility: v })} />
+            <Dropdown id="cat"     icon={Tag}          value={drafts.category}   options={CATEGORIES}         placeholder="Category"   onSelect={v => setDraft({ category: v })} />
+            <Dropdown id="mood"    icon={Smile}        value={drafts.mood}       options={MOODS}              placeholder="Mood"       onSelect={v => setDraft({ mood: v })} />
+            <Dropdown id="trigger" icon={AlertTriangle} value={drafts.trigger}   options={TRIGGER_WARNINGS}   placeholder="Trigger Warning" onSelect={v => setDraft({ trigger: v })} />
+          </motion.div>
+        )}
+
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={focused ? handleShare : () => { setFocused(true); setTimeout(() => textareaRef.current?.focus(), 50); }}
+            style={{
+              background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+              border: 'none', borderRadius: 14, color: '#fff',
+              fontWeight: 700, fontSize: 14, padding: '11px 24px',
+              cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+              boxShadow: '0 4px 20px rgba(124,58,237,0.5)',
+              display: 'flex', alignItems: 'center', gap: 8,
+            }}
+          >
+            {focused ? 'Share Story ✍️' : 'Write Your Story'}
+          </motion.button>
+          {focused && (
+            <button
+              onClick={() => { setFocused(false); clearDraft(); }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_DIM, fontSize: 13, fontFamily: 'Inter, sans-serif' }}
+            >
+              Cancel
+            </button>
+          )}
         </div>
-
-        {/* Share button */}
-        <motion.button
-          whileTap={{ scale: 0.97 }}
-          onClick={onShare}
-          style={{
-            background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-            border: 'none', borderRadius: 14, color: '#fff',
-            fontWeight: 700, fontSize: 14, padding: '11px 24px',
-            cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-            boxShadow: '0 4px 20px rgba(124,58,237,0.5)',
-            display: 'flex', alignItems: 'center', gap: 8,
-          }}
-        >
-          Share Story ✍️
-        </motion.button>
       </div>
 
-      {/* Right: Feather illustration */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: 4 }}>
         <FeatherIllustration />
       </div>
@@ -444,13 +473,15 @@ function ComposerCard({ onShare }) {
   );
 }
 
-/* ─── Featured Story Card ───────────────────────────────────────────────────── */
-function FeaturedStoryCard() {
+/* ─── Featured Story Card ────────────────────────────────────────────────────── */
+function FeaturedStoryCard({ story, onNavigate }) {
+  if (!story) return null;
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+      onClick={() => onNavigate(story.id)}
       style={{
         borderRadius: 24, overflow: 'hidden',
         border: '1px solid rgba(139,92,246,0.2)',
@@ -458,41 +489,40 @@ function FeaturedStoryCard() {
         cursor: 'pointer', position: 'relative', marginBottom: 12,
       }}
     >
-      {/* Hero image */}
       <div style={{ position: 'relative', overflow: 'hidden' }}>
         <SunsetSilhouette />
         <div style={{
           position: 'absolute', top: 14, left: 14,
           background: 'rgba(244,197,66,0.15)', border: '1px solid rgba(244,197,66,0.4)',
           borderRadius: 20, padding: '4px 12px',
-          fontSize: 11, fontWeight: 700, color: GOLD, display: 'flex', alignItems: 'center', gap: 5,
+          fontSize: 11, fontWeight: 700, color: GOLD,
         }}>
           ⭐ Featured Story Today
         </div>
       </div>
-      {/* Content */}
       <div style={{
         background: 'linear-gradient(180deg, rgba(20,8,52,0.97), rgba(8,6,18,0.98))',
         padding: '20px 20px 18px', borderTop: '1px solid rgba(139,92,246,0.1)',
       }}>
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
-          The day I finally asked for help
+        <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
+          {story.title}
         </h2>
         <p style={{ fontSize: 13, color: TEXT_MID, margin: '0 0 14px', lineHeight: 1.6 }}>
-          Sometimes the bravest thing you can do is admit you're not okay.
+          {story.preview}
         </p>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', color: '#60A5FA', fontSize: 11, fontWeight: 600, borderRadius: 20, padding: '3px 10px' }}>Anxiety</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: TEXT_DIM }}>
-              <Clock size={11} /> 3 min read
+            <span style={{ background: `${story.categoryColor}1A`, border: `1px solid ${story.categoryColor}40`, color: story.categoryColor, fontSize: 11, fontWeight: 600, borderRadius: 20, padding: '3px 10px' }}>
+              {story.category}
             </span>
             <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: TEXT_DIM }}>
-              🤝 2.3K
+              <Clock size={11} /> {story.readTime}
             </span>
+            <span style={{ fontSize: 12, color: TEXT_DIM }}>🤝 {story.understand}</span>
           </div>
           <motion.button
             whileTap={{ scale: 0.97 }}
+            onClick={e => { e.stopPropagation(); onNavigate(story.id); }}
             style={{
               background: 'linear-gradient(135deg, #7C3AED, #A855F7)', border: 'none',
               borderRadius: 12, color: '#fff', fontWeight: 600, fontSize: 13,
@@ -509,7 +539,7 @@ function FeaturedStoryCard() {
   );
 }
 
-/* ─── Daily Prompt Card ─────────────────────────────────────────────────────── */
+/* ─── Daily Prompt Card ──────────────────────────────────────────────────────── */
 function DailyPromptCard({ onWrite }) {
   return (
     <motion.div
@@ -525,17 +555,12 @@ function DailyPromptCard({ onWrite }) {
       }}
     >
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.2), transparent)' }} />
-
       <div>
-        <div style={{ fontSize: 11, color: GOLD, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 5 }}>
-          ✨ Today's Prompt
-        </div>
+        <div style={{ fontSize: 11, color: GOLD, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>✨ Today's Prompt</div>
         <p style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: '0 0 8px', lineHeight: 1.4, letterSpacing: '-0.01em' }}>
           "What is one thing you forgive yourself for today?"
         </p>
-        <p style={{ fontSize: 12, color: TEXT_DIM, margin: '0 0 14px' }}>
-          2,438 people answered today
-        </p>
+        <p style={{ fontSize: 12, color: TEXT_DIM, margin: '0 0 14px' }}>2,438 people answered today</p>
         <motion.button
           whileTap={{ scale: 0.97 }}
           onClick={onWrite}
@@ -550,23 +575,17 @@ function DailyPromptCard({ onWrite }) {
           Write Response <ArrowUpRight size={14} />
         </motion.button>
       </div>
-
-      <div style={{ flexShrink: 0 }}>
-        <HeartChatIllustration />
-      </div>
+      <div style={{ flexShrink: 0 }}><HeartChatIllustration /></div>
     </motion.div>
   );
 }
 
-/* ─── Trending Topics ───────────────────────────────────────────────────────── */
+/* ─── Trending Topics ────────────────────────────────────────────────────────── */
 function TrendingTopics({ onSelect }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
         <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Trending Topics</span>
-        <button style={{ background: 'none', border: 'none', fontSize: 13, color: '#A78BFA', fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-          View All
-        </button>
       </div>
       <div style={{ display: 'flex', gap: 10, overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: 4 }}>
         {TRENDING.map((t, i) => (
@@ -593,7 +612,6 @@ function TrendingTopics({ onSelect }) {
             <div style={{ fontSize: 11, color: TEXT_DIM }}>{t.count} Stories</div>
           </motion.button>
         ))}
-        {/* Chevron hint */}
         <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingRight: 4 }}>
           <ChevronRight size={18} color={TEXT_DIM} />
         </div>
@@ -602,7 +620,7 @@ function TrendingTopics({ onSelect }) {
   );
 }
 
-/* ─── Filter Bar ────────────────────────────────────────────────────────────── */
+/* ─── Filter Bar ─────────────────────────────────────────────────────────────── */
 function FilterBar({ active, setActive }) {
   return (
     <div style={{
@@ -623,9 +641,7 @@ function FilterBar({ active, setActive }) {
               flexShrink: 0, display: 'flex', alignItems: 'center', gap: 5,
               padding: '8px 16px', borderRadius: 20, cursor: 'pointer',
               fontFamily: 'Inter, sans-serif', fontSize: 13, fontWeight: isActive ? 700 : 500,
-              background: isActive
-                ? 'linear-gradient(135deg, #7C3AED, #A855F7)'
-                : 'rgba(255,255,255,0.06)',
+              background: isActive ? 'linear-gradient(135deg, #7C3AED, #A855F7)' : 'rgba(255,255,255,0.06)',
               border: isActive ? 'none' : '1px solid rgba(255,255,255,0.09)',
               color: isActive ? '#fff' : TEXT_MID,
               boxShadow: isActive ? '0 4px 14px rgba(124,58,237,0.4)' : 'none',
@@ -641,51 +657,180 @@ function FilterBar({ active, setActive }) {
   );
 }
 
-/* ─── Story Card ────────────────────────────────────────────────────────────── */
-const SUPPORT_REACTIONS = [
-  { key: 'understand', emoji: '🤝', label: 'I Understand', field: 'understand' },
-  { key: 'support',    emoji: '💜', label: 'Sending Support', field: 'support' },
-];
+/* ─── Replies Panel ──────────────────────────────────────────────────────────── */
+function RepliesPanel({ storyId, onClose }) {
+  const { replies: storeReplies, addReply } = useStoriesStore();
+  const [text, setText] = useState('');
+  const [isAnon, setIsAnon] = useState(true);
 
-function StoryCard({ story, index, onSave, onReact }) {
+  const dbReplies = useMemo(() => REPLIES_DB.filter(r => r.storyId === storyId), [storyId]);
+  const userReplies = storeReplies[storyId] || [];
+  const allReplies = [...userReplies, ...dbReplies];
+
+  const handleSubmit = () => {
+    if (!text.trim()) return;
+    addReply(storyId, {
+      id: `ur-${Date.now()}`,
+      storyId,
+      authorId: null,
+      authorName: isAnon ? 'Anonymous Soul' : 'You',
+      isAnon,
+      content: text.trim(),
+      createdAt: new Date().toISOString(),
+    });
+    setText('');
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+      style={{ overflow: 'hidden' }}
+    >
+      <div style={{
+        background: 'rgba(20,10,50,0.9)', backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(139,92,246,0.15)', borderRadius: 16,
+        padding: '16px', marginTop: 8,
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Support Replies ({allReplies.length})</span>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_DIM }}>
+            <X size={16} />
+          </button>
+        </div>
+
+        {/* Reply list */}
+        <div style={{ maxHeight: 240, overflowY: 'auto', marginBottom: 12 }}>
+          {allReplies.length === 0 ? (
+            <p style={{ fontSize: 13, color: TEXT_DIM, textAlign: 'center', padding: '16px 0' }}>
+              Be the first to offer support 💜
+            </p>
+          ) : (
+            allReplies.map((reply) => (
+              <div key={reply.id} style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
+                <GradientAvatar name={reply.authorName} isAnon={reply.isAnon} size={32} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{reply.authorName}</span>
+                    {reply.isAnon && (
+                      <span style={{ background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.3)', color: '#A78BFA', fontSize: 9, fontWeight: 600, borderRadius: 20, padding: '1px 6px' }}>Anon</span>
+                    )}
+                  </div>
+                  <p style={{ fontSize: 13, color: TEXT_MID, margin: 0, lineHeight: 1.55 }}>{reply.content}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Reply input */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+          <div style={{ flex: 1 }}>
+            <textarea
+              value={text}
+              onChange={e => setText(e.target.value)}
+              placeholder="Write a supportive reply..."
+              rows={2}
+              style={{
+                width: '100%', boxSizing: 'border-box',
+                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 12, padding: '10px 12px', resize: 'none',
+                fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#E2DEFF',
+                outline: 'none',
+              }}
+            />
+            <button
+              onClick={() => setIsAnon(a => !a)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_DIM, fontSize: 11, fontFamily: 'Inter, sans-serif', display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}
+            >
+              {isAnon ? <EyeOff size={11} /> : <Eye size={11} />}
+              {isAnon ? 'Posting anonymously' : 'Posting as You'}
+            </button>
+          </div>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={handleSubmit}
+            disabled={!text.trim()}
+            style={{
+              background: text.trim() ? 'linear-gradient(135deg, #7C3AED, #A855F7)' : 'rgba(255,255,255,0.06)',
+              border: 'none', borderRadius: 12, padding: '10px 14px', cursor: text.trim() ? 'pointer' : 'default',
+              color: '#fff', flexShrink: 0,
+            }}
+          >
+            <Send size={15} />
+          </motion.button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── Story Card ─────────────────────────────────────────────────────────────── */
+function StoryCard({ story, index, userStoryIds, toast }) {
+  const navigate = useNavigate();
+  const { reactions, savedIds, toggleSave, setReaction, hideStory, deleteStory } = useStoriesStore();
   const [expanded, setExpanded] = useState(false);
-  const [reacted, setReacted] = useState(null);
+  const [showReplies, setShowReplies] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
 
-  const handleReact = (key) => {
-    if (reacted === key) { setReacted(null); onReact(story.id, key, -1); }
-    else {
-      if (reacted) onReact(story.id, reacted, -1);
-      setReacted(key);
-      onReact(story.id, key, 1);
+  const isOwnStory = userStoryIds.includes(story.id);
+  const currentReaction = reactions[story.id];
+  const isSaved = savedIds.includes(story.id);
+
+  const getReactionCount = (key) => {
+    const base = story[key] || 0;
+    if (currentReaction === key) return base + 1;
+    return base;
+  };
+
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}/story/${story.id}`);
+      toast('Link copied! 🔗');
+    } catch {
+      toast('Link copied! 🔗');
     }
   };
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!showMenu) return;
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setShowMenu(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showMenu]);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.22 + index * 0.06, duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+      exit={{ opacity: 0, y: -10, scale: 0.97 }}
+      transition={{ delay: Math.min(index * 0.04, 0.3), duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
       style={{
         background: CARD, backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
         border: '1px solid rgba(255,255,255,0.08)', borderRadius: 22,
         padding: '16px 16px 14px', marginBottom: 10,
-        position: 'relative', overflow: 'hidden',
+        position: 'relative', overflow: 'visible',
         boxShadow: '0 6px 24px rgba(0,0,0,0.35)',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
       }}
       onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(0,0,0,0.45), 0 0 24px rgba(124,58,237,0.1)'; }}
       onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.35)'; }}
     >
-      {/* Inner top highlight */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)' }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)', borderRadius: '22px 22px 0 0' }} />
 
-      {/* Top row: avatar + meta + save */}
+      {/* Top row */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <GradientAvatar name={story.name} isAnon={story.isAnon} size={38} />
+          <GradientAvatar name={story.authorName} isAnon={story.isAnon} size={38} />
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{story.name}</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{story.authorName}</span>
               {story.isAnon && (
                 <span style={{ background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.3)', color: '#A78BFA', fontSize: 10, fontWeight: 600, borderRadius: 20, padding: '1px 7px' }}>
                   Anonymous
@@ -701,17 +846,69 @@ function StoryCard({ story, index, onSave, onReact }) {
             </div>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button onClick={() => onSave(story.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-            <Bookmark size={16} color={story.saved ? PURPLE : TEXT_DIM} fill={story.saved ? PURPLE : 'none'} />
+
+        {/* Action buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <button onClick={() => toggleSave(story.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+            <Bookmark size={16} color={isSaved ? PURPLE : TEXT_DIM} fill={isSaved ? PURPLE : 'none'} />
           </button>
-          <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+          <button onClick={handleShare} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
             <Share2 size={15} color={TEXT_DIM} />
           </button>
+          {/* Three-dot menu */}
+          <div style={{ position: 'relative' }} ref={menuRef}>
+            <button
+              onClick={() => setShowMenu(m => !m)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}
+            >
+              <MoreHorizontal size={16} color={TEXT_DIM} />
+            </button>
+            <AnimatePresence>
+              {showMenu && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  style={{
+                    position: 'absolute', top: 'calc(100% + 4px)', right: 0,
+                    background: 'rgba(20,10,50,0.98)', backdropFilter: 'blur(24px)',
+                    border: '1px solid rgba(139,92,246,0.25)', borderRadius: 14,
+                    padding: '6px', zIndex: 300, minWidth: 160,
+                    boxShadow: '0 16px 40px rgba(0,0,0,0.6)',
+                  }}
+                >
+                  {[
+                    { icon: Bookmark, label: isSaved ? 'Unsave' : 'Save', action: () => { toggleSave(story.id); setShowMenu(false); } },
+                    { icon: EyeOff, label: 'Hide Story', action: () => { hideStory(story.id); setShowMenu(false); } },
+                    { icon: Flag, label: 'Report', action: () => { toast('Story reported'); setShowMenu(false); } },
+                    ...(isOwnStory ? [{ icon: Trash2, label: 'Delete', action: () => { deleteStory(story.id); setShowMenu(false); }, danger: true }] : []),
+                  ].map(item => (
+                    <button
+                      key={item.label}
+                      onClick={item.action}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        width: '100%', textAlign: 'left',
+                        background: 'none', border: 'none', padding: '9px 12px',
+                        fontSize: 13, color: item.danger ? '#F87171' : TEXT_MID,
+                        borderRadius: 10, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = item.danger ? 'rgba(248,113,113,0.1)' : 'rgba(139,92,246,0.15)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'none'}
+                    >
+                      <item.icon size={13} />
+                      {item.label}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
-      {/* Category + Mood badges */}
+      {/* Category + Mood */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
         <span style={{
           background: `${story.categoryColor}1A`, border: `1px solid ${story.categoryColor}40`,
@@ -728,17 +925,35 @@ function StoryCard({ story, index, onSave, onReact }) {
         </span>
       </div>
 
-      {/* Story preview */}
+      {/* Title */}
+      <h3
+        onClick={() => navigate(`/story/${story.id}`)}
+        style={{ fontSize: 15, fontWeight: 700, color: '#fff', margin: '0 0 8px', lineHeight: 1.35, cursor: 'pointer', letterSpacing: '-0.01em' }}
+        onMouseEnter={e => e.currentTarget.style.color = '#C4B5FD'}
+        onMouseLeave={e => e.currentTarget.style.color = '#fff'}
+      >
+        {story.title}
+      </h3>
+
+      {/* Content preview */}
       <div style={{ position: 'relative', marginBottom: 12 }}>
-        <p style={{
-          fontSize: 13, color: TEXT_MID, lineHeight: 1.65, margin: 0,
-          overflow: expanded ? 'visible' : 'hidden',
-          display: expanded ? 'block' : '-webkit-box',
-          WebkitLineClamp: expanded ? 'none' : 3,
-          WebkitBoxOrient: 'vertical',
-        }}>
-          {story.preview}
-        </p>
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={expanded ? 'expanded' : 'collapsed'}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            style={{
+              fontSize: 13, color: TEXT_MID, lineHeight: 1.65, margin: 0,
+              overflow: expanded ? 'visible' : 'hidden',
+              display: expanded ? 'block' : '-webkit-box',
+              WebkitLineClamp: expanded ? 'none' : 3,
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+            {expanded ? story.content : story.preview}
+          </motion.p>
+        </AnimatePresence>
+
         {!expanded && (
           <div style={{
             position: 'absolute', bottom: 0, left: 0, right: 0, height: 28,
@@ -746,54 +961,78 @@ function StoryCard({ story, index, onSave, onReact }) {
             display: 'flex', alignItems: 'flex-end',
           }}>
             <button
-              onClick={() => setExpanded(true)}
+              onClick={() => navigate(`/story/${story.id}`)}
               style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 0, fontFamily: 'Inter, sans-serif' }}
             >
-              Read More
+              Read More →
             </button>
           </div>
         )}
       </div>
 
-      {/* Reactions row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+      {expanded && (
+        <button
+          onClick={() => setExpanded(false)}
+          style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: '0 0 10px', fontFamily: 'Inter, sans-serif' }}
+        >
+          Show Less ↑
+        </button>
+      )}
+
+      {/* Reactions */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
         {SUPPORT_REACTIONS.map(r => {
-          const isReacted = reacted === r.key;
+          const isActive = currentReaction === r.key;
           return (
             <motion.button
               key={r.key}
               whileTap={{ scale: 0.93 }}
-              onClick={() => handleReact(r.key)}
+              onClick={() => setReaction(story.id, r.key)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 5,
-                background: isReacted ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.05)',
-                border: isReacted ? '1px solid rgba(139,92,246,0.45)' : '1px solid rgba(255,255,255,0.09)',
+                background: isActive ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.05)',
+                border: isActive ? '1px solid rgba(139,92,246,0.45)' : '1px solid rgba(255,255,255,0.09)',
                 borderRadius: 20, padding: '5px 12px', cursor: 'pointer',
                 fontFamily: 'Inter, sans-serif', transition: 'all 0.2s',
               }}
             >
               <span style={{ fontSize: 13 }}>{r.emoji}</span>
-              <span style={{ fontSize: 11, color: isReacted ? '#C4B5FD' : TEXT_DIM, fontWeight: isReacted ? 600 : 400 }}>
-                {story[r.field]}
+              <span style={{ fontSize: 11, color: isActive ? '#C4B5FD' : TEXT_DIM, fontWeight: isActive ? 600 : 400 }}>
+                {getReactionCount(r.key)}
               </span>
             </motion.button>
           );
         })}
-        <button style={{
-          display: 'flex', alignItems: 'center', gap: 5,
-          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)',
-          borderRadius: 20, padding: '5px 12px', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-        }}>
-          <MessageCircle size={12} color={TEXT_DIM} />
-          <span style={{ fontSize: 11, color: TEXT_DIM }}>{story.replies} Support Replies</span>
+        <button
+          onClick={() => setShowReplies(v => !v)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 5,
+            background: showReplies ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.05)',
+            border: showReplies ? '1px solid rgba(139,92,246,0.35)' : '1px solid rgba(255,255,255,0.09)',
+            borderRadius: 20, padding: '5px 12px', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+            transition: 'all 0.2s',
+          }}
+        >
+          <MessageCircle size={12} color={showReplies ? '#A78BFA' : TEXT_DIM} />
+          <span style={{ fontSize: 11, color: showReplies ? '#A78BFA' : TEXT_DIM }}>
+            {story.replyCount || 0} Support Replies
+          </span>
         </button>
       </div>
+
+      {/* Replies Panel */}
+      <AnimatePresence>
+        {showReplies && (
+          <RepliesPanel storyId={story.id} onClose={() => setShowReplies(false)} />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
 
-/* ─── AI Insight Card ───────────────────────────────────────────────────────── */
+/* ─── AI Insight Card ────────────────────────────────────────────────────────── */
 function AIInsightCard() {
+  const navigate = useNavigate();
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -822,11 +1061,13 @@ function AIInsightCard() {
         You've been reading about anxiety and burnout. A short breathing exercise might help right now.
       </p>
       <div style={{ display: 'flex', gap: 8 }}>
-        {['Meditate', 'Tiny Win', 'Community'].map(action => (
-          <button key={action} style={{
-            ...GLASS_BTN, padding: '6px 13px', fontSize: 12, fontWeight: 500, borderRadius: 20,
-          }}>
-            {action}
+        {[
+          { label: 'Meditate', path: '/meditate' },
+          { label: 'Tiny Win', path: '/tiny-wins' },
+          { label: 'Community', path: '/community' },
+        ].map(({ label, path }) => (
+          <button key={label} onClick={() => navigate(path)} style={{ ...GLASS_BTN, padding: '6px 13px', fontSize: 12, fontWeight: 500, borderRadius: 20 }}>
+            {label}
           </button>
         ))}
       </div>
@@ -834,7 +1075,28 @@ function AIInsightCard() {
   );
 }
 
-/* ─── Floating Action Button ────────────────────────────────────────────────── */
+/* ─── Empty State ────────────────────────────────────────────────────────────── */
+function EmptyState({ filter, search }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      style={{ textAlign: 'center', padding: '60px 20px' }}
+    >
+      <div style={{ fontSize: 48, marginBottom: 16 }}>🌿</div>
+      <h3 style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 8px' }}>
+        {search ? 'No stories found' : `No ${filter} stories yet`}
+      </h3>
+      <p style={{ fontSize: 14, color: TEXT_DIM, margin: '0 0 20px', lineHeight: 1.6 }}>
+        {search
+          ? `Nothing matched "${search}". Try a different search.`
+          : 'Be the first to share your story in this category.'}
+      </p>
+    </motion.div>
+  );
+}
+
+/* ─── Floating Action Button ─────────────────────────────────────────────────── */
 function FloatingShareButton({ onClick }) {
   return (
     <motion.button
@@ -860,51 +1122,98 @@ function FloatingShareButton({ onClick }) {
   );
 }
 
-/* ─── Toast ─────────────────────────────────────────────────────────────────── */
-function Toast({ visible }) {
-  return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 30 }}
-          transition={{ type: 'spring', stiffness: 280, damping: 24 }}
-          style={{
-            position: 'fixed', bottom: 90, left: '50%', transform: 'translateX(-50%)',
-            background: 'rgba(34,18,73,0.95)', backdropFilter: 'blur(24px)',
-            border: '1px solid rgba(244,197,66,0.35)', borderRadius: 16,
-            color: GOLD, padding: '12px 24px', fontSize: 14, fontWeight: 600,
-            zIndex: 999, whiteSpace: 'nowrap',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-          }}
-        >
-          🌱 Stories posting opens soon — stay tuned!
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-/* ─── Main Component ────────────────────────────────────────────────────────── */
+/* ─── Main Component ─────────────────────────────────────────────────────────── */
 export default function Stories() {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { userStories, hiddenIds, addStory } = useStoriesStore();
+
   const [activeFilter, setActiveFilter] = useState('For You');
-  const [stories, setStories] = useState(STORIES);
-  const [showToast, setShowToast] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [toast, setToast] = useState({ visible: false, message: '' });
+  const [visibleCount, setVisibleCount] = useState(10);
+  const sentinelRef = useRef(null);
 
-  const triggerToast = useCallback(() => {
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3200);
+  const showToast = useCallback((message) => {
+    setToast({ visible: true, message });
+    setTimeout(() => setToast({ visible: false, message: '' }), 3200);
   }, []);
 
-  const handleSave = useCallback((id) => {
-    setStories(prev => prev.map(s => s.id === id ? { ...s, saved: !s.saved } : s));
-  }, []);
+  // Merge feed
+  const allStories = useMemo(() => {
+    return [...userStories, ...STORIES_DB].filter(s => !hiddenIds.includes(s.id));
+  }, [userStories, hiddenIds]);
 
-  const handleReact = useCallback((id, key, delta) => {
-    setStories(prev => prev.map(s => s.id === id ? { ...s, [key]: s[key] + delta } : s));
-  }, []);
+  // Filter + search
+  const filteredStories = useMemo(() => {
+    let list = allStories;
+
+    if (activeFilter === 'Latest') {
+      list = [...list].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    } else if (activeFilter !== 'For You') {
+      list = list.filter(s => s.category === activeFilter);
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(s =>
+        s.title?.toLowerCase().includes(q) ||
+        s.content?.toLowerCase().includes(q) ||
+        s.authorName?.toLowerCase().includes(q) ||
+        s.category?.toLowerCase().includes(q)
+      );
+    }
+
+    return list;
+  }, [allStories, activeFilter, searchQuery]);
+
+  const visibleStories = filteredStories.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredStories.length;
+  const userStoryIds = useMemo(() => userStories.map(s => s.id), [userStories]);
+
+  // Infinite scroll
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => { if (entries[0].isIntersecting && hasMore) setVisibleCount(c => c + 10); },
+      { threshold: 0.1 }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore]);
+
+  const handleComposerShare = ({ content, visibility, category, mood, trigger }) => {
+    const cat = category || 'Growth';
+    const newStory = {
+      id: `us-${Date.now()}`,
+      title: content.split('\n')[0].slice(0, 80) || 'My Story',
+      category: cat,
+      categoryColor: CATEGORY_COLORS[cat] || PURPLE,
+      mood: mood || 'Hopeful',
+      moodEmoji: '✨',
+      tags: [cat.toLowerCase()],
+      content,
+      preview: content.slice(0, 220).trim() + (content.length > 220 ? '…' : ''),
+      authorId: user?.id || 'me',
+      authorName: visibility === 'Anonymous' ? 'Anonymous Soul' : (user?.name || 'You'),
+      isAnon: visibility === 'Anonymous',
+      createdAt: new Date().toISOString(),
+      time: 'just now',
+      readTime: `${Math.ceil(content.split(/\s+/).length / 200)} min read`,
+      understand: 0, sendingSupport: 0, notAlone: 0, stayStrong: 0,
+      replyCount: 0,
+    };
+    addStory(newStory);
+    showToast('🌱 Your story has been shared!');
+  };
+
+  const handleTrendingSelect = (topic) => {
+    setActiveFilter(topic);
+    setSearchQuery('');
+  };
+
+  const featuredStory = STORIES_DB[0];
 
   return (
     <div style={{
@@ -914,75 +1223,104 @@ export default function Stories() {
       position: 'relative',
     }}>
       <style>{`
-        @media (max-width: 768px) {
-          .stories-wrap { padding: 16px 16px 110px !important; }
-        }
-        .stories-wrap { padding: 24px 32px 110px; }
+        @media (max-width: 768px) { .stories-root { padding: 16px 16px 110px !important; } }
         ::-webkit-scrollbar { display: none; }
       `}</style>
 
-      <Toast visible={showToast} />
+      <Toast message={toast.message} visible={toast.visible} />
 
       {/* ── Header ── */}
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}
+        style={{ marginBottom: 20 }}
       >
-        <div>
-          <h1 style={{ fontSize: 30, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.02em' }}>Soul Stories</h1>
-          <p style={{ fontSize: 13, color: TEXT_DIM, margin: '4px 0 0' }}>Real stories. Real people. Real healing.</p>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div>
+            <h1 style={{ fontSize: 30, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.02em' }}>Soul Stories</h1>
+            <p style={{ fontSize: 13, color: TEXT_DIM, margin: '4px 0 0' }}>Real stories. Real people. Real healing.</p>
+          </div>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate('/saved')}
+            style={{
+              ...GLASS_BTN, borderRadius: 14, padding: '10px 16px',
+              display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, fontWeight: 600,
+            }}
+          >
+            <Bookmark size={15} /> Saved
+          </motion.button>
         </div>
-        <motion.button
-          whileTap={{ scale: 0.97 }}
-          onClick={triggerToast}
-          style={{
-            background: 'linear-gradient(135deg, #7C3AED, #A855F7)', border: 'none',
-            borderRadius: 14, color: '#fff', fontWeight: 700, fontSize: 14,
-            padding: '10px 20px', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-            display: 'flex', alignItems: 'center', gap: 7,
-            boxShadow: '0 4px 20px rgba(124,58,237,0.5)',
-            flexShrink: 0,
-          }}
-        >
-          <PenLine size={15} />+ Share Story
-        </motion.button>
+
+        {/* Search */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 16, padding: '10px 14px',
+        }}>
+          <Search size={15} color={TEXT_DIM} />
+          <input
+            value={searchQuery}
+            onChange={e => { setSearchQuery(e.target.value); setVisibleCount(10); }}
+            placeholder="Search stories, authors, categories..."
+            style={{
+              flex: 1, background: 'none', border: 'none', outline: 'none',
+              fontFamily: 'Inter, sans-serif', fontSize: 13, color: '#E2DEFF',
+            }}
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_DIM }}>
+              <X size={14} />
+            </button>
+          )}
+        </div>
       </motion.div>
 
       {/* ── Composer ── */}
-      <ComposerCard onShare={triggerToast} />
+      <ComposerCard onShare={handleComposerShare} />
 
       {/* ── Featured Story ── */}
-      <FeaturedStoryCard />
+      <FeaturedStoryCard story={featuredStory} onNavigate={(id) => navigate(`/story/${id}`)} />
 
       {/* ── Daily Prompt ── */}
-      <DailyPromptCard onWrite={triggerToast} />
+      <DailyPromptCard onWrite={() => document.querySelector('textarea')?.focus()} />
 
       {/* ── Trending Topics ── */}
-      <TrendingTopics onSelect={setActiveFilter} />
+      <TrendingTopics onSelect={handleTrendingSelect} />
 
       {/* ── Filter Bar ── */}
-      <FilterBar active={activeFilter} setActive={setActiveFilter} />
+      <FilterBar active={activeFilter} setActive={(f) => { setActiveFilter(f); setVisibleCount(10); }} />
 
       {/* ── Story Feed ── */}
-      <div>
-        {stories.map((story, i) => (
-          <React.Fragment key={story.id}>
-            <StoryCard
-              story={story}
-              index={i}
-              onSave={handleSave}
-              onReact={handleReact}
-            />
-            {/* AI insight card after 3rd story */}
-            {i === 2 && <AIInsightCard />}
-          </React.Fragment>
-        ))}
-      </div>
+      <AnimatePresence mode="popLayout">
+        {visibleStories.length === 0 ? (
+          <EmptyState filter={activeFilter} search={searchQuery} />
+        ) : (
+          visibleStories.map((story, i) => (
+            <React.Fragment key={story.id}>
+              <StoryCard
+                story={story}
+                index={i}
+                userStoryIds={userStoryIds}
+                toast={showToast}
+              />
+              {i === 2 && <AIInsightCard />}
+            </React.Fragment>
+          ))
+        )}
+      </AnimatePresence>
+
+      {/* Infinite scroll sentinel */}
+      {hasMore && (
+        <div ref={sentinelRef} style={{ height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid rgba(139,92,246,0.3)', borderTopColor: PURPLE, animation: 'spin 0.7s linear infinite' }} />
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      )}
 
       {/* ── Floating Button ── */}
-      <FloatingShareButton onClick={triggerToast} />
+      <FloatingShareButton onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
     </div>
   );
 }
