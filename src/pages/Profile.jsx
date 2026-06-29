@@ -3,24 +3,31 @@ import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { useWeatherStore } from '../store/weather';
+import { useTinyWinsStore } from '../store/tinyWins';
+import { useStoriesStore } from '../store/stories';
 import { ChevronRight, LogOut } from 'lucide-react';
 
 export default function Profile() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
-  const { streak, history } = useWeatherStore();
+  const { streak } = useWeatherStore();
+  const { totalWins } = useTinyWinsStore();
+  const { userStories, savedIds } = useStoriesStore();
+
+  const treeLevel = totalWins >= 500 ? 5 : totalWins >= 250 ? 4 : totalWins >= 100 ? 3 : totalWins >= 25 ? 2 : 1;
+  const treeName  = ['Seedling', 'New Leaf', 'Flower', 'Butterfly', 'Golden Lotus'][treeLevel - 1];
 
   const MENU = [
-    { icon: '🌳', label: 'Healing Tree', sub: 'Level 3', action: () => navigate('/home') },
-    { icon: '🏆', label: 'Achievements', sub: '12 Badges', action: () => {} },
-    { icon: '⚙️', label: 'Settings', sub: null, action: () => navigate('/account') },
-    { icon: '🛡️', label: 'Privacy & Safety', sub: null, action: () => navigate('/privacy') },
-    { icon: '🔔', label: 'Notifications', sub: 'Manage reminders', action: () => {} },
-    { icon: '❓', label: 'Help & Support', sub: null, action: () => navigate('/safety') },
+    { icon: '🌳', label: 'Healing Tree',    sub: `${treeName} · ${totalWins} wins`,  action: () => navigate('/tiny-wins') },
+    { icon: '📖', label: 'Saved Stories',   sub: `${savedIds.length} saved`,         action: () => navigate('/saved')     },
+    { icon: '🏆', label: 'Achievements',    sub: '12 Badges',                        action: () => {}                     },
+    { icon: '⚙️', label: 'Settings',        sub: null,                               action: () => navigate('/account')   },
+    { icon: '🛡️', label: 'Privacy & Safety', sub: null,                              action: () => navigate('/privacy')   },
+    { icon: '🔔', label: 'Notifications',   sub: 'Manage reminders',                 action: () => {}                     },
+    { icon: '❓', label: 'Help & Support',  sub: null,                               action: () => navigate('/safety')    },
   ];
 
-  const checkIns = history?.length || 7;
-  const stories = 3;
+  const storiesShared = userStories.length;
 
   return (
     <div
@@ -88,9 +95,9 @@ export default function Profile() {
           }}
         >
           {[
-            { label: 'Streak', value: `${streak || 5} days` },
-            { label: 'Check-ins', value: checkIns },
-            { label: 'Stories', value: stories },
+            { label: 'Tiny Wins',  value: totalWins       },
+            { label: 'Stories',    value: storiesShared   },
+            { label: 'Day Streak', value: `${streak || 0}d` },
           ].map((stat) => (
             <div key={stat.label} style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>{stat.value}</div>
@@ -105,7 +112,7 @@ export default function Profile() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.1 }}
-        onClick={() => navigate('/journal')}
+        onClick={() => navigate('/home')}
         style={{
           background: '#211044',
           border: '1px solid rgba(255,255,255,0.07)',

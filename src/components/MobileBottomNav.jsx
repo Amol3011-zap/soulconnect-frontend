@@ -1,14 +1,15 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Home, BookHeart, Users, MessageCircle, UserRound } from 'lucide-react';
+import { Home, BookHeart, Users, Stethoscope, UserRound } from 'lucide-react';
 
+// MVP mobile nav — 5 primary destinations, no Journal
 const NAV_ITEMS = [
-  { id: 'home',      icon: Home,           label: 'Home',      path: '/home'      },
-  { id: 'stories',   icon: BookHeart,      label: 'Stories',   path: '/stories'   },
-  { id: 'community', icon: Users,          label: 'Community', path: '/community' },
-  { id: 'messages',  icon: MessageCircle,  label: 'Messages',  path: '/messages'  },
-  { id: 'profile',   icon: UserRound,      label: 'Profile',   path: '/profile'   },
+  { id: 'home',          icon: Home,          label: 'Home',         path: '/home'          },
+  { id: 'stories',       icon: BookHeart,      label: 'Stories',      path: '/stories'       },
+  { id: 'community',     icon: Users,          label: 'Circles',      path: '/community'     },
+  { id: 'professionals', icon: Stethoscope,    label: 'Professionals', path: '/professionals' },
+  { id: 'profile',       icon: UserRound,      label: 'Profile',      path: '/profile'       },
 ];
 
 export default function MobileBottomNav() {
