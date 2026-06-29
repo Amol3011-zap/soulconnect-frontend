@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Background gradient — deep indigo-purple matching brand -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2D1B69"/>
+      <stop offset="50%" stop-color="#3D2080"/>
+      <stop offset="100%" stop-color="#1A0A4E"/>
+    </linearGradient>
+    <!-- Golden glow radial -->
+    <radialGradient id="coreGlow" cx="50%" cy="52%" r="38%">
+      <stop offset="0%"   stop-color="#FFD96A" stop-opacity="0.95"/>
+      <stop offset="40%"  stop-color="#F5A623" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#C17D11" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Outer ambient glow -->
+    <radialGradient id="ambientGlow" cx="50%" cy="50%" r="55%">
+      <stop offset="0%"   stop-color="#F0A500" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#6D28D9" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Petal gold gradient -->
+    <linearGradient id="petalGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#FFE08A"/>
+      <stop offset="50%"  stop-color="#D4A017"/>
+      <stop offset="100%" stop-color="#A07010"/>
+    </linearGradient>
+    <!-- Inner petal lighter gold -->
+    <linearGradient id="innerPetal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#FFE9A0"/>
+      <stop offset="100%" stop-color="#C8880A"/>
+    </linearGradient>
+    <!-- Face silhouette gradient -->
+    <linearGradient id="faceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#FFF0C0"/>
+      <stop offset="100%" stop-color="#E8A820"/>
+    </linearGradient>
+    <filter id="glowFilter" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="coreFilter" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="110" ry="110" fill="url(#bgGrad)"/>
+
+  <!-- Ambient golden glow layer -->
+  <ellipse cx="256" cy="270" rx="200" ry="190" fill="url(#ambientGlow)"/>
+
+  <!-- Core bright glow -->
+  <ellipse cx="256" cy="268" rx="100" ry="90" fill="url(#coreGlow)" filter="url(#coreFilter)"/>
+
+  <!-- ── OUTER LARGE PETALS (5) ── -->
+  <!-- Center top petal -->
+  <path d="M256 110 C235 155 228 205 256 248 C284 205 277 155 256 110Z"
+        fill="url(#petalGold)" opacity="0.92" filter="url(#softGlow)"/>
+
+  <!-- Left outer petal -->
+  <path d="M130 195 C160 220 195 232 218 262 C208 230 188 198 130 195Z"
+        fill="url(#petalGold)" opacity="0.85" filter="url(#softGlow)"/>
+
+  <!-- Right outer petal -->
+  <path d="M382 195 C352 220 317 232 294 262 C304 230 324 198 382 195Z"
+        fill="url(#petalGold)" opacity="0.85" filter="url(#softGlow)"/>
+
+  <!-- Bottom-left outer petal -->
+  <path d="M118 340 C155 330 192 318 220 302 C192 325 168 355 118 340Z"
+        fill="url(#petalGold)" opacity="0.80"/>
+
+  <!-- Bottom-right outer petal -->
+  <path d="M394 340 C357 330 320 318 292 302 C320 325 344 355 394 340Z"
+        fill="url(#petalGold)" opacity="0.80"/>
+
+  <!-- ── MIDDLE PETALS ── -->
+  <!-- Left middle petal -->
+  <path d="M148 258 C178 252 210 255 235 268 C212 248 180 238 148 258Z"
+        fill="url(#innerPetal)" opacity="0.9"/>
+
+  <!-- Right middle petal -->
+  <path d="M364 258 C334 252 302 255 277 268 C300 248 332 238 364 258Z"
+        fill="url(#innerPetal)" opacity="0.9"/>
+
+  <!-- Center large inner petal -->
+  <path d="M256 160 C238 195 232 230 256 268 C280 230 274 195 256 160Z"
+        fill="url(#innerPetal)" opacity="0.95" filter="url(#softGlow)"/>
+
+  <!-- ── BOTTOM LOTUS BASE PETALS ── -->
+  <!-- Main base petal center -->
+  <path d="M256 268 C232 295 222 330 256 355 C290 330 280 295 256 268Z"
+        fill="url(#petalGold)" opacity="0.9"/>
+
+  <!-- Base petal left -->
+  <path d="M256 268 C228 278 205 295 198 330 C218 308 240 290 256 268Z"
+        fill="url(#petalGold)" opacity="0.78"/>
+
+  <!-- Base petal right -->
+  <path d="M256 268 C284 278 307 295 314 330 C294 308 272 290 256 268Z"
+        fill="url(#petalGold)" opacity="0.78"/>
+
+  <!-- Far left base curl -->
+  <path d="M188 310 C200 300 215 295 228 298 C215 305 202 315 188 310Z"
+        fill="url(#innerPetal)" opacity="0.7"/>
+
+  <!-- Far right base curl -->
+  <path d="M324 310 C312 300 297 295 284 298 C297 305 310 315 324 310Z"
+        fill="url(#innerPetal)" opacity="0.7"/>
+
+  <!-- ── TWO FACE SILHOUETTES in center petals ── -->
+  <!-- Left face (facing right) -->
+  <g filter="url(#glowFilter)" opacity="0.88">
+    <!-- Left figure head -->
+    <circle cx="232" cy="215" r="16" fill="url(#faceGrad)"/>
+    <!-- Left figure body suggestion -->
+    <path d="M220 231 Q224 250 222 265 Q230 258 238 265 Q236 250 232 231Z"
+          fill="url(#faceGrad)" opacity="0.85"/>
+    <!-- Left figure chin/jaw curve -->
+    <path d="M220 218 Q218 230 225 234" stroke="url(#faceGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Right face (facing left, mirrored) -->
+  <g filter="url(#glowFilter)" opacity="0.88">
+    <!-- Right figure head -->
+    <circle cx="280" cy="215" r="16" fill="url(#faceGrad)"/>
+    <!-- Right figure body suggestion -->
+    <path d="M292 231 Q288 250 290 265 Q282 258 274 265 Q276 250 280 231Z"
+          fill="url(#faceGrad)" opacity="0.85"/>
+    <!-- Right figure chin/jaw curve -->
+    <path d="M292 218 Q294 230 287 234" stroke="url(#faceGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- ── CENTER GLOW CORE ── -->
+  <circle cx="256" cy="262" r="22" fill="#FFD96A" opacity="0.6" filter="url(#coreFilter)"/>
+  <circle cx="256" cy="262" r="12" fill="#FFEBB0" opacity="0.9"/>
+  <circle cx="256" cy="262" r="5"  fill="#FFF5D0"/>
+
+  <!-- ── DECORATIVE SPARKLES ── -->
+  <circle cx="256" cy="108" r="4" fill="#FFD96A" opacity="0.85"/>
+  <circle cx="256" cy="108" r="7" fill="#FFD96A" opacity="0.2"/>
+
+  <circle cx="384" cy="188" r="3" fill="#FFD96A" opacity="0.75"/>
+  <circle cx="128" cy="188" r="3" fill="#FFD96A" opacity="0.75"/>
+
+  <circle cx="140" cy="340" r="2.5" fill="#FFD96A" opacity="0.6"/>
+  <circle cx="372" cy="340" r="2.5" fill="#FFD96A" opacity="0.6"/>
+
+  <!-- Small accent dots -->
+  <circle cx="195" cy="148" r="2" fill="#FFD96A" opacity="0.5"/>
+  <circle cx="317" cy="148" r="2" fill="#FFD96A" opacity="0.5"/>
+  <circle cx="104" cy="265" r="2" fill="#C4A030" opacity="0.4"/>
+  <circle cx="408" cy="265" r="2" fill="#C4A030" opacity="0.4"/>
+</svg>

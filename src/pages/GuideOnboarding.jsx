@@ -777,7 +777,7 @@ export default function GuideOnboarding({ onComplete }) {
       <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:560 }}>
         {/* Logo */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, marginBottom:24 }}>
-          <div style={{ width:36, height:36, borderRadius:10, background:'linear-gradient(135deg,#6D4AFF,#A78BFA)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:17, boxShadow:'0 4px 16px rgba(109,74,255,0.4)' }}>🪷</div>
+          <img src="/logo-icon.svg" alt="SoulConnect" style={{ width:36, height:36, borderRadius:10, boxShadow:'0 4px 16px rgba(109,74,255,0.4)', display:'block' }} />
           <span style={{ fontSize:16, fontWeight:800, color:'#fff' }}>Soul<span style={{ color:'#A78BFA' }}>Connect</span></span>
           <span style={{ background:'rgba(109,74,255,0.25)', color:'#C4B5FD', fontSize:10, fontWeight:700, padding:'3px 8px', borderRadius:99, border:'1px solid rgba(167,139,250,0.3)' }}>Guide Portal</span>
         </div>

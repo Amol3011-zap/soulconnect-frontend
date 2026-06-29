@@ -182,15 +182,11 @@ export default function DashboardLayout() {
 
         {/* Logo */}
         <div className="dash-logo" onClick={() => navigate('/home')}>
-          <div style={{
-            width: 34, height: 34, borderRadius: 11,
-            background: 'linear-gradient(135deg, #6D28D9, #A855F7)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 18,
-            boxShadow: '0 0 16px rgba(124,58,237,0.5)',
-          }}>
-            🪷
-          </div>
+          <img
+            src="/logo-icon.svg"
+            alt="SoulConnect"
+            style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: 'block' }}
+          />
           <span className="dash-logo-text">SoulConnect</span>
         </div>
 

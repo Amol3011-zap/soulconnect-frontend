@@ -220,13 +220,10 @@ export default function Footer() {
           <div>
             {/* Logo */}
             <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:16 }}>
-              <div style={{
-                width:44, height:44, borderRadius:14,
-                background:'linear-gradient(135deg,#6D4AFF,#A78BFA)',
-                display:'flex', alignItems:'center', justifyContent:'center',
-                fontSize:22, flexShrink:0,
+              <img src="/logo-icon.svg" alt="SoulConnect" style={{
+                width:44, height:44, borderRadius:14, flexShrink:0, display:'block',
                 boxShadow:'0 6px 24px rgba(109,74,255,0.45)',
-              }}>🪷</div>
+              }} />
               <div>
                 <div style={{ fontSize:19, fontWeight:800, color:'#fff', letterSpacing:'-0.02em', lineHeight:1 }}>
                   Soul<span style={{ color:'#A78BFA' }}>Connect</span>

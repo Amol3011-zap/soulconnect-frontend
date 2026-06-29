@@ -97,15 +97,11 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginRight: 44, flexShrink: 0 }}>
-            <div style={{
-              width: 38, height: 38, borderRadius: 12,
-              background: 'linear-gradient(135deg, #6D4AFF, #A78BFA)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 18,
-              boxShadow: '0 4px 16px rgba(109,74,255,0.35)',
-              flexShrink: 0,
-              transition: 'box-shadow 0.2s ease',
-            }}>🪷</div>
+            <img
+              src="/logo-icon.svg"
+              alt="SoulConnect"
+              style={{ width: 40, height: 40, borderRadius: 12, flexShrink: 0, display: 'block', boxShadow: '0 4px 16px rgba(109,74,255,0.35)' }}
+            />
             <div>
               <span style={{ fontSize: 16, fontWeight: 800, color: '#1F1B3D', letterSpacing: '-0.02em', display: 'block', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
                 Soul<span style={{ color: '#6D4AFF' }}>Connect</span>
