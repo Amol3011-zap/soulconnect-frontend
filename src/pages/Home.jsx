@@ -12,6 +12,9 @@ import {
   Users, Zap, Star, Moon, Monitor, Leaf,
   Target, Briefcase, BookOpen, Palette, Sparkles, Gift,
 } from 'lucide-react';
+import AICompanionCard from '../components/AICompanionCard';
+import AIInsightCard from '../components/AIInsightCard';
+import FloatingCompanion from '../components/FloatingCompanion';
 
 const CATEGORY_ICONS = {
   'Movement':          Activity,
@@ -677,6 +680,11 @@ export default function Home() {
           33%      { transform: translate(6px,-10px); }
           66%      { transform: translate(-4px,6px); }
         }
+        @keyframes companionParticleDrift {
+          0%,100% { transform: translate(0,0); }
+          33%      { transform: translate(4px,-8px); }
+          66%      { transform: translate(-3px,5px); }
+        }
         @keyframes orbFloat {
           0%,100% { transform: translateY(0px); }
           50%      { transform: translateY(-14px); }
@@ -817,80 +825,96 @@ export default function Home() {
         </div>
 
         {/* ════════════════════════════════════════════════════════════
-            SECTION 1 — SOUL CLIMATE HERO CARD
+            SECTION 1 — SPLIT HERO: SOUL CLIMATE + AI COMPANION
         ════════════════════════════════════════════════════════════ */}
         <div style={{
           margin: '20px 32px 16px',
-          background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
-          border: '1px solid rgba(139,92,246,0.2)',
-          borderRadius: 28,
-          padding: '28px 28px 24px',
-          position: 'relative',
-          overflow: 'hidden',
           display: 'grid',
-          gridTemplateColumns: '1fr auto',
-          gap: 20,
-          alignItems: 'center',
-          boxShadow: '0 12px 48px rgba(0,0,0,0.5), 0 0 60px rgba(124,58,237,0.15)',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 14,
           zIndex: 1,
+          position: 'relative',
         }}>
-          {/* Floating particles inside card */}
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-            <FloatingParticles count={10} />
-          </div>
-          {/* Inner top highlight */}
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-            background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent)',
-          }} />
-
-          {/* LEFT: text + check-in */}
-          <div style={{ zIndex: 1 }}>
-            <div style={SECTION_LABEL}>SOUL CLIMATE ⓘ</div>
-            <h2 style={{ fontSize: 26, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
-              How is your mind<br />feeling today?
-            </h2>
-            <p style={{ fontSize: 13, color: 'rgba(184,180,216,0.65)', margin: '0 0 20px', lineHeight: 1.6 }}>
-              Your check-in helps us support you better.
-            </p>
-            <motion.button
-              whileTap={{ scale: 0.97 }}
-              onClick={handleCheckIn}
-              style={{ ...PURPLE_BTN, fontSize: 13, padding: '10px 22px' }}
-            >
-              {selectedWeather ? '✓ Checked In' : 'Check In'}
-            </motion.button>
-
-            {/* Weather pills */}
-            <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap', marginTop: 18 }}>
-              {WEATHER_OPTIONS.map(opt => (
-                <button
-                  key={opt.id}
-                  className="weather-pill"
-                  onClick={() => handleWeatherSelect(opt.id)}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 5,
-                    background: selectedWeather === opt.id
-                      ? 'rgba(139,92,246,0.32)' : 'rgba(255,255,255,0.07)',
-                    border: selectedWeather === opt.id
-                      ? '1px solid rgba(168,85,247,0.6)' : '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: 20, padding: '5px 12px',
-                    fontSize: 11, color: '#E2DEFF', cursor: 'pointer', fontWeight: 500,
-                    whiteSpace: 'nowrap',
-                    boxShadow: selectedWeather === opt.id ? '0 0 12px rgba(124,58,237,0.3)' : 'none',
-                  }}
-                >
-                  <span>{opt.emoji}</span>
-                  <span>{opt.label}</span>
-                </button>
-              ))}
+          {/* ── LEFT: Soul Climate card ── */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+            style={{
+              background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
+              border: '1px solid rgba(139,92,246,0.2)',
+              borderRadius: 28,
+              padding: '26px 24px 22px',
+              position: 'relative',
+              overflow: 'hidden',
+              boxShadow: '0 12px 48px rgba(0,0,0,0.5), 0 0 60px rgba(124,58,237,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            {/* Floating particles */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+              <FloatingParticles count={8} />
             </div>
-          </div>
+            {/* Top shine */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+              background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent)',
+            }} />
 
-          {/* RIGHT: Orb */}
-          <div style={{ zIndex: 1, display: 'flex', justifyContent: 'center' }}>
-            <SoulClimateOrb />
-          </div>
+            <div style={{ zIndex: 1 }}>
+              <div style={SECTION_LABEL}>SOUL CLIMATE ⓘ</div>
+              <h2 style={{ fontSize: 24, fontWeight: 800, color: '#fff', margin: '0 0 7px', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
+                How is your mind<br />feeling today?
+              </h2>
+              <p style={{ fontSize: 12.5, color: 'rgba(184,180,216,0.65)', margin: '0 0 18px', lineHeight: 1.6 }}>
+                Your check-in helps us support you better.
+              </p>
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                whileHover={{ boxShadow: '0 6px 28px rgba(124,58,237,0.55)' }}
+                onClick={handleCheckIn}
+                style={{ ...PURPLE_BTN, fontSize: 13, padding: '10px 22px' }}
+              >
+                {selectedWeather ? '✓ Checked In' : 'Check In'}
+              </motion.button>
+
+              {/* Weather pills */}
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 16 }}>
+                {WEATHER_OPTIONS.map(opt => (
+                  <button
+                    key={opt.id}
+                    className="weather-pill"
+                    onClick={() => handleWeatherSelect(opt.id)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 5,
+                      background: selectedWeather === opt.id
+                        ? 'rgba(139,92,246,0.32)' : 'rgba(255,255,255,0.07)',
+                      border: selectedWeather === opt.id
+                        ? '1px solid rgba(168,85,247,0.6)' : '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: 20, padding: '5px 11px',
+                      fontSize: 11, color: '#E2DEFF', cursor: 'pointer', fontWeight: 500,
+                      whiteSpace: 'nowrap',
+                      boxShadow: selectedWeather === opt.id ? '0 0 12px rgba(124,58,237,0.3)' : 'none',
+                    }}
+                  >
+                    <span>{opt.emoji}</span>
+                    <span>{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ── RIGHT: AI Companion card ── */}
+          <AICompanionCard
+            firstName={firstName}
+            greeting={greeting}
+            checkedInDays={todayEntry ? 4 : 0}
+            onReflection={() => navigate('/stories')}
+            onCheckIn={handleCheckIn}
+          />
         </div>
 
         {/* ════════════════════════════════════════════════════════════
@@ -1076,7 +1100,16 @@ export default function Home() {
       {/* ════════════════════ RIGHT SIDEBAR ════════════════════ */}
       <div className="home-right-sidebar">
 
-        {/* ── Card 1: Today's Focus ── */}
+        {/* ── Card 1: AI Companion Insight ── */}
+        <AIInsightCard
+          insight="You've been feeling heavy lately."
+          suggestion="Would you like to try a 2-minute breathing exercise?"
+          onAction={() => setShowBreathing(true)}
+          actionLabel="Start Breathing"
+          isActioned={breathingDone}
+        />
+
+        {/* ── Card 2: Today's Focus ── */}
         <div className="sidebar-card-inner" style={{ ...CARD_STYLE }}>
           <div style={SECTION_LABEL}>TODAY'S FOCUS ⓘ</div>
 
@@ -1171,10 +1204,18 @@ export default function Home() {
           </button>
         </div>
 
-        {/* ── Card 4: This Week Stats ── */}
+        {/* ── Card 5: This Week Stats ── */}
         <WeeklyStatsCard weeklyStats={weeklyStats} />
 
       </div>{/* end .home-right-sidebar */}
+
+      {/* ════════════════════ FLOATING COMPANION ════════════════════ */}
+      <FloatingCompanion
+        onReflection={() => navigate('/stories')}
+        onBreathing={() => setShowBreathing(true)}
+        onEmotionalWeather={handleCheckIn}
+        onSupport={() => navigate('/professionals')}
+      />
     </>
   );
 }
