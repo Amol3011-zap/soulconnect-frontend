@@ -82,11 +82,30 @@ export default function About() {
       "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap";
     document.head.appendChild(link);
 
+    // Responsive styles for Our Values grid
+    const style = document.createElement("style");
+    style.id = "ab-values-responsive";
+    style.textContent = [
+      "@media(max-width:767px){",
+      ".ab-values-grid{grid-template-columns:1fr!important;gap:20px!important;}",
+      ".ab-values-card{padding:24px!important;border-radius:24px!important;min-height:auto!important;width:100%!important;max-width:420px!important;margin-left:auto!important;margin-right:auto!important;box-sizing:border-box!important;}",
+      ".ab-values-icon{font-size:44px!important;margin-bottom:20px!important;display:block!important;}",
+      ".ab-values-h3{font-size:22px!important;line-height:1.2!important;max-width:none!important;}",
+      ".ab-values-p{font-size:16px!important;line-height:1.7!important;word-break:normal!important;overflow-wrap:break-word!important;}",
+      "}",
+      "@media(min-width:768px) and (max-width:1023px){",
+      ".ab-values-grid{grid-template-columns:repeat(2,1fr)!important;gap:22px!important;}",
+      "}",
+    ].join("");
+    document.head.appendChild(style);
+
     const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.head.removeChild(link);
+      const s = document.getElementById("ab-values-responsive");
+      if (s) document.head.removeChild(s);
     };
   }, []);
 
@@ -394,6 +413,7 @@ export default function About() {
           </div>
 
           <div
+            className="ab-values-grid"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
@@ -403,6 +423,7 @@ export default function About() {
             {beliefs.map((b) => (
               <div
                 key={b.title}
+                className="ab-values-card"
                 style={{
                   background: "#fff",
                   borderRadius: 24,
@@ -420,8 +441,9 @@ export default function About() {
                   e.currentTarget.style.boxShadow = "0 4px 24px rgba(109,74,255,0.08)";
                 }}
               >
-                <div style={{ fontSize: 36, marginBottom: 16 }}>{b.icon}</div>
+                <div className="ab-values-icon" style={{ fontSize: 36, marginBottom: 16 }}>{b.icon}</div>
                 <h3
+                  className="ab-values-h3"
                   style={{
                     fontFamily: "'Playfair Display', serif",
                     fontSize: 20,
@@ -432,7 +454,7 @@ export default function About() {
                 >
                   {b.title}
                 </h3>
-                <p style={{ fontSize: 15, color: "#4B3A7A", lineHeight: 1.65, margin: 0 }}>
+                <p className="ab-values-p" style={{ fontSize: 15, color: "#4B3A7A", lineHeight: 1.65, margin: 0 }}>
                   {b.body}
                 </p>
               </div>

@@ -746,6 +746,46 @@ export default function Landing() {
     @media(max-width:480px){
       .l-struggle-grid{grid-template-columns:repeat(2,1fr)!important;}
     }
+
+    /* ── Values / "Building In Public" card grid ── */
+    @media(max-width:767px){
+      .l-values-grid{
+        grid-template-columns:1fr!important;
+        max-width:420px!important;
+        margin-left:auto!important;
+        margin-right:auto!important;
+      }
+      .l-values-card{
+        padding:24px!important;
+        border-radius:24px!important;
+        min-height:auto!important;
+        width:100%!important;
+      }
+      .l-values-icon{
+        font-size:44px!important;
+        margin-bottom:20px!important;
+        display:block!important;
+      }
+      .l-values-h3{
+        font-size:22px!important;
+        line-height:1.2!important;
+        max-width:none!important;
+      }
+      .l-values-p{
+        font-size:16px!important;
+        line-height:1.7!important;
+        word-break:normal!important;
+        overflow-wrap:break-word!important;
+      }
+    }
+    @media(min-width:768px) and (max-width:1023px){
+      .l-values-grid{
+        grid-template-columns:repeat(2,1fr)!important;
+        max-width:680px!important;
+        margin-left:auto!important;
+        margin-right:auto!important;
+      }
+    }
   `;
 
   const STEPS = [
@@ -1340,7 +1380,7 @@ export default function Landing() {
             early user — you are a <strong style={{color:P}}>founding community member</strong> shaping what this becomes.
           </p>
 
-          <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)',
+          <div className="l-values-grid" style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)',
             gap:24, maxWidth:820, margin:'0 auto'}}>
             {[
               {icon:'🧪', title:'We Listen First',
@@ -1350,16 +1390,16 @@ export default function Landing() {
               {icon:'💜', title:'No Fake Promises',
                desc:'We are honest about what we are building. Early access = real community, not a polished product.'},
             ].map((p,i)=>(
-              <div key={i} style={{background:'#fff', borderRadius:22, padding:'32px 24px',
+              <div key={i} className="l-values-card" style={{background:'#fff', borderRadius:22, padding:'32px 24px',
                 border:'1.5px solid rgba(109,74,255,0.09)',
                 boxShadow:'0 4px 24px rgba(109,74,255,0.07)', textAlign:'left',
                 transition:'all .28s',}}
                 onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-6px)';e.currentTarget.style.boxShadow='0 18px 48px rgba(109,74,255,0.14)';}}
                 onMouseLeave={e=>{e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.boxShadow='0 4px 24px rgba(109,74,255,0.07)';}}
               >
-                <div style={{fontSize:34, marginBottom:16}}>{p.icon}</div>
-                <h3 style={{fontSize:16, fontWeight:800, color:DARK, marginBottom:10, lineHeight:1.3}}>{p.title}</h3>
-                <p style={{fontSize:13, color:'#6B7280', lineHeight:1.68}}>{p.desc}</p>
+                <div className="l-values-icon" style={{fontSize:34, marginBottom:16}}>{p.icon}</div>
+                <h3 className="l-values-h3" style={{fontSize:16, fontWeight:800, color:DARK, marginBottom:10, lineHeight:1.3}}>{p.title}</h3>
+                <p className="l-values-p" style={{fontSize:13, color:'#6B7280', lineHeight:1.68}}>{p.desc}</p>
               </div>
             ))}
           </div>
