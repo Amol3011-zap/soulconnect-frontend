@@ -2,7 +2,6 @@ import React from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Home, BookHeart, Users, MessageCircle, BookOpen, Flower2, Stethoscope, UserRound } from 'lucide-react';
-import { useAuthStore } from '../store/auth';
 
 const NAV_ITEMS = [
   { icon: Home,          label: 'Home',          to: '/home'          },
@@ -61,8 +60,6 @@ function SidebarIllustration() {
 export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuthStore();
-  const firstName = user?.name?.split(' ')[0] || 'Friend';
 
   return (
     <div style={{
@@ -232,7 +229,7 @@ export default function DashboardLayout() {
               <SidebarIllustration />
             </div>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4, position: 'relative', zIndex: 1 }}>
-              Keep going, {firstName} 💜
+              Keep going 💜
             </div>
             <div style={{ fontSize: 11, color: 'rgba(184,180,216,0.7)', lineHeight: 1.55, marginBottom: 14, position: 'relative', zIndex: 1 }}>
               You're showing up<br />for yourself.
