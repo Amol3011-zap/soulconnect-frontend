@@ -42,7 +42,7 @@ export default function Community() {
   return (
     <div
       style={{
-        padding: '20px 32px',
+        padding: 'clamp(16px, 4vw, 32px)',
         minHeight: '100vh',
         background: BG,
         fontFamily: "'Inter', sans-serif",

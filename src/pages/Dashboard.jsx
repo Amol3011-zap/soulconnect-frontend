@@ -650,6 +650,10 @@ export default function Dashboard() {
         @media (max-width: 900px) {
           .dc-left-sidebar { display: none !important; }
         }
+        @media (max-width: 768px) {
+          .dc-chip::-webkit-scrollbar { display: none; }
+          .dc-msg-area { padding: 12px 12px 8px !important; }
+        }
       `}</style>
 
       {showCrisisPopup && (
@@ -1043,8 +1047,9 @@ export default function Dashboard() {
 
               {/* Suggestion chips */}
               <div style={{
-                padding: '10px 24px 0',
-                display: 'flex', gap: 7, flexWrap: 'wrap',
+                padding: '8px 16px 0',
+                display: 'flex', gap: 7, flexWrap: 'nowrap',
+                overflowX: 'auto', scrollbarWidth: 'none',
                 flexShrink: 0,
               }}>
                 {SUGGESTION_CHIPS.map(chip => (

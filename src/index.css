@@ -198,10 +198,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Touch target enforcement ── */
-button, a, [role="button"], [role="tab"], [role="radio"], [role="checkbox"] {
-  min-height: var(--touch-min, 48px);
-  min-width: var(--touch-min, 48px);
+/* ── Touch target enforcement (mobile only) ── */
+@media (max-width: 768px) {
+  button, [role="button"], [role="tab"] {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 /* Exception: inline text links and icon-only small buttons */
 button.sc-inline, a.sc-inline { min-height: unset; min-width: unset; }

@@ -664,11 +664,36 @@ export default function Home() {
             margin-right: 0 !important;
             padding-bottom: 0 !important;
           }
-          /* Tighten section padding on mobile */
-          .home-section-pad {
+          /* Header */
+          .home-header {
+            padding: 20px 16px 0 !important;
+          }
+          .home-header h1 {
+            font-size: 22px !important;
+          }
+          /* All sections full-width with 16px side padding */
+          .home-section {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
             padding-left: 16px !important;
             padding-right: 16px !important;
           }
+          /* Soul climate card horizontal → vertical on mobile */
+          .soul-climate-body {
+            flex-direction: column !important;
+            gap: 16px !important;
+          }
+          .soul-climate-body > * { width: 100% !important; }
+          /* Challenges: show 1.2 cards at a time */
+          .challenges-scroll { padding-left: 16px !important; padding-right: 16px !important; }
+          .challenge-card { min-width: 200px !important; }
+          /* Stories: show 1.2 at a time */
+          .stories-scroll { padding-left: 16px !important; }
+          .story-card { min-width: 240px !important; width: 240px !important; }
+          /* Soul climate card padding */
+          .soul-climate-card { padding: 16px !important; }
+          /* Section headers */
+          .section-header { padding: 0 16px !important; }
         }
         .weather-pill { transition: all 0.2s ease; }
         .weather-pill:hover { background: rgba(139,92,246,0.25) !important; }
@@ -770,7 +795,7 @@ export default function Home() {
         </div>
 
         {/* ── HEADER ── */}
-        <div style={{
+        <div className="home-header" style={{
           padding: '24px 32px 0',
           display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
           position: 'relative', zIndex: 1,
