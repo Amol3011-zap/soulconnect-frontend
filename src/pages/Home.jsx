@@ -657,6 +657,19 @@ export default function Home() {
           .home-right-sidebar { display: none; }
           .home-main { margin-right: 0 !important; padding-bottom: 100px; }
         }
+
+        /* ── Mobile ≤ 768px ── */
+        @media (max-width: 768px) {
+          .home-main {
+            margin-right: 0 !important;
+            padding-bottom: 0 !important;
+          }
+          /* Tighten section padding on mobile */
+          .home-section-pad {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+        }
         .weather-pill { transition: all 0.2s ease; }
         .weather-pill:hover { background: rgba(139,92,246,0.25) !important; }
         .icon-btn { transition: background 0.2s ease; }
