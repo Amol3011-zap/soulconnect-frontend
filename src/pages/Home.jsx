@@ -6,10 +6,33 @@ import { useWeatherStore } from '../store/weather';
 import { useTinyWinsStore } from '../store/tinyWins';
 import { CATEGORY_META } from '../data/tinyWinsChallenges';
 import {
-  Search, Bell, ChevronLeft, ChevronRight,
-  Heart, MessageCircle, Bookmark, Share2, Clock,
-  CheckCircle, Trophy, Zap, MoreHorizontal,
+  Search, Bell, Heart, MessageCircle, Bookmark, Clock,
+  CheckCircle, MoreHorizontal,
+  Activity, Droplets, Wind, Brain, Flower2,
+  Users, Zap, Star, Moon, Monitor, Leaf,
+  Target, Briefcase, BookOpen, Palette, Sparkles, Gift,
 } from 'lucide-react';
+
+const CATEGORY_ICONS = {
+  'Movement':          Activity,
+  'Body':              Droplets,
+  'Breathing':         Wind,
+  'Mind':              Brain,
+  'Meditation':        Flower2,
+  'Connection':        Users,
+  'Confidence':        Zap,
+  'Gratitude':         Star,
+  'Sleep':             Moon,
+  'Digital Wellbeing': Monitor,
+  'Nature':            Leaf,
+  'Focus':             Target,
+  'Relationships':     Heart,
+  'Work':              Briefcase,
+  'Learning':          BookOpen,
+  'Creativity':        Palette,
+  'Self Care':         Sparkles,
+  'Kindness':          Gift,
+};
 import BreathingSession from '../components/BreathingSession';
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -237,6 +260,7 @@ function HealingTreePremium({ totalWins = 0 }) {
 function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
   if (!win) return null;
   const meta = CATEGORY_META[win.category] || {};
+  const IconComp = CATEGORY_ICONS[win.category];
 
   return (
     <motion.div
@@ -286,14 +310,17 @@ function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
 
       {/* Category icon bubble */}
       <div style={{
-        width: 54, height: 54, borderRadius: '50%',
+        width: 60, height: 60, borderRadius: '50%',
         background: meta.bg || 'rgba(139,92,246,0.15)',
-        border: `1px solid ${meta.color ? meta.color + '35' : 'rgba(139,92,246,0.25)'}`,
+        border: `1px solid ${meta.color ? meta.color + '40' : 'rgba(139,92,246,0.25)'}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 26, margin: '8px auto 14px',
-        boxShadow: `0 0 20px ${meta.bg || 'rgba(139,92,246,0.1)'}`,
+        margin: '10px auto 14px',
+        boxShadow: `0 0 24px ${meta.bg || 'rgba(139,92,246,0.1)'}, inset 0 1px 0 rgba(255,255,255,0.08)`,
       }}>
-        {meta.icon || '✨'}
+        {IconComp
+          ? <IconComp size={28} color={meta.color || '#A78BFA'} strokeWidth={1.5} />
+          : <span style={{ fontSize: 26 }}>{meta.icon || '✨'}</span>
+        }
       </div>
 
       {/* Title */}
@@ -1124,7 +1151,7 @@ export default function Home() {
               color: '#C4B5FD', fontSize: 10, fontWeight: 700,
               borderRadius: 20, padding: '3px 10px',
             }}>
-              {totalWins} wins
+              Level {totalWins >= 500 ? 5 : totalWins >= 250 ? 4 : totalWins >= 100 ? 3 : totalWins >= 25 ? 2 : 1}
             </span>
           </div>
 
