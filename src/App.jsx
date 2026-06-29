@@ -45,8 +45,9 @@ const Professionals = lazy(() => import('./pages/Professionals'));
 const Profile       = lazy(() => import('./pages/Profile'));
 
 // Soul Stories sub-pages
-const StoryDetail   = lazy(() => import('./pages/StoryDetail'));
-const SavedStories  = lazy(() => import('./pages/SavedStories'));
+const StoryDetail        = lazy(() => import('./pages/StoryDetail'));
+const SavedStories       = lazy(() => import('./pages/SavedStories'));
+const NotificationPage   = lazy(() => import('./pages/NotificationPage'));
 
 // Legacy pages kept for backward compat
 const Healers       = lazy(() => import('./pages/Healers'));
@@ -177,7 +178,8 @@ function AppInner() {
                 <Route path="/profile"       element={<Suspense fallback={<PageLoader />}><Profile /></Suspense>} />
                 <Route path="/tiny-wins"    element={<Suspense fallback={<PageLoader />}><TinyWins /></Suspense>} />
                 <Route path="/story/:id"   element={<Suspense fallback={<PageLoader />}><StoryDetail /></Suspense>} />
-                <Route path="/saved"       element={<Suspense fallback={<PageLoader />}><SavedStories /></Suspense>} />
+                <Route path="/saved"         element={<Suspense fallback={<PageLoader />}><SavedStories /></Suspense>} />
+                <Route path="/notifications" element={<Suspense fallback={<PageLoader />}><NotificationPage /></Suspense>} />
 
                 {/* Legacy pages inside layout */}
                 <Route path="/healers"       element={<Suspense fallback={<PageLoader />}><Healers /></Suspense>} />

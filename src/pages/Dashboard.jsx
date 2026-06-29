@@ -6,7 +6,6 @@ import ThemeToggle from '../components/ThemeToggle';
 import ActivitySuggestions from '../components/ActivitySuggestions';
 import GuidedHealing from '../components/GuidedHealing';
 import DailyChallenges from '../components/DailyChallenges';
-import DashboardStats from '../components/DashboardStats';
 import { journeyAPI } from '../services/api';
 
 // ── Crisis phrase detection ────────────────────────────────────────────────
@@ -1329,9 +1328,6 @@ export default function Dashboard() {
             padding: '20px 16px',
           }}
         >
-          {/* Stat Cards */}
-          <DashboardStats />
-
           {/* Card 2 — Daily Affirmation */}
           <div style={{
             background: 'linear-gradient(135deg, #F8F4FF, #F3EEFF)',

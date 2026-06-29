@@ -18,6 +18,8 @@ import FloatingCompanion from '../components/FloatingCompanion';
 import TodaysReflectionModal from '../components/TodaysReflectionModal';
 import ProgressModal from '../components/ProgressModal';
 import WeeklyInsightsModal from '../components/WeeklyInsightsModal';
+import SearchModal from '../components/SearchModal';
+import NotificationDropdown from '../components/NotificationDropdown';
 import { useReflections } from '../hooks/useReflections';
 
 const CATEGORY_ICONS = {
@@ -580,6 +582,11 @@ export default function Home() {
   const [progressModalOpen, setProgressModalOpen] = useState(false);
   const [weeklyInsightsOpen, setWeeklyInsightsOpen] = useState(false);
 
+  // Search + Notifications
+  const [searchOpen, setSearchOpen]   = useState(false);
+  const [notifOpen,  setNotifOpen]    = useState(false);
+  const bellRef = useRef(null);
+
   // Ref for "Continue Journey" smooth scroll to Today's Focus card
   const todaysFocusRef = useRef(null);
 
@@ -641,11 +648,11 @@ export default function Home() {
           backdrop-filter: blur(24px);
           -webkit-backdrop-filter: blur(24px);
           border-left: 1px solid rgba(255,255,255,0.06);
-          overflow-y: auto; padding: 24px 16px;
+          display: flex; flex-direction: column;
+          padding: 24px 16px 20px;
           z-index: 50;
-          scrollbar-width: none;
+          overflow: hidden;
         }
-        .home-right-sidebar::-webkit-scrollbar { display: none; }
         @media (max-width: 1100px) {
           .home-right-sidebar { display: none; }
           .home-main { margin-right: 0 !important; padding-bottom: 100px; }
@@ -692,6 +699,9 @@ export default function Home() {
           />
         )}
       </AnimatePresence>
+
+      {/* ── Global Search modal ── */}
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* ── Today's Reflection modal ── */}
       <TodaysReflectionModal
@@ -762,7 +772,7 @@ export default function Home() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 4 }}>
-            <button className="icon-btn" style={{
+            <button className="icon-btn" onClick={() => setSearchOpen(true)} style={{
               background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)',
               borderRadius: 12, width: 40, height: 40,
               display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
@@ -770,13 +780,19 @@ export default function Home() {
               <Search size={16} color="#B8B4D8" />
             </button>
 
-            <div style={{ position: 'relative' }}>
-              <button className="icon-btn" style={{
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)',
-                borderRadius: 12, width: 40, height: 40,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-              }}>
-                <Bell size={16} color="#B8B4D8" />
+            <div ref={bellRef} style={{ position: 'relative' }}>
+              <button
+                className="icon-btn"
+                onClick={() => setNotifOpen(prev => !prev)}
+                style={{
+                  background: notifOpen ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.06)',
+                  border: notifOpen ? '1px solid rgba(168,85,247,0.4)' : '1px solid rgba(255,255,255,0.09)',
+                  borderRadius: 12, width: 40, height: 40,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <Bell size={16} color={notifOpen ? '#A78BFA' : '#B8B4D8'} />
               </button>
               <span style={{
                 position: 'absolute', top: -5, right: -5,
@@ -786,9 +802,14 @@ export default function Home() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 border: '2px solid #080812',
               }}>3</span>
+              <NotificationDropdown
+                isOpen={notifOpen}
+                onClose={() => setNotifOpen(false)}
+                anchorRef={bellRef}
+              />
             </div>
 
-            <div style={{
+            <div onClick={() => navigate('/profile')} style={{
               width: 38, height: 38, borderRadius: '50%',
               background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -801,37 +822,33 @@ export default function Home() {
         </div>
 
         {/* ════════════════════════════════════════════════════════════
-            SECTION 1 — SPLIT HERO: SOUL CLIMATE + AI COMPANION
+            SECTION 1 — SOUL CLIMATE (full width)
         ════════════════════════════════════════════════════════════ */}
         <div style={{
           margin: '20px 32px 16px',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 14,
-          zIndex: 1,
-          position: 'relative',
+          position: 'relative', zIndex: 1,
         }}>
-          {/* ── LEFT: Soul Climate card ── */}
+          {/* ── Soul Climate card (full width) ── */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
             style={{
               background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
               border: '1px solid rgba(139,92,246,0.2)',
               borderRadius: 28,
-              padding: '26px 24px 22px',
+              padding: '26px 32px 24px',
               position: 'relative',
               overflow: 'hidden',
               boxShadow: '0 12px 48px rgba(0,0,0,0.5), 0 0 60px rgba(124,58,237,0.15)',
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 48,
             }}
           >
             {/* Floating particles */}
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-              <FloatingParticles count={8} />
+              <FloatingParticles count={12} />
             </div>
             {/* Top shine */}
             <div style={{
@@ -839,43 +856,57 @@ export default function Home() {
               background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent)',
             }} />
 
-            <div style={{ zIndex: 1 }}>
+            {/* Left: title + button */}
+            <div style={{ zIndex: 1, flexShrink: 0 }}>
               <div style={SECTION_LABEL}>SOUL CLIMATE ⓘ</div>
-              <h2 style={{ fontSize: 24, fontWeight: 800, color: '#fff', margin: '0 0 7px', lineHeight: 1.25, letterSpacing: '-0.02em' }}>
+              <h2 style={{ fontSize: 26, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.2, letterSpacing: '-0.02em' }}>
                 How is your mind<br />feeling today?
               </h2>
-              <p style={{ fontSize: 12.5, color: 'rgba(184,180,216,0.65)', margin: '0 0 18px', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 13, color: 'rgba(184,180,216,0.65)', margin: '0 0 20px', lineHeight: 1.6 }}>
                 Your check-in helps us support you better.
               </p>
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 whileHover={{ boxShadow: '0 6px 28px rgba(124,58,237,0.55)' }}
                 onClick={handleCheckIn}
-                style={{ ...PURPLE_BTN, fontSize: 13, padding: '10px 22px' }}
+                style={{ ...PURPLE_BTN, fontSize: 13, padding: '10px 28px' }}
               >
-                {selectedWeather ? '✓ Checked In' : 'Check In'}
+                {selectedWeather ? '✓ Checked In' : 'Check In Now'}
               </motion.button>
+            </div>
 
-              {/* Weather pills */}
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 16 }}>
+            {/* Divider */}
+            <div style={{
+              width: 1, alignSelf: 'stretch',
+              background: 'rgba(168,85,247,0.15)',
+              flexShrink: 0, zIndex: 1,
+            }} />
+
+            {/* Right: weather pills grid */}
+            <div style={{ zIndex: 1, flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(196,181,253,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>
+                Select your mood
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {WEATHER_OPTIONS.map(opt => (
                   <button
                     key={opt.id}
                     className="weather-pill"
                     onClick={() => handleWeatherSelect(opt.id)}
                     style={{
-                      display: 'flex', alignItems: 'center', gap: 5,
+                      display: 'flex', alignItems: 'center', gap: 6,
                       background: selectedWeather === opt.id
                         ? 'rgba(139,92,246,0.32)' : 'rgba(255,255,255,0.07)',
                       border: selectedWeather === opt.id
                         ? '1px solid rgba(168,85,247,0.6)' : '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: 20, padding: '5px 11px',
-                      fontSize: 11, color: '#E2DEFF', cursor: 'pointer', fontWeight: 500,
+                      borderRadius: 24, padding: '7px 16px',
+                      fontSize: 12, color: '#E2DEFF', cursor: 'pointer', fontWeight: 500,
                       whiteSpace: 'nowrap',
-                      boxShadow: selectedWeather === opt.id ? '0 0 12px rgba(124,58,237,0.3)' : 'none',
+                      boxShadow: selectedWeather === opt.id ? '0 0 14px rgba(124,58,237,0.35)' : 'none',
+                      transition: 'all 0.2s',
                     }}
                   >
-                    <span>{opt.emoji}</span>
+                    <span style={{ fontSize: 15 }}>{opt.emoji}</span>
                     <span>{opt.label}</span>
                   </button>
                 ))}
@@ -883,14 +914,6 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* ── RIGHT: AI Companion card ── */}
-          <AICompanionCard
-            firstName={firstName}
-            greeting={greeting}
-            checkedInDays={todayEntry ? 4 : 0}
-            onReflection={() => setReflectionModalOpen(true)}
-            onCheckIn={handleCheckIn}
-          />
         </div>
 
         {/* ════════════════════════════════════════════════════════════
@@ -1076,20 +1099,8 @@ export default function Home() {
       {/* ════════════════════ RIGHT SIDEBAR ════════════════════ */}
       <div className="home-right-sidebar">
 
-        {/* ── Card 1: AI Companion Insight ── */}
-        <AIInsightCard
-          streak={todayEntry ? 4 : 0}
-          winsToday={completedCount}
-          weeklyTotal={weeklyStats?.total || 0}
-          hasCheckedIn={Boolean(todayEntry)}
-          onViewProgress={() => setProgressModalOpen(true)}
-          onReflection={() => setReflectionModalOpen(true)}
-          onWeeklyInsights={() => setWeeklyInsightsOpen(true)}
-          onContinueJourney={() => todaysFocusRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-        />
-
-        {/* ── Card 2: Today's Focus ── */}
-        <div ref={todaysFocusRef} className="sidebar-card-inner" style={{ ...CARD_STYLE }}>
+        {/* ── Card 1: Today's Focus ── */}
+        <div ref={todaysFocusRef} className="sidebar-card-inner" style={{ ...CARD_STYLE, flex: 1, minHeight: 0, marginBottom: 14, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div style={SECTION_LABEL}>TODAY'S FOCUS ⓘ</div>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -1125,8 +1136,8 @@ export default function Home() {
           </motion.button>
         </div>
 
-        {/* ── Card 2: Upcoming Session ── */}
-        <div className="sidebar-card-inner" style={{ ...CARD_STYLE }}>
+        {/* ── Card 3: Upcoming Session ── */}
+        <div className="sidebar-card-inner" style={{ ...CARD_STYLE, flex: 1, minHeight: 0, marginBottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div style={SECTION_LABEL}>UPCOMING SESSION</div>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>

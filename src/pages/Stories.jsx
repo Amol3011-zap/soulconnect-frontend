@@ -265,7 +265,7 @@ function Toast({ message, visible }) {
 }
 
 /* ─── Composer Card ──────────────────────────────────────────────────────────── */
-function ComposerCard({ onShare }) {
+function ComposerCard({ onShare, triggerOpen, onTriggerConsumed }) {
   const { drafts, setDraft, clearDraft } = useStoriesStore();
   const [focused, setFocused] = useState(false);
   const [promptIdx, setPromptIdx] = useState(0);
@@ -276,6 +276,14 @@ function ComposerCard({ onShare }) {
     const t = setInterval(() => setPromptIdx(i => (i + 1) % PROMPTS.length), 15000);
     return () => clearInterval(t);
   }, []);
+
+  // Open composer when triggered externally (e.g. FloatingShareButton)
+  useEffect(() => {
+    if (!triggerOpen) return;
+    setFocused(true);
+    setTimeout(() => textareaRef.current?.focus(), 80);
+    onTriggerConsumed?.();
+  }, [triggerOpen]);
 
   const Dropdown = ({ id, icon: Icon, value, options, placeholder, onSelect }) => (
     <div style={{ position: 'relative' }}>
@@ -1132,6 +1140,7 @@ export default function Stories() {
   const [searchQuery, setSearchQuery] = useState('');
   const [toast, setToast] = useState({ visible: false, message: '' });
   const [visibleCount, setVisibleCount] = useState(10);
+  const [composerOpen, setComposerOpen] = useState(false);
   const sentinelRef = useRef(null);
 
   const showToast = useCallback((message) => {
@@ -1278,7 +1287,11 @@ export default function Stories() {
       </motion.div>
 
       {/* ── Composer ── */}
-      <ComposerCard onShare={handleComposerShare} />
+      <ComposerCard
+        onShare={handleComposerShare}
+        triggerOpen={composerOpen}
+        onTriggerConsumed={() => setComposerOpen(false)}
+      />
 
       {/* ── Featured Story ── */}
       <FeaturedStoryCard story={featuredStory} onNavigate={(id) => navigate(`/story/${id}`)} />
@@ -1320,7 +1333,10 @@ export default function Stories() {
       )}
 
       {/* ── Floating Button ── */}
-      <FloatingShareButton onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+      <FloatingShareButton onClick={() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => setComposerOpen(true), 350);
+      }} />
     </div>
   );
 }

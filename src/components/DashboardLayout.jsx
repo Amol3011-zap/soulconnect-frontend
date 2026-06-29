@@ -204,51 +204,6 @@ export default function DashboardLayout() {
           ))}
         </nav>
 
-        {/* Motivation card */}
-        <div style={{ padding: '12px 12px 22px' }}>
-          <div style={{
-            background: 'linear-gradient(145deg, rgba(30,10,62,0.95), rgba(45,16,96,0.9))',
-            border: '1px solid rgba(139,92,246,0.2)',
-            borderRadius: 20,
-            padding: '18px 14px',
-            textAlign: 'center',
-            boxShadow: '0 0 30px rgba(124,58,237,0.12), inset 0 1px 0 rgba(255,255,255,0.06)',
-            position: 'relative',
-            overflow: 'hidden',
-          }}>
-            {/* Inner glow */}
-            <div style={{
-              position: 'absolute', top: -20, left: '50%', transform: 'translateX(-50%)',
-              width: 100, height: 80,
-              background: 'radial-gradient(ellipse, rgba(168,85,247,0.2) 0%, transparent 70%)',
-              pointerEvents: 'none',
-            }} />
-            <div className="sidebar-illus" style={{ display: 'flex', justifyContent: 'center', marginBottom: 10, position: 'relative', zIndex: 1 }}>
-              <SidebarIllustration />
-            </div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4, position: 'relative', zIndex: 1 }}>
-              Keep going, {firstName} 💜
-            </div>
-            <div style={{ fontSize: 11, color: 'rgba(184,180,216,0.7)', lineHeight: 1.55, marginBottom: 14, position: 'relative', zIndex: 1 }}>
-              You're showing up<br />for yourself.
-            </div>
-            <button
-              onClick={() => navigate('/profile')}
-              style={{
-                width: '100%', padding: '9px 0', borderRadius: 12,
-                background: 'linear-gradient(135deg, rgba(124,58,237,0.5), rgba(168,85,247,0.35))',
-                border: '1px solid rgba(139,92,246,0.3)',
-                color: '#C4B5FD', fontSize: 12, fontWeight: 600,
-                cursor: 'pointer', fontFamily: 'inherit',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
-                position: 'relative', zIndex: 1,
-              }}
-            >
-              View Progress →
-            </button>
-          </div>
-        </div>
       </aside>
 
       {/* ── Page Content ── */}
