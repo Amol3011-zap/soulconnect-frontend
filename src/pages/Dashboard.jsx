@@ -680,12 +680,15 @@ export default function Dashboard() {
           {/* Logo */}
           <div style={{ padding: '22px 18px 14px', flexShrink: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: 10,
-                background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 18, boxShadow: '0 0 14px rgba(124,58,237,0.5)',
-              }}>🪷</div>
+              <img
+                src="/brand/logo/soulconnect-logo-primary.png"
+                alt="SoulConnect"
+                style={{
+                  width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                  objectFit: 'contain', display: 'block',
+                  boxShadow: '0 0 14px rgba(124,58,237,0.5)',
+                }}
+              />
               <div>
                 <div style={{ fontSize: 15, fontWeight: 800, color: '#E2DEFF', letterSpacing: '-0.02em' }}>SoulConnect</div>
                 <div style={{ fontSize: 9, color: 'rgba(139,116,230,0.5)', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600 }}>
