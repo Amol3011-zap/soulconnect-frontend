@@ -3,20 +3,85 @@ import { motion } from 'motion/react';
 
 /* ─────────────────────────────────────────────────────────
    AIInsightCard — Sidebar companion insight card
+   Provides personalised progress, encouragement and guidance.
+   Never duplicates Today's Focus / breathing exercises.
+
    Props:
-     insight      — string (the insight sentence)
-     suggestion   — string (the follow-up question)
-     onAction     — () => void  (primary button click)
-     actionLabel  — string (default "Start Breathing")
-     isActioned   — bool (show completed state)
+     streak        — number (check-in streak days)
+     winsToday     — number (tiny wins completed today)
+     weeklyTotal   — number (wins this week)
+     hasCheckedIn  — bool
+     onViewProgress   — () => void
+     onReflection     — () => void
+     onWeeklyInsights — () => void
+     onContinueJourney — () => void
 ───────────────────────────────────────────────────────── */
+
+function pickInsight({ streak, winsToday, weeklyTotal, hasCheckedIn }) {
+  if (streak >= 3) {
+    return {
+      state: 1,
+      message: `You've checked in ${streak} day${streak !== 1 ? 's' : ''} in a row.\nConsistency is becoming a healthy habit.`,
+      buttonLabel: 'View Progress',
+      buttonKey: 'progress',
+    };
+  }
+  if (winsToday >= 1) {
+    return {
+      state: 2,
+      message: `Yesterday you completed ${winsToday} Tiny Win${winsToday !== 1 ? 's' : ''}.\nYou're making steady progress.`,
+      buttonLabel: "Today's Reflection",
+      buttonKey: 'reflection',
+    };
+  }
+  if (weeklyTotal >= 3) {
+    return {
+      state: 3,
+      message: 'Your emotional weather has improved this week.\n\nKeep taking one small step every day.',
+      buttonLabel: 'Weekly Insights',
+      buttonKey: 'weekly',
+    };
+  }
+  if (hasCheckedIn) {
+    return {
+      state: 4,
+      message: 'Welcome back.\n\nEvery time you return, you\'re investing in yourself.',
+      buttonLabel: 'Continue Journey',
+      buttonKey: 'journey',
+    };
+  }
+  return {
+    state: 5,
+    message: 'You\'re showing up for yourself consistently.\n\nProgress isn\'t perfection.\nIt\'s consistency.',
+    buttonLabel: 'See My Progress',
+    buttonKey: 'progress',
+  };
+}
+
 export default function AIInsightCard({
-  insight     = "You've been feeling overwhelmed lately.",
-  suggestion  = 'Would you like to try a 2-minute breathing exercise?',
-  onAction,
-  actionLabel = 'Start Breathing',
-  isActioned  = false,
+  streak           = 0,
+  winsToday        = 0,
+  weeklyTotal      = 0,
+  hasCheckedIn     = false,
+  onViewProgress,
+  onReflection,
+  onWeeklyInsights,
+  onContinueJourney,
 }) {
+  const insight = pickInsight({ streak, winsToday, weeklyTotal, hasCheckedIn });
+
+  function handleButton() {
+    switch (insight.buttonKey) {
+      case 'progress':  return onViewProgress?.();
+      case 'reflection': return onReflection?.();
+      case 'weekly':    return onWeeklyInsights?.();
+      case 'journey':   return onContinueJourney?.();
+    }
+  }
+
+  // Format message — newlines → line breaks
+  const lines = insight.message.split('\n');
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -43,7 +108,7 @@ export default function AIInsightCard({
         borderRadius: '24px 24px 0 0',
       }} />
 
-      {/* Background glow blob */}
+      {/* Background glow */}
       <div style={{
         position: 'absolute', top: -30, right: -20,
         width: 120, height: 120, borderRadius: '50%',
@@ -53,9 +118,8 @@ export default function AIInsightCard({
 
       {/* Header */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, zIndex: 1, position: 'relative',
+        display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, position: 'relative', zIndex: 1,
       }}>
-        {/* Icon orb */}
         <motion.div
           animate={{ scale: [1, 1.08, 1] }}
           transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
@@ -79,58 +143,44 @@ export default function AIInsightCard({
         </div>
       </div>
 
-      {/* Insight text */}
-      <p style={{
-        fontSize: 14, fontWeight: 600, color: '#E2DEFF',
-        margin: '0 0 6px', lineHeight: 1.5, position: 'relative', zIndex: 1,
-      }}>
-        {insight}
-      </p>
-
-      {/* Suggestion */}
-      <p style={{
-        fontSize: 12, color: 'rgba(184,180,216,0.7)',
-        margin: '0 0 14px', lineHeight: 1.6, position: 'relative', zIndex: 1,
-      }}>
-        {suggestion}
-      </p>
+      {/* Message */}
+      <div style={{ marginBottom: 14, position: 'relative', zIndex: 1 }}>
+        {lines.map((line, i) => (
+          line === ''
+            ? <div key={i} style={{ height: 6 }} />
+            : <p key={i} style={{
+                fontSize: i === 0 ? 14 : 12.5,
+                fontWeight: i === 0 ? 600 : 400,
+                color: i === 0 ? '#E2DEFF' : 'rgba(184,180,216,0.7)',
+                margin: 0,
+                lineHeight: 1.55,
+                marginBottom: lines[i + 1] !== undefined && lines[i + 1] !== '' ? 4 : 0,
+              }}>
+                {line}
+              </p>
+        ))}
+      </div>
 
       {/* Action button */}
-      {isActioned ? (
-        <motion.div
-          initial={{ scale: 0.92 }}
-          animate={{ scale: 1 }}
-          style={{
-            width: '100%', padding: '10px', borderRadius: 13, textAlign: 'center',
-            background: 'rgba(16,185,129,0.14)',
-            border: '1px solid rgba(16,185,129,0.3)',
-            color: '#6EE7B7', fontSize: 13, fontWeight: 600,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            position: 'relative', zIndex: 1,
-          }}
-        >
-          ✓ Completed
-        </motion.div>
-      ) : (
-        <motion.button
-          whileHover={{ scale: 1.03, boxShadow: '0 6px 24px rgba(124,58,237,0.5)' }}
-          whileTap={{ scale: 0.97 }}
-          onClick={onAction}
-          style={{
-            width: '100%', padding: '10px', borderRadius: 13,
-            background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-            border: 'none',
-            color: '#fff', fontSize: 13, fontWeight: 700,
-            cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-            boxShadow: '0 4px 16px rgba(124,58,237,0.4)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            transition: 'box-shadow 0.2s ease',
-            position: 'relative', zIndex: 1,
-          }}
-        >
-          🌬 {actionLabel}
-        </motion.button>
-      )}
+      <motion.button
+        whileHover={{ scale: 1.03, boxShadow: '0 6px 24px rgba(124,58,237,0.5)' }}
+        whileTap={{ scale: 0.97 }}
+        onClick={handleButton}
+        style={{
+          width: '100%', padding: '10px', borderRadius: 13,
+          background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+          border: 'none',
+          color: '#fff', fontSize: 13, fontWeight: 700,
+          cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+          boxShadow: '0 4px 16px rgba(124,58,237,0.4)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+          transition: 'box-shadow 0.2s ease',
+          position: 'relative', zIndex: 1,
+          letterSpacing: '-0.01em',
+        }}
+      >
+        {insight.buttonLabel}
+      </motion.button>
     </motion.div>
   );
 }

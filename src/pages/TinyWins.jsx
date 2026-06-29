@@ -573,7 +573,7 @@ export default function TinyWins() {
 
         {/* ── TABS ── */}
         <div style={{ padding: '18px 24px 14px', display: 'flex', gap: 8, overflowX: 'auto', scrollbarWidth: 'none' }}>
-          {['today', 'history', 'stats', 'tree'].map(tab => (
+          {['today', 'history', 'stats'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -581,8 +581,7 @@ export default function TinyWins() {
             >
               {tab === 'today'   ? '🌿 Today'    :
                tab === 'history' ? '📅 History'  :
-               tab === 'stats'   ? '📊 Stats'    :
-                                   '🌳 Tree'    }
+                                   '📊 Stats'   }
             </button>
           ))}
         </div>
@@ -703,27 +702,6 @@ export default function TinyWins() {
               </motion.div>
             )}
 
-            {/* ── HEALING TREE ── */}
-            {activeTab === 'tree' && (
-              <motion.div
-                key="tree"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-              >
-                <HealingTreeProgress totalWins={totalWins} />
-
-                {/* Tips */}
-                <div style={{ ...CARD }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)' }} />
-                  <div style={LABEL}>💜 ABOUT YOUR TREE</div>
-                  <p style={{ fontSize: 13, color: '#B8B4D8', lineHeight: 1.7, margin: 0 }}>
-                    Your Healing Tree grows with every Tiny Win you complete. Progress never resets — because healing is cumulative. Each small action you take becomes a permanent part of your tree, your story, and your growth.
-                  </p>
-                </div>
-              </motion.div>
-            )}
 
           </AnimatePresence>
         </div>

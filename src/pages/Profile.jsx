@@ -14,11 +14,7 @@ export default function Profile() {
   const { totalWins } = useTinyWinsStore();
   const { userStories, savedIds } = useStoriesStore();
 
-  const treeLevel = totalWins >= 500 ? 5 : totalWins >= 250 ? 4 : totalWins >= 100 ? 3 : totalWins >= 25 ? 2 : 1;
-  const treeName  = ['Seedling', 'New Leaf', 'Flower', 'Butterfly', 'Golden Lotus'][treeLevel - 1];
-
   const MENU = [
-    { icon: '🌳', label: 'Healing Tree',    sub: `${treeName} · ${totalWins} wins`,  action: () => navigate('/tiny-wins') },
     { icon: '📖', label: 'Saved Stories',   sub: `${savedIds.length} saved`,         action: () => navigate('/saved')     },
     { icon: '🏆', label: 'Achievements',    sub: '12 Badges',                        action: () => {}                     },
     { icon: '⚙️', label: 'Settings',        sub: null,                               action: () => navigate('/account')   },

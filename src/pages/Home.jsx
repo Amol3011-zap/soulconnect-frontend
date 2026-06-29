@@ -16,6 +16,8 @@ import AICompanionCard from '../components/AICompanionCard';
 import AIInsightCard from '../components/AIInsightCard';
 import FloatingCompanion from '../components/FloatingCompanion';
 import TodaysReflectionModal from '../components/TodaysReflectionModal';
+import ProgressModal from '../components/ProgressModal';
+import WeeklyInsightsModal from '../components/WeeklyInsightsModal';
 import { useReflections } from '../hooks/useReflections';
 
 const CATEGORY_ICONS = {
@@ -170,91 +172,6 @@ function SoulClimateOrb() {
         <ellipse cx="110" cy="200" rx="58" ry="10" fill="rgba(139,92,246,0.45)" />
         <ellipse cx="110" cy="200" rx="36" ry="6"  fill="rgba(168,85,247,0.65)" />
       </svg>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   HEALING TREE  (premium with glow)
-───────────────────────────────────────────────────────────────────────────── */
-function HealingTreePremium({ totalWins = 0 }) {
-  // Determine tree level
-  const level = totalWins >= 500 ? 5 : totalWins >= 250 ? 4 : totalWins >= 100 ? 3 : totalWins >= 25 ? 2 : 1;
-  const levelLabel = ['Seedling', 'New Leaf', 'Flower', 'Butterfly', 'Golden Lotus'][level - 1];
-
-  return (
-    <div style={{ position: 'relative' }}>
-      <svg viewBox="0 0 260 190" width="100%" height="170" style={{ display: 'block' }}>
-        <defs>
-          <radialGradient id="treeGlowPrem" cx="50%" cy="90%" r="55%">
-            <stop offset="0%"   stopColor="rgba(168,85,247,0.5)" />
-            <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
-          <radialGradient id="canopyGrad" cx="50%" cy="35%" r="60%">
-            <stop offset="0%"   stopColor="#9D4EDD" />
-            <stop offset="60%"  stopColor="#6D28D9" />
-            <stop offset="100%" stopColor="#3C096C" />
-          </radialGradient>
-          <radialGradient id="canopy2" cx="50%" cy="30%" r="60%">
-            <stop offset="0%"   stopColor="#A855F7" />
-            <stop offset="100%" stopColor="#4C1D95" />
-          </radialGradient>
-          <filter id="treeGlowFilter">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <radialGradient id="lotusGold2" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#FDE68A" />
-            <stop offset="100%" stopColor="#F59E0B" />
-          </radialGradient>
-        </defs>
-
-        {/* Ground glow */}
-        <ellipse cx="130" cy="174" rx="88" ry="14" fill="url(#treeGlowPrem)" />
-
-        {/* Trunk */}
-        <path d="M122,118 Q118,140 120,168 L140,168 Q138,140 138,118 Z"
-          fill="#6D28D9" opacity="0.85" />
-        {/* Trunk highlight */}
-        <path d="M124,125 Q122,148 124,165" stroke="rgba(196,181,253,0.2)" strokeWidth="2" fill="none" strokeLinecap="round" />
-
-        {/* Canopy layers (bottom up) */}
-        <ellipse cx="130" cy="96"  rx="76" ry="60" fill="url(#canopyGrad)" opacity="0.95" filter="url(#treeGlowFilter)" />
-        <ellipse cx="130" cy="76"  rx="62" ry="50" fill="url(#canopy2)"    opacity="0.9"  />
-        <ellipse cx="130" cy="58"  rx="48" ry="40" fill="#7C3AED"          opacity="0.88" />
-        <ellipse cx="130" cy="42"  rx="34" ry="30" fill="#9D4EDD"          opacity="0.85" />
-        <ellipse cx="130" cy="28"  rx="22" ry="22" fill="#A855F7"          opacity="0.82" />
-
-        {/* Glowing dots / berries */}
-        {[
-          [104,86,3],[155,80,3],[118,60,2.5],[143,65,2.5],[130,96,3],
-          [93,100,2.5],[166,95,2.5],[112,42,2],[148,46,2],[130,20,3],
-          [88,72,2],[172,88,2],[130,110,2.5],
-        ].map(([x,y,r],i) => (
-          <circle key={i} cx={x} cy={y} r={r} fill="#F4C542" opacity={0.55 + (i % 4) * 0.1}
-            style={{ filter: 'drop-shadow(0 0 3px rgba(244,197,66,0.8))' }} />
-        ))}
-
-        {/* Lotus at base */}
-        <ellipse cx="130" cy="170" rx="22" ry="9" fill="#F59E0B" opacity="0.6" />
-        <ellipse cx="130" cy="165" rx="14" ry="16" fill="rgba(251,191,36,0.55)" transform="rotate(-25,130,165)" />
-        <ellipse cx="130" cy="165" rx="14" ry="16" fill="rgba(251,191,36,0.55)" transform="rotate(25,130,165)" />
-        <ellipse cx="130" cy="165" rx="12" ry="14" fill="rgba(168,85,247,0.5)"  transform="rotate(-50,130,165)" />
-        <ellipse cx="130" cy="165" rx="12" ry="14" fill="rgba(168,85,247,0.5)"  transform="rotate(50,130,165)" />
-        <circle cx="130" cy="163" r="8" fill="url(#lotusGold2)" />
-        <circle cx="130" cy="163" r="5" fill="#FEF3C7" opacity="0.92" />
-      </svg>
-
-      {/* Level badge */}
-      <div style={{
-        position: 'absolute', top: 6, right: 6,
-        background: 'rgba(139,92,246,0.25)',
-        border: '1px solid rgba(139,92,246,0.45)',
-        borderRadius: 20, padding: '3px 10px',
-        fontSize: 10, fontWeight: 700, color: '#C4B5FD',
-      }}>
-        {levelLabel}
-      </div>
     </div>
   );
 }
@@ -659,6 +576,13 @@ export default function Home() {
   const [reflectionSavedToast, setReflectionSavedToast] = useState(false);
   const { todayReflection, saveReflection, isExisting } = useReflections();
 
+  // Companion modals
+  const [progressModalOpen, setProgressModalOpen] = useState(false);
+  const [weeklyInsightsOpen, setWeeklyInsightsOpen] = useState(false);
+
+  // Ref for "Continue Journey" smooth scroll to Today's Focus card
+  const todaysFocusRef = useRef(null);
+
   function handleReflectionSaved() {
     setReflectionSavedToast(true);
     setTimeout(() => setReflectionSavedToast(false), 4000);
@@ -701,16 +625,11 @@ export default function Home() {
           0%,100% { transform: translateY(0px); }
           50%      { transform: translateY(-14px); }
         }
-        @keyframes healingFloat {
-          0%,100% { transform: translateY(0px); }
-          50%      { transform: translateY(-7px); }
-        }
         @keyframes auroraShift {
           0%,100% { opacity: 0.5; transform: scale(1); }
           50%      { opacity: 0.8; transform: scale(1.06); }
         }
         .orb-float { animation: orbFloat 9s ease-in-out infinite; }
-        .healing-float { animation: healingFloat 7s ease-in-out 0.5s infinite; }
         .home-main {
           margin-right: 290px;
           min-height: 100vh;
@@ -785,6 +704,27 @@ export default function Home() {
         userName={firstName}
         winsToday={completedToday.length}
         hasCheckedIn={Boolean(todayEntry)}
+      />
+
+      {/* ── Progress modal ── */}
+      <ProgressModal
+        isOpen={progressModalOpen}
+        onClose={() => setProgressModalOpen(false)}
+        streak={todayEntry ? 4 : 0}
+        totalWins={totalWins}
+        winsToday={completedCount}
+        storiesCount={0}
+        daysActive={todayEntry ? 4 : 1}
+        currentWeather={selectedWeather}
+      />
+
+      {/* ── Weekly Insights modal ── */}
+      <WeeklyInsightsModal
+        isOpen={weeklyInsightsOpen}
+        onClose={() => setWeeklyInsightsOpen(false)}
+        weeklyStats={weeklyStats}
+        checkInsThisWeek={todayEntry ? 4 : 0}
+        storiesThisWeek={0}
       />
 
       {/* ════════════════════ MAIN CONTENT ════════════════════ */}
@@ -1138,15 +1078,18 @@ export default function Home() {
 
         {/* ── Card 1: AI Companion Insight ── */}
         <AIInsightCard
-          insight="You've been feeling heavy lately."
-          suggestion="Would you like to try a 2-minute breathing exercise?"
-          onAction={() => setShowBreathing(true)}
-          actionLabel="Start Breathing"
-          isActioned={breathingDone}
+          streak={todayEntry ? 4 : 0}
+          winsToday={completedCount}
+          weeklyTotal={weeklyStats?.total || 0}
+          hasCheckedIn={Boolean(todayEntry)}
+          onViewProgress={() => setProgressModalOpen(true)}
+          onReflection={() => setReflectionModalOpen(true)}
+          onWeeklyInsights={() => setWeeklyInsightsOpen(true)}
+          onContinueJourney={() => todaysFocusRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
         />
 
         {/* ── Card 2: Today's Focus ── */}
-        <div className="sidebar-card-inner" style={{ ...CARD_STYLE }}>
+        <div ref={todaysFocusRef} className="sidebar-card-inner" style={{ ...CARD_STYLE }}>
           <div style={SECTION_LABEL}>TODAY'S FOCUS ⓘ</div>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -1211,37 +1154,6 @@ export default function Home() {
           </button>
         </div>
 
-        {/* ── Card 3: Healing Tree ── */}
-        <div className="sidebar-card-inner" style={{ ...CARD_STYLE }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-            <span style={{ ...SECTION_LABEL, marginBottom: 0 }}>HEALING TREE</span>
-            <span style={{
-              background: 'rgba(139,92,246,0.2)', border: '1px solid rgba(139,92,246,0.35)',
-              color: '#C4B5FD', fontSize: 10, fontWeight: 700,
-              borderRadius: 20, padding: '3px 10px',
-            }}>
-              Level {totalWins >= 500 ? 5 : totalWins >= 250 ? 4 : totalWins >= 100 ? 3 : totalWins >= 25 ? 2 : 1}
-            </span>
-          </div>
-
-          <div className="healing-float">
-            <HealingTreePremium totalWins={totalWins} />
-          </div>
-
-          <p style={{ fontSize: 12, color: 'rgba(184,180,216,0.65)', textAlign: 'center', margin: '0 0 12px' }}>
-            Keep nurturing your growth.
-          </p>
-
-          <button
-            onClick={() => navigate('/profile')}
-            style={{ ...GLASS_BTN, width: '100%', padding: '9px', textAlign: 'center', borderRadius: 13 }}
-          >
-            View Tree
-          </button>
-        </div>
-
-        {/* ── Card 5: This Week Stats ── */}
-        <WeeklyStatsCard weeklyStats={weeklyStats} />
 
       </div>{/* end .home-right-sidebar */}
 
