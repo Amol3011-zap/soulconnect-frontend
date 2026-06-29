@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -494,6 +494,7 @@ export default function Dashboard() {
   const [mainTab, setMainTab] = useState('chat');
   const [showCrisisPopup, setShowCrisisPopup] = useState(false);
   const [filterTab, setFilterTab] = useState('All');
+  const [sidebarSearch, setSidebarSearch] = useState('');
 
   const bottomRef = useRef(null);
   const chatLoggedRef = useRef(false);
@@ -510,41 +511,67 @@ export default function Dashboard() {
 
   const convCards = [
     {
-      id: 'soul', name: 'Soul Guide', initials: 'SG',
+      id: 'soul', name: 'Soul Guide', initials: 'SG', type: 'ai',
       grad: 'linear-gradient(135deg,#7C3AED,#A855F7)',
       online: true, time: 'Just now',
       lastMsg: "Hi 💜 I'm here for you.",
       unread: 0,
     },
     {
-      id: 'anxiety', name: 'Anxiety Support Circle', initials: '👥',
+      id: 'anxiety', name: 'Anxiety Support Circle', initials: '👥', type: 'group',
       grad: 'linear-gradient(135deg,#6D28D9,#4338CA)',
       online: false, time: '4:45 PM',
       lastMsg: 'Riya: Thank you everyone…',
       unread: 4,
     },
     {
-      id: 'mindful', name: 'Mindfulness Group', initials: '🌿',
+      id: 'mindful', name: 'Mindfulness Group', initials: '🌿', type: 'group',
       grad: 'linear-gradient(135deg,#059669,#10B981)',
       online: false, time: 'Yesterday',
       lastMsg: 'Aman: Great session today 🙏',
       unread: 0,
     },
     {
-      id: 'healing', name: 'Healing Circle', initials: '💗',
+      id: 'healing', name: 'Healing Circle', initials: '💗', type: 'group',
       grad: 'linear-gradient(135deg,#BE185D,#EC4899)',
       online: false, time: 'Yesterday',
       lastMsg: 'Neha: Sending love to all 💜',
-      unread: 0,
+      unread: 2,
     },
     {
-      id: 'meera', name: 'Dr. Meera Sharma', initials: 'MS',
+      id: 'meera', name: 'Dr. Meera Sharma', initials: 'MS', type: 'professional',
       grad: 'linear-gradient(135deg,#0891B2,#0E7490)',
       online: false, time: 'Saturday',
       lastMsg: 'See you tomorrow at 11 AM',
       unread: 0,
     },
+    {
+      id: 'arjun', name: 'Dr. Arjun Kapoor', initials: 'AK', type: 'professional',
+      grad: 'linear-gradient(135deg,#065F46,#059669)',
+      online: true, time: 'Friday',
+      lastMsg: 'Your progress has been great!',
+      unread: 1,
+    },
   ];
+
+  const BADGE_COUNTS = useMemo(() => ({
+    All: convCards.length,
+    Unread: convCards.filter(c => c.unread > 0).length,
+    Groups: convCards.filter(c => c.type === 'group').length,
+    Professionals: convCards.filter(c => c.type === 'professional').length,
+  }), []);
+
+  const filteredConvs = useMemo(() => {
+    let result = [...convCards];
+    if (filterTab === 'Unread') result = result.filter(c => c.unread > 0);
+    else if (filterTab === 'Groups') result = result.filter(c => c.type === 'group');
+    else if (filterTab === 'Professionals') result = result.filter(c => c.type === 'professional');
+    const q = sidebarSearch.trim().toLowerCase();
+    if (q) result = result.filter(c =>
+      c.name.toLowerCase().includes(q) || c.lastMsg.toLowerCase().includes(q)
+    );
+    return result;
+  }, [filterTab, sidebarSearch]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -587,7 +614,7 @@ export default function Dashboard() {
     { key: 'activities', label: '🎯 Activities' },
   ];
 
-  const FILTER_TABS = ['All', 'Unread', 'Groups', 'Professionals'];
+  const FILTER_KEYS = ['All', 'Unread', 'Groups', 'Professionals'];
 
   return (
     <>
@@ -610,6 +637,9 @@ export default function Dashboard() {
           transform: translateY(-1px);
         }
         .dc-conv:hover { background: rgba(139,92,246,0.07) !important; }
+        .dc-filter-btn { transition: all 0.25s ease !important; }
+        .dc-filter-btn:hover { background: rgba(255,255,255,0.06) !important; color: #fff !important; }
+        .dc-filter-bar::-webkit-scrollbar { display: none; }
         .dc-msg-area::-webkit-scrollbar { width: 3px; }
         .dc-msg-area::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.2); border-radius: 3px; }
         .dc-msg-area::-webkit-scrollbar-track { background: transparent; }
@@ -692,6 +722,8 @@ export default function Dashboard() {
             }}>
               <Search size={13} color="rgba(139,116,230,0.5)" />
               <input
+                value={sidebarSearch}
+                onChange={e => setSidebarSearch(e.target.value)}
                 placeholder="Search conversations..."
                 style={{
                   flex: 1, background: 'none', border: 'none', outline: 'none',
@@ -701,45 +733,121 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Filter tabs */}
-          <div style={{
-            display: 'flex', gap: 4, padding: '0 14px 12px',
-            flexShrink: 0, overflowX: 'auto', scrollbarWidth: 'none',
-          }}>
-            {FILTER_TABS.map(f => (
-              <button
-                key={f}
-                onClick={() => setFilterTab(f)}
-                style={{
-                  flexShrink: 0, padding: '5px 12px', borderRadius: 20,
-                  fontSize: 11, fontWeight: 600, cursor: 'pointer',
-                  fontFamily: 'Inter, sans-serif',
-                  background: filterTab === f ? 'rgba(139,92,246,0.2)' : 'transparent',
-                  border: filterTab === f ? '1px solid rgba(139,92,246,0.4)' : '1px solid transparent',
-                  color: filterTab === f ? '#C4B5FD' : 'rgba(139,116,230,0.5)',
-                  transition: 'all 0.15s',
-                }}
-              >{f}</button>
-            ))}
+          {/* ── Filter Bar ── */}
+          <div style={{ padding: '0 12px 12px', flexShrink: 0 }}>
+            <div
+              className="dc-filter-bar"
+              style={{
+                display: 'flex', gap: 4,
+                background: 'rgba(255,255,255,0.04)',
+                borderRadius: 14, padding: 5,
+                overflowX: 'auto', scrollbarWidth: 'none',
+                height: 42, alignItems: 'center',
+              }}
+            >
+              {FILTER_KEYS.map(f => {
+                const isActive = filterTab === f;
+                const count = BADGE_COUNTS[f];
+                return (
+                  <motion.button
+                    key={f}
+                    className={isActive ? '' : 'dc-filter-btn'}
+                    onClick={() => setFilterTab(f)}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                      flexShrink: 0,
+                      display: 'flex', alignItems: 'center', gap: 5,
+                      padding: '5px 11px',
+                      borderRadius: 10,
+                      fontSize: 11, fontWeight: isActive ? 600 : 500,
+                      cursor: 'pointer', border: 'none',
+                      fontFamily: 'Inter, sans-serif',
+                      background: isActive
+                        ? 'linear-gradient(135deg,#7C3AED,#A855F7)'
+                        : 'transparent',
+                      color: isActive ? '#fff' : 'rgba(255,255,255,0.65)',
+                      boxShadow: isActive
+                        ? '0 0 14px rgba(124,58,237,0.45), inset 0 1px 0 rgba(255,255,255,0.15)'
+                        : 'none',
+                      transition: 'background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease',
+                    }}
+                  >
+                    {f}
+                    {count > 0 && (
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        minWidth: 16, height: 16, borderRadius: 8, padding: '0 4px',
+                        fontSize: 9, fontWeight: 700, lineHeight: 1,
+                        background: isActive ? 'rgba(255,255,255,0.2)' : 'rgba(139,92,246,0.25)',
+                        color: isActive ? '#fff' : '#C4B5FD',
+                      }}>
+                        {count}
+                      </span>
+                    )}
+                  </motion.button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* CONVERSATIONS label */}
-          <div style={{ padding: '0 18px 8px', flexShrink: 0 }}>
-            <span style={{ fontSize: 9, fontWeight: 700, color: 'rgba(139,116,230,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-              CONVERSATIONS
-            </span>
-          </div>
-
-          {/* Conversation list */}
+          {/* ── Conversation List ── */}
           <div className="dc-sidebar-scroll" style={{ flex: 1, overflowY: 'auto', padding: '0 10px' }}>
-            {convCards.map(conv => (
-              <ConvCard
-                key={conv.id}
-                conv={conv}
-                isActive={conv.id === 'soul'}
-                onClick={() => {}}
-              />
-            ))}
+            <AnimatePresence mode="popLayout">
+              {filteredConvs.length > 0 ? (
+                filteredConvs.map(conv => (
+                  <motion.div
+                    key={conv.id}
+                    layout
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, x: -12 }}
+                    transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+                  >
+                    <ConvCard
+                      conv={conv}
+                      isActive={conv.id === 'soul'}
+                      onClick={() => {}}
+                    />
+                  </motion.div>
+                ))
+              ) : (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    justifyContent: 'center', padding: '36px 16px', textAlign: 'center',
+                  }}
+                >
+                  <div style={{ fontSize: 36, marginBottom: 12 }}>🔍</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#C4B5FD', marginBottom: 6 }}>
+                    No conversations found.
+                  </div>
+                  <div style={{ fontSize: 11, color: 'rgba(139,116,230,0.5)', lineHeight: 1.6, marginBottom: 16 }}>
+                    Try another filter or start a new conversation.
+                  </div>
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ boxShadow: '0 6px 20px rgba(124,58,237,0.4)' }}
+                    onClick={() => { setSidebarSearch(''); setFilterTab('All'); inputRef.current?.focus(); }}
+                    style={{
+                      padding: '9px 18px',
+                      background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
+                      border: 'none', borderRadius: 12, color: '#fff',
+                      fontSize: 12, fontWeight: 700, cursor: 'pointer',
+                      fontFamily: 'Inter, sans-serif',
+                      boxShadow: '0 4px 16px rgba(124,58,237,0.35)',
+                      display: 'flex', alignItems: 'center', gap: 6,
+                    }}
+                  >
+                    <Plus size={13} /> New Conversation
+                  </motion.button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Book Professional Support */}
