@@ -13,7 +13,7 @@ export default defineConfig({
           // React core — cached separately, changes rarely
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           // State management
-          'vendor-store': ['zustand'],
+          'vendor-store': ['zustand', 'zustand/middleware'],
           // HTTP client
           'vendor-http': ['axios'],
           // Authenticated-only pages — only loaded after login
