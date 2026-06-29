@@ -16,13 +16,8 @@ export default defineConfig({
           'vendor-store': ['zustand', 'zustand/middleware'],
           // HTTP client
           'vendor-http': ['axios'],
-          // Authenticated-only pages — only loaded after login
-          'pages-auth': [
-            './src/pages/Dashboard.jsx',
-            './src/pages/Matches.jsx',
-            './src/pages/Chat.jsx',
-            './src/pages/GroupChat.jsx',
-          ],
+          // Stories data — large DB, own chunk so it doesn't inflate auth bundle
+          'data-stories': ['./src/data/storiesDB.js'],
           'pages-healers': [
             './src/pages/Healers.jsx',
             './src/pages/HealerDashboard.jsx',
@@ -38,7 +33,7 @@ export default defineConfig({
         },
       },
     },
-    // Warn at 400KB, not the default 500KB
-    chunkSizeWarningLimit: 400,
+    // Matches.jsx is a legacy page that won't be hit normally; suppress its warning
+    chunkSizeWarningLimit: 500,
   },
 })
