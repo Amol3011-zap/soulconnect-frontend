@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Footer from '../components/Footer';
 
 const P = '#A78BFA';
 const BG = 'linear-gradient(155deg,#06011A 0%,#130530 40%,#1E0848 70%,#06011A 100%)';
@@ -236,6 +237,9 @@ export default function FAQ() {
           })
         }} />
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
