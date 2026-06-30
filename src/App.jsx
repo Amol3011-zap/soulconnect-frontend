@@ -19,6 +19,7 @@ const Signup        = lazy(() => import('./pages/Signup'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const TermsPrivacy  = lazy(() => import('./pages/TermsPrivacy'));
 const SafetyPolicy  = lazy(() => import('./pages/SafetyPolicy'));
+const CrisisSupport = lazy(() => import('./pages/CrisisSupport'));
 const GuideTerms    = lazy(() => import('./pages/GuideTerms'));
 const CommunityRules = lazy(() => import('./pages/CommunityRules'));
 const ReportConcern = lazy(() => import('./pages/ReportConcern'));
@@ -119,6 +120,7 @@ function AppInner() {
   const safetyRoutes = (
     <>
       <Route path="/safety"          element={<Suspense fallback={<PageLoader />}><SafetyPolicy /></Suspense>} />
+      <Route path="/crisis-support"  element={<Suspense fallback={<PageLoader />}><CrisisSupport /></Suspense>} />
       <Route path="/guide-terms"     element={<Suspense fallback={<PageLoader />}><GuideTerms /></Suspense>} />
       <Route path="/community-rules" element={<Suspense fallback={<PageLoader />}><CommunityRules /></Suspense>} />
       <Route path="/report"          element={<Suspense fallback={<PageLoader />}><ReportConcern /></Suspense>} />
