@@ -286,7 +286,7 @@ export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
             <p style={{ fontSize: 12, fontWeight: 600, color: 'rgba(196, 181, 253, 0.6)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 12px' }}>
               Choose Duration
             </p>
-            <div style={{ display: 'flex', gap: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
               {[3, 5, 7].map((dur) => (
                 <motion.button
                   key={dur}
@@ -294,8 +294,7 @@ export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setDuration(dur)}
                   style={{
-                    flex: 1,
-                    padding: '12px 16px',
+                    padding: '10px 12px',
                     borderRadius: 12,
                     border:
                       duration === dur
@@ -306,14 +305,16 @@ export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
                         ? 'rgba(139, 92, 246, 0.15)'
                         : 'rgba(139, 92, 246, 0.08)',
                     color: '#E2DEFF',
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: 600,
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     fontFamily: 'inherit',
+                    minWidth: 0,
+                    whiteSpace: 'nowrap',
                   }}
                 >
-                  ○ {dur} min
+                  ○ {dur}m
                 </motion.button>
               ))}
             </div>

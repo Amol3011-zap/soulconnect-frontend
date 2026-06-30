@@ -46,6 +46,8 @@ const CATEGORY_ICONS = {
 };
 import BreathingSession from '../components/BreathingSession';
 import TodaysFocusCard from '../components/TodaysFocusCard';
+import OnboardingModal from '../components/OnboardingModal';
+import { onboardingAPI } from '../services/api';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    PARTICLES
@@ -592,10 +594,27 @@ export default function Home() {
   // Search + Notifications
   const [searchOpen, setSearchOpen]   = useState(false);
   const [notifOpen,  setNotifOpen]    = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const bellRef = useRef(null);
 
   // Ref for "Continue Journey" smooth scroll to Today's Focus card
   const todaysFocusRef = useRef(null);
+
+  // Check if user completed onboarding
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      try {
+        const res = await onboardingAPI.getStatus();
+        if (!res.data.completed) {
+          setShowOnboarding(true);
+        }
+      } catch (err) {
+        console.log('Onboarding check failed, showing modal');
+        setShowOnboarding(true);
+      }
+    };
+    checkOnboarding();
+  }, []);
 
   function handleReflectionSaved() {
     setReflectionSavedToast(true);
@@ -1146,6 +1165,13 @@ export default function Home() {
         onEmotionalWeather={handleCheckIn}
         onSupport={() => navigate('/professionals')}
       />
+
+      {/* ════════════════════ ONBOARDING MODAL ════════════════════ */}
+      <AnimatePresence>
+        {showOnboarding && (
+          <OnboardingModal onComplete={() => setShowOnboarding(false)} />
+        )}
+      </AnimatePresence>
     </>
   );
 }

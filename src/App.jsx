@@ -180,6 +180,7 @@ function AppInner() {
               <Route path="/chat/:matchId" element={<Suspense fallback={<PageLoader />}><Chat /></Suspense>} />
               <Route path="/groups"        element={<Suspense fallback={<PageLoader />}><GroupChat /></Suspense>} />
               <Route path="/terms"         element={<Suspense fallback={<PageLoader />}><TermsPrivacy /></Suspense>} />
+              <Route path="/onboarding"    element={<Suspense fallback={<PageLoader />}><Onboarding /></Suspense>} />
 
               {/* Dashboard routes — all inside persistent sidebar layout */}
               <Route element={<DashboardLayout />}>
@@ -200,7 +201,6 @@ function AppInner() {
                 <Route path="/healers"       element={<Suspense fallback={<PageLoader />}><Healers /></Suspense>} />
                 <Route path="/meetups"       element={<Suspense fallback={<PageLoader />}><Meetups /></Suspense>} />
                 <Route path="/premium"       element={<Suspense fallback={<PageLoader />}><Premium /></Suspense>} />
-                <Route path="/onboarding"    element={<Suspense fallback={<PageLoader />}><Onboarding /></Suspense>} />
                 <Route path="/journey"       element={<Suspense fallback={<PageLoader />}><SoulJourney /></Suspense>} />
                 <Route path="/dashboard"     element={<Suspense fallback={<PageLoader />}><Matches /></Suspense>} />
 
