@@ -127,6 +127,7 @@ export default function Footer() {
   ];
 
   const trustLinks = [
+    { label: 'FAQ',                  to: '/faq' },
     { label: 'Safety Policy',        to: '/safety' },
     { label: 'Community Guidelines', to: '/community-rules' },
     { label: 'Privacy Policy',       to: '/terms' },
