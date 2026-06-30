@@ -177,35 +177,75 @@ export default function Footer() {
 
       {/* ── Crisis Support Bar ─────────────────────────────────────────── */}
       <div style={{
-        background: 'linear-gradient(135deg,rgba(245,158,11,0.15),rgba(234,88,12,0.12))',
-        borderBottom: '1px solid rgba(245,158,11,0.2)',
-        padding: '18px 32px',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        flexWrap: 'wrap', gap: 14,
+        background: 'linear-gradient(135deg,rgba(220,38,38,0.15),rgba(185,28,28,0.12))',
+        borderTop: '1px solid rgba(220,38,38,0.3)',
+        borderBottom: '1px solid rgba(220,38,38,0.2)',
+        padding: '24px 32px',
         position: 'relative', zIndex: 2,
       }}>
-        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-          <span style={{ fontSize:20 }}>⚠️</span>
-          <div>
-            <p style={{ margin:0, color:'#FCD34D', fontWeight:700, fontSize:14, lineHeight:1.2 }}>Need Immediate Help?</p>
-            <p style={{ margin:0, color:'rgba(255,255,255,0.6)', fontSize:12, marginTop:2 }}>
-              If you are in crisis or immediate danger, contact emergency services immediately.
-            </p>
+        <div style={{ maxWidth:1140, margin:'0 auto' }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap: 24 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:14 }}>
+              <span style={{ fontSize:28, lineHeight:1 }}>🆘</span>
+              <div>
+                <p style={{ margin:0, color:'#FCA5A5', fontWeight:800, fontSize:15, lineHeight:1.2 }}>In Crisis? Get Immediate Support</p>
+                <p style={{ margin:0, color:'rgba(255,255,255,0.55)', fontSize:12, marginTop:4 }}>
+                  Call anytime – available 24/7 across India
+                </p>
+              </div>
+            </div>
+            <div style={{ display:'flex', gap:16, flexWrap:'wrap' }}>
+              <a href="tel:9152987821" style={{
+                background:'rgba(251,146,146,0.2)', border:'1px solid rgba(251,146,146,0.4)',
+                borderRadius:12, padding:'12px 18px', fontSize:13, fontWeight:700,
+                color:'#FCA5A5', textDecoration:'none', whiteSpace:'nowrap',
+                transition:'all 0.2s ease', cursor:'pointer',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background='rgba(251,146,146,0.3)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.6)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='rgba(251,146,146,0.2)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.4)'; }}
+              >
+                📱 iCall: 9152987821
+              </a>
+              <a href="tel:1860-2662-345" style={{
+                background:'rgba(251,146,146,0.2)', border:'1px solid rgba(251,146,146,0.4)',
+                borderRadius:12, padding:'12px 18px', fontSize:13, fontWeight:700,
+                color:'#FCA5A5', textDecoration:'none', whiteSpace:'nowrap',
+                transition:'all 0.2s ease', cursor:'pointer',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background='rgba(251,146,146,0.3)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.6)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='rgba(251,146,146,0.2)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.4)'; }}
+              >
+                📱 Vandrevala: 1860-2662-345
+              </a>
+              <a href="tel:9820466726" style={{
+                background:'rgba(251,146,146,0.2)', border:'1px solid rgba(251,146,146,0.4)',
+                borderRadius:12, padding:'12px 18px', fontSize:13, fontWeight:700,
+                color:'#FCA5A5', textDecoration:'none', whiteSpace:'nowrap',
+                transition:'all 0.2s ease', cursor:'pointer',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background='rgba(251,146,146,0.3)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.6)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='rgba(251,146,146,0.2)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.4)'; }}
+              >
+                📱 AASRA: 9820466726
+              </a>
+              <button
+                onClick={() => navigate('/crisis-support')}
+                style={{
+                  background:'linear-gradient(135deg,#DC2626,#991B1B)',
+                  color:'white', border:'none', borderRadius:12,
+                  padding:'12px 20px', fontSize:13, fontWeight:800,
+                  cursor:'pointer', whiteSpace:'nowrap',
+                  boxShadow:'0 4px 16px rgba(220,38,38,0.3)',
+                  transition:'all 0.2s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 6px 22px rgba(220,38,38,0.45)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 4px 16px rgba(220,38,38,0.3)'; }}
+              >
+                Learn More →
+              </button>
+            </div>
           </div>
         </div>
-        <button
-          onClick={() => navigate('/crisis-support')}
-          style={{
-            background:'linear-gradient(135deg,#F59E0B,#D97706)',
-            color:'#1a0a00', border:'none', borderRadius:99,
-            padding:'10px 22px', fontSize:13, fontWeight:800,
-            cursor:'pointer', flexShrink:0, whiteSpace:'nowrap',
-            boxShadow:'0 4px 16px rgba(245,158,11,0.3)',
-            transition:'all 0.2s ease',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 6px 22px rgba(245,158,11,0.45)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 4px 16px rgba(245,158,11,0.3)'; }}
-        >Crisis Resources →</button>
       </div>
 
       {/* ── Main Footer Content ────────────────────────────────────────── */}
