@@ -109,6 +109,13 @@ export const METADATA = {
     ogType: 'website',
     keywords: 'mental health articles, anxiety help, depression support, grief counseling, mindfulness, wellness tips',
   },
+  '/faq': {
+    title: 'FAQ | Frequently Asked Questions | SoulConnect',
+    description: 'Find answers to common questions about SoulConnect, our services, privacy, professional verification, and mental health support.',
+    canonical: 'https://soulconnect.health/faq',
+    ogType: 'website',
+    keywords: 'faq, frequently asked questions, how it works, pricing, privacy, professional verification',
+  },
 };
 
 /**
