@@ -380,7 +380,7 @@ export default function SoulClimateWidget({
   isCheckedIn = false,
 }) {
   const [isAnimating, setIsAnimating] = useState(false);
-  const [showAffirmation, setShowAffirmation] = useState(false);
+  const [showAffirmation, setShowAffirmation] = useState(isCheckedIn);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const currentMood = MOOD_CONFIG[selectedMood];
@@ -574,31 +574,6 @@ export default function SoulClimateWidget({
             </>
           )}
         </motion.button>
-
-        {/* AFFIRMATION */}
-        <AnimatePresence>
-          {showAffirmation && currentMood && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 0.3 }}
-              style={{
-                marginTop: 16,
-                padding: '12px 16px',
-                background: 'rgba(255,255,255,0.1)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                borderRadius: 12,
-                fontSize: 12,
-                color: '#E2DEFF',
-                fontStyle: 'italic',
-                lineHeight: 1.5,
-              }}
-            >
-              {currentMood.emoji} {currentMood.affirmation}
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.div>
 
       {/* ── DIVIDER ── */}
@@ -612,71 +587,140 @@ export default function SoulClimateWidget({
         }}
       />
 
-      {/* ── RIGHT: MOOD SELECTION ── */}
-      <motion.div
-        style={{ zIndex: 10, flex: 1, position: 'relative' }}
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            color: 'rgba(196,181,253,0.5)',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            marginBottom: 12,
-          }}
+      {/* ── RIGHT: MOOD SELECTION (only show if not checked in) ── */}
+      {!isCheckedIn ? (
+        <motion.div
+          style={{ zIndex: 10, flex: 1, position: 'relative' }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
         >
-          Select your mood
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            gap: 8,
-            flexWrap: 'wrap',
-          }}
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              color: 'rgba(196,181,253,0.5)',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              marginBottom: 12,
+            }}
+          >
+            Select your mood
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 8,
+              flexWrap: 'wrap',
+            }}
+          >
+            {moodOptions.map((mood) => (
+              <motion.button
+                key={mood.id}
+                onClick={() => onMoodSelect(mood.id)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  background:
+                    selectedMood === mood.id
+                      ? 'rgba(139,92,246,0.32)'
+                      : 'rgba(255,255,255,0.07)',
+                  border:
+                    selectedMood === mood.id
+                      ? '1px solid rgba(168,85,247,0.6)'
+                      : '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 24,
+                  padding: '7px 16px',
+                  fontSize: 12,
+                  color: '#E2DEFF',
+                  cursor: 'pointer',
+                  fontWeight: 500,
+                  whiteSpace: 'nowrap',
+                  boxShadow:
+                    selectedMood === mood.id
+                      ? '0 0 14px rgba(124,58,237,0.35)'
+                      : 'none',
+                  transition: 'all 0.2s',
+                  fontFamily: 'inherit',
+                }}
+              >
+                <span style={{ fontSize: 15 }}>{mood.emoji}</span>
+                <span>{mood.label}</span>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+      ) : (
+        /* ── CHECKED IN STATE: Show mood + affirmation ── */
+        <motion.div
+          style={{ zIndex: 10, flex: 1, position: 'relative' }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
         >
-          {moodOptions.map((mood) => (
-            <motion.button
-              key={mood.id}
-              onClick={() => onMoodSelect(mood.id)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
+          {currentMood && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
               style={{
                 display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                background:
-                  selectedMood === mood.id
-                    ? 'rgba(139,92,246,0.32)'
-                    : 'rgba(255,255,255,0.07)',
-                border:
-                  selectedMood === mood.id
-                    ? '1px solid rgba(168,85,247,0.6)'
-                    : '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 24,
-                padding: '7px 16px',
-                fontSize: 12,
-                color: '#E2DEFF',
-                cursor: 'pointer',
-                fontWeight: 500,
-                whiteSpace: 'nowrap',
-                boxShadow:
-                  selectedMood === mood.id
-                    ? '0 0 14px rgba(124,58,237,0.35)'
-                    : 'none',
-                transition: 'all 0.2s',
-                fontFamily: 'inherit',
+                flexDirection: 'column',
+                gap: 16,
               }}
             >
-              <span style={{ fontSize: 15 }}>{mood.emoji}</span>
-              <span>{mood.label}</span>
-            </motion.button>
-          ))}
-        </div>
-      </motion.div>
+              {/* Mood badge */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  background: 'rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: 24,
+                  padding: '10px 20px',
+                  width: 'fit-content',
+                }}
+              >
+                <span style={{ fontSize: 24 }}>{currentMood.emoji}</span>
+                <span
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: '#E2DEFF',
+                  }}
+                >
+                  Your mood: {currentMood.label}
+                </span>
+              </div>
+
+              {/* Affirmation */}
+              {showAffirmation && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  style={{
+                    padding: '14px 18px',
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: 14,
+                    fontSize: 13,
+                    color: '#E2DEFF',
+                    fontStyle: 'italic',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {currentMood.affirmation}
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </motion.div>
+      )}
     </motion.div>
   );
 }
