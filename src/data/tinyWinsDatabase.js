@@ -351,42 +351,50 @@ export const DIFFICULTY_COLORS = {
   Advanced: '#EF4444',
 };
 
-// Get challenges for today based on mood
-export function getTodaysChallenges(mood = 'clear-sky', completedToday = []) {
+// Deterministic daily challenge selection
+// Returns same 3 challenge IDs for the same mood and date
+// Excludes challenges used in the last 7 days
+export function getTodaysChallenges(mood = 'clear-sky', recentChallengeIds = []) {
   const categories = MOOD_TO_CATEGORIES[mood] || MOOD_TO_CATEGORIES['clear-sky'];
+  const recentSet = new Set(recentChallengeIds);
 
-  // Filter out already completed challenges
-  const available = TINY_WINS_DATABASE.filter(
-    challenge => !completedToday.includes(challenge.id)
-  );
+  // Get available challenges (not used in last 7 days)
+  const available = TINY_WINS_DATABASE.filter(challenge => !recentSet.has(challenge.id));
 
-  // Get 3 challenges: mix different categories
+  // Pass 1: Prefer mood-aligned challenges, diverse categories
   const selected = [];
   const usedCategories = new Set();
 
-  // Prefer challenges in mood-related categories
-  for (const challenge of available) {
+  // Start with mood-aligned challenges (deterministic sort by ID)
+  const moodAligned = available
+    .filter(c => categories.includes(c.category) && !usedCategories.has(c.category))
+    .sort((a, b) => a.id - b.id);
+
+  for (const challenge of moodAligned) {
     if (selected.length >= 3) break;
-    if (categories.includes(challenge.category) && !usedCategories.has(challenge.category)) {
-      selected.push(challenge);
-      usedCategories.add(challenge.category);
-    }
+    selected.push(challenge.id);
+    usedCategories.add(challenge.category);
   }
 
-  // Fill remaining slots with any available challenges from different categories
-  for (const challenge of available) {
+  // Pass 2: Fill remaining with any category
+  const remaining = available
+    .filter(c => !selected.includes(c.id) && !usedCategories.has(c.category))
+    .sort((a, b) => a.id - b.id);
+
+  for (const challenge of remaining) {
     if (selected.length >= 3) break;
-    if (!selected.find(c => c.id === challenge.id) && !usedCategories.has(challenge.category)) {
-      selected.push(challenge);
-      usedCategories.add(challenge.category);
-    }
+    selected.push(challenge.id);
+    usedCategories.add(challenge.category);
   }
 
-  // If still need more, just add any available challenges
-  for (const challenge of available) {
-    if (selected.length >= 3) break;
-    if (!selected.find(c => c.id === challenge.id)) {
-      selected.push(challenge);
+  // Pass 3: Last resort - allow duplicate categories
+  if (selected.length < 3) {
+    const lastResort = available
+      .filter(c => !selected.includes(c.id))
+      .sort((a, b) => a.id - b.id);
+    for (const challenge of lastResort) {
+      if (selected.length >= 3) break;
+      selected.push(challenge.id);
     }
   }
 
