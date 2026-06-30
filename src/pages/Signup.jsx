@@ -163,8 +163,8 @@ export default function Signup() {
                   setStep(2);
                 }}
                 style={{
-                  background: 'rgba(255,255,255,0.07)',
-                  border: '1.5px solid rgba(139,92,246,0.2)',
+                  background: 'linear-gradient(145deg, rgba(139,92,246,0.1) 0%, rgba(167,139,250,0.08) 100%)',
+                  border: '1.5px solid rgba(139,92,246,0.3)',
                   borderRadius: 20,
                   padding: '24px',
                   cursor: 'pointer',
@@ -173,15 +173,18 @@ export default function Signup() {
                   display: 'flex',
                   gap: 16,
                   alignItems: 'flex-start',
+                  boxShadow: '0 4px 20px rgba(124,58,237,0.1)',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(139,92,246,0.15)';
-                  e.currentTarget.style.borderColor = 'rgba(139,92,246,0.4)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.background = 'linear-gradient(145deg, rgba(139,92,246,0.18) 0%, rgba(167,139,250,0.15) 100%)';
+                  e.currentTarget.style.borderColor = 'rgba(139,92,246,0.5)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(124,58,237,0.25)';
+                  e.currentTarget.style.transform = 'translateY(-4px)';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.07)';
-                  e.currentTarget.style.borderColor = 'rgba(139,92,246,0.2)';
+                  e.currentTarget.style.background = 'linear-gradient(145deg, rgba(139,92,246,0.1) 0%, rgba(167,139,250,0.08) 100%)';
+                  e.currentTarget.style.borderColor = 'rgba(139,92,246,0.3)';
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(124,58,237,0.1)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -211,12 +214,13 @@ export default function Signup() {
                     {opt.features.map(f => (
                       <span key={f} style={{
                         fontSize: 11,
-                        background: 'rgba(245,184,65,0.15)',
-                        border: '1px solid rgba(245,184,65,0.25)',
-                        color: 'rgba(245,184,65,0.8)',
-                        padding: '4px 10px',
-                        borderRadius: 12,
-                        fontWeight: 500,
+                        background: 'rgba(167,139,250,0.15)',
+                        border: '1px solid rgba(167,139,250,0.3)',
+                        color: 'rgba(200,181,253,0.85)',
+                        padding: '5px 12px',
+                        borderRadius: 14,
+                        fontWeight: 600,
+                        letterSpacing: '0.02em',
                       }}>
                         {f}
                       </span>
@@ -291,24 +295,26 @@ export default function Signup() {
                 onChange={e => setFormData(f => ({...f, name: e.target.value}))}
                 style={{
                   width: '100%',
-                  padding: '12px 16px',
-                  borderRadius: 14,
-                  border: '1.5px solid rgba(255,255,255,0.15)',
-                  background: 'rgba(255,255,255,0.08)',
+                  padding: '13px 16px',
+                  borderRadius: 12,
+                  border: '1.5px solid rgba(139,92,246,0.25)',
+                  background: 'rgba(139,92,246,0.05)',
                   backdropFilter: 'blur(8px)',
                   color: '#fff',
                   fontSize: 14,
                   fontFamily: 'inherit',
                   outline: 'none',
-                  transition: 'all 0.2s',
+                  transition: 'all 0.2s ease',
                 }}
                 onFocus={e => {
-                  e.target.style.borderColor = 'rgba(139,92,246,0.4)';
-                  e.target.style.background = 'rgba(255,255,255,0.12)';
+                  e.target.style.borderColor = 'rgba(139,92,246,0.5)';
+                  e.target.style.background = 'rgba(139,92,246,0.12)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.15)';
                 }}
                 onBlur={e => {
-                  e.target.style.borderColor = 'rgba(255,255,255,0.15)';
-                  e.target.style.background = 'rgba(255,255,255,0.08)';
+                  e.target.style.borderColor = 'rgba(139,92,246,0.25)';
+                  e.target.style.background = 'rgba(139,92,246,0.05)';
+                  e.target.style.boxShadow = 'none';
                 }}
               />
             </div>
@@ -333,24 +339,26 @@ export default function Signup() {
                 onChange={e => setFormData(f => ({...f, email: e.target.value}))}
                 style={{
                   width: '100%',
-                  padding: '12px 16px',
-                  borderRadius: 14,
-                  border: '1.5px solid rgba(255,255,255,0.15)',
-                  background: 'rgba(255,255,255,0.08)',
+                  padding: '13px 16px',
+                  borderRadius: 12,
+                  border: '1.5px solid rgba(139,92,246,0.25)',
+                  background: 'rgba(139,92,246,0.05)',
                   backdropFilter: 'blur(8px)',
                   color: '#fff',
                   fontSize: 14,
                   fontFamily: 'inherit',
                   outline: 'none',
-                  transition: 'all 0.2s',
+                  transition: 'all 0.2s ease',
                 }}
                 onFocus={e => {
-                  e.target.style.borderColor = 'rgba(139,92,246,0.4)';
-                  e.target.style.background = 'rgba(255,255,255,0.12)';
+                  e.target.style.borderColor = 'rgba(139,92,246,0.5)';
+                  e.target.style.background = 'rgba(139,92,246,0.12)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.15)';
                 }}
                 onBlur={e => {
-                  e.target.style.borderColor = 'rgba(255,255,255,0.15)';
-                  e.target.style.background = 'rgba(255,255,255,0.08)';
+                  e.target.style.borderColor = 'rgba(139,92,246,0.25)';
+                  e.target.style.background = 'rgba(139,92,246,0.05)';
+                  e.target.style.boxShadow = 'none';
                 }}
               />
             </div>
@@ -416,10 +424,10 @@ export default function Signup() {
                   onChange={e => setFormData(f => ({...f, problem: e.target.value}))}
                   style={{
                     width: '100%',
-                    padding: '12px 16px',
-                    borderRadius: 14,
-                    border: '1.5px solid rgba(255,255,255,0.15)',
-                    background: 'rgba(255,255,255,0.08)',
+                    padding: '13px 16px',
+                    borderRadius: 12,
+                    border: '1.5px solid rgba(139,92,246,0.25)',
+                    background: 'rgba(139,92,246,0.05)',
                     backdropFilter: 'blur(8px)',
                     color: '#fff',
                     fontSize: 14,
@@ -427,15 +435,17 @@ export default function Signup() {
                     outline: 'none',
                     appearance: 'none',
                     cursor: 'pointer',
-                    transition: 'all 0.2s',
+                    transition: 'all 0.2s ease',
                   }}
                   onFocus={e => {
-                    e.target.style.borderColor = 'rgba(139,92,246,0.4)';
-                    e.target.style.background = 'rgba(255,255,255,0.12)';
+                    e.target.style.borderColor = 'rgba(139,92,246,0.5)';
+                    e.target.style.background = 'rgba(139,92,246,0.12)';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.15)';
                   }}
                   onBlur={e => {
-                    e.target.style.borderColor = 'rgba(255,255,255,0.15)';
-                    e.target.style.background = 'rgba(255,255,255,0.08)';
+                    e.target.style.borderColor = 'rgba(139,92,246,0.25)';
+                    e.target.style.background = 'rgba(139,92,246,0.05)';
+                    e.target.style.boxShadow = 'none';
                   }}
                 >
                   <option value="">Select a challenge...</option>
