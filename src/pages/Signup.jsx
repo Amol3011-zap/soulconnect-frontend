@@ -477,7 +477,7 @@ export default function Signup() {
     return (
       <div className="min-h-screen flex">
         <LeftPanel />
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8" style={{ background: '#FAFAF8' }}>
           <motion.div
             className="w-full max-w-md"
             initial={{ opacity: 0, y: 20 }}
@@ -544,7 +544,7 @@ export default function Signup() {
     return (
       <div className="min-h-screen flex">
         <LeftPanel />
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: '#FAFAF8' }}>
           <motion.div
             className="w-full max-w-md"
             initial={{ opacity: 0, x: 20 }}
@@ -674,7 +674,7 @@ export default function Signup() {
     return (
       <div className="min-h-screen flex">
         <LeftPanel />
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: '#FAFAF8' }}>
           <motion.div
             className="w-full max-w-md"
             initial={{ opacity: 0, x: 20 }}
@@ -777,7 +777,7 @@ export default function Signup() {
     return (
       <div className="min-h-screen flex">
         <LeftPanel />
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: '#FAFAF8' }}>
           <motion.div
             className="w-full max-w-md"
             initial={{ opacity: 0, x: 20 }}
@@ -957,7 +957,7 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex">
       <LeftPanel />
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: '#FAFAF8' }}>
         <motion.div
           className="w-full max-w-md"
           initial={{ opacity: 0, x: 20 }}

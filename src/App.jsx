@@ -133,8 +133,6 @@ function AppInner() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
-      <CrisisBanner />
-
       {showOnboarding && <SafetyOnboarding onComplete={() => setOnboardingDone(true)} />}
 
       {token && !hideNav && LAUNCH_READY && <Navbar />}
