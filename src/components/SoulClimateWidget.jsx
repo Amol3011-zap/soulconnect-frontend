@@ -617,7 +617,7 @@ export default function SoulClimateWidget() {
           {/* Mood pills - responsive grid */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(70px, 25vw, 100px), 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
             gap: 'clamp(8px, 2vw, 12px)',
             marginBottom: 'clamp(16px, 4vw, 20px)'
           }}>
