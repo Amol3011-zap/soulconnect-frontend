@@ -1,45 +1,44 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import { useAuthStore } from '../store/auth';
 import { authAPI } from '../services/api';
+import AuthCard from '../components/auth/AuthCard';
+import RoleCard from '../components/auth/RoleCard';
+import FormInput from '../components/auth/FormInput';
+import GradientButton from '../components/auth/GradientButton';
+
+const P = '#6D4AFF';
 
 const ROLE_OPTIONS = [
   {
     id: 'user',
-    title: 'I\'m seeking support',
-    subtitle: 'Connect with peers who understand',
-    description: 'Find community, share experiences, and heal together with people who\'ve walked similar paths.',
-    icon: '💜',
-    features: ['Peer matching', 'Anonymous', 'Free to join']
+    title: '🌱 I\'m seeking support',
+    description: 'Connect with peers who understand your journey',
+    features: ['Peer matching', 'Anonymous', 'Free to join'],
   },
   {
     id: 'healer',
-    title: 'I\'m a healer / professional',
-    subtitle: 'Offer your expertise to those in need',
-    description: 'Support others through your lived experience or professional expertise. Grow your practice on SoulConnect.',
-    icon: '🌿',
-    features: ['Set your own fee', 'Verified profile', 'Grow your practice']
-  }
+    title: '🧘 I\'m a healer / professional',
+    description: 'Offer your expertise to those in need',
+    features: ['Set your fee', 'Verified profile', 'Grow practice'],
+  },
 ];
 
 const PROBLEMS = [
-  { value: 'anxiety', label: 'Anxiety', icon: '😰' },
-  { value: 'depression', label: 'Depression', icon: '😢' },
-  { value: 'loneliness', label: 'Loneliness', icon: '😔' },
-  { value: 'relationship_breakup', label: 'Relationship / Breakup', icon: '💔' },
-  { value: 'grief_loss', label: 'Grief / Loss', icon: '🕯️' },
-  { value: 'burnout', label: 'Burnout', icon: '😵' },
-  { value: 'trauma', label: 'Trauma', icon: '⚠️' },
-  { value: 'other', label: 'Other', icon: '💭' },
+  { value: 'anxiety', label: 'Anxiety' },
+  { value: 'depression', label: 'Depression' },
+  { value: 'loneliness', label: 'Loneliness' },
+  { value: 'relationship_breakup', label: 'Relationship / Breakup' },
+  { value: 'grief_loss', label: 'Grief / Loss' },
+  { value: 'burnout', label: 'Burnout' },
+  { value: 'trauma', label: 'Trauma' },
+  { value: 'other', label: 'Other' },
 ];
-
-const P = '#6D4AFF';
-const LAV = '#A78BFA';
-const DARK = '#120B2E';
 
 export default function Signup() {
   const navigate = useNavigate();
-  const register = useAuthStore(s => s.register);
+  const register = useAuthStore((s) => s.register);
   const [step, setStep] = useState(1); // 1: role, 2: details
   const [role, setRole] = useState(null);
   const [formData, setFormData] = useState({
@@ -50,11 +49,12 @@ export default function Signup() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  async function handleSignup(e) {
+  const handleSignup = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.password) {
-      setError('Please fill in all fields');
+      setError('Please fill in all required fields');
       return;
     }
 
@@ -81,442 +81,336 @@ export default function Signup() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: `linear-gradient(135deg, #140028 0%, #1e0f47 40%, #2d1b69 100%)`,
-      fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
-      {/* Background elements */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: '10%',
-        width: 400,
-        height: 400,
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)',
-        filter: 'blur(60px)',
-        pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute',
-        bottom: 0,
-        right: '5%',
-        width: 500,
-        height: 500,
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%)',
-        filter: 'blur(80px)',
-        pointerEvents: 'none',
-      }} />
+    <div className="min-h-screen flex overflow-hidden">
+      {/* LEFT HOPEFUL SECTION */}
+      <div
+        className="hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-12 relative overflow-hidden"
+        style={{
+          background: `linear-gradient(160deg, rgba(109, 74, 255, 0.06) 0%, rgba(139, 92, 246, 0.04) 50%, rgba(109, 74, 255, 0.02) 100%)`,
+        }}
+      >
+        {/* Animated background */}
+        <motion.div
+          animate={{ y: [0, 40, 0], x: [0, 10, 0] }}
+          transition={{ duration: 12, repeat: Infinity }}
+          className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full opacity-25"
+          style={{
+            background: `radial-gradient(circle, ${P}, transparent)`,
+            filter: 'blur(60px)',
+          }}
+        />
+        <motion.div
+          animate={{ y: [0, -40, 0], x: [0, -10, 0] }}
+          transition={{ duration: 14, repeat: Infinity, delay: 1 }}
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-20"
+          style={{
+            background: `radial-gradient(circle, ${P}, transparent)`,
+            filter: 'blur(80px)',
+          }}
+        />
 
-      {/* Main card */}
-      <div style={{
-        position: 'relative',
-        zIndex: 10,
-        width: '100%',
-        maxWidth: 500,
-      }}>
-        {/* Logo + Header */}
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <Link to="/" style={{ display: 'inline-block', marginBottom: 28 }}>
-            <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect"
-              style={{ height: 48, width: 'auto', filter: 'drop-shadow(0 4px 12px rgba(124,58,237,0.4))' }} />
-          </Link>
-          <h1 style={{
-            fontSize: 32,
-            fontWeight: 800,
-            color: '#fff',
-            margin: '0 0 12px',
-            letterSpacing: '-0.02em',
-          }}>
-            {step === 1 ? 'Join SoulConnect' : 'Create Your Account'}
-          </h1>
-          <p style={{
-            fontSize: 14,
-            color: 'rgba(255,255,255,0.55)',
-            margin: 0,
-          }}>
-            {step === 1
-              ? 'Connect with a community that understands'
-              : 'A few more details to get you started'}
-          </p>
+        {/* Sunrise/Lotus illustration hint */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 45, repeat: Infinity, ease: 'linear' }}
+          className="absolute inset-0 flex items-center justify-center opacity-3 pointer-events-none"
+          style={{ fontSize: '500px' }}
+        >
+          🪷
+        </motion.div>
+
+        <div className="relative z-10">
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <img src="/logo-footer.png" alt="SoulConnect" className="h-16" />
+          </motion.div>
         </div>
 
-        {/* Step 1: Role Selection */}
-        {step === 1 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {ROLE_OPTIONS.map(opt => (
-              <button
-                key={opt.id}
-                onClick={() => {
-                  setRole(opt.id);
-                  setStep(2);
-                }}
+        {/* Main content */}
+        <div className="relative z-10 space-y-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h1 className="text-5xl font-bold text-gray-900 leading-tight mb-4">
+              You don't have to go through this alone.
+            </h1>
+            <p className="text-lg text-gray-600 leading-relaxed mb-8">
+              Every meaningful connection starts with one small step. Join a community built around empathy, healing and real conversations.
+            </p>
+          </motion.div>
+
+          {/* Trust cards */}
+          <motion.div
+            className="space-y-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, staggerChildren: 0.1 }}
+          >
+            {[
+              { icon: '🔒', title: 'Anonymous', desc: 'Your privacy is protected' },
+              {
+                icon: '✅',
+                title: 'Verified Professionals',
+                desc: 'Healers are carefully verified',
+              },
+              {
+                icon: '🤝',
+                title: 'Community First',
+                desc: 'Built with care, for healing',
+              },
+            ].map(({ icon, title, desc }) => (
+              <motion.div
+                key={title}
+                className="flex gap-3 items-start p-4 rounded-xl"
                 style={{
-                  background: 'linear-gradient(145deg, rgba(139,92,246,0.1) 0%, rgba(167,139,250,0.08) 100%)',
-                  border: '1.5px solid rgba(139,92,246,0.3)',
-                  borderRadius: 20,
-                  padding: '24px',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  gap: 16,
-                  alignItems: 'flex-start',
-                  boxShadow: '0 4px 20px rgba(124,58,237,0.1)',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'linear-gradient(145deg, rgba(139,92,246,0.18) 0%, rgba(167,139,250,0.15) 100%)';
-                  e.currentTarget.style.borderColor = 'rgba(139,92,246,0.5)';
-                  e.currentTarget.style.boxShadow = '0 8px 32px rgba(124,58,237,0.25)';
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'linear-gradient(145deg, rgba(139,92,246,0.1) 0%, rgba(167,139,250,0.08) 100%)';
-                  e.currentTarget.style.borderColor = 'rgba(139,92,246,0.3)';
-                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(124,58,237,0.1)';
-                  e.currentTarget.style.transform = 'translateY(0)';
+                  background: 'rgba(255, 255, 255, 0.6)',
+                  border: '1px solid rgba(109, 74, 255, 0.1)',
                 }}
               >
-                <div style={{ fontSize: 40 }}>{opt.icon}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                    color: '#fff',
-                    marginBottom: 4,
-                  }}>
-                    {opt.title}
-                  </div>
-                  <div style={{
-                    fontSize: 12,
-                    color: 'rgba(255,255,255,0.55)',
-                    marginBottom: 12,
-                    lineHeight: 1.5,
-                  }}>
-                    {opt.description}
-                  </div>
-                  <div style={{
-                    display: 'flex',
-                    gap: 8,
-                    flexWrap: 'wrap',
-                  }}>
-                    {opt.features.map(f => (
-                      <span key={f} style={{
-                        fontSize: 11,
-                        background: 'rgba(167,139,250,0.15)',
-                        border: '1px solid rgba(167,139,250,0.3)',
-                        color: 'rgba(200,181,253,0.85)',
-                        padding: '5px 12px',
-                        borderRadius: 14,
-                        fontWeight: 600,
-                        letterSpacing: '0.02em',
-                      }}>
-                        {f}
-                      </span>
-                    ))}
-                  </div>
+                <span className="text-2xl flex-shrink-0">{icon}</span>
+                <div>
+                  <div className="font-semibold text-gray-900">{title}</div>
+                  <div className="text-xs text-gray-600">{desc}</div>
                 </div>
-              </button>
+              </motion.div>
             ))}
-            <p style={{
-              textAlign: 'center',
-              fontSize: 13,
-              color: 'rgba(255,255,255,0.5)',
-              marginTop: 8,
-            }}>
-              Already have an account? <Link to="/login" style={{
-                color: P,
-                textDecoration: 'none',
-                fontWeight: 600,
-              }}>Sign In</Link>
+          </motion.div>
+        </div>
+
+        {/* Inspirational quote */}
+        <motion.div
+          className="relative z-10 italic text-gray-600 text-center py-6 px-4 rounded-xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          style={{
+            background: 'rgba(109, 74, 255, 0.05)',
+            borderLeft: `4px solid ${P}`,
+          }}
+        >
+          "Sometimes healing begins with simply being heard."
+        </motion.div>
+      </div>
+
+      {/* RIGHT FORM SECTION */}
+      <div className="flex-1 flex items-center justify-center p-6 lg:p-12 bg-gradient-to-br from-gray-50 via-white to-gray-50">
+        <motion.div
+          className="w-full max-w-md"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Mobile logo */}
+          <motion.div
+            className="flex justify-center mb-10 lg:hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <img src="/logo-footer.png" alt="SoulConnect" className="h-14" />
+          </motion.div>
+
+          {/* Heading */}
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              {step === 1 ? 'Join SoulConnect' : 'Create Your Account'}
+            </h1>
+            <p className="text-gray-600 text-sm">
+              {step === 1
+                ? 'Connect with a community that understands'
+                : 'A few more details to get you started'}
             </p>
-          </div>
-        )}
+          </motion.div>
 
-        {/* Step 2: Signup Form */}
-        {step === 2 && (
-          <form onSubmit={handleSignup} style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 16,
-          }}>
-            {/* Back button */}
-            <button
-              type="button"
-              onClick={() => {
-                setStep(1);
-                setRole(null);
-              }}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'rgba(255,255,255,0.6)',
-                cursor: 'pointer',
-                fontSize: 14,
-                fontWeight: 500,
-                marginBottom: 8,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                fontFamily: 'inherit',
-              }}
-            >
-              ← Back
-            </button>
-
-            {/* Name */}
-            <div>
-              <label style={{
-                display: 'block',
-                fontSize: 12,
-                fontWeight: 700,
-                color: 'rgba(255,255,255,0.65)',
-                marginBottom: 8,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}>
-                Full Name
-              </label>
-              <input
-                type="text"
-                placeholder="Your full name"
-                value={formData.name}
-                onChange={e => setFormData(f => ({...f, name: e.target.value}))}
-                style={{
-                  width: '100%',
-                  padding: '13px 16px',
-                  borderRadius: 12,
-                  border: '1.5px solid rgba(139,92,246,0.25)',
-                  background: 'rgba(139,92,246,0.05)',
-                  backdropFilter: 'blur(8px)',
-                  color: '#fff',
-                  fontSize: 14,
-                  fontFamily: 'inherit',
-                  outline: 'none',
-                  transition: 'all 0.2s ease',
-                }}
-                onFocus={e => {
-                  e.target.style.borderColor = 'rgba(139,92,246,0.5)';
-                  e.target.style.background = 'rgba(139,92,246,0.12)';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.15)';
-                }}
-                onBlur={e => {
-                  e.target.style.borderColor = 'rgba(139,92,246,0.25)';
-                  e.target.style.background = 'rgba(139,92,246,0.05)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <label style={{
-                display: 'block',
-                fontSize: 12,
-                fontWeight: 700,
-                color: 'rgba(255,255,255,0.65)',
-                marginBottom: 8,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}>
-                Email Address
-              </label>
-              <input
-                type="email"
-                placeholder="your@email.com"
-                value={formData.email}
-                onChange={e => setFormData(f => ({...f, email: e.target.value}))}
-                style={{
-                  width: '100%',
-                  padding: '13px 16px',
-                  borderRadius: 12,
-                  border: '1.5px solid rgba(139,92,246,0.25)',
-                  background: 'rgba(139,92,246,0.05)',
-                  backdropFilter: 'blur(8px)',
-                  color: '#fff',
-                  fontSize: 14,
-                  fontFamily: 'inherit',
-                  outline: 'none',
-                  transition: 'all 0.2s ease',
-                }}
-                onFocus={e => {
-                  e.target.style.borderColor = 'rgba(139,92,246,0.5)';
-                  e.target.style.background = 'rgba(139,92,246,0.12)';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.15)';
-                }}
-                onBlur={e => {
-                  e.target.style.borderColor = 'rgba(139,92,246,0.25)';
-                  e.target.style.background = 'rgba(139,92,246,0.05)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-
-            {/* Password */}
-            <div>
-              <label style={{
-                display: 'block',
-                fontSize: 12,
-                fontWeight: 700,
-                color: 'rgba(255,255,255,0.65)',
-                marginBottom: 8,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}>
-                Password
-              </label>
-              <input
-                type="password"
-                placeholder="Create a strong password"
-                value={formData.password}
-                onChange={e => setFormData(f => ({...f, password: e.target.value}))}
-                style={{
-                  width: '100%',
-                  padding: '12px 16px',
-                  borderRadius: 14,
-                  border: '1.5px solid rgba(255,255,255,0.15)',
-                  background: 'rgba(255,255,255,0.08)',
-                  backdropFilter: 'blur(8px)',
-                  color: '#fff',
-                  fontSize: 14,
-                  fontFamily: 'inherit',
-                  outline: 'none',
-                  transition: 'all 0.2s',
-                }}
-                onFocus={e => {
-                  e.target.style.borderColor = 'rgba(139,92,246,0.4)';
-                  e.target.style.background = 'rgba(255,255,255,0.12)';
-                }}
-                onBlur={e => {
-                  e.target.style.borderColor = 'rgba(255,255,255,0.15)';
-                  e.target.style.background = 'rgba(255,255,255,0.08)';
-                }}
-              />
-            </div>
-
-            {/* Problem (optional for users) */}
-            {role === 'user' && (
-              <div>
-                <label style={{
-                  display: 'block',
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: 'rgba(255,255,255,0.65)',
-                  marginBottom: 8,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}>
-                  What are you struggling with? (Optional)
-                </label>
-                <select
-                  value={formData.problem}
-                  onChange={e => setFormData(f => ({...f, problem: e.target.value}))}
-                  style={{
-                    width: '100%',
-                    padding: '13px 16px',
-                    borderRadius: 12,
-                    border: '1.5px solid rgba(139,92,246,0.25)',
-                    background: 'rgba(139,92,246,0.05)',
-                    backdropFilter: 'blur(8px)',
-                    color: '#fff',
-                    fontSize: 14,
-                    fontFamily: 'inherit',
-                    outline: 'none',
-                    appearance: 'none',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onFocus={e => {
-                    e.target.style.borderColor = 'rgba(139,92,246,0.5)';
-                    e.target.style.background = 'rgba(139,92,246,0.12)';
-                    e.target.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.15)';
-                  }}
-                  onBlur={e => {
-                    e.target.style.borderColor = 'rgba(139,92,246,0.25)';
-                    e.target.style.background = 'rgba(139,92,246,0.05)';
-                    e.target.style.boxShadow = 'none';
-                  }}
+          <AuthCard>
+            {/* STEP 1: Role Selection */}
+            <AnimatePresence mode="wait">
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-4"
                 >
-                  <option value="">Select a challenge...</option>
-                  {PROBLEMS.map(p => (
-                    <option key={p.value} value={p.value}>{p.label}</option>
+                  {ROLE_OPTIONS.map(({ id, title, description, features }) => (
+                    <RoleCard
+                      key={id}
+                      icon={title.charAt(0)}
+                      title={title.slice(2)}
+                      description={description}
+                      features={features}
+                      selected={role === id}
+                      onClick={() => {
+                        setRole(id);
+                        setStep(2);
+                      }}
+                    />
                   ))}
-                </select>
-              </div>
-            )}
 
-            {/* Error message */}
-            {error && (
-              <div style={{
-                background: 'rgba(239,68,68,0.15)',
-                border: '1px solid rgba(239,68,68,0.3)',
-                borderRadius: 12,
-                padding: 12,
-                fontSize: 12,
-                color: '#FCA5A5',
-              }}>
-                {error}
-              </div>
-            )}
+                  {/* Sign in link */}
+                  <p className="text-center text-sm text-gray-600 mt-6">
+                    Already have an account?{' '}
+                    <Link
+                      to="/login"
+                      className="font-semibold transition-colors hover:text-purple-700"
+                      style={{ color: P }}
+                    >
+                      Sign In
+                    </Link>
+                  </p>
+                </motion.div>
+              )}
 
-            {/* Submit button */}
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                width: '100%',
-                padding: '14px 20px',
-                borderRadius: 14,
-                border: 'none',
-                background: `linear-gradient(135deg, ${P} 0%, #8B5CF6 100%)`,
-                color: '#fff',
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: loading ? 'not-allowed' : 'pointer',
-                opacity: loading ? 0.7 : 1,
-                transition: 'all 0.3s',
-                boxShadow: '0 8px 24px rgba(124,58,237,0.35)',
-                fontFamily: 'inherit',
-              }}
-              onMouseEnter={e => {
-                if (!loading) {
-                  e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 12px 32px rgba(124,58,237,0.5)';
-                }
-              }}
-              onMouseLeave={e => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 8px 24px rgba(124,58,237,0.35)';
-              }}
-            >
-              {loading ? 'Creating account...' : 'Create Account'}
-            </button>
+              {/* STEP 2: Form */}
+              {step === 2 && (
+                <motion.form
+                  key="step2"
+                  onSubmit={handleSignup}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-5"
+                >
+                  {/* Back button */}
+                  <motion.button
+                    type="button"
+                    onClick={() => {
+                      setStep(1);
+                      setRole(null);
+                    }}
+                    className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                    whileHover={{ x: -2 }}
+                  >
+                    ← Back
+                  </motion.button>
 
-            {/* Sign in link */}
-            <p style={{
-              textAlign: 'center',
-              fontSize: 13,
-              color: 'rgba(255,255,255,0.5)',
-            }}>
-              Already have an account? <Link to="/login" style={{
-                color: P,
-                textDecoration: 'none',
-                fontWeight: 600,
-              }}>Sign In</Link>
-            </p>
-          </form>
-        )}
+                  {/* Error message */}
+                  <AnimatePresence>
+                    {error && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-sm flex items-center gap-2"
+                      >
+                        <span>⚠️</span> {error}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Name */}
+                  <FormInput
+                    label="Full Name"
+                    type="text"
+                    placeholder="Your full name"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData((f) => ({ ...f, name: e.target.value }))
+                    }
+                  />
+
+                  {/* Email */}
+                  <FormInput
+                    label="Email Address"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData((f) => ({ ...f, email: e.target.value }))
+                    }
+                  />
+
+                  {/* Password */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Create a strong password"
+                        value={formData.password}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            password: e.target.value,
+                          }))
+                        }
+                        className="w-full pl-4 pr-12 py-3.5 rounded-xl border-2 border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none transition-all bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg"
+                      >
+                        {showPassword ? '🙈' : '👁️'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Problem (optional for users) */}
+                  {role === 'user' && (
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        What are you struggling with? (Optional)
+                      </label>
+                      <select
+                        value={formData.problem}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            problem: e.target.value,
+                          }))
+                        }
+                        className="w-full pl-4 pr-4 py-3.5 rounded-xl border-2 border-gray-200 text-gray-900 focus:outline-none transition-all bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-100"
+                      >
+                        <option value="">Select a challenge...</option>
+                        {PROBLEMS.map((p) => (
+                          <option key={p.value} value={p.value}>
+                            {p.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Submit button */}
+                  <GradientButton type="submit" loading={loading}>
+                    {loading ? 'Creating account...' : 'Create Account'}
+                  </GradientButton>
+
+                  {/* Sign in link */}
+                  <p className="text-center text-sm text-gray-600">
+                    Already have an account?{' '}
+                    <Link
+                      to="/login"
+                      className="font-semibold transition-colors hover:text-purple-700"
+                      style={{ color: P }}
+                    >
+                      Sign In
+                    </Link>
+                  </p>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </AuthCard>
+        </motion.div>
       </div>
     </div>
   );
