@@ -1,436 +1,175 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { CATEGORY_META } from '../data/tinyWinsChallenges';
+import React, { useState } from 'react';
+import { motion } from 'motion/react';
+import { DIFFICULTY_COLORS } from '../data/tinyWinsDatabase';
 
-// ── Difficulty pill config ────────────────────────────────────────────────────
-const DIFFICULTY_STYLE = {
-  easy: {
-    bg: 'rgba(16,185,129,0.12)',
-    border: 'rgba(16,185,129,0.3)',
-    color: '#10B981',
-    label: 'Easy',
-  },
-  medium: {
-    bg: 'rgba(168,85,247,0.12)',
-    border: 'rgba(168,85,247,0.3)',
-    color: '#A855F7',
-    label: 'Medium',
-  },
+const CARD_STYLE = {
+  background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
+  border: '1px solid rgba(139,92,246,0.2)',
+  borderRadius: 20,
+  padding: 18,
+  boxShadow: '0 8px 32px rgba(0,0,0,0.3), 0 0 60px rgba(124,58,237,0.1)',
 };
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+const PURPLE_BTN = {
+  background: 'linear-gradient(135deg, #6D4AFF, #8B5CF6)',
+  border: 'none',
+  borderRadius: 12,
+  color: '#fff',
+  fontWeight: 600,
+  cursor: 'pointer',
+  padding: '10px 20px',
+  fontSize: 13,
+  transition: 'all 0.3s ease',
+  boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
+};
 
-function CategoryBubble({ category }) {
-  const meta = CATEGORY_META[category] || {};
-  return (
-    <div
-      style={{
-        width: 36,
-        height: 36,
-        borderRadius: '50%',
-        background: meta.bg || 'rgba(139,92,246,0.15)',
-        border: `1px solid ${meta.color ? meta.color + '4D' : 'rgba(139,92,246,0.3)'}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 17,
-        flexShrink: 0,
-      }}
-    >
-      {meta.icon || '✨'}
-    </div>
-  );
-}
+export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
+  const [expandedWhy, setExpandedWhy] = useState(false);
 
-function DurationPill({ duration }) {
-  return (
-    <span
-      style={{
-        fontSize: 11,
-        fontWeight: 500,
-        color: '#B8B4D8',
-        background: 'rgba(255,255,255,0.06)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 20,
-        padding: '2px 9px',
-        whiteSpace: 'nowrap',
-        letterSpacing: '0.01em',
-      }}
-    >
-      {duration}
-    </span>
-  );
-}
+  const handleComplete = () => {
+    onComplete?.(challenge.id);
+  };
 
-function DifficultyPill({ difficulty }) {
-  const style = DIFFICULTY_STYLE[difficulty] || DIFFICULTY_STYLE.easy;
-  return (
-    <span
-      style={{
-        fontSize: 11,
-        fontWeight: 600,
-        color: style.color,
-        background: style.bg,
-        border: `1px solid ${style.border}`,
-        borderRadius: 20,
-        padding: '2px 9px',
-        letterSpacing: '0.02em',
-        textTransform: 'uppercase',
-      }}
-    >
-      {style.label}
-    </span>
-  );
-}
+  const difficultyColor = DIFFICULTY_COLORS[challenge.difficulty] || '#10B981';
 
-function FavoriteButton({ isFavorite, onClick }) {
-  return (
-    <motion.button
-      onClick={onClick}
-      whileTap={{ scale: 0.88 }}
-      style={{
-        width: 32,
-        height: 32,
-        borderRadius: 10,
-        background: isFavorite ? 'rgba(244,197,66,0.12)' : 'rgba(255,255,255,0.05)',
-        border: isFavorite ? '1px solid rgba(244,197,66,0.35)' : '1px solid rgba(255,255,255,0.08)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        fontSize: 15,
-        flexShrink: 0,
-        transition: 'background 0.2s, border 0.2s',
-      }}
-      aria-label={isFavorite ? 'Remove from favorites' : 'Save to favorites'}
-    >
-      {isFavorite ? '🔖' : '📑'}
-    </motion.button>
-  );
-}
-
-// ── Completion overlay content ────────────────────────────────────────────────
-
-function CompletionState() {
   return (
     <motion.div
-      key="completion"
-      initial={{ opacity: 0, y: 6 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: 'easeOut' }}
+      transition={{ duration: 0.4 }}
+      whileHover={{ y: -4 }}
       style={{
-        marginTop: 14,
-        padding: '10px 14px',
-        borderRadius: 14,
-        background: 'rgba(139,92,246,0.08)',
-        border: '1px solid rgba(139,92,246,0.2)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
+        ...CARD_STYLE,
+        opacity: isCompleted ? 0.6 : 1,
       }}
     >
-      {/* Checkmark with spring pop */}
-      <motion.div
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 420, damping: 18, delay: 0.05 }}
-        style={{
-          width: 28,
-          height: 28,
-          borderRadius: '50%',
-          background: 'rgba(139,92,246,0.2)',
-          border: '1.5px solid rgba(139,92,246,0.5)',
-          display: 'flex',
+      <div style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
+        <div style={{ fontSize: 32, lineHeight: 1 }}>{challenge.icon}</div>
+        <div style={{ flex: 1 }}>
+          <div style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: 'rgba(196,181,253,0.5)',
+            marginBottom: 4,
+          }}>
+            {challenge.category}
+          </div>
+          <h3 style={{
+            fontSize: 15,
+            fontWeight: 700,
+            color: '#fff',
+            margin: 0,
+            letterSpacing: '-0.01em',
+          }}>
+            {challenge.title}
+            {isCompleted && <span style={{ marginLeft: 6 }}>✓</span>}
+          </h3>
+        </div>
+      </div>
+
+      <p style={{
+        fontSize: 12,
+        color: 'rgba(184,180,216,0.75)',
+        margin: '0 0 12px',
+        lineHeight: 1.5,
+      }}>
+        {challenge.description}
+      </p>
+
+      <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+        <span style={{
+          display: 'inline-flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 14,
-          flexShrink: 0,
-          boxShadow: '0 0 12px rgba(139,92,246,0.35)',
-        }}
+          gap: 4,
+          background: 'rgba(255,255,255,0.06)',
+          border: '1px solid rgba(255,255,255,0.09)',
+          borderRadius: 16,
+          padding: '4px 10px',
+          fontSize: 11,
+          color: '#B8B4D8',
+        }}>
+          ⏱ {challenge.time < 1 ? Math.round(challenge.time * 60) + 's' : challenge.time + ' min'}
+        </span>
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 4,
+          background: 'rgba(255,255,255,0.06)',
+          border: '1px solid rgba(255,255,255,0.09)',
+          borderRadius: 16,
+          padding: '4px 10px',
+          fontSize: 11,
+          color: '#B8B4D8',
+        }}>
+          <span style={{ color: difficultyColor }}>●</span> {challenge.difficulty}
+        </span>
+      </div>
+
+      <motion.div
+        initial={false}
+        animate={{ height: expandedWhy ? 'auto' : 0 }}
+        style={{ overflow: 'hidden', marginBottom: expandedWhy ? 12 : 0 }}
       >
-        ✓
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: expandedWhy ? 1 : 0 }}
+          transition={{ delay: 0.2 }}
+          style={{
+            background: 'rgba(139,92,246,0.1)',
+            border: '1px solid rgba(168,85,247,0.2)',
+            borderRadius: 12,
+            padding: 12,
+            marginBottom: 12,
+          }}
+        >
+          <p style={{
+            fontSize: 12,
+            color: 'rgba(184,180,216,0.85)',
+            margin: 0,
+            lineHeight: 1.6,
+          }}>
+            {challenge.whyItHelps}
+          </p>
+        </motion.div>
       </motion.div>
 
-      {/* Reflection text */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.18 }}
-        style={{
-          margin: 0,
-          fontSize: 13,
-          color: '#E2DEFF',
-          lineHeight: 1.45,
-          fontStyle: 'italic',
-          fontWeight: 400,
-        }}
-      >
-        You chose yourself today.
-      </motion.p>
-    </motion.div>
-  );
-}
-
-// ── Main component ────────────────────────────────────────────────────────────
-
-export default function TinyWinCard({
-  challenge,
-  isCompleted,
-  isSkipped,
-  isFavorite,
-  onComplete,
-  onSkip,
-  onFavorite,
-  index = 0,
-  showInfo = false,
-}) {
-  const [infoOpen, setInfoOpen] = useState(showInfo);
-
-  if (!challenge) return null;
-
-  const { id, title, description, category, duration, difficulty, tip } = challenge;
-
-  // ── Card style (glass + conditional completed tint) ───────────────────────
-  const cardBg = isCompleted
-    ? 'rgba(139,92,246,0.12)'
-    : 'rgba(33,16,68,0.6)';
-  const cardBorder = isCompleted
-    ? '1px solid rgba(139,92,246,0.4)'
-    : '1px solid rgba(255,255,255,0.1)';
-  const cardBoxShadow = isCompleted
-    ? '0 0 0 1px rgba(139,92,246,0.15), 0 8px 32px rgba(0,0,0,0.35)'
-    : '0 4px 24px rgba(0,0,0,0.3)';
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{
-        opacity: isSkipped ? 0.45 : 1,
-        y: 0,
-        boxShadow: cardBoxShadow,
-      }}
-      transition={{
-        opacity: { duration: 0.35, delay: index * 0.1 },
-        y: { duration: 0.4, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] },
-        layout: { duration: 0.3 },
-      }}
-      style={{
-        borderRadius: 24,
-        background: cardBg,
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        border: cardBorder,
-        padding: '18px 20px',
-        fontFamily: "'Inter', sans-serif",
-        transition: 'background 0.3s, border 0.3s',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* ── Subtle inner highlight strip ─────────────────────────────────── */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 1,
-          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)',
-          borderRadius: '24px 24px 0 0',
-        }}
-      />
-
-      {/* ── TOP ROW ──────────────────────────────────────────────────────── */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          marginBottom: 10,
-        }}
-      >
-        <CategoryBubble category={category} />
-
-        {/* Title */}
-        <p
+      <div style={{ display: 'flex', gap: 8 }}>
+        <motion.button
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setExpandedWhy(!expandedWhy)}
           style={{
-            margin: 0,
             flex: 1,
-            fontSize: 15,
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 10,
+            color: '#A78BFA',
+            fontSize: 12,
             fontWeight: 600,
-            color: isCompleted ? '#E2DEFF' : '#fff',
-            lineHeight: 1.35,
-            letterSpacing: '-0.01em',
+            padding: '10px 12px',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
           }}
         >
-          {title}
-        </p>
-
-        {/* Duration pill */}
-        {duration && <DurationPill duration={duration} />}
-
-        {/* Favorite / bookmark */}
-        <FavoriteButton isFavorite={isFavorite} onClick={() => onFavorite?.(id)} />
-      </div>
-
-      {/* ── DESCRIPTION ──────────────────────────────────────────────────── */}
-      {description && (
-        <p
+          💡 {expandedWhy ? 'Hide' : 'Why?'}
+        </motion.button>
+        <motion.button
+          whileHover={!isCompleted ? { y: -2 } : {}}
+          whileTap={!isCompleted ? { scale: 0.95 } : {}}
+          onClick={handleComplete}
+          disabled={isCompleted}
           style={{
-            margin: '0 0 12px 0',
-            fontSize: 13.5,
-            color: '#B8B4D8',
-            lineHeight: 1.55,
-            paddingLeft: 2,
+            flex: 1,
+            ...PURPLE_BTN,
+            opacity: isCompleted ? 0.5 : 1,
+            cursor: isCompleted ? 'default' : 'pointer',
           }}
         >
-          {description}
-        </p>
-      )}
-
-      {/* ── EXPANDABLE TIP ───────────────────────────────────────────────── */}
-      {tip && (
-        <>
-          <button
-            onClick={() => setInfoOpen(v => !v)}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-              marginBottom: 6,
-              fontSize: 12,
-              color: '#8A84B6',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              fontFamily: 'inherit',
-            }}
-          >
-            <span style={{ fontSize: 10 }}>{infoOpen ? '▾' : '▸'}</span>
-            {infoOpen ? 'Hide tip' : 'Show tip'}
-          </button>
-
-          <AnimatePresence>
-            {infoOpen && (
-              <motion.div
-                key="tip"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.25 }}
-                style={{ overflow: 'hidden' }}
-              >
-                <div
-                  style={{
-                    padding: '9px 12px',
-                    borderRadius: 12,
-                    background: 'rgba(139,92,246,0.08)',
-                    border: '1px solid rgba(139,92,246,0.15)',
-                    fontSize: 12.5,
-                    color: '#B8B4D8',
-                    lineHeight: 1.5,
-                    marginBottom: 10,
-                  }}
-                >
-                  {tip}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </>
-      )}
-
-      {/* ── BOTTOM ROW ───────────────────────────────────────────────────── */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          marginTop: description ? 0 : 4,
-        }}
-      >
-        {/* Difficulty pill */}
-        {difficulty && <DifficultyPill difficulty={difficulty} />}
-
-        {/* Spacer */}
-        <div style={{ flex: 1 }} />
-
-        {/* Skip link (only when not completed) */}
-        {!isCompleted && (
-          <button
-            onClick={() => onSkip?.(id)}
-            disabled={isSkipped}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: isSkipped ? 'default' : 'pointer',
-              padding: '4px 2px',
-              fontSize: 12,
-              color: isSkipped ? '#8A84B6' : '#8A84B6',
-              opacity: isSkipped ? 0.5 : 1,
-              fontFamily: 'inherit',
-              textDecoration: isSkipped ? 'none' : 'underline',
-              textUnderlineOffset: 2,
-              transition: 'opacity 0.2s',
-            }}
-          >
-            {isSkipped ? 'Skipped' : 'Skip'}
-          </button>
-        )}
-
-        {/* Complete button */}
-        {isCompleted ? (
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'spring', stiffness: 380, damping: 22 }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '7px 16px',
-              borderRadius: 14,
-              background: 'rgba(16,185,129,0.2)',
-              border: '1px solid rgba(16,185,129,0.4)',
-              color: '#10B981',
-              fontSize: 13,
-              fontWeight: 600,
-              fontFamily: 'inherit',
-              letterSpacing: '0.01em',
-            }}
-          >
-            ✓ Done
-          </motion.div>
-        ) : (
-          <motion.button
-            whileTap={{ scale: 0.96 }}
-            onClick={() => onComplete?.(id)}
-            style={{
-              padding: '7px 18px',
-              borderRadius: 14,
-              background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
-              border: '1px solid rgba(168,85,247,0.4)',
-              color: '#fff',
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-              letterSpacing: '0.01em',
-              boxShadow: '0 2px 12px rgba(139,92,246,0.35)',
-              transition: 'box-shadow 0.2s',
-            }}
-          >
-            Complete ✓
-          </motion.button>
-        )}
+          {isCompleted ? '✓ Done' : 'Complete'}
+        </motion.button>
       </div>
-
-      {/* ── COMPLETION STATE ─────────────────────────────────────────────── */}
-      <AnimatePresence>
-        {isCompleted && <CompletionState key={`completion-${id}`} />}
-      </AnimatePresence>
     </motion.div>
   );
 }
