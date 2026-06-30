@@ -337,9 +337,8 @@ export default function Footer() {
             {/* Social icons */}
             <div style={{ display:'flex', gap:10 }}>
               {[
-                { icon:<IconInstagram />, href:'https://instagram.com', label:'Instagram', color:'#E1306C' },
-                { icon:<IconLinkedIn />,  href:'https://linkedin.com',  label:'LinkedIn',  color:'#0A66C2' },
-                { icon:<IconYouTube />,   href:'https://youtube.com',   label:'YouTube',   color:'#FF0000' },
+                { icon:<IconInstagram />, href:'https://instagram.com/soulconnect.health', label:'Instagram', color:'#E1306C' },
+                { icon:<IconLinkedIn />,  href:'https://www.linkedin.com/company/%E2%9C%85soulconnect/', label:'LinkedIn',  color:'#0A66C2' },
               ].map((s,i) => (
                 <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
                   className="sc-social-btn"
