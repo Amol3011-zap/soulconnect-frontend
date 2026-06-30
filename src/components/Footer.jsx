@@ -185,11 +185,11 @@ export default function Footer() {
         position: 'relative', zIndex: 2,
       }}>
         <div style={{ maxWidth:1140, margin:'0 auto' }}>
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap: 24 }}>
-            <div style={{ display:'flex', alignItems:'center', gap:14 }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap: '24px' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:'14px' }}>
               {/* Crisis Logo */}
               <div style={{
-                width:56, height:56, borderRadius:14, flexShrink:0,
+                width:'56px', height:'56px', borderRadius:'14px', flexShrink:0,
                 background: 'linear-gradient(135deg,#DC2626,#991B1B)',
                 display:'flex', alignItems:'center', justifyContent:'center',
                 boxShadow:'0 8px 24px rgba(220,38,38,0.35)',
