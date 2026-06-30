@@ -56,7 +56,69 @@
     <priority>0.5</priority>
   </url>
 
+  <!-- Blog & Content -->
+  <url>
+    <loc>https://soulconnect.health/blog</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://soulconnect.health/blog/anxiety-management-tips</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://soulconnect.health/blog/depression-treatment-support</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://soulconnect.health/blog/grief-support-healing</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://soulconnect.health/blog/overcoming-loneliness</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://soulconnect.health/blog/burnout-recovery-strategies</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://soulconnect.health/blog/panic-attacks-understanding</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://soulconnect.health/blog/breakup-recovery-healing</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://soulconnect.health/blog/meditation-mindfulness-guide</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- Legal -->
+  <url>
+    <loc>https://soulconnect.health/privacy</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://soulconnect.health/terms</loc>
     <lastmod>2026-06-20</lastmod>

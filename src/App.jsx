@@ -28,6 +28,8 @@ const CookiePolicy  = lazy(() => import('./pages/CookiePolicy'));
 const Accessibility = lazy(() => import('./pages/Accessibility'));
 const Contact       = lazy(() => import('./pages/Contact'));
 const Privacy       = lazy(() => import('./pages/Privacy'));
+const Blog          = lazy(() => import('./pages/Blog'));
+const BlogDetail    = lazy(() => import('./pages/BlogDetail'));
 
 // Full-screen experiences (no sidebar)
 const Dashboard     = lazy(() => import('./pages/Dashboard'));    // /chat
@@ -130,6 +132,8 @@ function AppInner() {
       <Route path="/accessibility"   element={<Suspense fallback={<PageLoader />}><Accessibility /></Suspense>} />
       <Route path="/contact"         element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
       <Route path="/privacy"         element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
+      <Route path="/blog"            element={<Suspense fallback={<PageLoader />}><Blog /></Suspense>} />
+      <Route path="/blog/:slug"      element={<Suspense fallback={<PageLoader />}><BlogDetail /></Suspense>} />
     </>
   );
 

@@ -102,6 +102,13 @@ export const METADATA = {
     ogType: 'website',
     keywords: 'verified therapist, counsellor, psychologist, wellness coach, online therapy',
   },
+  '/blog': {
+    title: 'Mental Health & Wellness Articles | SoulConnect Blog',
+    description: 'Read expert articles on anxiety, depression, grief, relationships, mindfulness and mental health. Science-backed guidance for your wellbeing journey.',
+    canonical: 'https://soulconnect.health/blog',
+    ogType: 'website',
+    keywords: 'mental health articles, anxiety help, depression support, grief counseling, mindfulness, wellness tips',
+  },
 };
 
 /**
