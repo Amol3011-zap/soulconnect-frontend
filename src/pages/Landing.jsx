@@ -1835,16 +1835,9 @@ export default function Landing() {
                   </svg>,
                 },
                 {
-                  label:'Facebook', href:'#',
+                  label:'LinkedIn', href:'https://www.linkedin.com/company/%E2%9C%85soulconnect/',
                   svg:<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-                  </svg>,
-                },
-                {
-                  label:'YouTube', href:'#',
-                  svg:<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
-                    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0A0230"/>
+                    <path d="M20 0H4C1.794 0 0 1.794 0 4v16c0 2.206 1.794 4 4 4h16c2.206 0 4-1.794 4-4V4c0-2.206-1.794-4-4-4zM8 19H5v-9h3v9zM6.5 8.25C5.5 8.25 4.75 7.5 4.75 6.5C4.75 5.5 5.5 4.75 6.5 4.75C7.5 4.75 8.25 5.5 8.25 6.5C8.25 7.5 7.5 8.25 6.5 8.25zm12.5 10.75h-3v-4.5c0-1.5-1-2-2-2c-1.5 0-2.5 1-2.5 2v4.5h-3v-9h3v1.25c.5-.75 1.5-2.25 4-2.25c2.5 0 4.5 1.5 4.5 5v5z"/>
                   </svg>,
                 },
               ].map((s,i)=>(
