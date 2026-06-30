@@ -1,378 +1,339 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useAuthStore } from '../store/auth';
-import { useWeatherStore } from '../store/weather';
 
 const MOOD_CONFIG = {
   'clear-sky': {
-    label: 'Clear',
     emoji: '☀️',
-    affirmation: '☀️ It\'s good to see brighter skies today.',
+    label: 'Clear',
+    affirmation: 'It\'s good to see brighter skies today.',
     hasConfetti: true,
-    background: {
-      gradient: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #FEF3C7 100%)',
-      particles: 'golden-rays',
-    },
+    bgGradient: 'linear-gradient(180deg, #FEF3C7 0%, #FDE68A 25%, #FCD34D 50%, #FBBF24 75%, #F59E0B 100%)',
+    particles: 'dust',
   },
   'hope': {
+    emoji: '🌤',
     label: 'Hope',
-    emoji: '🌅',
-    affirmation: '🌅 Hope begins with one small step.',
+    affirmation: 'Hope begins with one small step.',
     hasConfetti: true,
-    background: {
-      gradient: 'linear-gradient(135deg, #EC4899 0%, #F472B6 30%, #FCA5A5 100%)',
-      particles: 'pink-sunrise',
-    },
+    bgGradient: 'linear-gradient(180deg, #DDD6FE 0%, #E9D5FF 20%, #F3E8FF 40%, #FED7AA 60%, #FECACA 100%)',
+    particles: 'light',
   },
   'blooming': {
-    label: 'Blooming',
     emoji: '🌸',
-    affirmation: '🌸 Growth isn\'t always visible, but it\'s happening.',
+    label: 'Blooming',
+    affirmation: 'Growth isn\'t always visible, but it\'s happening.',
     hasConfetti: true,
-    background: {
-      gradient: 'linear-gradient(135deg, #A855F7 0%, #C084FC 50%, #E9D5FF 100%)',
-      particles: 'petals',
-    },
+    bgGradient: 'linear-gradient(180deg, #FDF2F8 0%, #FAE8F3 30%, #F5D5E8 60%, #E8B4DB 85%, #D8A8D0 100%)',
+    particles: 'petals',
   },
   'fog': {
+    emoji: '🌫',
     label: 'Fog',
-    emoji: '🌫️',
-    affirmation: '🌫️ It\'s okay if things aren\'t clear today.',
+    affirmation: 'It\'s okay if things aren\'t clear today.',
     hasConfetti: false,
-    background: {
-      gradient: 'linear-gradient(135deg, #64748B 0%, #94A3B8 50%, #CBD5E1 100%)',
-      particles: 'fog',
-    },
+    bgGradient: 'linear-gradient(180deg, #E5E7EB 0%, #D1D5DB 30%, #9CA3AF 60%, #6B7280 85%, #4B5563 100%)',
+    particles: 'fog',
   },
   'heavy-rain': {
+    emoji: '🌧',
     label: 'Heavy Rain',
-    emoji: '🌧️',
-    affirmation: '🌧️ Even storms eventually pass.',
+    affirmation: 'Even storms eventually pass.',
     hasConfetti: false,
-    background: {
-      gradient: 'linear-gradient(135deg, #0C4A6E 0%, #1E40AF 50%, #60A5FA 100%)',
-      particles: 'rain',
-    },
+    bgGradient: 'linear-gradient(180deg, #93C5FD 0%, #60A5FA 25%, #3B82F6 50%, #1E40AF 75%, #0F172A 100%)',
+    particles: 'rain',
   },
   'storm': {
-    label: 'Storm',
     emoji: '⚡',
-    affirmation: '⚡ You don\'t have to face this storm alone.',
+    label: 'Storm',
+    affirmation: 'You don\'t have to face this storm alone.',
     hasConfetti: false,
-    background: {
-      gradient: 'linear-gradient(135deg, #1E1B4B 0%, #3730A3 50%, #818CF8 100%)',
-      particles: 'storm-particles',
-    },
+    bgGradient: 'linear-gradient(180deg, #7C3AED 0%, #6D28D9 30%, #4C1D95 60%, #2E1065 85%, #1A0F3E 100%)',
+    particles: 'storm',
   },
 };
 
-const WEATHER_OPTIONS = [
-  { id: 'clear-sky', emoji: '☀️', label: 'Clear' },
-  { id: 'hope', emoji: '🌅', label: 'Hope' },
-  { id: 'blooming', emoji: '🌸', label: 'Blooming' },
-  { id: 'fog', emoji: '🌫️', label: 'Fog' },
-  { id: 'heavy-rain', emoji: '🌧️', label: 'Heavy Rain' },
-  { id: 'storm', emoji: '⚡', label: 'Storm' },
-];
-
-// ─────────────────────────────────────────────────────────────────────────────
-// MOOD BACKGROUND ANIMATIONS
-// ─────────────────────────────────────────────────────────────────────────────
-
-function MoodBackground({ mood, isActive }) {
-  if (!isActive) return null;
-
-  const config = MOOD_CONFIG[mood];
+/* ───────────────────────────────────────────────────────────────
+   DUST PARTICLES (for Clear)
+─────────────────────────────────────────────────────────────── */
+function DustParticles() {
+  const particles = Array.from({ length: 12 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    delay: Math.random() * 2,
+    duration: 3 + Math.random() * 2,
+  }));
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        background: config.background.gradient,
-        overflow: 'hidden',
-        zIndex: 0,
-      }}
-    >
-      {/* Clear: Golden rays + dust particles */}
-      {mood === 'clear-sky' && (
-        <>
-          {/* Light rays */}
-          {Array.from({ length: 3 }).map((_, i) => (
-            <motion.div
-              key={`ray-${i}`}
-              style={{
-                position: 'absolute',
-                width: 2,
-                height: '200%',
-                background: 'rgba(255, 255, 255, 0.08)',
-                left: `${20 + i * 30}%`,
-                top: 0,
-                transform: 'skewX(-15deg)',
-              }}
-              animate={{ y: [0, 20, 0] }}
-              transition={{
-                duration: 4 + i,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
-          {/* Dust particles */}
-          {Array.from({ length: 12 }).map((_, i) => (
-            <motion.div
-              key={`dust-${i}`}
-              style={{
-                position: 'absolute',
-                width: 2 + Math.random() * 3,
-                height: 2 + Math.random() * 3,
-                borderRadius: '50%',
-                background: 'rgba(255, 255, 255, 0.6)',
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.3, 0.8, 0.3],
-                x: [0, Math.random() * 20 - 10, 0],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </>
-      )}
-
-      {/* Hope: Soft floating particles */}
-      {mood === 'hope' && (
-        <>
-          {Array.from({ length: 8 }).map((_, i) => (
-            <motion.div
-              key={`hope-particle-${i}`}
-              style={{
-                position: 'absolute',
-                width: 3 + Math.random() * 4,
-                height: 3 + Math.random() * 4,
-                borderRadius: '50%',
-                background: `rgba(255, 255, 255, ${0.4 + Math.random() * 0.4})`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -40, 0],
-                opacity: [0.2, 0.7, 0.2],
-              }}
-              transition={{
-                duration: 5 + Math.random() * 3,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </>
-      )}
-
-      {/* Blooming: Floating petals + lotus */}
-      {mood === 'blooming' && (
-        <>
-          {/* Lotus watermark */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: -20,
-              right: -20,
-              fontSize: 180,
-              opacity: 0.08,
-              pointerEvents: 'none',
-            }}
-          >
-            🪷
-          </div>
-          {/* Petals */}
-          {Array.from({ length: 6 }).map((_, i) => (
-            <motion.div
-              key={`petal-${i}`}
-              style={{
-                position: 'absolute',
-                fontSize: '1.2rem',
-                left: `${20 + Math.random() * 60}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -60, 0],
-                x: [0, Math.random() * 30 - 15, 0],
-                rotate: [0, 360],
-                opacity: [0.3, 0.7, 0.3],
-              }}
-              transition={{
-                duration: 5 + Math.random() * 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: Math.random() * 2,
-              }}
-            >
-              🌸
-            </motion.div>
-          ))}
-        </>
-      )}
-
-      {/* Fog: Slow moving fog layers */}
-      {mood === 'fog' && (
-        <>
-          {Array.from({ length: 3 }).map((_, i) => (
-            <motion.div
-              key={`fog-${i}`}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `radial-gradient(ellipse at 50% 50%, rgba(255,255,255,${0.15 - i * 0.04}), transparent)`,
-                filter: 'blur(40px)',
-              }}
-              animate={{
-                x: [0, 30, 0],
-                opacity: [0.4, 0.6, 0.4],
-              }}
-              transition={{
-                duration: 8 + i * 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
-        </>
-      )}
-
-      {/* Heavy Rain: Rain particles + ripples */}
-      {mood === 'heavy-rain' && (
-        <>
-          {/* Rain drops */}
-          {Array.from({ length: 20 }).map((_, i) => (
-            <motion.div
-              key={`raindrop-${i}`}
-              style={{
-                position: 'absolute',
-                width: 2,
-                height: 20,
-                background: 'rgba(255, 255, 255, 0.4)',
-                left: `${Math.random() * 100}%`,
-                top: 0,
-                borderRadius: 1,
-              }}
-              animate={{
-                y: ['0%', '100%'],
-              }}
-              transition={{
-                duration: 1 + Math.random() * 0.5,
-                repeat: Infinity,
-                ease: 'linear',
-                delay: Math.random() * 1,
-              }}
-            />
-          ))}
-          {/* Water ripples */}
-          {Array.from({ length: 3 }).map((_, i) => (
-            <motion.div
-              key={`ripple-${i}`}
-              style={{
-                position: 'absolute',
-                width: 60,
-                height: 60,
-                borderRadius: '50%',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                left: `${30 + i * 20}%`,
-                bottom: 10,
-              }}
-              animate={{
-                scale: [1, 2.5],
-                opacity: [0.8, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeOut',
-                delay: i * 0.6,
-              }}
-            />
-          ))}
-        </>
-      )}
-
-      {/* Storm: Cloud movement + occasional lightning */}
-      {mood === 'storm' && (
-        <>
-          {/* Storm particles */}
-          {Array.from({ length: 10 }).map((_, i) => (
-            <motion.div
-              key={`storm-particle-${i}`}
-              style={{
-                position: 'absolute',
-                width: 2,
-                height: 2,
-                background: 'rgba(255, 255, 255, 0.5)',
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                x: [-10, 10, -10],
-                y: [0, 15, 0],
-              }}
-              transition={{
-                duration: 2 + Math.random() * 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
-          {/* Occasional lightning */}
-          <motion.div
-            key="lightning"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'rgba(255, 255, 255, 0)',
-              pointerEvents: 'none',
-            }}
-            animate={{
-              background: [
-                'rgba(255, 255, 255, 0)',
-                'rgba(255, 255, 255, 0)',
-                'rgba(255, 255, 255, 0.1)',
-                'rgba(255, 255, 255, 0)',
-              ],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              times: [0, 0.7, 0.75, 1],
-              ease: 'easeInOut',
-            }}
-          />
-        </>
-      )}
-    </motion.div>
+    <>
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          style={{
+            position: 'absolute',
+            left: p.left,
+            top: '-10%',
+            width: 4,
+            height: 4,
+            borderRadius: '50%',
+            background: 'rgba(255, 255, 255, 0.4)',
+            zIndex: 0,
+          }}
+          animate={{ y: '120%', opacity: [0.4, 0.6, 0] }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+    </>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CONFETTI
-// ─────────────────────────────────────────────────────────────────────────────
-
-function Confetti() {
-  const confetti = Array.from({ length: 30 }).map((_, i) => ({
+/* ───────────────────────────────────────────────────────────────
+   LIGHT PARTICLES (for Hope)
+─────────────────────────────────────────────────────────────── */
+function LightParticles() {
+  const particles = Array.from({ length: 10 }, (_, i) => ({
     id: i,
-    left: Math.random() * 100,
+    left: `${Math.random() * 100}%`,
+    delay: Math.random() * 2.5,
+  }));
+
+  return (
+    <>
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          style={{
+            position: 'absolute',
+            left: p.left,
+            top: '-10%',
+            width: 3,
+            height: 3,
+            borderRadius: '50%',
+            background: 'rgba(255, 255, 255, 0.5)',
+            zIndex: 0,
+          }}
+          animate={{ y: '120%', opacity: [0.3, 0.7, 0], x: Math.sin(Math.random() * 10) * 20 }}
+          transition={{
+            duration: 4,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────
+   PETAL PARTICLES (for Blooming)
+─────────────────────────────────────────────────────────────── */
+function PetalParticles() {
+  const petals = Array.from({ length: 8 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    delay: Math.random() * 3,
+  }));
+
+  return (
+    <>
+      {petals.map((p) => (
+        <motion.div
+          key={p.id}
+          style={{
+            position: 'absolute',
+            left: p.left,
+            top: '-10%',
+            width: 5,
+            height: 5,
+            borderRadius: '50% 0',
+            background: 'rgba(244, 114, 182, 0.4)',
+            zIndex: 0,
+          }}
+          animate={{
+            y: '120%',
+            rotate: 360,
+            opacity: [0.5, 0.7, 0],
+            x: Math.cos(Math.random() * Math.PI) * 40,
+          }}
+          transition={{
+            duration: 5,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+      {/* Lotus watermark */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          right: '10%',
+          top: '15%',
+          fontSize: 80,
+          opacity: 0.08,
+          zIndex: 0,
+        }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+      >
+        🪷
+      </motion.div>
+    </>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────
+   FOG EFFECT
+─────────────────────────────────────────────────────────────── */
+function FogEffect() {
+  return (
+    <>
+      <motion.div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.2) 0%, transparent 40%)',
+          zIndex: 0,
+        }}
+        animate={{ opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 6, repeat: Infinity }}
+      />
+      <motion.div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse at 80% 60%, rgba(255,255,255,0.15) 0%, transparent 50%)',
+          zIndex: 0,
+        }}
+        animate={{ opacity: [0.4, 0.2, 0.4] }}
+        transition={{ duration: 8, repeat: Infinity, delay: 1 }}
+      />
+    </>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────
+   RAIN EFFECT
+─────────────────────────────────────────────────────────────── */
+function RainEffect() {
+  const raindrops = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    duration: 1.5 + Math.random() * 1,
+    delay: Math.random() * 1.5,
+  }));
+
+  return (
+    <>
+      {raindrops.map((drop) => (
+        <motion.div
+          key={drop.id}
+          style={{
+            position: 'absolute',
+            left: drop.left,
+            top: '-10%',
+            width: 2,
+            height: 10,
+            background: 'rgba(255, 255, 255, 0.3)',
+            borderRadius: 1,
+            zIndex: 0,
+          }}
+          animate={{ y: '110%', opacity: [0.4, 0.6, 0] }}
+          transition={{
+            duration: drop.duration,
+            delay: drop.delay,
+            repeat: Infinity,
+            ease: 'easeIn',
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────
+   STORM EFFECT (clouds + occasional lightning)
+─────────────────────────────────────────────────────────────── */
+function StormEffect() {
+  const [showLightning, setShowLightning] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() < 0.15) {
+        setShowLightning(true);
+        setTimeout(() => setShowLightning(false), 150);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <>
+      {/* Moving clouds */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: '20%',
+          left: '-20%',
+          width: 300,
+          height: 100,
+          background: 'radial-gradient(ellipse, rgba(0,0,0,0.2) 0%, transparent 70%)',
+          filter: 'blur(40px)',
+          zIndex: 0,
+        }}
+        animate={{ x: ['-20%', '120%'], opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 12, repeat: Infinity }}
+      />
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: '40%',
+          left: '20%',
+          width: 250,
+          height: 80,
+          background: 'radial-gradient(ellipse, rgba(0,0,0,0.15) 0%, transparent 70%)',
+          filter: 'blur(30px)',
+          zIndex: 0,
+        }}
+        animate={{ x: ['20%', '-80%'], opacity: [0.4, 0.2, 0.4] }}
+        transition={{ duration: 15, repeat: Infinity, delay: 1 }}
+      />
+
+      {/* Lightning */}
+      <AnimatePresence>
+        {showLightning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ duration: 0.2 }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(255, 255, 255, 0.15)',
+              zIndex: 1,
+              pointerEvents: 'none',
+            }}
+          />
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────
+   CONFETTI
+─────────────────────────────────────────────────────────────── */
+function Confetti() {
+  const confetti = Array.from({ length: 30 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
     delay: Math.random() * 0.3,
-    duration: 2 + Math.random() * 1,
+    rotation: Math.random() * 360,
   }));
 
   return (
@@ -380,408 +341,386 @@ function Confetti() {
       {confetti.map((c) => (
         <motion.div
           key={c.id}
-          initial={{
-            y: -10,
-            x: c.left,
-            opacity: 1,
-            rotate: 0,
+          style={{
+            position: 'absolute',
+            left: c.left,
+            top: '50%',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: ['#FCD34D', '#F59E0B', '#EC4899', '#8B5CF6', '#3B82F6'][Math.floor(Math.random() * 5)],
+            zIndex: 10,
+            pointerEvents: 'none',
           }}
+          initial={{ y: 0, opacity: 1, rotate: 0 }}
           animate={{
-            y: 300,
-            x: c.left + (Math.random() * 40 - 20),
+            y: Math.random() < 0.5 ? '-200px' : '-300px',
             opacity: 0,
-            rotate: Math.random() * 360,
+            rotate: c.rotation + 360,
           }}
           transition={{
-            duration: c.duration,
+            duration: 2.5 + Math.random() * 1,
             delay: c.delay,
-            ease: 'easeIn',
+            ease: 'easeOut',
           }}
-          style={{
-            position: 'fixed',
-            pointerEvents: 'none',
-            fontSize: ['🎉', '✨', '🌟'][Math.floor(Math.random() * 3)],
-            zIndex: 9998,
-          }}
-        >
-          {['🎉', '✨', '🌟'][Math.floor(Math.random() * 3)]}
-        </motion.div>
+        />
       ))}
     </>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MAIN WIDGET
-// ─────────────────────────────────────────────────────────────────────────────
-
-export default function SoulClimateWidget() {
-  const { user } = useAuthStore();
-  const { submitWeather } = useWeatherStore();
-  const userId = user?.id || user?.user_id || 1;
-
-  const [selectedMood, setSelectedMood] = useState(null);
-  const [checkedInMood, setCheckedInMood] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showAffirmation, setShowAffirmation] = useState(false);
+/* ───────────────────────────────────────────────────────────────
+   MAIN WIDGET
+─────────────────────────────────────────────────────────────── */
+export default function SoulClimateWidget({
+  selectedMood,
+  onMoodSelect,
+  onCheckIn,
+  isCheckingIn = false,
+  isCheckedIn = false,
+}) {
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [showAffirmation, setShowAffirmation] = useState(isCheckedIn);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  // Check localStorage for today's check-in
-  useEffect(() => {
-    const today = new Date().toDateString();
-    const stored = localStorage.getItem('soulclimate_checkin');
-    if (stored) {
-      const { date, mood } = JSON.parse(stored);
-      if (date === today) {
-        setCheckedInMood(mood);
-      } else {
-        localStorage.removeItem('soulclimate_checkin');
-      }
-    }
-  }, []);
+  const currentMood = MOOD_CONFIG[selectedMood];
+  const moodOptions = Object.entries(MOOD_CONFIG).map(([id, config]) => ({
+    id,
+    ...config,
+  }));
 
-  const handleMoodSelect = useCallback((moodId) => {
-    if (checkedInMood) return;
-    setSelectedMood(moodId);
-  }, [checkedInMood]);
+  const handleCheckInClick = async () => {
+    if (isCheckedIn) return;
 
-  const handleCheckIn = useCallback(async () => {
-    if (!selectedMood || checkedInMood) return;
+    setIsAnimating(true);
+    await onCheckIn();
 
-    setIsLoading(true);
-
-    try {
-      // Save to backend
-      await submitWeather(selectedMood, userId);
-
-      // Save to localStorage
-      localStorage.setItem(
-        'soulclimate_checkin',
-        JSON.stringify({
-          date: new Date().toDateString(),
-          mood: selectedMood,
-        })
-      );
-
-      // Animations
-      setCheckedInMood(selectedMood);
-
-      const config = MOOD_CONFIG[selectedMood];
-      if (config.hasConfetti) {
+    setTimeout(() => {
+      setIsAnimating(false);
+      setShowAffirmation(true);
+      if (currentMood?.hasConfetti) {
         setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 2500);
+        setTimeout(() => setShowConfetti(false), 3000);
       }
-
-      setTimeout(() => {
-        setShowAffirmation(true);
-      }, 300);
-    } catch (err) {
-      console.error('Check-in failed:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [selectedMood, checkedInMood, userId, submitWeather]);
-
-  const isCheckedIn = !!checkedInMood;
-  const displayMood = checkedInMood || selectedMood;
-  const config = displayMood ? MOOD_CONFIG[displayMood] : null;
-
-  const SECTION_LABEL = {
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase',
-    color: 'rgba(196,181,253,0.5)',
-    marginBottom: 6,
-  };
-
-  const PURPLE_BTN = {
-    background: 'linear-gradient(135deg, #6D4AFF, #8B5CF6)',
-    border: 'none',
-    borderRadius: 12,
-    color: '#fff',
-    fontWeight: 600,
-    cursor: isCheckedIn ? 'default' : 'pointer',
-    opacity: isCheckedIn ? 0.7 : 1,
-    transition: 'all 0.3s',
+    }, 700);
   };
 
   return (
-    <>
-      {showConfetti && <Confetti />}
-
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-        className="soul-climate-card"
-        style={{
-          background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
-          border: '1px solid rgba(139,92,246,0.2)',
-          borderRadius: 28,
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: '0 12px 48px rgba(0,0,0,0.5), 0 0 60px rgba(124,58,237,0.15)',
-          // Mobile: stacked
-          display: 'flex',
-          flexDirection: 'column',
-          padding: 20,
-          gap: 20,
-          minHeight: 'auto',
-          // Tablet+: Two columns with bounded height
-        }}
-      >
-        {/* Animated mood background */}
-        <AnimatePresence>
-          {displayMood && (
-            <MoodBackground mood={displayMood} isActive={true} />
-          )}
-        </AnimatePresence>
-
-        {/* Floating particles (base layer) */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-          <FloatingParticles count={12} />
-        </div>
-
-        {/* Top shine */}
-        <div
+    <motion.div
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+      className="soul-climate-widget"
+      style={{
+        background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
+        border: '1px solid rgba(139,92,246,0.2)',
+        borderRadius: 28,
+        padding: '26px 32px 24px',
+        position: 'relative',
+        overflow: 'hidden',
+        boxShadow: '0 12px 48px rgba(0,0,0,0.5), 0 0 60px rgba(124,58,237,0.15)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 48,
+      }}
+    >
+      {/* ── BACKGROUND ANIMATION (clipped inside card) ── */}
+      {selectedMood && (
+        <motion.div
+          key={selectedMood}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
           style={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 1,
-            background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent)',
-            zIndex: 1,
+            inset: 0,
+            background: currentMood.bgGradient,
+            zIndex: 0,
+            overflow: 'hidden',
           }}
-        />
+        >
+          {/* Mood-specific particles */}
+          {currentMood.particles === 'dust' && <DustParticles />}
+          {currentMood.particles === 'light' && <LightParticles />}
+          {currentMood.particles === 'petals' && <PetalParticles />}
+          {currentMood.particles === 'fog' && <FogEffect />}
+          {currentMood.particles === 'rain' && <RainEffect />}
+          {currentMood.particles === 'storm' && <StormEffect />}
 
-        {/* LEFT SECTION: Title + Button + Affirmation */}
-        <div style={{ zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-          <div style={{
-            fontSize: 11,
+          {/* Confetti */}
+          <AnimatePresence>
+            {showConfetti && <Confetti />}
+          </AnimatePresence>
+
+          {/* Overlay to darken for readability */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(0, 0, 0, 0.25)',
+              zIndex: 5,
+            }}
+          />
+        </motion.div>
+      )}
+
+      {/* ── TOP SHINE (above background) ── */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 1,
+          background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent)',
+          zIndex: 6,
+        }}
+      />
+
+      {/* ── LEFT: TITLE + BUTTON ── */}
+      <motion.div
+        style={{ zIndex: 10, flexShrink: 0, position: 'relative' }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        <div
+          style={{
+            fontSize: 10,
             fontWeight: 700,
+            color: 'rgba(196,181,253,0.5)',
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            color: 'rgba(196,181,253,0.5)',
             marginBottom: 8,
-          }}>
-            SOUL CLIMATE ⓘ
-          </div>
-
-          <h2 style={{
-            fontSize: 24,
+          }}
+        >
+          SOUL CLIMATE ⓘ
+        </div>
+        <h2
+          style={{
+            fontSize: 26,
             fontWeight: 800,
             color: '#fff',
             margin: '0 0 8px',
             lineHeight: 1.2,
             letterSpacing: '-0.02em',
-          }}>
-            How is your mind<br />feeling today?
-          </h2>
-
-          <p style={{
+          }}
+        >
+          How is your mind<br />
+          feeling today?
+        </h2>
+        <p
+          style={{
             fontSize: 13,
             color: 'rgba(184,180,216,0.65)',
-            margin: '0 0 16px',
+            margin: '0 0 20px',
             lineHeight: 1.6,
-          }}>
-            Your check-in helps us support you better.
-          </p>
+          }}
+        >
+          Your check-in helps us support you better.
+        </p>
 
-          <motion.button
-            whileTap={isCheckedIn ? {} : { scale: 0.97 }}
-            whileHover={isCheckedIn ? {} : { boxShadow: '0 6px 28px rgba(124,58,237,0.55)' }}
-            onClick={handleCheckIn}
-            disabled={isCheckedIn || !selectedMood || isLoading}
+        {/* CHECK-IN BUTTON */}
+        <motion.button
+          whileTap={{ scale: isCheckedIn ? 1 : 0.97 }}
+          whileHover={{
+            boxShadow: isCheckedIn
+              ? '0 4px 12px rgba(107,114,128,0.3)'
+              : '0 6px 28px rgba(124,58,237,0.55)',
+          }}
+          onClick={handleCheckInClick}
+          disabled={isCheckedIn}
+          style={{
+            background: isCheckedIn
+              ? 'rgba(107,114,128,0.3)'
+              : 'linear-gradient(135deg, #7C3AED, #A855F7)',
+            border: isCheckedIn ? '1px solid rgba(156,163,175,0.3)' : 'none',
+            borderRadius: 14,
+            color: isCheckedIn ? '#9CA3AF' : '#fff',
+            cursor: isCheckedIn ? 'not-allowed' : 'pointer',
+            fontWeight: 700,
+            fontSize: 13,
+            padding: '10px 28px',
+            boxShadow: isCheckedIn
+              ? '0 4px 12px rgba(107,114,128,0.3)'
+              : '0 4px 20px rgba(124,58,237,0.45)',
+            fontFamily: 'Inter, sans-serif',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            minWidth: 160,
+          }}
+        >
+          {isAnimating && (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+              style={{
+                width: 14,
+                height: 14,
+                border: '2px solid rgba(255,255,255,0.3)',
+                borderTopColor: '#fff',
+                borderRadius: '50%',
+              }}
+            />
+          )}
+          {!isAnimating && (
+            <>
+              {isCheckedIn ? '✓' : ''}
+              {isCheckedIn ? 'Checked In Today' : 'Check In Now'}
+            </>
+          )}
+        </motion.button>
+      </motion.div>
+
+      {/* ── DIVIDER ── */}
+      <div
+        style={{
+          width: 1,
+          alignSelf: 'stretch',
+          background: 'rgba(168,85,247,0.15)',
+          flexShrink: 0,
+          zIndex: 10,
+        }}
+      />
+
+      {/* ── RIGHT: MOOD SELECTION (only show if not checked in) ── */}
+      {!isCheckedIn ? (
+        <motion.div
+          style={{ zIndex: 10, flex: 1, position: 'relative' }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div
             style={{
-              ...PURPLE_BTN,
-              fontSize: 13,
-              padding: '12px 28px',
-              minHeight: 44,
-              width: '100%',
-              maxWidth: 200,
-              marginBottom: 16,
+              fontSize: 11,
+              fontWeight: 700,
+              color: 'rgba(196,181,253,0.5)',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              marginBottom: 12,
             }}
           >
-            {isLoading ? (
-              <>
-                <span style={{ display: 'inline-block', animation: 'spin 0.8s linear infinite' }}>⟳</span>
-                {' '}Checking in...
-              </>
-            ) : isCheckedIn ? (
-              '✓ Checked In'
-            ) : (
-              'Check In Now'
-            )}
-          </motion.button>
-
-          {/* Affirmation */}
-          <AnimatePresence>
-            {showAffirmation && config && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.6 }}
-                style={{
-                  padding: '12px 0',
-                  fontSize: 13,
-                  color: 'rgba(184,180,216,0.85)',
-                  lineHeight: 1.6,
-                  textAlign: 'left',
-                }}
-              >
-                {config.affirmation}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* RIGHT SECTION: Mood Chips Grid */}
-        <div style={{ zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{
-            fontSize: 11,
-            fontWeight: 700,
-            color: 'rgba(196,181,253,0.5)',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            marginBottom: 12,
-          }}>
             Select your mood
           </div>
-
-          {/* 2-column grid for mood pills */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 12,
-          }}>
-            {WEATHER_OPTIONS.map((opt) => (
+          <div
+            style={{
+              display: 'flex',
+              gap: 8,
+              flexWrap: 'wrap',
+            }}
+          >
+            {moodOptions.map((mood) => (
               <motion.button
-                key={opt.id}
-                onClick={() => handleMoodSelect(opt.id)}
-                disabled={isCheckedIn}
-                whileHover={!isCheckedIn ? { scale: 1.05 } : {}}
-                whileTap={!isCheckedIn ? { scale: 0.95 } : {}}
+                key={mood.id}
+                onClick={() => onMoodSelect(mood.id)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
                 style={{
                   display: 'flex',
-                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'center',
                   gap: 6,
                   background:
-                    selectedMood === opt.id
+                    selectedMood === mood.id
                       ? 'rgba(139,92,246,0.32)'
                       : 'rgba(255,255,255,0.07)',
                   border:
-                    selectedMood === opt.id
+                    selectedMood === mood.id
                       ? '1px solid rgba(168,85,247,0.6)'
                       : '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 16,
-                  padding: 12,
+                  borderRadius: 24,
+                  padding: '7px 16px',
                   fontSize: 12,
                   color: '#E2DEFF',
-                  cursor: isCheckedIn ? 'default' : 'pointer',
+                  cursor: 'pointer',
                   fontWeight: 500,
-                  minHeight: 72,
+                  whiteSpace: 'nowrap',
                   boxShadow:
-                    selectedMood === opt.id
+                    selectedMood === mood.id
                       ? '0 0 14px rgba(124,58,237,0.35)'
                       : 'none',
                   transition: 'all 0.2s',
-                  opacity: isCheckedIn && !checkedInMood ? 0.5 : 1,
+                  fontFamily: 'inherit',
                 }}
               >
-                <span style={{ fontSize: 24 }}>{opt.emoji}</span>
-                <span>{opt.label}</span>
+                <span style={{ fontSize: 15 }}>{mood.emoji}</span>
+                <span>{mood.label}</span>
               </motion.button>
             ))}
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      ) : (
+        /* ── CHECKED IN STATE: Show mood + affirmation ── */
+        <motion.div
+          style={{ zIndex: 10, flex: 1, position: 'relative' }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          {currentMood && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 16,
+              }}
+            >
+              {/* Mood badge */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  background: 'rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: 24,
+                  padding: '10px 20px',
+                  width: 'fit-content',
+                }}
+              >
+                <span style={{ fontSize: 24 }}>{currentMood.emoji}</span>
+                <span
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: '#E2DEFF',
+                  }}
+                >
+                  Your mood: {currentMood.label}
+                </span>
+              </div>
 
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes particleDrift {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          50% { transform: translateY(-20px) translateX(10px); }
-        }
-
-        /* Tablet (768px - 1199px): Stack but with better spacing */
-        @media (min-width: 768px) {
-          .soul-climate-card {
-            padding: 24px !important;
-            min-height: 340px;
-            max-height: 380px;
-            flex-direction: column !important;
-          }
-        }
-
-        /* Desktop (1200px+): 2-column layout */
-        @media (min-width: 1200px) {
-          .soul-climate-card {
-            padding: 40px !important;
-            min-height: 340px;
-            max-height: 380px;
-            flex-direction: row !important;
-            align-items: center !important;
-            gap: 48px !important;
-          }
-
-          .soul-climate-card > div:first-of-type {
-            flex: 0 0 65%;
-            justify-content: flex-start !important;
-          }
-
-          .soul-climate-card > div:last-of-type {
-            flex: 0 0 35%;
-            justify-content: center !important;
-          }
-        }
-      `}</style>
-    </>
-  );
-}
-
-function FloatingParticles({ count = 14 }) {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-  if (isMobile) return null;
-
-  const particles = Array.from({ length: count }, (_, i) => ({
-    id: i,
-    size: 1.5 + (i % 3) * 0.8,
-    left: `${(i * 7.3 + 8) % 92}%`,
-    top: `${(i * 11.7 + 4) % 88}%`,
-    duration: 8 + (i % 6) * 1.8,
-    delay: i * 0.55,
-    opacity: 0.12 + (i % 4) * 0.05,
-    color: i % 3 === 0 ? '#A78BFA' : i % 3 === 1 ? '#F4C542' : '#C4B5FD',
-  }));
-
-  return (
-    <>
-      {particles.map((p) => (
-        <div
-          key={p.id}
-          style={{
-            position: 'absolute',
-            width: p.size,
-            height: p.size,
-            borderRadius: '50%',
-            background: p.color,
-            opacity: p.opacity,
-            left: p.left,
-            top: p.top,
-            animation: `particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite`,
-            pointerEvents: 'none',
-            zIndex: 0,
-          }}
-        />
-      ))}
-    </>
+              {/* Affirmation */}
+              {showAffirmation && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  style={{
+                    padding: '14px 18px',
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: 14,
+                    fontSize: 13,
+                    color: '#E2DEFF',
+                    fontStyle: 'italic',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {currentMood.affirmation}
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </motion.div>
+      )}
+    </motion.div>
   );
 }

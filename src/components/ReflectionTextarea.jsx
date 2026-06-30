@@ -82,7 +82,7 @@ export default function ReflectionTextarea({
       {/* Character count */}
       <div style={{
         position: 'absolute', bottom: 10, right: 14,
-        fontSize: 10, color: 'rgba(139,116,230,0.45)',
+        fontSize: 10,
         fontWeight: 500, pointerEvents: 'none',
         transition: 'color 0.2s ease',
         color: value.length > 900 ? 'rgba(251,191,36,0.7)' : 'rgba(139,116,230,0.45)',

@@ -20,8 +20,8 @@ import ProgressModal from '../components/ProgressModal';
 import WeeklyInsightsModal from '../components/WeeklyInsightsModal';
 import SearchModal from '../components/SearchModal';
 import NotificationDropdown from '../components/NotificationDropdown';
+import EmotionWeatherModal from '../components/emotional-weather/EmotionWeatherModal';
 import SoulClimateWidget from '../components/SoulClimateWidget';
-import TodaysFocusCard from '../components/TodaysFocusCard';
 import { useReflections } from '../hooks/useReflections';
 
 const CATEGORY_ICONS = {
@@ -45,6 +45,9 @@ const CATEGORY_ICONS = {
   'Kindness':          Gift,
 };
 import BreathingSession from '../components/BreathingSession';
+import TodaysFocusCard from '../components/TodaysFocusCard';
+import OnboardingModal from '../components/OnboardingModal';
+import { onboardingAPI } from '../services/api';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    PARTICLES
@@ -563,7 +566,7 @@ const STORIES = [
 export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { todayEntry, submitWeather } = useWeatherStore();
+  const { todayEntry, submitWeather, showModal } = useWeatherStore();
   const {
     dailyWins, completedToday, checkAndRefresh, completeWin,
     totalWins, showReflection, reflectionText, dismissReflection,
@@ -577,7 +580,6 @@ export default function Home() {
 
   const [showBreathing, setShowBreathing] = useState(false);
   const [breathingDone, setBreathingDone] = useState(false);
-  const [breathingDuration, setBreathingDuration] = useState(3);
   const [selectedWeather, setSelectedWeather] = useState(todayEntry?.weather || null);
 
   // Today's Reflection modal
@@ -592,10 +594,27 @@ export default function Home() {
   // Search + Notifications
   const [searchOpen, setSearchOpen]   = useState(false);
   const [notifOpen,  setNotifOpen]    = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const bellRef = useRef(null);
 
   // Ref for "Continue Journey" smooth scroll to Today's Focus card
   const todaysFocusRef = useRef(null);
+
+  // Check if user completed onboarding
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      try {
+        const res = await onboardingAPI.getStatus();
+        if (!res.data.completed) {
+          setShowOnboarding(true);
+        }
+      } catch (err) {
+        console.log('Onboarding check failed, showing modal');
+        setShowOnboarding(true);
+      }
+    };
+    checkOnboarding();
+  }, []);
 
   function handleReflectionSaved() {
     setReflectionSavedToast(true);
@@ -608,6 +627,13 @@ export default function Home() {
     checkAndRefresh(weatherId);
   }, [todayEntry?.weather]);
 
+  // Sync selectedWeather with todayEntry when it updates
+  useEffect(() => {
+    if (todayEntry?.weather) {
+      setSelectedWeather(todayEntry.weather);
+    }
+  }, [todayEntry?.weather]);
+
   const handleWeatherSelect = useCallback((id) => {
     setSelectedWeather(id);
     submitWeather(id, userId);
@@ -615,11 +641,6 @@ export default function Home() {
 
   const handleCheckIn = useCallback(() => {
     useWeatherStore.setState({ showModal: true });
-  }, []);
-
-  const handleStartBreathingSession = useCallback((duration) => {
-    setBreathingDuration(duration);
-    setShowBreathing(true);
   }, []);
 
   const weeklyStats = getWeeklyStats();
@@ -749,7 +770,6 @@ export default function Home() {
       <AnimatePresence>
         {showBreathing && (
           <BreathingSession
-            duration={breathingDuration}
             onClose={() => setShowBreathing(false)}
             onComplete={() => { setBreathingDone(true); setShowBreathing(false); }}
           />
@@ -776,6 +796,11 @@ export default function Home() {
 
       {/* ── Global Search modal ── */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+
+      {/* ── Emotion Weather Check-in Modal ── */}
+      <AnimatePresence>
+        {showModal && <EmotionWeatherModal />}
+      </AnimatePresence>
 
       {/* ── Today's Reflection modal ── */}
       <TodaysReflectionModal
@@ -902,7 +927,12 @@ export default function Home() {
           margin: '20px 32px 16px',
           position: 'relative', zIndex: 1,
         }}>
-          <SoulClimateWidget />
+          <SoulClimateWidget
+            selectedMood={selectedWeather}
+            onMoodSelect={handleWeatherSelect}
+            onCheckIn={handleCheckIn}
+            isCheckedIn={selectedWeather !== null}
+          />
         </div>
 
         {/* ════════════════════════════════════════════════════════════
@@ -1088,11 +1118,11 @@ export default function Home() {
       {/* ════════════════════ RIGHT SIDEBAR ════════════════════ */}
       <div className="home-right-sidebar">
 
-        {/* ── Card 1: Today's Focus ── */}
+        {/* ── Card 1: Today's Focus (Premium Interactive) ── */}
         <div ref={todaysFocusRef} style={{ marginBottom: 14 }}>
           <TodaysFocusCard
-            onStartSession={handleStartBreathingSession}
-            breathingDone={breathingDone}
+            selectedMood={selectedWeather}
+            onSessionComplete={() => setBreathingDone(true)}
           />
         </div>
 
@@ -1135,6 +1165,13 @@ export default function Home() {
         onEmotionalWeather={handleCheckIn}
         onSupport={() => navigate('/professionals')}
       />
+
+      {/* ════════════════════ ONBOARDING MODAL ════════════════════ */}
+      <AnimatePresence>
+        {showOnboarding && (
+          <OnboardingModal onComplete={() => setShowOnboarding(false)} />
+        )}
+      </AnimatePresence>
     </>
   );
 }

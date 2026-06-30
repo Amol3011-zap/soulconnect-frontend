@@ -1,215 +1,376 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import BreathingSessionOverlay from './BreathingSessionOverlay';
 
-const DURATIONS = [
-  {
-    value: 3,
-    title: 'Quick Reset',
-    subtitle: 'Perfect when you need a short moment to breathe.',
-  },
-  {
-    value: 5,
-    title: 'Calm & Center',
-    subtitle: 'Slow down and reconnect with yourself.',
-  },
-  {
-    value: 7,
-    title: 'Deep Relaxation',
-    subtitle: 'A longer guided breathing experience.',
-  },
-];
-
-const SECTION_LABEL = {
-  fontSize: 11,
-  fontWeight: 700,
-  letterSpacing: '0.08em',
-  textTransform: 'uppercase',
-  color: 'rgba(196,181,253,0.5)',
-  marginBottom: 12,
+const MOOD_FOCUS = {
+  'clear-sky': { title: 'Stay Present', icon: '☀️', color: '#FCD34D' },
+  'hope': { title: 'Build Hope', icon: '🌤', color: '#A78BFA' },
+  'blooming': { title: 'Keep Growing', icon: '🌸', color: '#F472B6' },
+  'fog': { title: 'Find Clarity', icon: '🌫', color: '#9CA3AF' },
+  'heavy-rain': { title: 'Calm Your Mind', icon: '🌧', color: '#60A5FA' },
+  'storm': { title: 'Regain Control', icon: '⚡', color: '#7C3AED' },
 };
 
-const CARD_STYLE = {
-  background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
-  border: '1px solid rgba(139,92,246,0.2)',
-  borderRadius: 20,
-  padding: 18,
-  boxShadow: '0 8px 32px rgba(0,0,0,0.3), 0 0 60px rgba(124,58,237,0.1)',
+const DURATION_DETAILS = {
+  3: {
+    label: '3 min',
+    desc: 'Quick reset',
+    fullDesc: 'Take a short mindful pause to reset your nervous system.',
+  },
+  5: {
+    label: '5 min',
+    desc: 'Deep breathing',
+    fullDesc: 'Slow your breathing and relax your body.',
+  },
+  7: {
+    label: '7 min',
+    desc: 'Full guided relaxation',
+    fullDesc: 'A guided breathing session to reduce anxiety and restore calm.',
+  },
 };
 
-const PURPLE_BTN = {
-  background: 'linear-gradient(135deg, #6D4AFF, #8B5CF6)',
-  border: 'none',
-  borderRadius: 12,
-  color: '#fff',
-  fontWeight: 600,
-  cursor: 'pointer',
-  transition: 'all 0.3s ease',
-  boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
-};
+export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
+  const [duration, setDuration] = useState(3);
+  const [isSessionActive, setIsSessionActive] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [showSession, setShowSession] = useState(false);
 
-export default function TodaysFocusCard({ onStartSession, breathingDone }) {
-  const [selectedDuration, setSelectedDuration] = useState(3);
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const moodData = MOOD_FOCUS[selectedMood] || MOOD_FOCUS['clear-sky'];
+  const durationData = DURATION_DETAILS[duration];
 
-  const currentDuration = DURATIONS.find((d) => d.value === selectedDuration);
-
-  const handleDurationChange = (duration) => {
-    setSelectedDuration(duration);
-    setShowConfirmation(true);
-    setTimeout(() => setShowConfirmation(false), 2000);
+  const handleComplete = () => {
+    setIsCompleted(true);
+    setShowSession(false);
+    onSessionComplete?.();
   };
 
-  const handleStartSession = () => {
-    onStartSession?.(selectedDuration);
+  const getMoodBackground = () => {
+    switch (selectedMood) {
+      case 'clear-sky':
+        return 'linear-gradient(145deg, rgba(254, 243, 199, 0.08) 0%, rgba(253, 224, 71, 0.03) 100%)';
+      case 'hope':
+        return 'linear-gradient(145deg, rgba(221, 214, 254, 0.08) 0%, rgba(168, 139, 250, 0.03) 100%)';
+      case 'blooming':
+        return 'linear-gradient(145deg, rgba(253, 242, 248, 0.08) 0%, rgba(244, 114, 182, 0.03) 100%)';
+      case 'fog':
+        return 'linear-gradient(145deg, rgba(229, 231, 235, 0.08) 0%, rgba(156, 163, 175, 0.03) 100%)';
+      case 'heavy-rain':
+        return 'linear-gradient(145deg, rgba(147, 197, 253, 0.08) 0%, rgba(59, 130, 246, 0.03) 100%)';
+      case 'storm':
+        return 'linear-gradient(145deg, rgba(124, 58, 237, 0.08) 0%, rgba(109, 74, 255, 0.03) 100%)';
+      default:
+        return 'linear-gradient(145deg, rgba(139, 92, 246, 0.08) 0%, rgba(168, 85, 247, 0.03) 100%)';
+    }
   };
+
+  const getMoodBorderColor = () => {
+    switch (selectedMood) {
+      case 'clear-sky':
+        return 'rgba(253, 211, 77, 0.2)';
+      case 'hope':
+        return 'rgba(168, 139, 250, 0.2)';
+      case 'blooming':
+        return 'rgba(244, 114, 182, 0.2)';
+      case 'fog':
+        return 'rgba(156, 163, 175, 0.2)';
+      case 'heavy-rain':
+        return 'rgba(59, 130, 246, 0.2)';
+      case 'storm':
+        return 'rgba(124, 58, 237, 0.2)';
+      default:
+        return 'rgba(139, 92, 246, 0.2)';
+    }
+  };
+
+  if (isCompleted) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        style={{
+          background: getMoodBackground(),
+          border: `1.5px solid ${getMoodBorderColor()}`,
+          borderRadius: 24,
+          padding: '28px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Mood particles animation */}
+        {selectedMood === 'blooming' && (
+          <>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ y: 200, opacity: 0 }}
+                animate={{ y: -200, opacity: [0, 1, 0] }}
+                transition={{ duration: 3, delay: i * 0.2, repeat: Infinity }}
+                style={{
+                  position: 'absolute',
+                  left: `${Math.random() * 100}%`,
+                  fontSize: 14,
+                  pointerEvents: 'none',
+                }}
+              >
+                🌸
+              </motion.div>
+            ))}
+          </>
+        )}
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+            <span style={{ fontSize: 28 }}>✅</span>
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: 0 }}>
+              Today's Focus Completed
+            </h3>
+          </div>
+
+          <p style={{ fontSize: 14, color: 'rgba(184, 180, 216, 0.8)', margin: '0 0 16px' }}>
+            Beautiful work. You just spent time taking care of yourself.
+          </p>
+
+          <div
+            style={{
+              display: 'inline-block',
+              background: 'rgba(139, 92, 246, 0.2)',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              borderRadius: 12,
+              padding: '8px 16px',
+              fontSize: 13,
+              fontWeight: 600,
+              color: '#A78BFA',
+            }}
+          >
+            +1 Healing Point
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
-    <div style={{ ...CARD_STYLE, flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-      {/* Header */}
-      <div style={SECTION_LABEL}>TODAY'S FOCUS ⓘ</div>
-
-      {/* Title + Icon */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
-        <div>
-          <motion.h3
-            key={currentDuration.title}
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              fontSize: 16,
-              fontWeight: 700,
-              color: '#fff',
-              margin: 0,
-              letterSpacing: '-0.01em',
-            }}
-          >
-            {currentDuration.title}
-          </motion.h3>
-        </div>
-        <span style={{ fontSize: 28, lineHeight: 1 }}>🌿</span>
-      </div>
-
-      {/* Subtitle */}
-      <motion.p
-        key={currentDuration.subtitle}
-        initial={{ opacity: 0, y: -4 }}
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
         style={{
-          fontSize: 12,
-          color: 'rgba(184,180,216,0.65)',
-          margin: '0 0 16px',
-          lineHeight: 1.5,
+          background: getMoodBackground(),
+          border: `1.5px solid ${getMoodBorderColor()}`,
+          borderRadius: 24,
+          padding: '28px',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        {currentDuration.subtitle}
-      </motion.p>
-
-      {/* Duration Label */}
-      <div
-        style={{
-          fontSize: 10,
-          fontWeight: 700,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          color: 'rgba(196,181,253,0.4)',
-          marginBottom: 10,
-        }}
-      >
-        Choose your session
-      </div>
-
-      {/* Duration Buttons */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-        {DURATIONS.map((duration) => (
-          <motion.button
-            key={duration.value}
-            onClick={() => handleDurationChange(duration.value)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+        {/* Mood-based background effects */}
+        {selectedMood === 'clear-sky' && (
+          <motion.div
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 4, repeat: Infinity }}
             style={{
-              flex: 1,
-              padding: '10px 8px',
-              borderRadius: 12,
-              border: selectedDuration === duration.value ? '1px solid rgba(168,85,247,0.6)' : '1px solid rgba(255,255,255,0.1)',
-              background:
-                selectedDuration === duration.value
-                  ? 'rgba(139,92,246,0.25)'
-                  : 'rgba(255,255,255,0.05)',
-              color: '#E2DEFF',
-              fontSize: 12,
-              fontWeight: 600,
+              position: 'absolute',
+              top: -50,
+              right: -50,
+              width: 200,
+              height: 200,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(253, 211, 77, 0.3) 0%, transparent 70%)',
+              filter: 'blur(40px)',
+              zIndex: 0,
+            }}
+          />
+        )}
+
+        {selectedMood === 'blooming' && (
+          <>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ y: 200, opacity: 0 }}
+                animate={{ y: -200, opacity: [0, 0.6, 0] }}
+                transition={{ duration: 3, delay: i * 0.5, repeat: Infinity }}
+                style={{
+                  position: 'absolute',
+                  left: `${20 + i * 30}%`,
+                  fontSize: 20,
+                  pointerEvents: 'none',
+                  zIndex: 0,
+                }}
+              >
+                🌸
+              </motion.div>
+            ))}
+          </>
+        )}
+
+        {selectedMood === 'fog' && (
+          <>
+            {Array.from({ length: 2 }).map((_, i) => (
+              <motion.div
+                key={i}
+                animate={{ opacity: [0.2, 0.4, 0.2], x: [-10, 10, -10] }}
+                transition={{ duration: 5, repeat: Infinity, delay: i * 1 }}
+                style={{
+                  position: 'absolute',
+                  top: i * 40,
+                  left: 0,
+                  right: 0,
+                  height: 60,
+                  background: 'radial-gradient(ellipse, rgba(156, 163, 175, 0.2) 0%, transparent 70%)',
+                  filter: 'blur(30px)',
+                  zIndex: 0,
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        {selectedMood === 'heavy-rain' && (
+          <>
+            {Array.from({ length: 15 }).map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 200, opacity: [0, 0.6, 0] }}
+                transition={{
+                  duration: 1.5,
+                  delay: (i % 5) * 0.2,
+                  repeat: Infinity,
+                }}
+                style={{
+                  position: 'absolute',
+                  left: `${Math.random() * 100}%`,
+                  width: 2,
+                  height: 12,
+                  background: 'rgba(59, 130, 246, 0.4)',
+                  borderRadius: 1,
+                  zIndex: 0,
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+            <span style={{ fontSize: 24 }}>🌿</span>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: 0 }}>
+              Today's Focus
+            </h2>
+          </div>
+
+          {/* Focus Title */}
+          <div style={{ marginBottom: 24 }}>
+            <div
+              style={{
+                fontSize: 32,
+                fontWeight: 800,
+                color: moodData.color,
+                marginBottom: 4,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              {moodData.icon} {moodData.title}
+            </div>
+            <p style={{ fontSize: 13, color: 'rgba(184, 180, 216, 0.6)', margin: 0 }}>
+              Adapted to your mood
+            </p>
+          </div>
+
+          {/* Duration Selection */}
+          <div style={{ marginBottom: 24 }}>
+            <p style={{ fontSize: 12, fontWeight: 600, color: 'rgba(196, 181, 253, 0.6)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 12px' }}>
+              Choose Duration
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+              {[3, 5, 7].map((dur) => (
+                <motion.button
+                  key={dur}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setDuration(dur)}
+                  style={{
+                    padding: '10px 12px',
+                    borderRadius: 12,
+                    border:
+                      duration === dur
+                        ? `2px solid rgba(168, 139, 250, 0.6)`
+                        : '1px solid rgba(168, 139, 250, 0.2)',
+                    background:
+                      duration === dur
+                        ? 'rgba(139, 92, 246, 0.15)'
+                        : 'rgba(139, 92, 246, 0.08)',
+                    color: '#E2DEFF',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    fontFamily: 'inherit',
+                    minWidth: 0,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  ○ {dur}m
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Duration Details */}
+          <div style={{ marginBottom: 24, padding: '14px', background: 'rgba(139, 92, 246, 0.08)', borderRadius: 12 }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: '#A78BFA', margin: '0 0 6px' }}>
+              {durationData.desc}
+            </p>
+            <p style={{ fontSize: 12, color: 'rgba(184, 180, 216, 0.7)', margin: 0, lineHeight: 1.5 }}>
+              {durationData.fullDesc}
+            </p>
+          </div>
+
+          {/* Difficulty Badge */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 20 }}>
+            <span style={{ fontSize: 12, color: 'rgba(196, 181, 253, 0.6)' }}>🟢 Beginner</span>
+          </div>
+
+          {/* Start Button */}
+          <motion.button
+            whileHover={{ scale: 1.02, boxShadow: '0 8px 32px rgba(124, 58, 237, 0.4)' }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setShowSession(true)}
+            style={{
+              width: '100%',
+              padding: '14px 24px',
+              borderRadius: 14,
+              border: 'none',
+              background: 'linear-gradient(135deg, #6D4AFF 0%, #8B5CF6 100%)',
+              color: '#fff',
+              fontSize: 14,
+              fontWeight: 700,
               cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              boxShadow:
-                selectedDuration === duration.value
-                  ? '0 0 16px rgba(139,92,246,0.4)'
-                  : 'none',
+              boxShadow: '0 4px 20px rgba(124, 58, 237, 0.3)',
+              fontFamily: 'inherit',
+              transition: 'all 0.2s',
             }}
           >
-            {duration.value} min
+            ▶ Start Session
           </motion.button>
-        ))}
-      </div>
+        </div>
+      </motion.div>
 
-      {/* Confirmation Message */}
-      {showConfirmation && (
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            fontSize: 11,
-            color: '#A78BFA',
-            textAlign: 'center',
-            marginBottom: 12,
-            fontWeight: 500,
-          }}
-        >
-          ✨ Great choice! Small steps create lasting change.
-        </motion.div>
-      )}
-
-      {/* Difficulty Badge */}
-      <div style={{ marginBottom: 14 }}>
-        <span
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.09)',
-            borderRadius: 20,
-            padding: '4px 12px',
-            fontSize: 11,
-            color: '#B8B4D8',
-          }}
-        >
-          <span>🟢</span> Beginner
-        </span>
-      </div>
-
-      {/* Start Button */}
-      <motion.button
-        whileHover={{ y: -2 }}
-        whileTap={{ scale: 0.97 }}
-        onClick={handleStartSession}
-        style={{
-          ...PURPLE_BTN,
-          width: '100%',
-          padding: '12px',
-          fontSize: 13,
-          borderRadius: 13,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 8,
-        }}
-      >
-        {breathingDone ? '✓ Completed' : `▶ Start ${selectedDuration}m Session`}
-      </motion.button>
-    </div>
+      {/* Breathing Session Overlay */}
+      <AnimatePresence>
+        {showSession && (
+          <BreathingSessionOverlay
+            duration={duration}
+            mood={selectedMood}
+            onComplete={handleComplete}
+            onClose={() => setShowSession(false)}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }

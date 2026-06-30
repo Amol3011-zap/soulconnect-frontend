@@ -94,12 +94,8 @@ function LeftPanel({ role }) {
 
       <div className="relative z-10 flex flex-col justify-between p-12 w-full">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-            style={{ background: logoGrad }}>
-            {isHealer ? '🧘' : '🌿'}
-          </div>
-          <span className="text-white text-xl font-bold tracking-tight">SoulConnect</span>
+        <div className="flex items-center">
+          <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 64, width: 'auto', objectFit: 'contain', maxWidth: 260, borderRadius: 10 }} />
         </div>
 
         {/* Hero copy */}
@@ -150,8 +146,8 @@ function LeftPanel({ role }) {
         {/* Stats */}
         <div className="flex gap-8">
           {(isHealer
-            ? [['500+', 'Healers'], ['10K+', 'Sessions'], ['4.9★', 'Avg Rating']]
-            : [['10K+', 'Members'], ['95%', 'Feel Better'], ['Safe', '& Anonymous']]
+            ? [['Pre-Launch', 'Platform'], ['Building', 'Together'], ['Community', 'First']]
+            : [['Early', 'Access'], ['Building', 'In Public'], ['Community', 'First']]
           ).map(([val, label]) => (
             <div key={label}>
               <div className="font-bold text-xl" style={{ color: highlightColor }}>{val}</div>
@@ -194,6 +190,8 @@ export default function Signup() {
   const [languages, setLanguages] = useState('');
 
   const [gpsLocation, setGpsLocation] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [pendingNav, setPendingNav] = useState('');
   const { setAuth } = useAuthStore();
   const navigate = useNavigate();
 
@@ -282,7 +280,9 @@ export default function Signup() {
       };
       const response = await authAPI.signup(payload);
       setAuth(response.data, response.data.access_token, role);
-      navigate('/home');
+      const dest = role === 'healer' ? '/healer-dashboard' : '/onboarding';
+      setPendingNav(dest);
+      setShowWelcome(true);
     } catch (err) {
       const detail = err.response?.data?.detail;
       if (Array.isArray(detail)) {
@@ -405,18 +405,39 @@ export default function Signup() {
   // ── Steps 1–4 ──
   return (
     <div className="min-h-screen flex">
+
+      {/* Welcome dialogue after signup */}
+      {showWelcome && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6"
+          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}>
+          <div className="w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl"
+            style={{ background: 'white' }}>
+            <div className="text-5xl mb-5">🤗</div>
+            <h2 className="text-lg font-bold mb-3" style={{ color: '#1a3d2e' }}>
+              Welcome to SoulConnect
+            </h2>
+            <p className="text-base leading-relaxed mb-6 font-medium"
+              style={{ color: '#374151', fontStyle: 'italic' }}>
+              "Kabhi kabhi ek jadoo ki jhappi aur dil se baat kar lena hi kaafi hota hai"
+            </p>
+            <button
+              onClick={() => { setShowWelcome(false); navigate(pendingNav); }}
+              className="w-full py-3 rounded-xl font-bold text-white text-sm"
+              style={{ background: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>
+              Let's Begin →
+            </button>
+          </div>
+        </div>
+      )}
+
       <LeftPanel role={role} />
 
       <div className="flex-1 flex items-center justify-center p-6 overflow-y-auto" style={{ background: '#f5f5f0' }}>
         <div className="w-full max-w-md py-8">
 
           {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-6 lg:hidden">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
-              style={{ background: accentGrad }}>
-              {role === 'healer' ? '🧘' : '🌿'}
-            </div>
-            <span className="text-gray-800 text-lg font-bold">SoulConnect</span>
+          <div className="flex items-center mb-6 lg:hidden">
+            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 40, width: 'auto', objectFit: 'contain', maxWidth: 180 }} />
           </div>
 
           {/* Role badge */}
@@ -461,32 +482,39 @@ export default function Signup() {
           {step === 1 && (
             <div className="space-y-4">
               <div>
-                <label className={labelClass}>Phone Number</label>
+                <label htmlFor="sig-phone" className={labelClass}>Phone Number</label>
                 <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium select-none">+91</div>
-                  <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
+                  <div aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium select-none">+91</div>
+                  <input id="sig-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
                     placeholder="98765 43210"
+                    aria-describedby="sig-phone-hint"
+                    autoComplete="tel"
                     className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none transition-colors bg-white"
-                    style={{ '--tw-ring-color': accentColor }}
                     onFocus={(e) => e.target.style.borderColor = accentColor}
                     onBlur={(e) => e.target.style.borderColor = '#e5e7eb'} />
                 </div>
-                <p className="text-xs text-gray-400 mt-1">Used to log in — never shared</p>
+                <p id="sig-phone-hint" className="text-xs text-gray-400 mt-1">Used to log in — never shared</p>
               </div>
               <div>
-                <label className={labelClass}>Password</label>
+                <label htmlFor="sig-password" className={labelClass}>Password</label>
                 <div className="relative">
-                  <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)}
+                  <input id="sig-password" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)}
                     placeholder="At least 6 characters"
+                    aria-describedby="sig-password-hint"
+                    autoComplete="new-password"
                     className="w-full pl-4 pr-12 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none transition-colors bg-white"
                     onFocus={(e) => e.target.style.borderColor = accentColor}
                     onBlur={(e) => e.target.style.borderColor = '#e5e7eb'} />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm select-none">
+                  <button type="button"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 select-none"
+                    style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}>
                     {showPassword ? '🙈' : '👁️'}
                   </button>
                 </div>
-                <p className="text-xs text-gray-400 mt-1">Keep your account secure</p>
+                <p id="sig-password-hint" className="text-xs text-gray-400 mt-1">Keep your account secure</p>
               </div>
               <div>
                 <label className={labelClass}>{role === 'healer' ? 'Full Name' : 'Your Name'}</label>
@@ -521,9 +549,9 @@ export default function Signup() {
                   </div>
                 </div>
               </div>
-              {error && <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
+              {error && <p role="alert" className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
               <button onClick={next} className="w-full py-3.5 rounded-xl font-semibold text-white transition-all hover:opacity-90"
-                style={{ background: accentGrad }}>Continue →</button>
+                style={{ background: accentGrad, minHeight: 48 }}>Continue →</button>
               <p className="text-center text-sm text-gray-500">
                 Already have an account?{' '}
                 <Link to="/login" className="font-semibold hover:underline" style={{ color: accentColor }}>Sign in</Link>
@@ -566,7 +594,7 @@ export default function Signup() {
                   {role === 'healer' ? 'Helps local clients find you' : 'Helps us find nearby peers & meetups'}
                 </p>
               </div>
-              {error && <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
+              {error && <p role="alert" className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
               <div className="flex gap-3 pt-1">
                 <button onClick={back} className="flex-1 py-3 rounded-xl font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200">Back</button>
                 <button onClick={next} className="flex-1 py-3 rounded-xl font-semibold text-white hover:opacity-90"
@@ -589,13 +617,15 @@ export default function Signup() {
                   {selectedProblems.length} selected{selectedProblems.length >= 2 ? ' ✓' : ' (min 2)'}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1 mb-5"
-                style={{ scrollbarWidth: 'thin', scrollbarColor: `${accentColor} #f3f4f6` }}>
+              {/* No max-height/overflow — all items visible, page scrolls naturally */}
+              <div className="grid grid-cols-2 gap-2 mb-5" role="group" aria-label="Select your challenges">
                 {PROBLEMS.map((prob) => {
                   const isSelected = selectedProblems.includes(prob.value);
                   const order = selectedProblems.indexOf(prob.value);
                   return (
                     <button key={prob.value} onClick={() => toggleProblem(prob.value)}
+                      aria-pressed={isSelected}
+                      aria-label={`${prob.label}${isSelected ? ', selected' : ''}`}
                       className={`p-3 rounded-xl text-left transition-all border-2 relative ${
                         isSelected ? 'border-purple-500 bg-purple-50' : 'border-gray-100 bg-white hover:border-purple-200'
                       }`}>
@@ -694,7 +724,7 @@ export default function Signup() {
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:border-cyan-500 transition-colors bg-white resize-none" />
               </div>
 
-              {error && <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
+              {error && <p role="alert" className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
               <div className="flex gap-3">
                 <button onClick={back} className="flex-1 py-3 rounded-xl font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200">Back</button>
                 <button onClick={next} className="flex-1 py-3 rounded-xl font-semibold text-white hover:opacity-90"
@@ -762,9 +792,16 @@ export default function Signup() {
 
               <p className="text-xs text-gray-400 text-center mt-4">
                 By joining, you agree to our{' '}
-                <span className="text-purple-500 cursor-pointer hover:underline">Terms</span> &{' '}
-                <span className="text-purple-500 cursor-pointer hover:underline">Privacy Policy</span>
+                <Link to="/terms" target="_blank" className="font-semibold hover:underline" style={{ color: '#2d6a4f' }}>Terms</Link>{' '}&{' '}
+                <Link to="/terms#privacy" target="_blank" className="font-semibold hover:underline" style={{ color: '#2d6a4f' }}>Privacy Policy</Link>
               </p>
+              <div className="mt-4 p-3 rounded-xl text-xs text-gray-500 text-center leading-relaxed"
+                style={{ background: '#F9FAFB', border: '1px solid #E5E7EB' }}>
+                ⚕️ <strong>Disclaimer:</strong> SoulConnect is a peer-support and wellness platform.
+                We do not provide medical, psychiatric, psychological, or emergency services.
+                If you are in crisis, please call emergency services or visit{' '}
+                <Link to="/crisis-support" className="underline" style={{ color: '#6D4AFF' }}>Crisis Resources</Link>.
+              </div>
             </div>
           )}
         </div>

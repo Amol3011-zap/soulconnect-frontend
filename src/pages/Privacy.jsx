@@ -73,7 +73,16 @@ const sections = [
     title: '6. Data Security',
     body: [
       'We take the security of your personal information seriously and implement appropriate technical and organisational measures to protect it.',
+      'Your data is protected through encryption in transit (TLS/SSL) and at rest. We use secure cloud infrastructure with industry-standard access controls.',
       'While we strive to protect your data, no method of transmission over the internet is completely secure. We cannot guarantee absolute security but will notify you promptly if a breach occurs that may affect your rights.',
+    ],
+  },
+  {
+    title: '6a. DPDPA 2023 Compliance (India)',
+    body: [
+      'SoulConnect complies with the Digital Personal Data Protection Act (DPDPA), 2023, India\'s primary data protection framework.',
+      'We process personal data fairly, lawfully, and transparently with appropriate consent. Your data is stored on secure Indian data centers where applicable.',
+      'All personal data including mental health information is treated as sensitive personal data and protected under DPDPA guidelines.',
     ],
   },
   {

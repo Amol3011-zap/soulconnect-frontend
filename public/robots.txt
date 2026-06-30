@@ -1,7 +1,11 @@
+# SoulConnect robots.txt - Allow search and AI crawlers
+# Block training crawlers and authenticated routes
+
+# Default: Allow all crawlers
 User-agent: *
 Allow: /
 
-# Private / authenticated routes — do not index
+# Block authenticated/private routes
 Disallow: /dashboard
 Disallow: /matches
 Disallow: /onboarding
@@ -11,10 +15,10 @@ Disallow: /settings
 Disallow: /notifications
 Disallow: /messages
 
-# API endpoints
+# Block API endpoints
 Disallow: /api/
 
-# Block AI training crawlers (not allowed for training datasets)
+# Block training crawlers (GPTBot, CCBot, Bytespider, etc.)
 User-agent: GPTBot
 Disallow: /
 
@@ -33,16 +37,15 @@ Disallow: /
 User-agent: meta-externalagent
 Disallow: /
 
-# Allow AI search & grounding crawlers
-# Google-Extended (Google AI Overviews) — ALLOWED for real-time grounding
+# Allow AI search/grounding crawlers (explicitly overrides above)
 User-agent: Google-Extended
 Allow: /
 
-# Allow other AI search crawlers
 User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: PerplexityBot
 Allow: /
 
+# Sitemap
 Sitemap: https://soulconnect.health/sitemap.xml

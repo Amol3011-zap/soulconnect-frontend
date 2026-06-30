@@ -1,0 +1,60 @@
+{
+  "routes": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/crisis-support",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/safety",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/cookies",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/accessibility",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/community-rules",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/guide-terms",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/report",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/professionals",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/healers",
+      "destination": "/index.html"
+    }
+  ]
+}

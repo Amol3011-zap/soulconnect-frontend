@@ -19,6 +19,7 @@ const Signup        = lazy(() => import('./pages/Signup'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const TermsPrivacy  = lazy(() => import('./pages/TermsPrivacy'));
 const SafetyPolicy  = lazy(() => import('./pages/SafetyPolicy'));
+const CrisisSupport = lazy(() => import('./pages/CrisisSupport'));
 const GuideTerms    = lazy(() => import('./pages/GuideTerms'));
 const CommunityRules = lazy(() => import('./pages/CommunityRules'));
 const ReportConcern = lazy(() => import('./pages/ReportConcern'));
@@ -27,6 +28,11 @@ const CookiePolicy  = lazy(() => import('./pages/CookiePolicy'));
 const Accessibility = lazy(() => import('./pages/Accessibility'));
 const Contact       = lazy(() => import('./pages/Contact'));
 const Privacy       = lazy(() => import('./pages/Privacy'));
+const FAQ           = lazy(() => import('./pages/FAQ'));
+const Blog          = lazy(() => import('./pages/Blog'));
+const BlogDetail    = lazy(() => import('./pages/BlogDetail'));
+const HowItWorks    = lazy(() => import('./pages/HowItWorks'));
+const TrustSafety   = lazy(() => import('./pages/TrustSafety'));
 
 // Full-screen experiences (no sidebar)
 const Dashboard     = lazy(() => import('./pages/Dashboard'));    // /chat
@@ -60,7 +66,7 @@ const Matches       = lazy(() => import('./pages/Matches'));
 
 import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
-import CrisisBanner from './components/CrisisBanner';
+import MetaHead from './components/MetaHead';
 
 const HIDE_FLOAT_PATHS = ['/safety', '/report', '/community-rules', '/guide-terms'];
 const LAUNCH_READY = import.meta.env.VITE_LAUNCH_READY === 'true';
@@ -120,6 +126,7 @@ function AppInner() {
   const safetyRoutes = (
     <>
       <Route path="/safety"          element={<Suspense fallback={<PageLoader />}><SafetyPolicy /></Suspense>} />
+      <Route path="/crisis-support"  element={<Suspense fallback={<PageLoader />}><CrisisSupport /></Suspense>} />
       <Route path="/guide-terms"     element={<Suspense fallback={<PageLoader />}><GuideTerms /></Suspense>} />
       <Route path="/community-rules" element={<Suspense fallback={<PageLoader />}><CommunityRules /></Suspense>} />
       <Route path="/report"          element={<Suspense fallback={<PageLoader />}><ReportConcern /></Suspense>} />
@@ -128,11 +135,18 @@ function AppInner() {
       <Route path="/accessibility"   element={<Suspense fallback={<PageLoader />}><Accessibility /></Suspense>} />
       <Route path="/contact"         element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
       <Route path="/privacy"         element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
+      <Route path="/faq"             element={<Suspense fallback={<PageLoader />}><FAQ /></Suspense>} />
+      <Route path="/blog"            element={<Suspense fallback={<PageLoader />}><Blog /></Suspense>} />
+      <Route path="/blog/:slug"      element={<Suspense fallback={<PageLoader />}><BlogDetail /></Suspense>} />
+      <Route path="/how-it-works"    element={<Suspense fallback={<PageLoader />}><HowItWorks /></Suspense>} />
+      <Route path="/trust-safety"    element={<Suspense fallback={<PageLoader />}><TrustSafety /></Suspense>} />
     </>
   );
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+      <MetaHead />
+
       {showOnboarding && <SafetyOnboarding onComplete={() => setOnboardingDone(true)} />}
 
       {token && !hideNav && LAUNCH_READY && <Navbar />}
@@ -166,6 +180,7 @@ function AppInner() {
               <Route path="/chat/:matchId" element={<Suspense fallback={<PageLoader />}><Chat /></Suspense>} />
               <Route path="/groups"        element={<Suspense fallback={<PageLoader />}><GroupChat /></Suspense>} />
               <Route path="/terms"         element={<Suspense fallback={<PageLoader />}><TermsPrivacy /></Suspense>} />
+              <Route path="/onboarding"    element={<Suspense fallback={<PageLoader />}><Onboarding /></Suspense>} />
 
               {/* Dashboard routes — all inside persistent sidebar layout */}
               <Route element={<DashboardLayout />}>
@@ -186,7 +201,6 @@ function AppInner() {
                 <Route path="/healers"       element={<Suspense fallback={<PageLoader />}><Healers /></Suspense>} />
                 <Route path="/meetups"       element={<Suspense fallback={<PageLoader />}><Meetups /></Suspense>} />
                 <Route path="/premium"       element={<Suspense fallback={<PageLoader />}><Premium /></Suspense>} />
-                <Route path="/onboarding"    element={<Suspense fallback={<PageLoader />}><Onboarding /></Suspense>} />
                 <Route path="/journey"       element={<Suspense fallback={<PageLoader />}><SoulJourney /></Suspense>} />
                 <Route path="/dashboard"     element={<Suspense fallback={<PageLoader />}><Matches /></Suspense>} />
 

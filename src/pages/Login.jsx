@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useAuthStore } from '../store/auth';
 import { authAPI } from '../services/api';
+import AuthCard from '../components/auth/AuthCard';
+import FeatureCard from '../components/auth/FeatureCard';
+import StatCard from '../components/auth/StatCard';
+import GradientButton from '../components/auth/GradientButton';
+import FormInput from '../components/auth/FormInput';
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   DESIGN TOKENS
-═══════════════════════════════════════════════════════════════════════════════ */
-const P    = '#6D4AFF';
-const LAV  = '#A78BFA';
-const GLD  = '#F5B841';
-const PNK  = '#F472B6';
-const DARK = '#120B2E';
+const P = '#6D4AFF';
+const GLD = '#F5B841';
 
 export default function Login() {
   const [phone, setPhone] = useState('');
@@ -19,7 +18,8 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [fieldError, setFieldError] = useState({ phone: '', password: '' });
+  const [phoneError, setPhoneError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const { setAuth } = useAuthStore();
   const navigate = useNavigate();
@@ -28,352 +28,337 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const newErrors = { phone: '', password: '' };
+    setError('');
+    setPhoneError('');
+    setPasswordError('');
 
     if (!phone) {
-      newErrors.phone = 'Phone number is required';
+      setPhoneError('Please enter your phone number');
+      return;
     }
     if (!password) {
-      newErrors.password = 'Password is required';
+      setPasswordError('Please enter your password');
+      return;
     }
 
-    setFieldError(newErrors);
-
-    if (newErrors.phone || newErrors.password) return;
-
     setLoading(true);
-    setError('');
-
     try {
       const response = await authAPI.login(phone, password);
       setAuth(response.data, response.data.access_token, response.data.role);
-      navigate('/home');
+      navigate('/dashboard');
     } catch (err) {
-      const errorMsg = err.response?.data?.detail || 'Incorrect phone number or password. Try again.';
-      setError(errorMsg);
+      setError(err.response?.data?.detail || 'Incorrect phone number or password.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-white">
-      {/* ── LEFT PANEL: Premium Hero ── */}
+    <div className="min-h-screen flex overflow-hidden">
+      {/* LEFT HERO SECTION */}
       <div
-        className="hidden lg:flex lg:w-5/12 relative overflow-hidden flex-col justify-between p-12"
+        className="hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-12 relative overflow-hidden"
         style={{
-          background: `linear-gradient(155deg, #0A0222 0%, #120B2E 40%, #1E0848 70%, #0A0222 100%)`,
+          background: `linear-gradient(160deg, rgba(109, 74, 255, 0.08) 0%, rgba(139, 92, 246, 0.05) 50%, rgba(109, 74, 255, 0.03) 100%)`,
         }}
       >
-        {/* Logo */}
+        {/* Animated background elements */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          animate={{ y: [0, 30, 0] }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute top-20 left-10 w-64 h-64 rounded-full opacity-30"
+          style={{
+            background: `radial-gradient(circle, ${P}, transparent)`,
+            filter: 'blur(60px)',
+          }}
+        />
+        <motion.div
+          animate={{ y: [0, -30, 0] }}
+          transition={{ duration: 12, repeat: Infinity, delay: 1 }}
+          className="absolute bottom-32 right-10 w-80 h-80 rounded-full opacity-20"
+          style={{
+            background: `radial-gradient(circle, ${P}, transparent)`,
+            filter: 'blur(80px)',
+          }}
+        />
+
+        {/* Lotus watermark */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+          className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none"
+          style={{ fontSize: '400px' }}
         >
-          <img
-            src="/logo-footer.png"
-            alt="SoulConnect"
-            style={{
-              height: 56,
-              width: 'auto',
-              objectFit: 'contain',
-              maxWidth: 220,
-              borderRadius: 12,
-            }}
-          />
+          🪷
         </motion.div>
 
-        {/* Hero Content */}
-        <motion.div>
-          <motion.h1
-            className="text-5xl font-bold text-white leading-tight mb-4"
+        <div className="relative z-10">
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <img
+              src="/logo-footer.png"
+              alt="SoulConnect"
+              className="h-16"
+            />
+          </motion.div>
+        </div>
+
+        {/* Main content */}
+        <div className="relative z-10 space-y-12">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            Welcome back.
-          </motion.h1>
-          <motion.div
-            className="text-5xl font-bold mb-6 leading-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            style={{
-              background: `linear-gradient(135deg, ${LAV}, ${GLD})`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Your healing journey continues.
+            <h1 className="text-5xl font-bold text-gray-900 leading-tight mb-4">
+              Welcome back.
+            </h1>
+            <p className="text-lg text-gray-600 leading-relaxed mb-8">
+              Your healing journey continues here — with real people who understand what you're going through.
+            </p>
           </motion.div>
-          <motion.p
-            className="text-lg text-white/70 mb-10 leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            Reconnect with people who understand you. Continue your healing with meaningful conversations and support.
-          </motion.p>
 
-          {/* Feature Cards */}
-          <div className="grid grid-cols-3 gap-3 mb-12">
-            {[
-              { icon: '🤝', title: 'Peer Connections', desc: 'Find people who truly understand.' },
-              { icon: '💜', title: 'Safe Conversations', desc: 'Private and judgment-free.' },
-              { icon: '🪷', title: 'Guided Healing', desc: 'Mindfulness and healing.' },
-            ].map((card) => (
-              <motion.div
-                key={card.title}
-                className="rounded-2xl p-4 backdrop-blur-md border"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  borderColor: 'rgba(255, 255, 255, 0.12)',
-                }}
-                whileHover={{ y: -4 }}
-              >
-                <div className="text-3xl mb-3">{card.icon}</div>
-                <h4 className="text-sm font-semibold text-white mb-1">{card.title}</h4>
-                <p className="text-xs text-white/60">{card.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+          {/* Feature cards */}
+          <motion.div
+            className="grid grid-cols-1 gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, staggerChildren: 0.1 }}
+          >
+            <FeatureCard
+              icon="🤝"
+              title="Peer Connections"
+              description="Find people who truly understand your journey."
+            />
+            <FeatureCard
+              icon="💜"
+              title="Safe Conversations"
+              description="Private and judgment-free conversations."
+            />
+            <FeatureCard
+              icon="🪷"
+              title="Guided Healing"
+              description="Mindfulness and daily healing practices."
+            />
+          </motion.div>
+        </div>
 
         {/* Stats */}
         <motion.div
-          className="flex justify-between pt-8 border-t"
-          style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          className="relative z-10 flex gap-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-          {[
-            { value: '12K+', label: 'Members' },
-            { value: '98%', label: 'Feel Supported' },
-            { value: 'Private', label: 'Anonymous' },
-          ].map((stat) => (
-            <div key={stat.label}>
-              <div className="font-bold text-xl" style={{ color: GLD }}>
-                {stat.value}
-              </div>
-              <div className="text-xs text-white/50 mt-1">{stat.label}</div>
-            </div>
-          ))}
+          <StatCard value="12K+" label="Members" />
+          <StatCard value="98%" label="Feel Supported" />
+          <StatCard value="100%" label="Private" />
         </motion.div>
       </div>
 
-      {/* ── RIGHT PANEL: Auth Card ── */}
-      <div className="w-full lg:w-7/12 flex items-center justify-center p-6 md:p-8 bg-white">
+      {/* RIGHT FORM SECTION */}
+      <div className="flex-1 flex items-center justify-center p-6 lg:p-12 bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <motion.div
-          className="w-full max-w-lg"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
+          className="w-full max-w-md"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
         >
-          {/* Mobile Logo */}
-          <motion.div className="flex items-center mb-8 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          {/* Mobile logo */}
+          <motion.div
+            className="flex justify-center mb-10 lg:hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
             <img
               src="/logo-footer.png"
               alt="SoulConnect"
-              style={{
-                height: 40,
-                width: 'auto',
-                objectFit: 'contain',
-                maxWidth: 160,
-              }}
+              className="h-14"
             />
           </motion.div>
 
           {/* Heading */}
           <motion.div
+            className="text-center mb-10"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mb-8"
+            transition={{ delay: 0.1 }}
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-2">Sign in</h2>
-            <p className="text-gray-600 text-base">Your community is waiting for you</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Sign in
+            </h1>
+            <p className="text-gray-600">
+              Welcome back — your community is waiting
+            </p>
           </motion.div>
 
-          {/* Success Message */}
-          {successMsg && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 rounded-xl flex items-center gap-3 bg-green-50 border border-green-200"
-            >
-              <span className="text-xl">✅</span>
-              <span className="text-sm font-medium text-green-700">{successMsg}</span>
-            </motion.div>
-          )}
+          {/* Auth Card */}
+          <AuthCard>
+            <form onSubmit={handleLogin} className="space-y-6">
+              {/* Success message */}
+              <AnimatePresence>
+                {successMsg && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-xl text-sm flex items-center gap-2"
+                  >
+                    <span>✅</span> {successMsg}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-          {/* Error Message */}
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 rounded-xl flex items-center gap-3 bg-red-50 border border-red-200"
-            >
-              <span className="text-xl">⚠️</span>
-              <span className="text-sm font-medium text-red-700">{error}</span>
-            </motion.div>
-          )}
+              {/* Error message */}
+              <AnimatePresence>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-sm flex items-center gap-2"
+                  >
+                    <span>⚠️</span> {error}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-          {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-6">
-            {/* Phone Input */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2.5">Phone Number</label>
-              <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg">📱</div>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => {
-                    setPhone(e.target.value);
-                    setFieldError({ ...fieldError, phone: '' });
-                  }}
-                  placeholder="98765 43210"
-                  autoFocus
-                  className="w-full h-14 pl-14 pr-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all font-medium"
-                  style={{ borderColor: fieldError.phone ? '#EF4444' : undefined, backgroundColor: fieldError.phone ? '#FEF2F2' : undefined }}
-                />
+              {/* Phone input */}
+              <FormInput
+                label="Phone Number"
+                type="tel"
+                icon="+91"
+                placeholder="98765 43210"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setPhoneError('');
+                }}
+                error={phoneError}
+                autoFocus
+              />
+
+              {/* Password input */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-semibold text-gray-900">
+                    Password
+                  </label>
+                  <Link
+                    to="/forgot-password"
+                    className="text-xs font-semibold hover:text-purple-700 transition-colors"
+                    style={{ color: P }}
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setPasswordError('');
+                    }}
+                    placeholder="Enter your password"
+                    className={`w-full pl-4 pr-12 py-3.5 rounded-xl border-2 text-gray-900 placeholder-gray-400 focus:outline-none transition-all ${
+                      passwordError
+                        ? 'border-red-300 bg-red-50'
+                        : 'border-gray-200 bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-100'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg"
+                  >
+                    {showPassword ? '🙈' : '👁️'}
+                  </button>
+                </div>
+                {passwordError && (
+                  <p className="text-sm text-red-600 mt-2">{passwordError}</p>
+                )}
               </div>
-              {fieldError.phone && (
-                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-600 mt-2">
-                  ⚠️ {fieldError.phone}
-                </motion.p>
-              )}
-            </div>
 
-            {/* Password Input */}
-            <div>
-              <div className="flex items-center justify-between mb-2.5">
-                <label className="block text-sm font-semibold text-gray-900">Password</label>
-                <Link to="/forgot-password" className="text-xs font-semibold hover:opacity-80 transition-opacity" style={{ color: P }}>
-                  Forgot password?
-                </Link>
-              </div>
-              <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg">🔐</div>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setFieldError({ ...fieldError, password: '' });
-                  }}
-                  placeholder="••••••••"
-                  className="w-full h-14 pl-14 pr-12 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all font-medium"
-                  style={{ borderColor: fieldError.password ? '#EF4444' : undefined, backgroundColor: fieldError.password ? '#FEF2F2' : undefined }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-lg hover:opacity-70 transition-opacity"
-                >
-                  {showPassword ? '👁️' : '🙈'}
-                </button>
-              </div>
-              {fieldError.password && (
-                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-xs text-red-600 mt-2">
-                  ⚠️ {fieldError.password}
-                </motion.p>
-              )}
-            </div>
-
-            {/* Remember Me */}
-            <motion.div
-              className="flex items-center justify-between"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <label className="flex items-center gap-2.5 cursor-pointer">
+              {/* Remember me */}
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 rounded"
-                  style={{ accentColor: P }}
+                  className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                 />
-                <span className="text-sm text-gray-700 font-medium">Remember me</span>
+                <span className="text-sm text-gray-700">Remember me</span>
               </label>
-            </motion.div>
 
-            {/* Sign In Button */}
-            <motion.button
-              type="submit"
-              disabled={loading}
-              className="w-full h-14 rounded-xl font-semibold text-white transition-all flex items-center justify-center gap-2 disabled:opacity-60"
-              style={{
-                background: `linear-gradient(135deg, ${P}, #8B5CF6)`,
-              }}
-              whileHover={!loading ? { y: -2 } : {}}
-              whileTap={!loading ? { scale: 0.98 } : {}}
-            >
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                <>
-                  Sign In
-                  <span>→</span>
-                </>
-              )}
-            </motion.button>
-          </form>
+              {/* Sign in button */}
+              <GradientButton type="submit" loading={loading}>
+                {loading ? 'Signing in...' : 'Sign In →'}
+              </GradientButton>
 
-          {/* Divider */}
+              {/* Divider */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">
+                    or continue with
+                  </span>
+                </div>
+              </div>
+
+              {/* Social login buttons */}
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { icon: '🔵', label: 'Google' },
+                  { icon: '🍎', label: 'Apple' },
+                  { icon: '📱', label: 'Phone' },
+                ].map(({ icon, label }) => (
+                  <motion.button
+                    key={label}
+                    type="button"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="py-2.5 rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-colors"
+                  >
+                    <span className="text-2xl">{icon}</span>
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* Sign up link */}
+              <p className="text-center text-sm text-gray-600">
+                New to SoulConnect?{' '}
+                <Link
+                  to="/signup"
+                  className="font-semibold transition-colors hover:text-purple-700"
+                  style={{ color: P }}
+                >
+                  Create account
+                </Link>
+              </p>
+            </form>
+          </AuthCard>
+
+          {/* Trust badge */}
           <motion.div
-            className="my-8 flex items-center gap-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            className="mt-8 flex items-center gap-3 p-4 rounded-xl"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            style={{
+              background: 'rgba(109, 74, 255, 0.08)',
+              border: '1px solid rgba(109, 74, 255, 0.15)',
+            }}
           >
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-sm text-gray-500 font-medium">Or continue with</span>
-            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-xl">🔒</span>
+            <p className="text-xs text-gray-700">
+              Your account is private and anonymous. We never share your information.
+            </p>
           </motion.div>
-
-          {/* OAuth Buttons */}
-          <motion.div
-            className="grid grid-cols-3 gap-3 mb-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-          >
-            {[
-              { icon: '🔵', label: 'Google' },
-              { icon: '🍎', label: 'Apple' },
-              { icon: '📞', label: 'OTP' },
-            ].map((btn) => (
-              <motion.button
-                key={btn.label}
-                type="button"
-                className="py-3 rounded-xl font-medium transition-all text-sm flex items-center justify-center gap-2 bg-gray-100 border border-gray-200 hover:bg-gray-200 hover:y-0.5"
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span>{btn.icon}</span>
-              </motion.button>
-            ))}
-          </motion.div>
-
-          {/* Sign Up Link */}
-          <motion.p
-            className="text-center text-sm text-gray-600"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-          >
-            Don't have an account?{' '}
-            <Link to="/signup" className="font-semibold hover:opacity-80 transition-opacity" style={{ color: P }}>
-              Create Account →
-            </Link>
-          </motion.p>
         </motion.div>
       </div>
     </div>
