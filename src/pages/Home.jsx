@@ -20,6 +20,7 @@ import ProgressModal from '../components/ProgressModal';
 import WeeklyInsightsModal from '../components/WeeklyInsightsModal';
 import SearchModal from '../components/SearchModal';
 import NotificationDropdown from '../components/NotificationDropdown';
+import SoulClimateWidget from '../components/SoulClimateWidget';
 import { useReflections } from '../hooks/useReflections';
 
 const CATEGORY_ICONS = {
@@ -893,93 +894,7 @@ export default function Home() {
           margin: '20px 32px 16px',
           position: 'relative', zIndex: 1,
         }}>
-          {/* ── Soul Climate card (full width) ── */}
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-            className="soul-climate-body soul-climate-card"
-            style={{
-              background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
-              border: '1px solid rgba(139,92,246,0.2)',
-              borderRadius: 28,
-              padding: '26px 32px 24px',
-              position: 'relative',
-              overflow: 'hidden',
-              boxShadow: '0 12px 48px rgba(0,0,0,0.5), 0 0 60px rgba(124,58,237,0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 48,
-            }}
-          >
-            {/* Floating particles */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-              <FloatingParticles count={12} />
-            </div>
-            {/* Top shine */}
-            <div style={{
-              position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-              background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.3), transparent)',
-            }} />
-
-            {/* Left: title + button */}
-            <div style={{ zIndex: 1, flexShrink: 0 }}>
-              <div style={SECTION_LABEL}>SOUL CLIMATE ⓘ</div>
-              <h2 style={{ fontSize: 26, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.2, letterSpacing: '-0.02em' }}>
-                How is your mind<br />feeling today?
-              </h2>
-              <p style={{ fontSize: 13, color: 'rgba(184,180,216,0.65)', margin: '0 0 20px', lineHeight: 1.6 }}>
-                Your check-in helps us support you better.
-              </p>
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                whileHover={{ boxShadow: '0 6px 28px rgba(124,58,237,0.55)' }}
-                onClick={handleCheckIn}
-                style={{ ...PURPLE_BTN, fontSize: 13, padding: '10px 28px' }}
-              >
-                {selectedWeather ? '✓ Checked In' : 'Check In Now'}
-              </motion.button>
-            </div>
-
-            {/* Divider */}
-            <div className="climate-divider" style={{
-              width: 1, alignSelf: 'stretch',
-              background: 'rgba(168,85,247,0.15)',
-              flexShrink: 0, zIndex: 1,
-            }} />
-
-            {/* Right: weather pills grid */}
-            <div style={{ zIndex: 1, flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(196,181,253,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>
-                Select your mood
-              </div>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {WEATHER_OPTIONS.map(opt => (
-                  <button
-                    key={opt.id}
-                    className="weather-pill"
-                    onClick={() => handleWeatherSelect(opt.id)}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: 6,
-                      background: selectedWeather === opt.id
-                        ? 'rgba(139,92,246,0.32)' : 'rgba(255,255,255,0.07)',
-                      border: selectedWeather === opt.id
-                        ? '1px solid rgba(168,85,247,0.6)' : '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: 24, padding: '7px 16px',
-                      fontSize: 12, color: '#E2DEFF', cursor: 'pointer', fontWeight: 500,
-                      whiteSpace: 'nowrap',
-                      boxShadow: selectedWeather === opt.id ? '0 0 14px rgba(124,58,237,0.35)' : 'none',
-                      transition: 'all 0.2s',
-                    }}
-                  >
-                    <span style={{ fontSize: 15 }}>{opt.emoji}</span>
-                    <span>{opt.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
+          <SoulClimateWidget />
         </div>
 
         {/* ════════════════════════════════════════════════════════════
