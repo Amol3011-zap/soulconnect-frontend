@@ -14,7 +14,7 @@ const SQ3  = 1.7320508;
 const NAV_LINKS = [
   { label: 'About Us',     href: '/about',  isRoute: true  },
   { label: 'How It Works', href: '/how-it-works', isRoute: true },
-  { label: 'Resources',    href: '#trust',  isRoute: false },
+  { label: 'Trust & Safety', href: '/trust-safety', isRoute: true },
   { label: 'Contact',      href: '/contact', isRoute: true  },
 ];
 
@@ -1792,7 +1792,7 @@ export default function Landing() {
               {[
                 {label:'About Us',           to:'/about',          isRoute:true},
                 {label:'How It Works',       to:'/how-it-works',   isRoute:true},
-                {label:'Resources',          href:'#trust',        isRoute:false},
+                {label:'Trust & Safety',     to:'/trust-safety',   isRoute:true},
                 {label:'FAQ',                to:'/faq',            isRoute:true},
                 {label:'Privacy Policy',     to:'/privacy',        isRoute:true},
                 {label:'Terms of Service',   to:'/terms',          isRoute:true},

@@ -123,6 +123,13 @@ export const METADATA = {
     ogType: 'website',
     keywords: 'how soulconnect works, getting started, peer support guide, community membership, wellness resources',
   },
+  '/trust-safety': {
+    title: 'Trust & Safety | SoulConnect Community Standards',
+    description: 'Learn about SoulConnect\'s commitment to privacy, community safety, moderation, and your well-being. Verified professionals, transparent practices, and your control over your data.',
+    canonical: 'https://soulconnect.health/trust-safety',
+    ogType: 'website',
+    keywords: 'community safety, privacy protection, moderation, verified professionals, trust, transparency, data security',
+  },
 };
 
 /**
