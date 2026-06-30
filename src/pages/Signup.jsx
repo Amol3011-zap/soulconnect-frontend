@@ -7,12 +7,11 @@ import { authAPI } from '../services/api';
 /* ═══════════════════════════════════════════════════════════════════════════════
    DESIGN TOKENS
 ═══════════════════════════════════════════════════════════════════════════════ */
-const P    = '#6D4AFF';  // Primary Purple
-const LAV  = '#A78BFA'; // Lavender
-const GLD  = '#F5B841'; // Gold
-const PNK  = '#F472B6'; // Pink
-const DARK = '#120B2E'; // Dark Purple
-const BG_GRADIENT = 'linear-gradient(155deg, #0A0222 0%, #120B2E 40%, #1E0848 70%, #0A0222 100%)';
+const P    = '#6D4AFF';
+const LAV  = '#A78BFA';
+const GLD  = '#F5B841';
+const PNK  = '#F472B6';
+const DARK = '#120B2E';
 
 const PROBLEMS = [
   { value: 'anxiety', label: 'Anxiety', icon: '😰' },
@@ -77,245 +76,6 @@ const INDIA_STATES = [
   'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
   'Delhi', 'Jammu & Kashmir', 'Ladakh', 'Puducherry', 'Chandigarh',
 ];
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   REUSABLE COMPONENTS
-═══════════════════════════════════════════════════════════════════════════════ */
-
-function RoleCard({ role, isSelected, onClick, title, description, tags, icon }) {
-  const roleColor = role === 'healer' ? '#059669' : P;
-  const roleGrad = role === 'healer'
-    ? 'linear-gradient(135deg, #059669, #0d9488)'
-    : 'linear-gradient(135deg, #6D4AFF, #8B5CF6)';
-
-  return (
-    <motion.button
-      onClick={onClick}
-      className="w-full text-left rounded-2xl p-6 border-2 transition-all"
-      style={{
-        background: isSelected ? 'rgba(0,0,0,0.02)' : 'transparent',
-        borderColor: isSelected ? roleColor : 'rgba(0,0,0,0.1)',
-        boxShadow: isSelected ? `0 0 20px ${roleColor}33` : 'none',
-      }}
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <div className="flex items-start gap-4">
-        <div className="text-4xl">{icon}</div>
-        <div className="flex-1">
-          <h3 className="font-bold text-lg text-gray-900 mb-1">{title}</h3>
-          <p className="text-sm text-gray-600 mb-3">{description}</p>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-xs font-medium px-2.5 py-1 rounded-full"
-                style={{
-                  background: role === 'healer' ? '#D1FAE5' : '#EDE9FE',
-                  color: role === 'healer' ? '#065F46' : '#4C1D95',
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-        <motion.div
-          className="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0"
-          style={{ borderColor: isSelected ? roleColor : '#ddd' }}
-        >
-          {isSelected && (
-            <motion.div
-              className="w-3 h-3 rounded-full"
-              style={{ background: roleColor }}
-              layoutId="selectedRoleIndicator"
-            />
-          )}
-        </motion.div>
-      </div>
-    </motion.button>
-  );
-}
-
-function FormInput({ label, type = 'text', value, onChange, placeholder, error, required = false }) {
-  return (
-    <div>
-      <label className="block text-sm font-semibold text-gray-900 mb-2.5">
-        {label}
-        {required && <span style={{ color: P }}>*</span>}
-      </label>
-      <input
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        className="w-full py-3 px-4 rounded-xl border-2 transition-all focus:outline-none font-medium"
-        style={{
-          borderColor: error ? '#EF4444' : '#E5E7EB',
-          background: error ? '#FEF2F2' : '#FAFAF9',
-        }}
-        onFocus={(e) => {
-          if (!error) e.target.style.borderColor = LAV;
-        }}
-        onBlur={(e) => {
-          if (!error) e.target.style.borderColor = '#E5E7EB';
-        }}
-      />
-      {error && <p className="text-xs text-red-600 mt-1.5">⚠️ {error}</p>}
-    </div>
-  );
-}
-
-function FormSelect({ label, value, onChange, options, error, required = false }) {
-  return (
-    <div>
-      <label className="block text-sm font-semibold text-gray-900 mb-2.5">
-        {label}
-        {required && <span style={{ color: P }}>*</span>}
-      </label>
-      <select
-        value={value}
-        onChange={onChange}
-        className="w-full py-3 px-4 rounded-xl border-2 transition-all focus:outline-none font-medium appearance-none cursor-pointer"
-        style={{
-          borderColor: error ? '#EF4444' : '#E5E7EB',
-          background: error ? '#FEF2F2' : '#FAFAF9',
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'right 12px center',
-          paddingRight: '36px',
-        }}
-      >
-        <option value="">Select {label.toLowerCase()}</option>
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
-          </option>
-        ))}
-      </select>
-      {error && <p className="text-xs text-red-600 mt-1.5">⚠️ {error}</p>}
-    </div>
-  );
-}
-
-function GradientButton({ children, loading = false, type = 'button', onClick }) {
-  return (
-    <motion.button
-      type={type}
-      onClick={onClick}
-      disabled={loading}
-      className="w-full py-3.5 rounded-xl font-semibold text-white transition-all disabled:opacity-60 flex items-center justify-center gap-2"
-      style={{
-        background: `linear-gradient(135deg, ${P}, #8B5CF6)`,
-      }}
-      whileHover={!loading ? { y: -2 } : {}}
-      whileTap={!loading ? { scale: 0.98 } : {}}
-    >
-      {loading ? (
-        <>
-          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          Creating account...
-        </>
-      ) : (
-        <>
-          {children}
-          <span>→</span>
-        </>
-      )}
-    </motion.button>
-  );
-}
-
-function LeftPanel() {
-  return (
-    <div
-      className="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center"
-      style={{ background: BG_GRADIENT }}
-    >
-      <motion.div
-        className="relative z-10 w-full px-12 py-20 flex flex-col justify-center items-center text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.8 }}
-      >
-        {/* Lotus Illustration */}
-        <motion.div
-          className="text-8xl mb-8"
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          🪷
-        </motion.div>
-
-        {/* Sunrise Elements */}
-        <motion.div
-          className="absolute top-20 left-1/2 -translate-x-1/2"
-          animate={{ opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 6, repeat: Infinity }}
-        >
-          <div className="text-6xl">🌅</div>
-        </motion.div>
-
-        {/* Hero Text */}
-        <motion.h1
-          className="text-4xl font-bold text-white mb-4 leading-tight"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          You don't have to go through this alone.
-        </motion.h1>
-
-        <motion.p
-          className="text-lg text-white/70 max-w-md mb-8 leading-relaxed"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          Every meaningful connection starts with one small step. Join a community built around empathy, healing, and real conversations.
-        </motion.p>
-
-        {/* Trust Cards */}
-        <motion.div
-          className="grid grid-cols-3 gap-3 w-full max-w-md"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          {[
-            { icon: '🔒', label: 'Anonymous' },
-            { icon: '✔️', label: 'Verified Professionals' },
-            { icon: '🤝', label: 'Community First' },
-          ].map((card) => (
-            <motion.div
-              key={card.label}
-              className="rounded-xl p-3 text-center"
-              style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.1)' }}
-              whileHover={{ y: -4 }}
-            >
-              <div className="text-2xl mb-2">{card.icon}</div>
-              <p className="text-xs font-medium text-white/80">{card.label}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Quote */}
-        <motion.blockquote
-          className="mt-16 italic text-white/60 text-sm border-l-4 border-white/30 pl-4 py-2 max-w-md"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-        >
-          "Sometimes healing begins with simply being heard."
-        </motion.blockquote>
-      </motion.div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   MAIN SIGNUP COMPONENT
-═══════════════════════════════════════════════════════════════════════════════ */
 
 export default function Signup() {
   const [role, setRole] = useState('');
@@ -475,15 +235,81 @@ export default function Signup() {
   /* ── STEP 0: Role Selection ── */
   if (step === 0) {
     return (
-      <div className="min-h-screen flex">
-        <LeftPanel />
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8" style={{ background: '#FFFFFF' }}>
+      <div className="min-h-screen flex flex-col lg:flex-row bg-white">
+        {/* LEFT PANEL */}
+        <div
+          className="hidden lg:flex lg:w-5/12 relative overflow-hidden flex-col justify-center items-center text-center p-12"
+          style={{
+            background: `linear-gradient(155deg, #0A0222 0%, #120B2E 40%, #1E0848 70%, #0A0222 100%)`,
+          }}
+        >
           <motion.div
-            className="w-full max-w-md"
+            className="relative z-10 w-full max-w-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <motion.div
+              className="text-8xl mb-8"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
+            >
+              🪷
+            </motion.div>
+
+            <motion.h1
+              className="text-4xl font-bold text-white mb-4 leading-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              You don't have to go through this alone.
+            </motion.h1>
+
+            <motion.p
+              className="text-lg text-white/70 max-w-md mb-8 leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              Every meaningful connection starts with one small step. Join a community built around empathy, healing, and real conversations.
+            </motion.p>
+
+            <motion.div
+              className="grid grid-cols-3 gap-3 w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              {[
+                { icon: '🔒', label: 'Anonymous' },
+                { icon: '✔️', label: 'Verified' },
+                { icon: '🤝', label: 'Community' },
+              ].map((card) => (
+                <motion.div
+                  key={card.label}
+                  className="rounded-xl p-3 text-center border"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                  }}
+                  whileHover={{ y: -4 }}
+                >
+                  <div className="text-2xl mb-2">{card.icon}</div>
+                  <p className="text-xs font-medium text-white/80">{card.label}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* RIGHT PANEL */}
+        <div className="w-full lg:w-7/12 flex items-center justify-center p-6 md:p-8 bg-white">
+          <motion.div
+            className="w-full max-w-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            {/* Mobile Logo */}
             <div className="flex items-center gap-2 mb-8 lg:hidden">
               <img
                 src="/logo-footer.png"
@@ -501,35 +327,77 @@ export default function Signup() {
             <p className="text-gray-600 mb-8">How would you like to join us?</p>
 
             <div className="space-y-4 mb-8">
-              <RoleCard
-                role="user"
-                isSelected={role === 'user'}
-                onClick={() => {
-                  setRole('user');
-                  setStep(1);
-                }}
-                icon="🌱"
-                title="I'm seeking support"
-                description="Connect with peers who understand your struggle and join a community that heals together."
-                tags={['Peer matching', 'Anonymous', 'Free to join']}
-              />
-              <RoleCard
-                role="healer"
-                isSelected={role === 'healer'}
-                onClick={() => {
-                  setRole('healer');
-                  setStep(1);
-                }}
-                icon="🧘"
-                title="I'm a healer / professional"
-                description="Offer your expertise as a counsellor, therapist, coach, or wellness practitioner."
-                tags={['Set your own fee', 'Verified profile', 'Grow your practice']}
-              />
+              {[
+                {
+                  value: 'user',
+                  icon: '🌱',
+                  title: 'I\'m seeking support',
+                  desc: 'Connect with peers who understand your struggle',
+                  tags: ['Peer matching', 'Anonymous', 'Free'],
+                },
+                {
+                  value: 'healer',
+                  icon: '🧘',
+                  title: 'I\'m a healer / professional',
+                  desc: 'Offer your expertise as a counsellor, therapist, or practitioner',
+                  tags: ['Set your fee', 'Verified', 'Grow practice'],
+                },
+              ].map((opt) => (
+                <motion.button
+                  key={opt.value}
+                  onClick={() => {
+                    setRole(opt.value);
+                    setStep(1);
+                  }}
+                  className="w-full text-left rounded-2xl p-6 border-2 transition-all bg-white"
+                  style={{
+                    borderColor: role === opt.value ? P : '#E5E7EB',
+                    background: role === opt.value ? '#F9F7FF' : '#FFFFFF',
+                    boxShadow: role === opt.value ? `0 0 20px ${P}33` : 'none',
+                  }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="text-4xl">{opt.icon}</div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-lg text-gray-900 mb-1">{opt.title}</h3>
+                      <p className="text-sm text-gray-600 mb-3">{opt.desc}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {opt.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs font-medium px-2.5 py-1 rounded-full"
+                            style={{
+                              background: opt.value === 'healer' ? '#D1FAE5' : '#EDE9FE',
+                              color: opt.value === 'healer' ? '#065F46' : '#4C1D95',
+                            }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <motion.div
+                      className="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                      style={{ borderColor: role === opt.value ? P : '#ddd' }}
+                    >
+                      {role === opt.value && (
+                        <motion.div
+                          className="w-3 h-3 rounded-full"
+                          style={{ background: P }}
+                          layoutId="selectedRoleIndicator"
+                        />
+                      )}
+                    </motion.div>
+                  </div>
+                </motion.button>
+              ))}
             </div>
 
             <p className="text-center text-sm text-gray-600">
               Already have an account?{' '}
-              <Link to="/login" className="font-semibold transition-colors hover:opacity-80" style={{ color: P }}>
+              <Link to="/login" className="font-semibold hover:opacity-80 transition-opacity" style={{ color: P }}>
                 Sign In →
               </Link>
             </p>
@@ -539,434 +407,45 @@ export default function Signup() {
     );
   }
 
-  /* ── STEP 1: Basic Info ── */
-  if (step === 1) {
-    return (
-      <div className="min-h-screen flex">
-        <LeftPanel />
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: '#FFFFFF' }}>
-          <motion.div
-            className="w-full max-w-md"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-          >
-            {/* Progress */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">Basic Info</h2>
-                <span className="text-sm font-medium text-gray-500">
-                  Step {step} of {STEPS.length}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <motion.div
-                  className="h-2 rounded-full"
-                  style={{ background: `linear-gradient(90deg, ${P}, #8B5CF6)` }}
-                  initial={{ width: '0%' }}
-                  animate={{ width: `${(step / STEPS.length) * 100}%` }}
-                  transition={{ duration: 0.5 }}
-                />
-              </div>
-            </div>
-
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 rounded-xl flex items-start gap-3"
-                style={{ background: '#FEF2F2', borderLeft: `4px solid #EF4444` }}
-              >
-                <span className="text-xl">⚠️</span>
-                <span className="text-sm text-red-700">{error}</span>
-              </motion.div>
-            )}
-
-            <div className="space-y-5 mb-8">
-              <FormInput
-                label="Full Name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setFieldErrors({ ...fieldErrors, name: '' });
-                }}
-                placeholder="Your full name"
-                error={fieldErrors.name}
-                required
-              />
-              <FormInput
-                label="Phone Number"
-                type="tel"
-                value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                  setFieldErrors({ ...fieldErrors, phone: '' });
-                }}
-                placeholder="98765 43210"
-                error={fieldErrors.phone}
-                required
-              />
-              <FormInput
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setFieldErrors({ ...fieldErrors, password: '' });
-                }}
-                placeholder="••••••••"
-                error={fieldErrors.password}
-                required
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <FormInput
-                  label="Age"
-                  type="number"
-                  value={age}
-                  onChange={(e) => {
-                    setAge(e.target.value);
-                    setFieldErrors({ ...fieldErrors, age: '' });
-                  }}
-                  placeholder="18"
-                  error={fieldErrors.age}
-                  required
-                />
-                <FormSelect
-                  label="Gender"
-                  value={gender}
-                  onChange={(e) => {
-                    setGender(e.target.value);
-                    setFieldErrors({ ...fieldErrors, gender: '' });
-                  }}
-                  options={['Male', 'Female', 'Non-binary', 'Prefer not to say']}
-                  error={fieldErrors.gender}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <div className="flex gap-3">
-              <motion.button
-                onClick={() => setStep(0)}
-                className="flex-1 py-3 rounded-xl font-semibold border-2 transition-all"
-                style={{
-                  borderColor: '#E5E7EB',
-                  color: '#6B7280',
-                }}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Back
-              </motion.button>
-              <div className="flex-1">
-                <GradientButton onClick={next}>Next</GradientButton>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-
-  /* ── STEP 2: Location ── */
-  if (step === 2) {
-    return (
-      <div className="min-h-screen flex">
-        <LeftPanel />
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: '#FFFFFF' }}>
-          <motion.div
-            className="w-full max-w-md"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-          >
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">Location</h2>
-                <span className="text-sm font-medium text-gray-500">
-                  Step {step} of {STEPS.length}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <motion.div
-                  className="h-2 rounded-full"
-                  style={{ background: `linear-gradient(90deg, ${P}, #8B5CF6)` }}
-                  initial={{ width: '0%' }}
-                  animate={{ width: `${(step / STEPS.length) * 100}%` }}
-                  transition={{ duration: 0.5 }}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-5 mb-8">
-              <FormSelect
-                label="Country"
-                value={country}
-                onChange={(e) => {
-                  setCountry(e.target.value);
-                  setFieldErrors({ ...fieldErrors, country: '' });
-                }}
-                options={COUNTRIES}
-                error={fieldErrors.country}
-                required
-              />
-              {country === 'India' ? (
-                <FormSelect
-                  label="State"
-                  value={state}
-                  onChange={(e) => {
-                    setState(e.target.value);
-                    setFieldErrors({ ...fieldErrors, state: '' });
-                  }}
-                  options={INDIA_STATES}
-                  error={fieldErrors.state}
-                  required
-                />
-              ) : (
-                <FormInput
-                  label="State / Province"
-                  value={state}
-                  onChange={(e) => {
-                    setState(e.target.value);
-                    setFieldErrors({ ...fieldErrors, state: '' });
-                  }}
-                  placeholder="Your state"
-                  error={fieldErrors.state}
-                  required
-                />
-              )}
-              <FormInput
-                label="City"
-                value={city}
-                onChange={(e) => {
-                  setCity(e.target.value);
-                  setFieldErrors({ ...fieldErrors, city: '' });
-                }}
-                placeholder="Your city"
-                error={fieldErrors.city}
-                required
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <motion.button
-                onClick={back}
-                className="flex-1 py-3 rounded-xl font-semibold border-2 transition-all"
-                style={{
-                  borderColor: '#E5E7EB',
-                  color: '#6B7280',
-                }}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Back
-              </motion.button>
-              <div className="flex-1">
-                <GradientButton onClick={next}>Next</GradientButton>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-
-  /* ── STEP 3: Struggles (User) or Professional (Healer) ── */
-  if (step === 3) {
-    return (
-      <div className="min-h-screen flex">
-        <LeftPanel />
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: '#FFFFFF' }}>
-          <motion.div
-            className="w-full max-w-md"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-          >
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {role === 'user' ? 'Your Struggles' : 'Professional Info'}
-                </h2>
-                <span className="text-sm font-medium text-gray-500">
-                  Step {step} of {STEPS.length}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <motion.div
-                  className="h-2 rounded-full"
-                  style={{ background: `linear-gradient(90deg, ${P}, #8B5CF6)` }}
-                  initial={{ width: '0%' }}
-                  animate={{ width: `${(step / STEPS.length) * 100}%` }}
-                  transition={{ duration: 0.5 }}
-                />
-              </div>
-            </div>
-
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 rounded-xl flex items-start gap-3"
-                style={{ background: '#FEF2F2', borderLeft: `4px solid #EF4444` }}
-              >
-                <span className="text-xl">⚠️</span>
-                <span className="text-sm text-red-700">{error}</span>
-              </motion.div>
-            )}
-
-            {role === 'user' ? (
-              <div className="space-y-4 mb-8">
-                <p className="text-sm text-gray-600 font-medium">
-                  What are you dealing with? (Select at least 2)
-                </p>
-                <div className="grid grid-cols-2 gap-2 max-h-96 overflow-y-auto">
-                  {PROBLEMS.map((p) => (
-                    <motion.button
-                      key={p.value}
-                      onClick={() => toggleProblem(p.value)}
-                      className="text-left p-3 rounded-lg border-2 transition-all text-sm font-medium flex items-center gap-2"
-                      style={{
-                        borderColor: selectedProblems.includes(p.value) ? P : '#E5E7EB',
-                        background: selectedProblems.includes(p.value) ? `${P}10` : '#F9FAFB',
-                        color: selectedProblems.includes(p.value) ? P : '#374151',
-                      }}
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <span>{p.icon}</span>
-                      {p.label}
-                    </motion.button>
-                  ))}
-                </div>
-                {fieldErrors.problems && (
-                  <p className="text-xs text-red-600">⚠️ {fieldErrors.problems}</p>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-6 mb-8">
-                <FormSelect
-                  label="Profession Type"
-                  value={healerType}
-                  onChange={(e) => {
-                    setHealerType(e.target.value);
-                    setFieldErrors({ ...fieldErrors, healerType: '' });
-                  }}
-                  options={HEALER_TYPES.map((h) => h.value)}
-                  error={fieldErrors.healerType}
-                  required
-                />
-
-                {selectedHealerType && (
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2.5">Specializations</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {SPECIALIZATIONS.map((s) => (
-                        <motion.button
-                          key={s}
-                          onClick={() => toggleSpec(s)}
-                          className="text-left p-2.5 rounded-lg border-2 transition-all text-xs font-medium"
-                          style={{
-                            borderColor: specializations.includes(s) ? '#059669' : '#E5E7EB',
-                            background: specializations.includes(s) ? '#D1FAE510' : '#F9FAFB',
-                            color: specializations.includes(s) ? '#059669' : '#374151',
-                          }}
-                          whileHover={{ y: -1 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          {s}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <FormInput
-                  label="Years of Experience"
-                  type="number"
-                  value={experience}
-                  onChange={(e) => {
-                    setExperience(e.target.value);
-                    setFieldErrors({ ...fieldErrors, experience: '' });
-                  }}
-                  placeholder="5"
-                  error={fieldErrors.experience}
-                  required
-                />
-
-                <FormInput
-                  label="Bio"
-                  type="textarea"
-                  value={bio}
-                  onChange={(e) => {
-                    setBio(e.target.value);
-                    setFieldErrors({ ...fieldErrors, bio: '' });
-                  }}
-                  placeholder="Tell clients about your approach..."
-                  error={fieldErrors.bio}
-                  required
-                />
-
-                <FormInput
-                  label="Session Fee (₹)"
-                  type="number"
-                  value={sessionFee}
-                  onChange={(e) => {
-                    setSessionFee(e.target.value);
-                    setFieldErrors({ ...fieldErrors, sessionFee: '' });
-                  }}
-                  placeholder="500"
-                  error={fieldErrors.sessionFee}
-                  required
-                />
-
-                <FormInput
-                  label="Languages (comma-separated)"
-                  value={languages}
-                  onChange={(e) => setLanguages(e.target.value)}
-                  placeholder="English, Hindi, Marathi"
-                />
-              </div>
-            )}
-
-            <div className="flex gap-3">
-              <motion.button
-                onClick={back}
-                className="flex-1 py-3 rounded-xl font-semibold border-2 transition-all"
-                style={{
-                  borderColor: '#E5E7EB',
-                  color: '#6B7280',
-                }}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Back
-              </motion.button>
-              <div className="flex-1">
-                <GradientButton onClick={next}>Review</GradientButton>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-
-  /* ── STEP 4: Review & Submit ── */
+  /* ── STEP 1-4: Form Steps ── */
   return (
-    <div className="min-h-screen flex">
-      <LeftPanel />
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: '#FFFFFF' }}>
+    <div className="min-h-screen flex flex-col lg:flex-row bg-white">
+      {/* LEFT PANEL */}
+      <div
+        className="hidden lg:flex lg:w-5/12 relative overflow-hidden flex-col justify-center p-12"
+        style={{
+          background: `linear-gradient(155deg, #0A0222 0%, #120B2E 40%, #1E0848 70%, #0A0222 100%)`,
+        }}
+      >
         <motion.div
-          className="w-full max-w-md"
+          className="relative z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <motion.div
+            className="text-8xl mb-8"
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          >
+            🪷
+          </motion.div>
+          <h1 className="text-4xl font-bold text-white mb-4">You don't have to go through this alone.</h1>
+          <p className="text-lg text-white/70 leading-relaxed">Every meaningful connection starts with one small step.</p>
+        </motion.div>
+      </div>
+
+      {/* RIGHT PANEL */}
+      <div className="w-full lg:w-7/12 flex items-center justify-center p-6 md:p-8 overflow-y-auto bg-white">
+        <motion.div
+          className="w-full max-w-lg"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
+          key={step}
         >
+          {/* Progress */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">Review</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{STEPS[step]}</h2>
               <span className="text-sm font-medium text-gray-500">
                 Step {step} of {STEPS.length}
               </span>
@@ -976,7 +455,7 @@ export default function Signup() {
                 className="h-2 rounded-full"
                 style={{ background: `linear-gradient(90deg, ${P}, #8B5CF6)` }}
                 initial={{ width: '0%' }}
-                animate={{ width: `100%` }}
+                animate={{ width: `${(step / STEPS.length) * 100}%` }}
                 transition={{ duration: 0.5 }}
               />
             </div>
@@ -986,75 +465,311 @@ export default function Signup() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 rounded-xl flex items-start gap-3"
-              style={{ background: '#FEF2F2', borderLeft: `4px solid #EF4444` }}
+              className="mb-6 p-4 rounded-xl flex items-start gap-3 bg-red-50 border border-red-200"
             >
               <span className="text-xl">⚠️</span>
               <span className="text-sm text-red-700">{error}</span>
             </motion.div>
           )}
 
-          <div className="space-y-4 mb-8">
-            <ReviewRow label="Name" value={name} />
-            <ReviewRow label="Phone" value={phone} />
-            <ReviewRow label="Age" value={age} />
-            <ReviewRow label="Gender" value={gender} />
-            <ReviewRow label="City, State" value={`${city}, ${state}`} />
-            <ReviewRow label="Country" value={country} />
+          {/* STEP 1: Basic Info */}
+          {step === 1 && (
+            <div className="space-y-5 mb-8">
+              {[
+                { label: 'Full Name', value: name, onChange: (e) => { setName(e.target.value); setFieldErrors({ ...fieldErrors, name: '' }); }, error: fieldErrors.name },
+                { label: 'Phone', value: phone, onChange: (e) => { setPhone(e.target.value); setFieldErrors({ ...fieldErrors, phone: '' }); }, error: fieldErrors.phone, placeholder: '98765 43210' },
+                { label: 'Password', type: 'password', value: password, onChange: (e) => { setPassword(e.target.value); setFieldErrors({ ...fieldErrors, password: '' }); }, error: fieldErrors.password },
+              ].map((field) => (
+                <div key={field.label}>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2.5">{field.label}</label>
+                  <input
+                    type={field.type || 'text'}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={field.placeholder}
+                    className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                    style={{ borderColor: field.error ? '#EF4444' : undefined, backgroundColor: field.error ? '#FEF2F2' : undefined }}
+                  />
+                  {field.error && <p className="text-xs text-red-600 mt-1.5">⚠️ {field.error}</p>}
+                </div>
+              ))}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2.5">Age</label>
+                  <input
+                    type="number"
+                    value={age}
+                    onChange={(e) => { setAge(e.target.value); setFieldErrors({ ...fieldErrors, age: '' }); }}
+                    className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                    style={{ borderColor: fieldErrors.age ? '#EF4444' : undefined, backgroundColor: fieldErrors.age ? '#FEF2F2' : undefined }}
+                  />
+                  {fieldErrors.age && <p className="text-xs text-red-600 mt-1.5">⚠️ {fieldErrors.age}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 mb-2.5">Gender</label>
+                  <select
+                    value={gender}
+                    onChange={(e) => { setGender(e.target.value); setFieldErrors({ ...fieldErrors, gender: '' }); }}
+                    className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all appearance-none"
+                    style={{ borderColor: fieldErrors.gender ? '#EF4444' : undefined, backgroundColor: fieldErrors.gender ? '#FEF2F2' : undefined }}
+                  >
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Non-binary">Non-binary</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                  </select>
+                  {fieldErrors.gender && <p className="text-xs text-red-600 mt-1.5">⚠️ {fieldErrors.gender}</p>}
+                </div>
+              </div>
+            </div>
+          )}
 
-            {role === 'user' && selectedProblems.length > 0 && (
-              <ReviewRow
-                label="Your Struggles"
-                value={selectedProblems.map((p) => PROBLEMS.find((x) => x.value === p)?.label).join(', ')}
-              />
-            )}
+          {/* STEP 2: Location */}
+          {step === 2 && (
+            <div className="space-y-5 mb-8">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2.5">Country</label>
+                <select
+                  value={country}
+                  onChange={(e) => { setCountry(e.target.value); setFieldErrors({ ...fieldErrors, country: '' }); }}
+                  className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all appearance-none"
+                >
+                  {COUNTRIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2.5">State</label>
+                {country === 'India' ? (
+                  <select
+                    value={state}
+                    onChange={(e) => { setState(e.target.value); setFieldErrors({ ...fieldErrors, state: '' }); }}
+                    className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all appearance-none"
+                  >
+                    <option value="">Select State</option>
+                    {INDIA_STATES.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    value={state}
+                    onChange={(e) => { setState(e.target.value); setFieldErrors({ ...fieldErrors, state: '' }); }}
+                    className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                  />
+                )}
+                {fieldErrors.state && <p className="text-xs text-red-600 mt-1.5">⚠️ {fieldErrors.state}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2.5">City</label>
+                <input
+                  type="text"
+                  value={city}
+                  onChange={(e) => { setCity(e.target.value); setFieldErrors({ ...fieldErrors, city: '' }); }}
+                  className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                />
+                {fieldErrors.city && <p className="text-xs text-red-600 mt-1.5">⚠️ {fieldErrors.city}</p>}
+              </div>
+            </div>
+          )}
 
-            {role === 'healer' && (
-              <>
-                <ReviewRow
-                  label="Profession"
-                  value={selectedHealerType?.label}
-                />
-                <ReviewRow
-                  label="Experience"
-                  value={`${experience} years`}
-                />
-                <ReviewRow
-                  label="Session Fee"
-                  value={`₹${sessionFee}`}
-                />
-              </>
-            )}
-          </div>
+          {/* STEP 3: Struggles or Professional */}
+          {step === 3 && (
+            <div className="space-y-5 mb-8">
+              {role === 'user' ? (
+                <div>
+                  <p className="text-sm text-gray-600 font-medium mb-4">What are you dealing with? (Select at least 2)</p>
+                  <div className="grid grid-cols-2 gap-2 max-h-96 overflow-y-auto">
+                    {PROBLEMS.map((p) => (
+                      <motion.button
+                        key={p.value}
+                        onClick={() => toggleProblem(p.value)}
+                        className="text-left p-3 rounded-lg border-2 transition-all text-sm font-medium flex items-center gap-2"
+                        style={{
+                          borderColor: selectedProblems.includes(p.value) ? P : '#E5E7EB',
+                          background: selectedProblems.includes(p.value) ? `${P}10` : '#F9FAFB',
+                          color: selectedProblems.includes(p.value) ? P : '#374151',
+                        }}
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <span>{p.icon}</span>
+                        {p.label}
+                      </motion.button>
+                    ))}
+                  </div>
+                  {fieldErrors.problems && <p className="text-xs text-red-600 mt-2">⚠️ {fieldErrors.problems}</p>}
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2.5">Profession</label>
+                    <select
+                      value={healerType}
+                      onChange={(e) => { setHealerType(e.target.value); setFieldErrors({ ...fieldErrors, healerType: '' }); }}
+                      className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all appearance-none"
+                    >
+                      <option value="">Select Profession</option>
+                      {HEALER_TYPES.map((h) => (
+                        <option key={h.value} value={h.value}>{h.label}</option>
+                      ))}
+                    </select>
+                    {fieldErrors.healerType && <p className="text-xs text-red-600 mt-1.5">⚠️ {fieldErrors.healerType}</p>}
+                  </div>
 
+                  {selectedHealerType && (
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2.5">Specializations</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {SPECIALIZATIONS.map((s) => (
+                          <motion.button
+                            key={s}
+                            onClick={() => toggleSpec(s)}
+                            className="text-left p-2.5 rounded-lg border-2 transition-all text-xs font-medium"
+                            style={{
+                              borderColor: specializations.includes(s) ? '#059669' : '#E5E7EB',
+                              background: specializations.includes(s) ? '#D1FAE510' : '#F9FAFB',
+                              color: specializations.includes(s) ? '#059669' : '#374151',
+                            }}
+                            whileHover={{ y: -1 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            {s}
+                          </motion.button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2.5">Experience (Years)</label>
+                    <input
+                      type="number"
+                      value={experience}
+                      onChange={(e) => { setExperience(e.target.value); setFieldErrors({ ...fieldErrors, experience: '' }); }}
+                      className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                      style={{ borderColor: fieldErrors.experience ? '#EF4444' : undefined, backgroundColor: fieldErrors.experience ? '#FEF2F2' : undefined }}
+                    />
+                    {fieldErrors.experience && <p className="text-xs text-red-600 mt-1.5">⚠️ {fieldErrors.experience}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2.5">Bio</label>
+                    <textarea
+                      value={bio}
+                      onChange={(e) => { setBio(e.target.value); setFieldErrors({ ...fieldErrors, bio: '' }); }}
+                      placeholder="Tell clients about your approach..."
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all min-h-24"
+                      style={{ borderColor: fieldErrors.bio ? '#EF4444' : undefined, backgroundColor: fieldErrors.bio ? '#FEF2F2' : undefined }}
+                    />
+                    {fieldErrors.bio && <p className="text-xs text-red-600 mt-1.5">⚠️ {fieldErrors.bio}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2.5">Session Fee (₹)</label>
+                    <input
+                      type="number"
+                      value={sessionFee}
+                      onChange={(e) => { setSessionFee(e.target.value); setFieldErrors({ ...fieldErrors, sessionFee: '' }); }}
+                      className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                      style={{ borderColor: fieldErrors.sessionFee ? '#EF4444' : undefined, backgroundColor: fieldErrors.sessionFee ? '#FEF2F2' : undefined }}
+                    />
+                    {fieldErrors.sessionFee && <p className="text-xs text-red-600 mt-1.5">⚠️ {fieldErrors.sessionFee}</p>}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2.5">Languages</label>
+                    <input
+                      type="text"
+                      value={languages}
+                      onChange={(e) => setLanguages(e.target.value)}
+                      placeholder="English, Hindi, Marathi"
+                      className="w-full h-14 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* STEP 4: Review */}
+          {step === 4 && (
+            <div className="space-y-4 mb-8">
+              {[
+                { label: 'Name', value: name },
+                { label: 'Phone', value: phone },
+                { label: 'Age', value: age },
+                { label: 'Gender', value: gender },
+                { label: 'City, State', value: `${city}, ${state}` },
+                { label: 'Country', value: country },
+                ...(role === 'user' ? [{ label: 'Struggles', value: selectedProblems.map((p) => PROBLEMS.find((x) => x.value === p)?.label).join(', ') }] : [
+                  { label: 'Profession', value: selectedHealerType?.label },
+                  { label: 'Experience', value: `${experience} years` },
+                  { label: 'Session Fee', value: `₹${sessionFee}` },
+                ]),
+              ].map((item) => (
+                <motion.div
+                  key={item.label}
+                  className="flex justify-between items-center p-3 rounded-lg bg-gray-50"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                >
+                  <span className="text-sm font-medium text-gray-600">{item.label}</span>
+                  <span className="text-sm font-semibold text-gray-900">{item.value}</span>
+                </motion.div>
+              ))}
+            </div>
+          )}
+
+          {/* Navigation */}
           <div className="flex gap-3">
-            <motion.button
-              onClick={back}
-              className="flex-1 py-3 rounded-xl font-semibold border-2 transition-all"
-              style={{
-                borderColor: '#E5E7EB',
-                color: '#6B7280',
-              }}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Back
-            </motion.button>
+            {step > 0 && (
+              <motion.button
+                onClick={back}
+                className="flex-1 py-3 rounded-xl font-semibold border-2 border-gray-200 text-gray-600 bg-white hover:bg-gray-50 transition-all"
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Back
+              </motion.button>
+            )}
             <div className="flex-1">
-              <GradientButton loading={loading} onClick={handleSignup}>
-                Create Account
-              </GradientButton>
+              <motion.button
+                onClick={step === 4 ? handleSignup : next}
+                disabled={loading}
+                className="w-full py-3 rounded-xl font-semibold text-white transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                style={{
+                  background: `linear-gradient(135deg, ${P}, #8B5CF6)`,
+                }}
+                whileHover={!loading ? { y: -2 } : {}}
+                whileTap={!loading ? { scale: 0.98 } : {}}
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    {step === 4 ? 'Create Account' : 'Next'}
+                    <span>→</span>
+                  </>
+                )}
+              </motion.button>
             </div>
           </div>
 
           <p className="text-center text-xs text-gray-600 mt-6">
             By signing up, you agree to our{' '}
-            <Link to="/terms" className="font-semibold hover:opacity-80" style={{ color: P }}>
-              Terms of Service
-            </Link>{' '}
-            and{' '}
-            <Link to="/privacy" className="font-semibold hover:opacity-80" style={{ color: P }}>
-              Privacy Policy
+            <Link to="/terms" className="font-semibold hover:opacity-80 transition-opacity" style={{ color: P }}>
+              Terms
+            </Link>
+            {' '}and{' '}
+            <Link to="/privacy" className="font-semibold hover:opacity-80 transition-opacity" style={{ color: P }}>
+              Privacy
             </Link>
           </p>
         </motion.div>
@@ -1090,19 +805,5 @@ export default function Signup() {
         )}
       </AnimatePresence>
     </div>
-  );
-}
-
-function ReviewRow({ label, value }) {
-  return (
-    <motion.div
-      className="flex justify-between items-center p-3 rounded-lg"
-      style={{ background: '#F9FAFB' }}
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-    >
-      <span className="text-sm font-medium text-gray-600">{label}</span>
-      <span className="text-sm font-semibold text-gray-900">{value}</span>
-    </motion.div>
   );
 }
