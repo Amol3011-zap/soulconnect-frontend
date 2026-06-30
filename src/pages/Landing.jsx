@@ -1506,7 +1506,7 @@ export default function Landing() {
                   We'll send occasional updates as we build a place where people can heal, connect and grow together.
                 </p>
                 <div style={{display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap', marginTop:28}}>
-                  <a href="https://instagram.com/soulconnect" target="_blank" rel="noopener noreferrer"
+                  <a href="https://www.instagram.com/soulconnect.health" target="_blank" rel="noopener noreferrer"
                     style={{
                       padding:'12px 24px', borderRadius:12,
                       background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.15)',
