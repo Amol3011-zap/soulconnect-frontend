@@ -114,3 +114,17 @@ export const dashboardAPI = {
   sessionEnd: () => api.post('/dashboard/session/end').catch(() => {}),
   getLive: () => api.get('/dashboard/live').catch(() => ({ data: { souls_healing_now: 847 } })),
 };
+
+export const onboardingAPI = {
+  getStatus: () => api.get('/onboarding/status'),
+  getProfile: () => api.get('/onboarding/profile'),
+  complete: (data) => api.post('/onboarding/complete', data),
+  saveProblems: (data) => api.post('/onboarding/step/problems', data),
+  saveIntensity: (data) => api.post('/onboarding/step/intensity', data),
+  saveNeeds: (data) => api.post('/onboarding/step/needs', data),
+  saveDisplayName: (data) => api.post('/onboarding/step/display-name', data),
+  saveLanguage: (data) => api.post('/onboarding/step/language', data),
+  saveAvailability: (data) => api.post('/onboarding/step/availability', data),
+  saveCity: (data) => api.post('/onboarding/step/city', data),
+  saveNotifications: (data) => api.post('/onboarding/step/notifications', data),
+};
