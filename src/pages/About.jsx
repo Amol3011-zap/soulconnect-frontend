@@ -45,7 +45,7 @@ const roadmap = [
     phase: "Phase 1",
     label: "Foundation",
     timing: "Now",
-    desc: "Building the early access community. Listening. Learning. Designing with real people.",
+    desc: "Building our Early Community. Listening. Learning. Designing with real people.",
     active: true,
   },
   {
@@ -735,7 +735,7 @@ export default function About() {
               marginRight: "auto",
             }}
           >
-            We are building SoulConnect alongside real people navigating real struggles. Join our early access list and help shape the future of healing communities.
+            We are building SoulConnect alongside real people navigating real struggles. Join our Early Community and help shape the future of healing communities.
           </p>
           <Link
             to="/signup"
