@@ -195,6 +195,18 @@ export default function Footer() {
               </div>
             </div>
             <div style={{ display:'flex', gap:16, flexWrap:'wrap' }}>
+              <a href="tel:14416" style={{
+                background:'rgba(251,146,146,0.2)', border:'1px solid rgba(251,146,146,0.4)',
+                borderRadius:12, padding:'12px 18px', fontSize:13, fontWeight:700,
+                color:'#FCA5A5', textDecoration:'none', whiteSpace:'nowrap',
+                transition:'all 0.2s ease', cursor:'pointer',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background='rgba(251,146,146,0.3)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.6)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='rgba(251,146,146,0.2)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.4)'; }}
+              title="Tele-MANAS (Government of India, 24×7)"
+              >
+                🏛️ Tele-MANAS: 14416
+              </a>
               <a href="tel:9152987821" style={{
                 background:'rgba(251,146,146,0.2)', border:'1px solid rgba(251,146,146,0.4)',
                 borderRadius:12, padding:'12px 18px', fontSize:13, fontWeight:700,
@@ -203,8 +215,21 @@ export default function Footer() {
               }}
               onMouseEnter={e => { e.currentTarget.style.background='rgba(251,146,146,0.3)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.6)'; }}
               onMouseLeave={e => { e.currentTarget.style.background='rgba(251,146,146,0.2)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.4)'; }}
+              title="iCall (24/7)"
               >
                 📱 iCall: 9152987821
+              </a>
+              <a href="tel:+919999666555" style={{
+                background:'rgba(251,146,146,0.2)', border:'1px solid rgba(251,146,146,0.4)',
+                borderRadius:12, padding:'12px 18px', fontSize:13, fontWeight:700,
+                color:'#FCA5A5', textDecoration:'none', whiteSpace:'nowrap',
+                transition:'all 0.2s ease', cursor:'pointer',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background='rgba(251,146,146,0.3)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.6)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='rgba(251,146,146,0.2)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.4)'; }}
+              title="Vandrevala Foundation (24×7 Mental Health Support)"
+              >
+                💜 Vandrevala: 9999 666 555
               </a>
               <a href="tel:1860-2662-345" style={{
                 background:'rgba(251,146,146,0.2)', border:'1px solid rgba(251,146,146,0.4)',
@@ -214,8 +239,9 @@ export default function Footer() {
               }}
               onMouseEnter={e => { e.currentTarget.style.background='rgba(251,146,146,0.3)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.6)'; }}
               onMouseLeave={e => { e.currentTarget.style.background='rgba(251,146,146,0.2)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.4)'; }}
+              title="Vandrevala Foundation (24×7)"
               >
-                📱 Vandrevala: 1860-2662-345
+                💜 Vandrevala: 1860-2662-345
               </a>
               <a href="tel:9820466726" style={{
                 background:'rgba(251,146,146,0.2)', border:'1px solid rgba(251,146,146,0.4)',
@@ -225,8 +251,9 @@ export default function Footer() {
               }}
               onMouseEnter={e => { e.currentTarget.style.background='rgba(251,146,146,0.3)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.6)'; }}
               onMouseLeave={e => { e.currentTarget.style.background='rgba(251,146,146,0.2)'; e.currentTarget.style.borderColor='rgba(251,146,146,0.4)'; }}
+              title="AASRA (24/7)"
               >
-                📱 AASRA: 9820466726
+                💚 AASRA: 9820466726
               </a>
               <button
                 onClick={() => navigate('/crisis-support')}
