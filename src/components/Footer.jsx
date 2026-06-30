@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom';
 const STYLES = `
   @keyframes footerFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-10px) scale(1.02)} }
   @keyframes footerPulse { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+  @keyframes crisisPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+  }
   @keyframes particleDrift {
     0%  { transform:translateY(0)   translateX(0)   opacity:0; }
     10% { opacity:0.6; }
@@ -194,13 +198,7 @@ export default function Footer() {
                 boxShadow:'0 8px 24px rgba(220,38,38,0.35)',
                 position:'relative',
               }}>
-                <span style={{ fontSize:28, lineHeight:1, animation:'pulse 2s ease-in-out infinite' }}>🆘</span>
-                <style>{`
-                  @keyframes pulse {
-                    0%, 100% { opacity: 1; transform: scale(1); }
-                    50% { opacity: 0.8; transform: scale(1.05); }
-                  }
-                `}</style>
+                <span style={{ fontSize:28, lineHeight:1, animation:'crisisPulse 2s ease-in-out infinite' }}>🆘</span>
               </div>
               <div>
                 <p style={{ margin:0, color:'#FCA5A5', fontWeight:800, fontSize:15, lineHeight:1.2 }}>In Crisis? Get Immediate Support</p>
