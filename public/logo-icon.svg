@@ -1,157 +1,227 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <!-- Background gradient — deep indigo-purple matching brand -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2D1B69"/>
-      <stop offset="50%" stop-color="#3D2080"/>
-      <stop offset="100%" stop-color="#1A0A4E"/>
+    <!-- Background: deep indigo-purple -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#3A246B"/>
+      <stop offset="50%"  stop-color="#2D1B5E"/>
+      <stop offset="100%" stop-color="#1E0F4A"/>
     </linearGradient>
-    <!-- Golden glow radial -->
-    <radialGradient id="coreGlow" cx="50%" cy="52%" r="38%">
-      <stop offset="0%"   stop-color="#FFD96A" stop-opacity="0.95"/>
-      <stop offset="40%"  stop-color="#F5A623" stop-opacity="0.7"/>
-      <stop offset="100%" stop-color="#C17D11" stop-opacity="0"/>
+
+    <!-- Gold stroke gradient -->
+    <linearGradient id="goldLine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#FFE5A0"/>
+      <stop offset="40%"  stop-color="#F0B429"/>
+      <stop offset="100%" stop-color="#C98A0A"/>
+    </linearGradient>
+
+    <!-- Central radial glow -->
+    <radialGradient id="centerGlow" cx="50%" cy="54%" r="40%">
+      <stop offset="0%"   stop-color="#FFE083" stop-opacity="1"/>
+      <stop offset="30%"  stop-color="#F0A800" stop-opacity="0.7"/>
+      <stop offset="70%"  stop-color="#C47F00" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#7B3FC0" stop-opacity="0"/>
     </radialGradient>
+
     <!-- Outer ambient glow -->
-    <radialGradient id="ambientGlow" cx="50%" cy="50%" r="55%">
-      <stop offset="0%"   stop-color="#F0A500" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#6D28D9" stop-opacity="0"/>
+    <radialGradient id="outerGlow" cx="50%" cy="54%" r="55%">
+      <stop offset="0%"   stop-color="#F0A000" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#3D1F80" stop-opacity="0"/>
     </radialGradient>
-    <!-- Petal gold gradient -->
-    <linearGradient id="petalGold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"   stop-color="#FFE08A"/>
-      <stop offset="50%"  stop-color="#D4A017"/>
-      <stop offset="100%" stop-color="#A07010"/>
-    </linearGradient>
-    <!-- Inner petal lighter gold -->
-    <linearGradient id="innerPetal" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"   stop-color="#FFE9A0"/>
-      <stop offset="100%" stop-color="#C8880A"/>
-    </linearGradient>
-    <!-- Face silhouette gradient -->
-    <linearGradient id="faceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%"   stop-color="#FFF0C0"/>
-      <stop offset="100%" stop-color="#E8A820"/>
-    </linearGradient>
-    <filter id="glowFilter" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="8" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+
+    <!-- Glow filter for the stroke lines -->
+    <filter id="lineGlow" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
-    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+
+    <!-- Glow filter for the center bright spot -->
+    <filter id="brightGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
-    <filter id="coreFilter" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="14" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+
+    <!-- Strong glow for the core -->
+    <filter id="coreGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="28" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
+
+    <clipPath id="roundedClip">
+      <rect width="512" height="512" rx="110" ry="110"/>
+    </clipPath>
   </defs>
 
-  <!-- Rounded square background -->
-  <rect width="512" height="512" rx="110" ry="110" fill="url(#bgGrad)"/>
+  <!-- ── BACKGROUND ── -->
+  <rect width="512" height="512" rx="110" ry="110" fill="url(#bg)"/>
 
-  <!-- Ambient golden glow layer -->
-  <ellipse cx="256" cy="270" rx="200" ry="190" fill="url(#ambientGlow)"/>
+  <!-- ── GLOW LAYERS ── -->
+  <ellipse cx="256" cy="278" rx="230" ry="210" fill="url(#outerGlow)" clip-path="url(#roundedClip)"/>
+  <ellipse cx="256" cy="272" rx="130" ry="115" fill="url(#centerGlow)" filter="url(#coreGlow)" clip-path="url(#roundedClip)"/>
 
-  <!-- Core bright glow -->
-  <ellipse cx="256" cy="268" rx="100" ry="90" fill="url(#coreGlow)" filter="url(#coreFilter)"/>
+  <!-- ── LOTUS LINE ART ── -->
+  <!-- All drawn as golden strokes, matching the reference elegant line-art style -->
+  <g filter="url(#lineGlow)" fill="none" stroke="url(#goldLine)" stroke-linecap="round" stroke-linejoin="round">
 
-  <!-- ── OUTER LARGE PETALS (5) ── -->
-  <!-- Center top petal -->
-  <path d="M256 110 C235 155 228 205 256 248 C284 205 277 155 256 110Z"
-        fill="url(#petalGold)" opacity="0.92" filter="url(#softGlow)"/>
+    <!-- ── OUTER PETALS (5 large outer petals) ── -->
 
-  <!-- Left outer petal -->
-  <path d="M130 195 C160 220 195 232 218 262 C208 230 188 198 130 195Z"
-        fill="url(#petalGold)" opacity="0.85" filter="url(#softGlow)"/>
+    <!-- TOP CENTER outer petal — tall pointed -->
+    <path d="M256 108
+             C238 148, 228 200, 240 250
+             C248 268, 256 275, 256 275
+             C256 275, 264 268, 272 250
+             C284 200, 274 148, 256 108 Z"
+          stroke-width="3.5" opacity="0.9"/>
 
-  <!-- Right outer petal -->
-  <path d="M382 195 C352 220 317 232 294 262 C304 230 324 198 382 195Z"
-        fill="url(#petalGold)" opacity="0.85" filter="url(#softGlow)"/>
+    <!-- TOP-LEFT outer petal -->
+    <path d="M142 175
+             C158 195, 178 218, 195 240
+             C210 258, 225 268, 240 272
+             C228 255, 210 232, 200 210
+             C188 185, 172 165, 142 175 Z"
+          stroke-width="3" opacity="0.85"/>
 
-  <!-- Bottom-left outer petal -->
-  <path d="M118 340 C155 330 192 318 220 302 C192 325 168 355 118 340Z"
-        fill="url(#petalGold)" opacity="0.80"/>
+    <!-- TOP-RIGHT outer petal (mirrored) -->
+    <path d="M370 175
+             C354 195, 334 218, 317 240
+             C302 258, 287 268, 272 272
+             C284 255, 302 232, 312 210
+             C324 185, 340 165, 370 175 Z"
+          stroke-width="3" opacity="0.85"/>
 
-  <!-- Bottom-right outer petal -->
-  <path d="M394 340 C357 330 320 318 292 302 C320 325 344 355 394 340Z"
-        fill="url(#petalGold)" opacity="0.80"/>
+    <!-- BOTTOM-LEFT outer petal -->
+    <path d="M118 345
+             C140 335, 170 320, 198 308
+             C218 298, 235 292, 244 285
+             C228 295, 208 308, 185 320
+             C160 333, 135 342, 118 345 Z"
+          stroke-width="3" opacity="0.8"/>
 
-  <!-- ── MIDDLE PETALS ── -->
-  <!-- Left middle petal -->
-  <path d="M148 258 C178 252 210 255 235 268 C212 248 180 238 148 258Z"
-        fill="url(#innerPetal)" opacity="0.9"/>
+    <!-- BOTTOM-RIGHT outer petal (mirrored) -->
+    <path d="M394 345
+             C372 335, 342 320, 314 308
+             C294 298, 277 292, 268 285
+             C284 295, 304 308, 327 320
+             C352 333, 377 342, 394 345 Z"
+          stroke-width="3" opacity="0.8"/>
 
-  <!-- Right middle petal -->
-  <path d="M364 258 C334 252 302 255 277 268 C300 248 332 238 364 258Z"
-        fill="url(#innerPetal)" opacity="0.9"/>
+    <!-- ── INNER LOTUS — TWO FIGURE SILHOUETTES ── -->
+    <!-- This is the signature design element: inner petal curves form two human profiles -->
 
-  <!-- Center large inner petal -->
-  <path d="M256 160 C238 195 232 230 256 268 C280 230 274 195 256 160Z"
-        fill="url(#innerPetal)" opacity="0.95" filter="url(#softGlow)"/>
+    <!-- LEFT FIGURE silhouette (facing inward/right) -->
+    <!-- Head: round top, into neck -->
+    <path d="M230 178
+             C218 178, 210 186, 208 196
+             C206 208, 212 220, 222 226
+             C228 230, 232 234, 230 242
+             C228 252, 222 260, 220 272
+             C224 268, 232 262, 238 268
+             C244 274, 244 282, 240 290
+             C236 298, 232 305, 236 314"
+          stroke-width="3.5" opacity="0.95"/>
 
-  <!-- ── BOTTOM LOTUS BASE PETALS ── -->
-  <!-- Main base petal center -->
-  <path d="M256 268 C232 295 222 330 256 355 C290 330 280 295 256 268Z"
-        fill="url(#petalGold)" opacity="0.9"/>
+    <!-- Left figure top of head -->
+    <path d="M230 178
+             C236 172, 244 170, 250 174
+             C254 178, 256 184, 256 190"
+          stroke-width="3" opacity="0.9"/>
 
-  <!-- Base petal left -->
-  <path d="M256 268 C228 278 205 295 198 330 C218 308 240 290 256 268Z"
-        fill="url(#petalGold)" opacity="0.78"/>
+    <!-- Left figure outer head/shoulder curve -->
+    <path d="M208 196
+             C204 210, 202 228, 208 244
+             C212 256, 218 266, 218 278
+             C218 290, 216 302, 220 314
+             C224 322, 232 326, 240 326"
+          stroke-width="3" opacity="0.85"/>
 
-  <!-- Base petal right -->
-  <path d="M256 268 C284 278 307 295 314 330 C294 308 272 290 256 268Z"
-        fill="url(#petalGold)" opacity="0.78"/>
+    <!-- RIGHT FIGURE silhouette (mirror of left, facing left) -->
+    <path d="M282 178
+             C294 178, 302 186, 304 196
+             C306 208, 300 220, 290 226
+             C284 230, 280 234, 282 242
+             C284 252, 290 260, 292 272
+             C288 268, 280 262, 274 268
+             C268 274, 268 282, 272 290
+             C276 298, 280 305, 276 314"
+          stroke-width="3.5" opacity="0.95"/>
 
-  <!-- Far left base curl -->
-  <path d="M188 310 C200 300 215 295 228 298 C215 305 202 315 188 310Z"
-        fill="url(#innerPetal)" opacity="0.7"/>
+    <path d="M282 178
+             C276 172, 268 170, 262 174
+             C258 178, 256 184, 256 190"
+          stroke-width="3" opacity="0.9"/>
 
-  <!-- Far right base curl -->
-  <path d="M324 310 C312 300 297 295 284 298 C297 305 310 315 324 310Z"
-        fill="url(#innerPetal)" opacity="0.7"/>
+    <path d="M304 196
+             C308 210, 310 228, 304 244
+             C300 256, 294 266, 294 278
+             C294 290, 296 302, 292 314
+             C288 322, 280 326, 272 326"
+          stroke-width="3" opacity="0.85"/>
 
-  <!-- ── TWO FACE SILHOUETTES in center petals ── -->
-  <!-- Left face (facing right) -->
-  <g filter="url(#glowFilter)" opacity="0.88">
-    <!-- Left figure head -->
-    <circle cx="232" cy="215" r="16" fill="url(#faceGrad)"/>
-    <!-- Left figure body suggestion -->
-    <path d="M220 231 Q224 250 222 265 Q230 258 238 265 Q236 250 232 231Z"
-          fill="url(#faceGrad)" opacity="0.85"/>
-    <!-- Left figure chin/jaw curve -->
-    <path d="M220 218 Q218 230 225 234" stroke="url(#faceGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- SHARED CENTER STEM — the two figures share the center line -->
+    <path d="M256 190 C256 210, 256 230, 256 275"
+          stroke-width="2.5" opacity="0.7"/>
+
+    <!-- ── BOTTOM LOTUS BASE PETALS ── -->
+
+    <!-- Center bottom petal -->
+    <path d="M240 326
+             C240 340, 244 356, 256 368
+             C268 356, 272 340, 272 326"
+          stroke-width="3" opacity="0.85"/>
+
+    <!-- Bottom left petal -->
+    <path d="M220 314
+             C210 326, 200 344, 196 362
+             C208 350, 224 336, 236 326"
+          stroke-width="2.8" opacity="0.78"/>
+
+    <!-- Bottom right petal -->
+    <path d="M292 314
+             C302 326, 312 344, 316 362
+             C304 350, 288 336, 276 326"
+          stroke-width="2.8" opacity="0.78"/>
+
+    <!-- Far bottom left curl -->
+    <path d="M196 362
+             C185 372, 175 378, 164 374
+             C172 366, 184 358, 196 362 Z"
+          stroke-width="2.5" opacity="0.7"/>
+
+    <!-- Far bottom right curl -->
+    <path d="M316 362
+             C327 372, 337 378, 348 374
+             C340 366, 328 358, 316 362 Z"
+          stroke-width="2.5" opacity="0.7"/>
+
+    <!-- Side base connector left -->
+    <path d="M164 374 C152 378, 140 372, 132 362"
+          stroke-width="2" opacity="0.6"/>
+
+    <!-- Side base connector right -->
+    <path d="M348 374 C360 378, 372 372, 380 362"
+          stroke-width="2" opacity="0.6"/>
   </g>
 
-  <!-- Right face (facing left, mirrored) -->
-  <g filter="url(#glowFilter)" opacity="0.88">
-    <!-- Right figure head -->
-    <circle cx="280" cy="215" r="16" fill="url(#faceGrad)"/>
-    <!-- Right figure body suggestion -->
-    <path d="M292 231 Q288 250 290 265 Q282 258 274 265 Q276 250 280 231Z"
-          fill="url(#faceGrad)" opacity="0.85"/>
-    <!-- Right figure chin/jaw curve -->
-    <path d="M292 218 Q294 230 287 234" stroke="url(#faceGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  </g>
+  <!-- ── CENTER BRIGHT CORE ── -->
+  <!-- Bright golden center glow — the heart of the lotus -->
+  <circle cx="256" cy="235" r="26" fill="#FFE083" opacity="0.95" filter="url(#brightGlow)"/>
+  <circle cx="256" cy="235" r="14" fill="#FFF3C0" opacity="1"/>
+  <circle cx="256" cy="235" r="6"  fill="#FFFFFF" opacity="0.95"/>
 
-  <!-- ── CENTER GLOW CORE ── -->
-  <circle cx="256" cy="262" r="22" fill="#FFD96A" opacity="0.6" filter="url(#coreFilter)"/>
-  <circle cx="256" cy="262" r="12" fill="#FFEBB0" opacity="0.9"/>
-  <circle cx="256" cy="262" r="5"  fill="#FFF5D0"/>
-
-  <!-- ── DECORATIVE SPARKLES ── -->
-  <circle cx="256" cy="108" r="4" fill="#FFD96A" opacity="0.85"/>
-  <circle cx="256" cy="108" r="7" fill="#FFD96A" opacity="0.2"/>
-
-  <circle cx="384" cy="188" r="3" fill="#FFD96A" opacity="0.75"/>
-  <circle cx="128" cy="188" r="3" fill="#FFD96A" opacity="0.75"/>
-
-  <circle cx="140" cy="340" r="2.5" fill="#FFD96A" opacity="0.6"/>
-  <circle cx="372" cy="340" r="2.5" fill="#FFD96A" opacity="0.6"/>
-
-  <!-- Small accent dots -->
-  <circle cx="195" cy="148" r="2" fill="#FFD96A" opacity="0.5"/>
-  <circle cx="317" cy="148" r="2" fill="#FFD96A" opacity="0.5"/>
-  <circle cx="104" cy="265" r="2" fill="#C4A030" opacity="0.4"/>
-  <circle cx="408" cy="265" r="2" fill="#C4A030" opacity="0.4"/>
+  <!-- ── SUBTLE SPARKLE DOTS ── -->
+  <circle cx="256" cy="102" r="3.5" fill="#FFE083" opacity="0.8"/>
+  <circle cx="380" cy="170" r="2.5" fill="#FFE083" opacity="0.65"/>
+  <circle cx="132" cy="170" r="2.5" fill="#FFE083" opacity="0.65"/>
+  <circle cx="110" cy="350" r="2"   fill="#FFD060" opacity="0.55"/>
+  <circle cx="402" cy="350" r="2"   fill="#FFD060" opacity="0.55"/>
 </svg>

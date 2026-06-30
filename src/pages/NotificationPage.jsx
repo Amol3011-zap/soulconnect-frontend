@@ -46,7 +46,7 @@ export default function NotificationPage() {
       minHeight: '100vh',
       background: '#0D0B1A',
       fontFamily: 'Inter, sans-serif',
-      paddingBottom: 100,
+      paddingBottom: 24,
     }}>
       {/* ── Header ── */}
       <motion.div

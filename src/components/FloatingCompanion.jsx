@@ -69,9 +69,7 @@ export default function FloatingCompanion({
             exit={{  opacity: 0, y: 12, scale: 0.94 }}
             transition={{ type: 'spring', stiffness: 340, damping: 26 }}
             style={{
-              background: 'rgba(18,10,44,0.92)',
-              backdropFilter: 'blur(28px)',
-              WebkitBackdropFilter: 'blur(28px)',
+              background: '#16093A',
               border: '1px solid rgba(168,85,247,0.28)',
               borderRadius: 22,
               padding: '14px 14px',
@@ -136,14 +134,12 @@ export default function FloatingCompanion({
       </AnimatePresence>
 
       {/* Floating button */}
-      <div style={{ position: 'relative' }}>
-        {/* Pulsing glow ring */}
-        <motion.div
-          animate={{ scale: [1, 1.35, 1], opacity: [0.5, 0, 0.5] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeOut' }}
+      <div style={{ position: 'relative', willChange: 'transform' }}>
+        {/* Static glow ring — no infinite animation to avoid constant repaints */}
+        <div
           style={{
             position: 'absolute', inset: -8, borderRadius: '50%',
-            border: '1.5px solid rgba(168,85,247,0.5)',
+            border: '1.5px solid rgba(168,85,247,0.3)',
             pointerEvents: 'none',
           }}
         />
@@ -164,7 +160,6 @@ export default function FloatingCompanion({
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.25s ease, box-shadow 0.25s ease',
             position: 'relative',
-            backdropFilter: 'blur(12px)',
           }}
         >
           <motion.span

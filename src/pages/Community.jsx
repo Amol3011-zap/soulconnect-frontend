@@ -46,7 +46,7 @@ export default function Community() {
         minHeight: '100vh',
         background: BG,
         fontFamily: "'Inter', sans-serif",
-        paddingBottom: 100,
+        paddingBottom: 24,
       }}
     >
       {/* Toast */}

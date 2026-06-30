@@ -59,10 +59,10 @@ export default function Professionals() {
   return (
     <div
       style={{
-        padding: '20px 32px',
+        padding: 'clamp(16px, 4vw, 20px) clamp(16px, 4vw, 32px)',
         minHeight: '100vh',
         background: BG,
-        paddingBottom: 100,
+        paddingBottom: 24,
         fontFamily: "'Inter', sans-serif",
       }}
     >

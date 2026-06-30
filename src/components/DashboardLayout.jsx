@@ -53,9 +53,7 @@ export default function DashboardLayout() {
           left: 0; top: 0; bottom: 0;
           width: 210px;
           z-index: 90;
-          background: rgba(8,6,22,0.92);
-          backdrop-filter: blur(28px);
-          -webkit-backdrop-filter: blur(28px);
+          background: #08061A;
           border-right: 1px solid rgba(255,255,255,0.06);
           overflow-y: auto;
           display: flex;
@@ -120,6 +118,16 @@ export default function DashboardLayout() {
         .dash-content-wrapper {
           margin-left: 210px;
           min-height: 100vh;
+          background: #080812;
+        }
+
+        /* ─── Page route transition (masks flash on tab switch) ─── */
+        @keyframes routeFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        .route-fade {
+          animation: routeFadeIn 0.18s ease-out both;
         }
 
         /* ─── Mobile bottom nav — hidden on desktop ─── */
@@ -150,7 +158,11 @@ export default function DashboardLayout() {
           /* Content: no left margin, pad bottom so content clears the nav bar */
           .dash-content-wrapper {
             margin-left: 0 !important;
-            padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
+            padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+            /* Kill horizontal overflow — prevents pages from "sliding" */
+            overflow-x: hidden;
+            /* Match page background to hide aurora gradient during tab transitions */
+            background: #0D0B1A;
           }
 
           /* Show mobile bottom nav */
@@ -159,15 +171,12 @@ export default function DashboardLayout() {
             position: fixed;
             bottom: 0; left: 0; right: 0;
             z-index: 999;
-            /* Frosted glass, deep dark */
-            background: rgba(6,4,18,0.96);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            /* Solid background — no blur to avoid GPU repaint on every scroll */
+            background: #06030F;
             border-top: 1px solid rgba(139,92,246,0.15);
-            box-shadow: 0 -8px 32px rgba(0,0,0,0.5), 0 -1px 0 rgba(139,92,246,0.08);
-            /* Safe area for home indicator */
-            padding-bottom: env(safe-area-inset-bottom, 6px);
-            padding-top: 6px;
+            box-shadow: 0 -1px 0 rgba(255,255,255,0.04), 0 -8px 24px rgba(0,0,0,0.5);
+            padding-bottom: env(safe-area-inset-bottom, 8px);
+            padding-top: 8px;
             align-items: flex-start;
             justify-content: space-around;
           }
@@ -179,53 +188,72 @@ export default function DashboardLayout() {
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
-            min-height: 52px;
+            gap: 4px;
+            min-height: 54px;
             min-width: 48px;
-            padding: 0 4px 4px;
+            padding: 0 4px 6px;
             text-decoration: none;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            position: relative;
+          }
+
+          /* Active top pill indicator */
+          .mob-tab::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 24px;
+            height: 3px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #7C3AED, #A78BFA);
+            transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+          }
+          .mob-tab.active::before {
+            transform: translateX(-50%) scaleX(1);
           }
 
           .mob-tab-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.15s ease;
+            transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
           }
 
           .mob-tab.active .mob-tab-icon {
-            background: linear-gradient(135deg, rgba(124,58,237,0.9), rgba(168,85,247,0.75));
+            background: linear-gradient(145deg, rgba(124,58,237,0.85) 0%, rgba(139,92,246,0.7) 100%);
             box-shadow:
-              0 0 18px rgba(124,58,237,0.55),
-              inset 0 1px 0 rgba(255,255,255,0.18);
+              0 0 20px rgba(124,58,237,0.5),
+              0 4px 12px rgba(0,0,0,0.3),
+              inset 0 1px 0 rgba(255,255,255,0.2);
           }
 
           .mob-tab:active .mob-tab-icon {
-            transform: scale(0.88);
+            transform: scale(0.86);
           }
 
           .mob-tab-label {
             font-size: 10px;
             font-weight: 500;
             font-family: 'Inter', -apple-system, sans-serif;
-            color: rgba(255,255,255,0.38);
-            letter-spacing: 0.01em;
-            transition: color 0.22s ease, font-weight 0.22s ease;
+            color: rgba(255,255,255,0.32);
+            letter-spacing: 0.02em;
+            transition: color 0.2s ease, font-weight 0.2s ease;
           }
 
           .mob-tab.active .mob-tab-label {
             color: #C4B5FD;
-            font-weight: 600;
+            font-weight: 700;
           }
 
-          /* Touch-target safety — per MOBILE_FIRST_RULES min 48×48px */
-          .mob-tab { min-width: 48px; min-height: 52px; }
+          /* Touch-target safety */
+          .mob-tab { min-width: 48px; min-height: 54px; }
         }
       `}</style>
 
@@ -256,7 +284,9 @@ export default function DashboardLayout() {
 
       {/* ══ Page Content ══ */}
       <div className="dash-content-wrapper">
-        <Outlet />
+        <div key={location.pathname} className="route-fade">
+          <Outlet />
+        </div>
       </div>
 
       {/* ══ Mobile Bottom Navigation ══ */}

@@ -237,7 +237,7 @@ export default function SavedStories() {
     <div style={{
       minHeight: '100vh', background: BG,
       fontFamily: "'Inter', -apple-system, sans-serif",
-      padding: '24px 32px', paddingBottom: 80,
+      padding: '24px 32px', paddingBottom: 24,
     }}>
       <style>{`::-webkit-scrollbar { display: none; }`}</style>
 

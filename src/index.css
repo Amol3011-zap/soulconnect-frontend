@@ -111,6 +111,33 @@ html, body {
   * { scrollbar-width: none; }
 }
 
+/* ══════════════════════════════════════════
+   MOBILE PERFORMANCE — Prevent full-page blink/repaint
+   Targets: iPhone Safari, Android Chrome
+══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* 1. Strip backdrop-filter from ALL elements — single biggest repaint source.
+        Fixed-position elements with blur force the entire page to be composited
+        on every scroll frame, causing the full-screen blink. */
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* 2. Disable expensive CSS filters on animated/fixed elements */
+  [style*="filter: blur"],
+  [style*="filter:blur"] {
+    filter: none !important;
+  }
+
+  /* 3. Prevent layout thrashing from mix-blend-mode */
+  * { mix-blend-mode: normal !important; }
+
+  /* 4. No transform or contain:paint on .dash-content-wrapper — both create
+        a new containing block that breaks position:fixed children.
+        Repaints are already handled by removing backdrop-filter globally. */
+}
+
 /* ── Safe area utility classes ── */
 .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
 .pt-safe { padding-top: env(safe-area-inset-top, 0px); }

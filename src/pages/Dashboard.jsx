@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Search, Plus, Star, Volume2, MoreHorizontal,
   Send, Mic, Bookmark, ChevronRight, ExternalLink,
-  LogOut, User,
+  LogOut, User, ArrowLeft,
 } from 'lucide-react';
 import { useAuthStore } from '../store/auth';
 import { journeyAPI } from '../services/api';
@@ -650,9 +650,26 @@ export default function Dashboard() {
         @media (max-width: 900px) {
           .dc-left-sidebar { display: none !important; }
         }
+        @media (max-width: 900px) {
+          /* Collapse to single column — no dead grid tracks */
+          .dc-root { grid-template-columns: 1fr !important; }
+        }
         @media (max-width: 768px) {
           .dc-chip::-webkit-scrollbar { display: none; }
           .dc-msg-area { padding: 12px 12px 8px !important; }
+          /* Header: tighter padding + safe area for iPhone status bar */
+          .dc-chat-header {
+            padding: env(safe-area-inset-top, 0px) 16px 0 !important;
+          }
+          /* Show back button on mobile */
+          .dc-back-btn { display: flex !important; }
+          /* Tabs: smaller on mobile */
+          .dc-tabs-bar button { padding: 8px 14px !important; font-size: 12px !important; }
+          /* Input bar: account for iPhone home bar */
+          .dc-input-bar-wrap {
+            padding: 10px 12px !important;
+            padding-bottom: max(10px, env(safe-area-inset-bottom, 10px)) !important;
+          }
         }
       `}</style>
 
@@ -664,7 +681,7 @@ export default function Dashboard() {
       )}
 
       {/* ══ Root layout ══ */}
-      <div style={{
+      <div className="dc-root" style={{
         position: 'fixed', inset: 0,
         display: 'grid',
         gridTemplateColumns: '272px 1fr 300px',
@@ -679,7 +696,7 @@ export default function Dashboard() {
           background: '#110C22',
           borderRight: '1px solid rgba(139,92,246,0.1)',
           display: 'flex', flexDirection: 'column',
-          height: '100vh', overflow: 'hidden',
+          height: '100%', overflow: 'hidden',
         }}>
           {/* Logo */}
           <div style={{ padding: '22px 18px 14px', flexShrink: 0 }}>
@@ -799,7 +816,7 @@ export default function Dashboard() {
 
           {/* ── Conversation List ── */}
           <div className="dc-sidebar-scroll" style={{ flex: 1, overflowY: 'auto', padding: '0 10px' }}>
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="sync">
               {filteredConvs.length > 0 ? (
                 filteredConvs.map(conv => (
                   <motion.div
@@ -922,23 +939,37 @@ export default function Dashboard() {
         ══════════════════════════════════════════ */}
         <main style={{
           display: 'flex', flexDirection: 'column',
-          background: '#0B0816', height: '100vh', overflow: 'hidden',
+          background: '#0B0816', height: '100%', overflow: 'hidden',
           borderRight: '1px solid rgba(139,92,246,0.08)',
         }}>
           {/* Header */}
-          <div style={{
+          <div className="dc-chat-header" style={{
             padding: '0 24px',
             borderBottom: '1px solid rgba(139,92,246,0.1)',
-            background: 'rgba(17,12,34,0.8)',
-            backdropFilter: 'blur(20px)',
+            background: '#110C22',
             flexShrink: 0,
           }}>
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               height: 64,
             }}>
-              {/* Left: avatar + name */}
+              {/* Left: back (mobile) + avatar + name */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                {/* Back button — visible on mobile only */}
+                <button
+                  className="dc-back-btn"
+                  onClick={() => navigate('/messages')}
+                  style={{
+                    display: 'none', /* shown via CSS on mobile */
+                    width: 36, height: 36, borderRadius: 10,
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(139,92,246,0.12)',
+                    alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', flexShrink: 0,
+                  }}
+                >
+                  <ArrowLeft size={18} color="#C4B5FD" />
+                </button>
                 <div style={{ position: 'relative' }}>
                   <div style={{
                     width: 42, height: 42, borderRadius: '50%',
@@ -991,7 +1022,7 @@ export default function Dashboard() {
             </div>
 
             {/* Tab bar */}
-            <div style={{ display: 'flex', gap: 0, marginBottom: 1 }}>
+            <div className="dc-tabs-bar" style={{ display: 'flex', gap: 0, marginBottom: 1 }}>
               {TABS.map(tab => (
                 <button
                   key={tab.key}
@@ -1075,7 +1106,7 @@ export default function Dashboard() {
               </div>
 
               {/* Message input bar */}
-              <div style={{ padding: '12px 20px 16px', flexShrink: 0 }}>
+              <div className="dc-input-bar-wrap" style={{ padding: '12px 20px 16px', flexShrink: 0 }}>
                 <div
                   className="dc-input-bar"
                   style={{
@@ -1101,7 +1132,7 @@ export default function Dashboard() {
                     />
                     <motion.button
                       whileTap={{ scale: 0.92 }}
-                      onClick={sendMessage}
+                      onClick={() => sendMessage()}
                       disabled={!input.trim() || typing}
                       style={{
                         width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
@@ -1167,7 +1198,7 @@ export default function Dashboard() {
         ══════════════════════════════════════════ */}
         <aside className="dc-right-panel" style={{
           background: '#110C22',
-          height: '100vh', overflow: 'hidden',
+          height: '100%', overflow: 'hidden',
           padding: '14px 12px',
           borderLeft: '1px solid rgba(139,92,246,0.08)',
           display: 'flex', flexDirection: 'column', gap: 10,

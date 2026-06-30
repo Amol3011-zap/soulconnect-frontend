@@ -48,6 +48,10 @@ import BreathingSession from '../components/BreathingSession';
    PARTICLES
 ───────────────────────────────────────────────────────────────────────────── */
 function FloatingParticles({ count = 14 }) {
+  // Skip all particles on mobile — 14 simultaneous CSS animations cause repaints
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  if (isMobile) return null;
+
   const particles = Array.from({ length: count }, (_, i) => ({
     id: i,
     size: 1.5 + (i % 3) * 0.8,
@@ -664,6 +668,12 @@ export default function Home() {
             margin-right: 0 !important;
             padding-bottom: 0 !important;
           }
+          /* Kill aurora animations on mobile — they cause constant repaints */
+          .aurora-layer { animation: none !important; opacity: 0.5 !important; }
+          /* Kill particle drift on mobile */
+          .home-particle { animation: none !important; }
+          /* Kill orb float on mobile */
+          .orb-float { animation: none !important; }
           /* Header */
           .home-header {
             padding: 20px 16px 0 !important;
@@ -692,8 +702,25 @@ export default function Home() {
           .story-card { min-width: 240px !important; width: 240px !important; }
           /* Soul climate card padding */
           .soul-climate-card { padding: 16px !important; }
+          /* Hide vertical divider when stacked */
+          .climate-divider { display: none !important; }
           /* Section headers */
           .section-header { padding: 0 16px !important; }
+          /* Tiny wins: horizontally scrollable on mobile */
+          .wins-scroll {
+            overflow-x: auto !important;
+            scroll-snap-type: x mandatory !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            padding-bottom: 8px !important;
+          }
+          .wins-scroll::-webkit-scrollbar { display: none; }
+          .wins-scroll > * {
+            flex-shrink: 0 !important;
+            min-width: 220px !important;
+            max-width: 260px !important;
+            scroll-snap-align: start !important;
+          }
         }
         .weather-pill { transition: all 0.2s ease; }
         .weather-pill:hover { background: rgba(139,92,246,0.25) !important; }
@@ -780,13 +807,13 @@ export default function Home() {
 
         {/* Aurora background layers */}
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 0 }}>
-          <div style={{
+          <div className="aurora-layer" style={{
             position: 'absolute', top: -100, left: '10%',
             width: 500, height: 500, borderRadius: '50%',
             background: 'radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, transparent 65%)',
             animation: 'auroraShift 14s ease-in-out infinite',
           }} />
-          <div style={{
+          <div className="aurora-layer" style={{
             position: 'absolute', top: 200, right: -100,
             width: 400, height: 400, borderRadius: '50%',
             background: 'radial-gradient(ellipse, rgba(168,85,247,0.08) 0%, transparent 65%)',
@@ -862,7 +889,7 @@ export default function Home() {
         {/* ════════════════════════════════════════════════════════════
             SECTION 1 — SOUL CLIMATE (full width)
         ════════════════════════════════════════════════════════════ */}
-        <div style={{
+        <div className="home-section" style={{
           margin: '20px 32px 16px',
           position: 'relative', zIndex: 1,
         }}>
@@ -871,6 +898,7 @@ export default function Home() {
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+            className="soul-climate-body soul-climate-card"
             style={{
               background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
               border: '1px solid rgba(139,92,246,0.2)',
@@ -914,7 +942,7 @@ export default function Home() {
             </div>
 
             {/* Divider */}
-            <div style={{
+            <div className="climate-divider" style={{
               width: 1, alignSelf: 'stretch',
               background: 'rgba(168,85,247,0.15)',
               flexShrink: 0, zIndex: 1,
@@ -957,7 +985,7 @@ export default function Home() {
         {/* ════════════════════════════════════════════════════════════
             SECTION 2 — TINY WINS
         ════════════════════════════════════════════════════════════ */}
-        <div style={{ margin: '0 32px 16px', position: 'relative', zIndex: 1 }}>
+        <div className="home-section" style={{ margin: '0 32px 16px', position: 'relative', zIndex: 1 }}>
 
           {/* Section header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
@@ -992,7 +1020,7 @@ export default function Home() {
 
           {/* 3 win cards */}
           {dailyWins.length > 0 ? (
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div className="wins-scroll" style={{ display: 'flex', gap: 12 }}>
               {dailyWins.map((win, i) => (
                 <HomeTinyWinCard
                   key={win.id}
@@ -1037,7 +1065,7 @@ export default function Home() {
         {/* ════════════════════════════════════════════════════════════
             SECTION 3 — LATEST SOUL STORIES
         ════════════════════════════════════════════════════════════ */}
-        <div style={{ margin: '0 32px 32px', position: 'relative', zIndex: 1 }}>
+        <div className="home-section" style={{ margin: '0 32px 32px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
             <span style={{ ...SECTION_LABEL, marginBottom: 0 }}>LATEST SOUL STORIES</span>
             <button
