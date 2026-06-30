@@ -326,7 +326,7 @@ export default function Login() {
       </div>
 
       {/* ── RIGHT PANEL: Auth Card ── */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8" style={{ background: '#FAFAF8' }}>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8" style={{ background: '#FFFFFF' }}>
         <motion.div
           className="w-full max-w-md"
           initial={{ opacity: 0, y: 20 }}
