@@ -66,11 +66,14 @@ const MOOD_CONFIG = {
   },
 };
 
-const WEATHER_OPTIONS = Object.entries(MOOD_CONFIG).map(([id, config]) => ({
-  id,
-  emoji: config.emoji,
-  label: config.label,
-}));
+const WEATHER_OPTIONS = [
+  { id: 'clear-sky', emoji: '☀️', label: 'Clear' },
+  { id: 'hope', emoji: '🌅', label: 'Hope' },
+  { id: 'blooming', emoji: '🌸', label: 'Blooming' },
+  { id: 'fog', emoji: '🌫️', label: 'Fog' },
+  { id: 'heavy-rain', emoji: '🌧️', label: 'Heavy Rain' },
+  { id: 'storm', emoji: '⚡', label: 'Storm' },
+];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MOOD BACKGROUND ANIMATIONS
@@ -516,13 +519,16 @@ export default function SoulClimateWidget() {
           background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
           border: '1px solid rgba(139,92,246,0.2)',
           borderRadius: 28,
-          padding: 'max(16px, clamp(16px, 5vw, 24px))',
           position: 'relative',
           overflow: 'hidden',
           boxShadow: '0 12px 48px rgba(0,0,0,0.5), 0 0 60px rgba(124,58,237,0.15)',
+          // Mobile: stacked
           display: 'flex',
           flexDirection: 'column',
-          gap: 'clamp(20px, 4vw, 48px)',
+          padding: 20,
+          gap: 20,
+          minHeight: 'auto',
+          // Tablet+: Two columns with bounded height
         }}
       >
         {/* Animated mood background */}
@@ -550,26 +556,35 @@ export default function SoulClimateWidget() {
           }}
         />
 
-        {/* Left: title + button */}
-        <div style={{ zIndex: 1, width: '100%' }}>
-          <div style={SECTION_LABEL}>SOUL CLIMATE ⓘ</div>
-          <h2
-            style={{
-              fontSize: 'clamp(20px, 5vw, 28px)',
-              fontWeight: 800,
-              color: '#fff',
-              margin: '0 0 clamp(8px, 2vw, 12px)',
-              lineHeight: 1.2,
-              letterSpacing: '-0.02em',
-            }}
-          >
+        {/* LEFT SECTION: Title + Button + Affirmation */}
+        <div style={{ zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+          <div style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: 'rgba(196,181,253,0.5)',
+            marginBottom: 8,
+          }}>
+            SOUL CLIMATE ⓘ
+          </div>
+
+          <h2 style={{
+            fontSize: 24,
+            fontWeight: 800,
+            color: '#fff',
+            margin: '0 0 8px',
+            lineHeight: 1.2,
+            letterSpacing: '-0.02em',
+          }}>
             How is your mind<br />feeling today?
           </h2>
+
           <p style={{
-            fontSize: 'clamp(13px, 3vw, 14px)',
+            fontSize: 13,
             color: 'rgba(184,180,216,0.65)',
-            margin: '0 0 clamp(16px, 4vw, 24px)',
-            lineHeight: 1.6
+            margin: '0 0 16px',
+            lineHeight: 1.6,
           }}>
             Your check-in helps us support you better.
           </p>
@@ -581,11 +596,12 @@ export default function SoulClimateWidget() {
             disabled={isCheckedIn || !selectedMood || isLoading}
             style={{
               ...PURPLE_BTN,
-              fontSize: 'clamp(13px, 3vw, 14px)',
-              padding: 'clamp(12px, 3vw, 16px) clamp(20px, 5vw, 32px)',
-              minHeight: 48,
+              fontSize: 13,
+              padding: '12px 28px',
+              minHeight: 44,
               width: '100%',
-              maxWidth: 400,
+              maxWidth: 200,
+              marginBottom: 16,
             }}
           >
             {isLoading ? (
@@ -594,32 +610,52 @@ export default function SoulClimateWidget() {
                 {' '}Checking in...
               </>
             ) : isCheckedIn ? (
-              `✓ ${new Date().toDateString() === localStorage.getItem('soulclimate_date') ? 'Checked In Today' : 'Checked In'}`
+              '✓ Checked In'
             ) : (
               'Check In Now'
             )}
           </motion.button>
+
+          {/* Affirmation */}
+          <AnimatePresence>
+            {showAffirmation && config && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.6 }}
+                style={{
+                  padding: '12px 0',
+                  fontSize: 13,
+                  color: 'rgba(184,180,216,0.85)',
+                  lineHeight: 1.6,
+                  textAlign: 'left',
+                }}
+              >
+                {config.affirmation}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Right: mood pills + affirmation */}
-        <div style={{ zIndex: 1, width: '100%' }}>
+        {/* RIGHT SECTION: Mood Chips Grid */}
+        <div style={{ zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{
-            fontSize: 'clamp(10px, 2vw, 11px)',
+            fontSize: 11,
             fontWeight: 700,
             color: 'rgba(196,181,253,0.5)',
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            marginBottom: 'clamp(12px, 3vw, 16px)'
+            marginBottom: 12,
           }}>
             Select your mood
           </div>
 
-          {/* Mood pills - responsive grid */}
+          {/* 2-column grid for mood pills */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
-            gap: 'clamp(8px, 2vw, 12px)',
-            marginBottom: 'clamp(16px, 4vw, 20px)'
+            gridTemplateColumns: '1fr 1fr',
+            gap: 12,
           }}>
             {WEATHER_OPTIONS.map((opt) => (
               <motion.button
@@ -633,7 +669,7 @@ export default function SoulClimateWidget() {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: 'clamp(4px, 1vw, 8px)',
+                  gap: 6,
                   background:
                     selectedMood === opt.id
                       ? 'rgba(139,92,246,0.32)'
@@ -642,14 +678,13 @@ export default function SoulClimateWidget() {
                     selectedMood === opt.id
                       ? '1px solid rgba(168,85,247,0.6)'
                       : '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 'clamp(12px, 4vw, 20px)',
-                  padding: 'clamp(10px, 2vw, 14px)',
-                  fontSize: 'clamp(11px, 2.5vw, 13px)',
+                  borderRadius: 16,
+                  padding: 12,
+                  fontSize: 12,
                   color: '#E2DEFF',
                   cursor: isCheckedIn ? 'default' : 'pointer',
                   fontWeight: 500,
-                  minHeight: 48,
-                  minWidth: 48,
+                  minHeight: 72,
                   boxShadow:
                     selectedMood === opt.id
                       ? '0 0 14px rgba(124,58,237,0.35)'
@@ -658,35 +693,11 @@ export default function SoulClimateWidget() {
                   opacity: isCheckedIn && !checkedInMood ? 0.5 : 1,
                 }}
               >
-                <span style={{ fontSize: 'clamp(18px, 5vw, 24px)' }}>{opt.emoji}</span>
+                <span style={{ fontSize: 24 }}>{opt.emoji}</span>
                 <span>{opt.label}</span>
               </motion.button>
             ))}
           </div>
-
-          {/* Affirmation */}
-          <AnimatePresence>
-            {showAffirmation && config && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.6 }}
-                style={{
-                  padding: 'clamp(14px, 3vw, 18px)',
-                  background: 'rgba(139,92,246,0.15)',
-                  border: '1px solid rgba(168,85,247,0.3)',
-                  borderRadius: 'clamp(12px, 3vw, 16px)',
-                  fontSize: 'clamp(13px, 3vw, 15px)',
-                  color: '#E2DEFF',
-                  lineHeight: 1.6,
-                  textAlign: 'center',
-                }}
-              >
-                {config.affirmation}
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </motion.div>
 
@@ -700,36 +711,35 @@ export default function SoulClimateWidget() {
           50% { transform: translateY(-20px) translateX(10px); }
         }
 
-        /* Tablet + Desktop: switch to two-column layout */
+        /* Tablet (768px - 1199px): Stack but with better spacing */
         @media (min-width: 768px) {
           .soul-climate-card {
+            padding: 24px !important;
+            min-height: 340px;
+            max-height: 380px;
+            flex-direction: column !important;
+          }
+        }
+
+        /* Desktop (1200px+): 2-column layout */
+        @media (min-width: 1200px) {
+          .soul-climate-card {
+            padding: 40px !important;
+            min-height: 340px;
+            max-height: 380px;
             flex-direction: row !important;
-            gap: 48px !important;
             align-items: center !important;
-            padding: 26px 32px 24px !important;
+            gap: 48px !important;
           }
 
-          .soul-climate-card > div:first-child {
-            flex-shrink: 0 !important;
-            width: auto !important;
-            max-width: none !important;
+          .soul-climate-card > div:first-of-type {
+            flex: 0 0 65%;
+            justify-content: flex-start !important;
           }
 
-          .soul-climate-card > div:last-child {
-            flex: 1 !important;
-            width: auto !important;
-          }
-
-          /* Divider for tablet+ */
-          .soul-climate-card::before {
-            content: '';
-            position: absolute;
-            width: 1px;
-            height: calc(100% - 52px);
-            background: rgba(168,85,247,0.15);
-            left: 50%;
-            top: 26px;
-            z-index: 1;
+          .soul-climate-card > div:last-of-type {
+            flex: 0 0 35%;
+            justify-content: center !important;
           }
         }
       `}</style>
