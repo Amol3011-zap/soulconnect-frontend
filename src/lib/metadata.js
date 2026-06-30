@@ -116,6 +116,13 @@ export const METADATA = {
     ogType: 'website',
     keywords: 'faq, frequently asked questions, how it works, pricing, privacy, professional verification',
   },
+  '/how-it-works': {
+    title: 'How SoulConnect Works | Step-by-Step Guide',
+    description: 'Learn how to use SoulConnect in 7 simple steps. Join a supportive community, find wellness resources, and connect with professionals.',
+    canonical: 'https://soulconnect.health/how-it-works',
+    ogType: 'website',
+    keywords: 'how soulconnect works, getting started, peer support guide, community membership, wellness resources',
+  },
 };
 
 /**

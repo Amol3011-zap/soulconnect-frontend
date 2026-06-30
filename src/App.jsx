@@ -31,6 +31,7 @@ const Privacy       = lazy(() => import('./pages/Privacy'));
 const FAQ           = lazy(() => import('./pages/FAQ'));
 const Blog          = lazy(() => import('./pages/Blog'));
 const BlogDetail    = lazy(() => import('./pages/BlogDetail'));
+const HowItWorks    = lazy(() => import('./pages/HowItWorks'));
 
 // Full-screen experiences (no sidebar)
 const Dashboard     = lazy(() => import('./pages/Dashboard'));    // /chat
@@ -136,6 +137,7 @@ function AppInner() {
       <Route path="/faq"             element={<Suspense fallback={<PageLoader />}><FAQ /></Suspense>} />
       <Route path="/blog"            element={<Suspense fallback={<PageLoader />}><Blog /></Suspense>} />
       <Route path="/blog/:slug"      element={<Suspense fallback={<PageLoader />}><BlogDetail /></Suspense>} />
+      <Route path="/how-it-works"    element={<Suspense fallback={<PageLoader />}><HowItWorks /></Suspense>} />
     </>
   );
 

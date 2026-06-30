@@ -13,7 +13,7 @@ const SQ3  = 1.7320508;
 
 const NAV_LINKS = [
   { label: 'About Us',     href: '/about',  isRoute: true  },
-  { label: 'How It Works', href: '#how',    isRoute: false },
+  { label: 'How It Works', href: '/how-it-works', isRoute: true },
   { label: 'Resources',    href: '#trust',  isRoute: false },
   { label: 'Contact',      href: '/contact', isRoute: true  },
 ];
@@ -1003,13 +1003,13 @@ export default function Landing() {
                 style={{fontSize:16, padding:'16px 38px', borderRadius:15}}>
                 Find My Circle 💜
               </a>
-              <a href="#how" className="l-btn-g" style={{fontSize:15, padding:'16px 28px'}}>
+              <Link to="/how-it-works" className="l-btn-g" style={{fontSize:15, padding:'16px 28px'}}>
                 <span style={{width:30, height:30, borderRadius:'50%',
                   background:'rgba(255,255,255,0.15)',
                   display:'flex', alignItems:'center', justifyContent:'center',
                   fontSize:11}}>▶</span>
                 How It Works
-              </a>
+              </Link>
             </div>
 
             {/* Sub note */}
@@ -1713,7 +1713,7 @@ export default function Landing() {
                 animation:'glowBreathe 5s ease-in-out infinite'}}>
               Find My Circle →
             </a>
-            <a href="#how"
+            <Link to="/how-it-works"
               style={{fontSize:15, color:'rgba(255,255,255,0.45)',
                 textDecoration:'none', fontWeight:500,
                 borderBottom:'1px solid rgba(255,255,255,0.2)',
@@ -1722,7 +1722,7 @@ export default function Landing() {
               onMouseLeave={e=>{e.currentTarget.style.color='rgba(255,255,255,0.45)';}}
             >
               Learn More
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -1791,7 +1791,7 @@ export default function Landing() {
               flexWrap:'wrap', gap:'4px 0'}}>
               {[
                 {label:'About Us',           to:'/about',          isRoute:true},
-                {label:'How It Works',       href:'#how',          isRoute:false},
+                {label:'How It Works',       to:'/how-it-works',   isRoute:true},
                 {label:'Resources',          href:'#trust',        isRoute:false},
                 {label:'FAQ',                to:'/faq',            isRoute:true},
                 {label:'Privacy Policy',     to:'/privacy',        isRoute:true},
