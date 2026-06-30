@@ -1,16 +1,53 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { generateMetaTags } from '../lib/metadata';
+import { getArticleBySlug } from '../data/articles';
 
 /**
  * MetaHead - Dynamically injects unique metadata for each route
  * Updates title, canonical, og:*, and twitter: tags
+ * Supports dynamic blog article pages
  */
 export default function MetaHead() {
   const location = useLocation();
 
   useEffect(() => {
-    const meta = generateMetaTags(location.pathname);
+    let meta;
+
+    // Handle blog article detail pages (/blog/:slug)
+    if (location.pathname.startsWith('/blog/')) {
+      const slug = location.pathname.split('/blog/')[1];
+      const article = getArticleBySlug(slug);
+
+      if (article) {
+        const imageUrl = article.image || 'https://soulconnect.health/og-image.png';
+        meta = {
+          title: `${article.title} | SoulConnect Blog`,
+          description: article.description,
+          canonical: `https://soulconnect.health/blog/${article.slug}`,
+          keywords: article.keywords.join(', '),
+          og: {
+            title: article.title,
+            description: article.excerpt,
+            url: `https://soulconnect.health/blog/${article.slug}`,
+            image: imageUrl,
+            type: 'article',
+            locale: 'en_IN',
+          },
+          twitter: {
+            title: article.title,
+            description: article.excerpt,
+            image: imageUrl,
+          },
+        };
+      } else {
+        // Fallback to generated tags if article not found
+        meta = generateMetaTags(location.pathname);
+      }
+    } else {
+      // Use standard metadata generation for other routes
+      meta = generateMetaTags(location.pathname);
+    }
 
     // Update title
     document.title = meta.title;
