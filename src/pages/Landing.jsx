@@ -600,6 +600,15 @@ export default function Landing() {
       0%{background-position:200% center}
       100%{background-position:-200% center}
     }
+    @keyframes slideInScale{
+      0%{opacity:0;transform:translateY(12px) scale(0.95)}
+      100%{opacity:1;transform:translateY(0) scale(1)}
+    }
+    @keyframes popScale{
+      0%{transform:scale(0.3)}
+      50%{transform:scale(1.15)}
+      100%{transform:scale(1)}
+    }
 
     /* Trust badge */
     .l-trust-badge{
@@ -1483,28 +1492,82 @@ export default function Landing() {
             boxShadow:'0 32px 80px rgba(0,0,0,0.3)',
           }}>
             {earlySubmitted ? (
-              <div style={{textAlign:'center', padding:'28px 0'}}>
-                <div style={{fontSize:60, marginBottom:20,
-                  filter:'drop-shadow(0 0 24px rgba(167,139,250,0.6))'}}>💜</div>
-                <h3 style={{fontFamily:SF, fontSize:26, fontWeight:800,
-                  color:'#fff', marginBottom:14}}>You're on the list!</h3>
-                <p style={{color:'rgba(255,255,255,0.52)', fontSize:16, lineHeight:1.72}}>
-                  We'll reach out when your circle is ready.<br/>
-                  Healing begins soon.
+              <div style={{textAlign:'center', padding:'32px 12px',
+                animation:'slideInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1)'}}>
+                <div style={{fontSize:64, marginBottom:24,
+                  filter:'drop-shadow(0 0 32px rgba(245,184,65,0.8))',
+                  animation:'popScale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'}}>🎉</div>
+                <h3 style={{fontFamily:SF, fontSize:28, fontWeight:800,
+                  color:'#fff', marginBottom:12, letterSpacing:'-0.02em'}}>
+                  You're officially part of the Early Community!
+                </h3>
+                <p style={{color:'rgba(255,255,255,0.65)', fontSize:15, lineHeight:1.8, marginBottom:24}}>
+                  Thank you for believing in SoulConnect.<br/><br/>
+                  We'll send occasional updates as we build a place where people can heal, connect and grow together.
                 </p>
+                <div style={{display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap', marginTop:28}}>
+                  <a href="https://instagram.com/soulconnect" target="_blank" rel="noopener noreferrer"
+                    style={{
+                      padding:'12px 24px', borderRadius:12,
+                      background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.15)',
+                      color:'#fff', fontSize:14, fontWeight:600,
+                      textDecoration:'none', cursor:'pointer',
+                      transition:'all 0.3s ease',
+                      display:'inline-flex', alignItems:'center', gap:8
+                    }}
+                    onMouseEnter={e=>{e.target.style.background='rgba(245,184,65,0.15)'; e.target.style.borderColor='rgba(245,184,65,0.3)'}}
+                    onMouseLeave={e=>{e.target.style.background='rgba(255,255,255,0.08)'; e.target.style.borderColor='rgba(255,255,255,0.15)'}}>
+                    📸 Follow Instagram
+                  </a>
+                  <button onClick={()=>{setEarlySubmitted(false); setEarlyForm({challenge:'',name:'',email:''})}}
+                    style={{
+                      padding:'12px 24px', borderRadius:12,
+                      background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.15)',
+                      color:'#fff', fontSize:14, fontWeight:600,
+                      cursor:'pointer',
+                      transition:'all 0.3s ease',
+                      display:'inline-flex', alignItems:'center', gap:8,
+                      fontFamily:'inherit'
+                    }}
+                    onMouseEnter={e=>{e.target.style.background='rgba(167,139,250,0.15)'; e.target.style.borderColor='rgba(167,139,250,0.3)'}}
+                    onMouseLeave={e=>{e.target.style.background='rgba(255,255,255,0.08)'; e.target.style.borderColor='rgba(255,255,255,0.15)'}}>
+                    ← Return Home
+                  </button>
+                </div>
               </div>
             ):(
               <form onSubmit={handleSubmit}
-                style={{display:'flex', flexDirection:'column', gap:16}}>
+                style={{display:'flex', flexDirection:'column', gap:18}}>
                 <div style={{marginBottom:4}}>
                   <h3 style={{fontFamily:SF, fontSize:22, fontWeight:700,
-                    color:'#fff', marginBottom:6}}>Request Early Access</h3>
-                  <p style={{fontSize:13, color:'rgba(255,255,255,0.4)'}}>
-                    Join the founding community.
+                    color:'#fff', marginBottom:6}}>Become an Early Member</h3>
+                  <p style={{fontSize:13, color:'rgba(255,255,255,0.55)'}}>
+                    Join a community that cares.
                   </p>
                 </div>
+
+                {/* Benefit chips */}
+                <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:8}}>
+                  {[
+                    {emoji:'✨', text:'Early Access'},
+                    {emoji:'❤️', text:'Help Shape SoulConnect'},
+                    {emoji:'🏅', text:'Founding Member'},
+                    {emoji:'🤝', text:'Exclusive Updates'},
+                  ].map((b,i)=>(
+                    <div key={i} style={{
+                      padding:'10px 12px', borderRadius:12,
+                      background:'rgba(255,255,255,0.06)', border:'1px solid rgba(245,184,65,0.2)',
+                      display:'flex', alignItems:'center', gap:8,
+                      fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.78)',
+                    }}>
+                      <span style={{fontSize:14}}>{b.emoji}</span>
+                      <span>{b.text}</span>
+                    </div>
+                  ))}
+                </div>
+
                 <label style={{fontSize:13, fontWeight:600,
-                  color:'rgba(255,255,255,0.65)'}}>
+                  color:'rgba(255,255,255,0.65)', marginTop:8}}>
                   What are you struggling with most?
                 </label>
                 <div style={{position:'relative'}}>
@@ -1525,19 +1588,38 @@ export default function Landing() {
                   value={earlyForm.name}
                   onChange={e=>setEarlyForm(f=>({...f,name:e.target.value}))}
                   className="l-form-field" required/>
-                <input type="email" placeholder="Email Address"
+                <input type="email" placeholder="Enter your email to become an Early Member"
                   value={earlyForm.email}
                   onChange={e=>setEarlyForm(f=>({...f,email:e.target.value}))}
                   className="l-form-field" required/>
+
                 <button type="submit" className="l-btn-p"
-                  style={{marginTop:6, width:'100%', justifyContent:'center',
+                  style={{marginTop:4, width:'100%', justifyContent:'center',
                     borderRadius:14, padding:'16px', fontSize:15,
                     animation:'glowBreathe 5s ease-in-out infinite'}}>
-                  Join Early Access →
+                  Join Early Community →
                 </button>
-                <p style={{textAlign:'center', fontSize:12,
-                  color:'rgba(255,255,255,0.28)', margin:0, lineHeight:1.6}}>
-                  🔒 We respect your privacy. No spam, ever.
+
+                {/* Trust indicators */}
+                <div style={{display:'flex', flexDirection:'column', gap:8, marginTop:4}}>
+                  {[
+                    {icon:'🔒', text:'Your email stays private'},
+                    {icon:'✉️', text:'No spam'},
+                    {icon:'❤️', text:'Only meaningful updates'},
+                    {icon:'🚫', text:'Unsubscribe anytime'},
+                  ].map((t,i)=>(
+                    <div key={i} style={{display:'flex', alignItems:'center', gap:8,
+                      fontSize:12, color:'rgba(255,255,255,0.55)'}}>
+                      <span>{t.icon}</span>
+                      <span>{t.text}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <p style={{textAlign:'center', fontSize:11,
+                  color:'rgba(255,255,255,0.42)', margin:'8px 0 0', lineHeight:1.5,
+                  fontWeight:500}}>
+                  Takes less than 10 seconds • Free forever • No credit card required
                 </p>
               </form>
             )}
