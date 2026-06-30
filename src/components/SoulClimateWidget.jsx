@@ -516,13 +516,13 @@ export default function SoulClimateWidget() {
           background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
           border: '1px solid rgba(139,92,246,0.2)',
           borderRadius: 28,
-          padding: '26px 32px 24px',
+          padding: 'max(16px, clamp(16px, 5vw, 24px))',
           position: 'relative',
           overflow: 'hidden',
           boxShadow: '0 12px 48px rgba(0,0,0,0.5), 0 0 60px rgba(124,58,237,0.15)',
           display: 'flex',
-          alignItems: 'center',
-          gap: 48,
+          flexDirection: 'column',
+          gap: 'clamp(20px, 4vw, 48px)',
         }}
       >
         {/* Animated mood background */}
@@ -551,21 +551,26 @@ export default function SoulClimateWidget() {
         />
 
         {/* Left: title + button */}
-        <div style={{ zIndex: 1, flexShrink: 0 }}>
+        <div style={{ zIndex: 1, width: '100%' }}>
           <div style={SECTION_LABEL}>SOUL CLIMATE ⓘ</div>
           <h2
             style={{
-              fontSize: 26,
+              fontSize: 'clamp(20px, 5vw, 28px)',
               fontWeight: 800,
               color: '#fff',
-              margin: '0 0 8px',
+              margin: '0 0 clamp(8px, 2vw, 12px)',
               lineHeight: 1.2,
               letterSpacing: '-0.02em',
             }}
           >
             How is your mind<br />feeling today?
           </h2>
-          <p style={{ fontSize: 13, color: 'rgba(184,180,216,0.65)', margin: '0 0 20px', lineHeight: 1.6 }}>
+          <p style={{
+            fontSize: 'clamp(13px, 3vw, 14px)',
+            color: 'rgba(184,180,216,0.65)',
+            margin: '0 0 clamp(16px, 4vw, 24px)',
+            lineHeight: 1.6
+          }}>
             Your check-in helps us support you better.
           </p>
 
@@ -576,8 +581,11 @@ export default function SoulClimateWidget() {
             disabled={isCheckedIn || !selectedMood || isLoading}
             style={{
               ...PURPLE_BTN,
-              fontSize: 13,
-              padding: '10px 28px',
+              fontSize: 'clamp(13px, 3vw, 14px)',
+              padding: 'clamp(12px, 3vw, 16px) clamp(20px, 5vw, 32px)',
+              minHeight: 48,
+              width: '100%',
+              maxWidth: 400,
             }}
           >
             {isLoading ? (
@@ -593,25 +601,26 @@ export default function SoulClimateWidget() {
           </motion.button>
         </div>
 
-        {/* Divider */}
-        <div
-          style={{
-            width: 1,
-            alignSelf: 'stretch',
-            background: 'rgba(168,85,247,0.15)',
-            flexShrink: 0,
-            zIndex: 1,
-          }}
-        />
-
         {/* Right: mood pills + affirmation */}
-        <div style={{ zIndex: 1, flex: 1 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(196,181,253,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>
+        <div style={{ zIndex: 1, width: '100%' }}>
+          <div style={{
+            fontSize: 'clamp(10px, 2vw, 11px)',
+            fontWeight: 700,
+            color: 'rgba(196,181,253,0.5)',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            marginBottom: 'clamp(12px, 3vw, 16px)'
+          }}>
             Select your mood
           </div>
 
-          {/* Mood pills */}
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
+          {/* Mood pills - responsive grid */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(70px, 25vw, 100px), 1fr))',
+            gap: 'clamp(8px, 2vw, 12px)',
+            marginBottom: 'clamp(16px, 4vw, 20px)'
+          }}>
             {WEATHER_OPTIONS.map((opt) => (
               <motion.button
                 key={opt.id}
@@ -621,8 +630,10 @@ export default function SoulClimateWidget() {
                 whileTap={!isCheckedIn ? { scale: 0.95 } : {}}
                 style={{
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 6,
+                  justifyContent: 'center',
+                  gap: 'clamp(4px, 1vw, 8px)',
                   background:
                     selectedMood === opt.id
                       ? 'rgba(139,92,246,0.32)'
@@ -631,13 +642,14 @@ export default function SoulClimateWidget() {
                     selectedMood === opt.id
                       ? '1px solid rgba(168,85,247,0.6)'
                       : '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: 24,
-                  padding: '7px 16px',
-                  fontSize: 12,
+                  borderRadius: 'clamp(12px, 4vw, 20px)',
+                  padding: 'clamp(10px, 2vw, 14px)',
+                  fontSize: 'clamp(11px, 2.5vw, 13px)',
                   color: '#E2DEFF',
                   cursor: isCheckedIn ? 'default' : 'pointer',
                   fontWeight: 500,
-                  whiteSpace: 'nowrap',
+                  minHeight: 48,
+                  minWidth: 48,
                   boxShadow:
                     selectedMood === opt.id
                       ? '0 0 14px rgba(124,58,237,0.35)'
@@ -646,7 +658,7 @@ export default function SoulClimateWidget() {
                   opacity: isCheckedIn && !checkedInMood ? 0.5 : 1,
                 }}
               >
-                <span style={{ fontSize: 15 }}>{opt.emoji}</span>
+                <span style={{ fontSize: 'clamp(18px, 5vw, 24px)' }}>{opt.emoji}</span>
                 <span>{opt.label}</span>
               </motion.button>
             ))}
@@ -661,11 +673,11 @@ export default function SoulClimateWidget() {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.6 }}
                 style={{
-                  padding: '12px 16px',
+                  padding: 'clamp(14px, 3vw, 18px)',
                   background: 'rgba(139,92,246,0.15)',
                   border: '1px solid rgba(168,85,247,0.3)',
-                  borderRadius: 12,
-                  fontSize: 13,
+                  borderRadius: 'clamp(12px, 3vw, 16px)',
+                  fontSize: 'clamp(13px, 3vw, 15px)',
                   color: '#E2DEFF',
                   lineHeight: 1.6,
                   textAlign: 'center',
@@ -686,6 +698,39 @@ export default function SoulClimateWidget() {
         @keyframes particleDrift {
           0%, 100% { transform: translateY(0px) translateX(0px); }
           50% { transform: translateY(-20px) translateX(10px); }
+        }
+
+        /* Tablet + Desktop: switch to two-column layout */
+        @media (min-width: 768px) {
+          .soul-climate-card {
+            flex-direction: row !important;
+            gap: 48px !important;
+            align-items: center !important;
+            padding: 26px 32px 24px !important;
+          }
+
+          .soul-climate-card > div:first-child {
+            flex-shrink: 0 !important;
+            width: auto !important;
+            max-width: none !important;
+          }
+
+          .soul-climate-card > div:last-child {
+            flex: 1 !important;
+            width: auto !important;
+          }
+
+          /* Divider for tablet+ */
+          .soul-climate-card::before {
+            content: '';
+            position: absolute;
+            width: 1px;
+            height: calc(100% - 52px);
+            background: rgba(168,85,247,0.15);
+            left: 50%;
+            top: 26px;
+            z-index: 1;
+          }
         }
       `}</style>
     </>
