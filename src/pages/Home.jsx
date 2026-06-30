@@ -20,6 +20,7 @@ import ProgressModal from '../components/ProgressModal';
 import WeeklyInsightsModal from '../components/WeeklyInsightsModal';
 import SearchModal from '../components/SearchModal';
 import NotificationDropdown from '../components/NotificationDropdown';
+import EmotionWeatherModal from '../components/emotional-weather/EmotionWeatherModal';
 import { useReflections } from '../hooks/useReflections';
 
 const CATEGORY_ICONS = {
@@ -561,7 +562,7 @@ const STORIES = [
 export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { todayEntry, submitWeather } = useWeatherStore();
+  const { todayEntry, submitWeather, showModal } = useWeatherStore();
   const {
     dailyWins, completedToday, checkAndRefresh, completeWin,
     totalWins, showReflection, reflectionText, dismissReflection,
@@ -603,6 +604,13 @@ export default function Home() {
   useEffect(() => {
     const weatherId = todayEntry?.weather || 'clear-sky';
     checkAndRefresh(weatherId);
+  }, [todayEntry?.weather]);
+
+  // Sync selectedWeather with todayEntry when it updates
+  useEffect(() => {
+    if (todayEntry?.weather) {
+      setSelectedWeather(todayEntry.weather);
+    }
   }, [todayEntry?.weather]);
 
   const handleWeatherSelect = useCallback((id) => {
@@ -767,6 +775,11 @@ export default function Home() {
 
       {/* ── Global Search modal ── */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+
+      {/* ── Emotion Weather Check-in Modal ── */}
+      <AnimatePresence>
+        {showModal && <EmotionWeatherModal />}
+      </AnimatePresence>
 
       {/* ── Today's Reflection modal ── */}
       <TodaysReflectionModal
