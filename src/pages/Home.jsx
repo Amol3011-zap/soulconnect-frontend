@@ -21,6 +21,7 @@ import WeeklyInsightsModal from '../components/WeeklyInsightsModal';
 import SearchModal from '../components/SearchModal';
 import NotificationDropdown from '../components/NotificationDropdown';
 import SoulClimateWidget from '../components/SoulClimateWidget';
+import TodaysFocusCard from '../components/TodaysFocusCard';
 import { useReflections } from '../hooks/useReflections';
 
 const CATEGORY_ICONS = {
@@ -576,6 +577,7 @@ export default function Home() {
 
   const [showBreathing, setShowBreathing] = useState(false);
   const [breathingDone, setBreathingDone] = useState(false);
+  const [breathingDuration, setBreathingDuration] = useState(3);
   const [selectedWeather, setSelectedWeather] = useState(todayEntry?.weather || null);
 
   // Today's Reflection modal
@@ -613,6 +615,11 @@ export default function Home() {
 
   const handleCheckIn = useCallback(() => {
     useWeatherStore.setState({ showModal: true });
+  }, []);
+
+  const handleStartBreathingSession = useCallback((duration) => {
+    setBreathingDuration(duration);
+    setShowBreathing(true);
   }, []);
 
   const weeklyStats = getWeeklyStats();
@@ -742,6 +749,7 @@ export default function Home() {
       <AnimatePresence>
         {showBreathing && (
           <BreathingSession
+            duration={breathingDuration}
             onClose={() => setShowBreathing(false)}
             onComplete={() => { setBreathingDone(true); setShowBreathing(false); }}
           />
@@ -1081,40 +1089,11 @@ export default function Home() {
       <div className="home-right-sidebar">
 
         {/* ── Card 1: Today's Focus ── */}
-        <div ref={todaysFocusRef} className="sidebar-card-inner" style={{ ...CARD_STYLE, flex: 1, minHeight: 0, marginBottom: 14, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <div style={SECTION_LABEL}>TODAY'S FOCUS ⓘ</div>
-
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span style={{ fontSize: 15, fontWeight: 700, color: '#fff', flex: 1 }}>Calm Your Mind</span>
-            <span style={{ fontSize: 30, lineHeight: 1 }}>🍃</span>
-          </div>
-
-          <p style={{ fontSize: 12, color: 'rgba(184,180,216,0.65)', margin: '0 0 12px', lineHeight: 1.6 }}>
-            A 7-minute breathing exercise to help you relax and reset.
-          </p>
-
-          <div style={{ display: 'flex', gap: 7, marginBottom: 14 }}>
-            {['⏱ 7 min', '🟢 Easy'].map(pill => (
-              <span key={pill} style={{
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)',
-                borderRadius: 20, padding: '3px 10px', fontSize: 11, color: '#B8B4D8',
-              }}>
-                {pill}
-              </span>
-            ))}
-          </div>
-
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={() => setShowBreathing(true)}
-            style={{
-              ...PURPLE_BTN,
-              width: '100%', padding: '10px', fontSize: 13, borderRadius: 13,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            }}
-          >
-            {breathingDone ? '✓ Completed' : '▶ Start Now'}
-          </motion.button>
+        <div ref={todaysFocusRef} style={{ marginBottom: 14 }}>
+          <TodaysFocusCard
+            onStartSession={handleStartBreathingSession}
+            breathingDone={breathingDone}
+          />
         </div>
 
         {/* ── Card 3: Upcoming Session ── */}

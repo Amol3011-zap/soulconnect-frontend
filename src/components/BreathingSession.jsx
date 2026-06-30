@@ -2,7 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const PHASE_CYCLE = 16; // seconds: 4 inhale + 4 hold + 4 exhale + 4 hold
-const TOTAL_SECONDS = 7 * 60; // 420
+
+// Duration presets
+const DURATIONS = {
+  3: 3 * 60,   // 180 seconds
+  5: 5 * 60,   // 300 seconds
+  7: 7 * 60,   // 420 seconds
+};
 
 const PHASES = [
   { name: 'Inhale',  start: 0,  end: 4,  instruction: 'Breathe in slowly...',  scale: 1.28, color: '#8B5CF6' },
@@ -48,12 +54,13 @@ function ProgressRing({ progress, size = 240, stroke = 3 }) {
   );
 }
 
-export default function BreathingSession({ onClose, onComplete }) {
+export default function BreathingSession({ onClose, onComplete, duration = 7 }) {
   const [elapsed, setElapsed] = useState(0);
   const [paused, setPaused] = useState(false);
   const [done, setDone] = useState(false);
   const timerRef = useRef(null);
 
+  const TOTAL_SECONDS = DURATIONS[duration] || DURATIONS[7];
   const remaining = TOTAL_SECONDS - elapsed;
   const mins = Math.floor(remaining / 60);
   const secs = remaining % 60;
@@ -157,7 +164,7 @@ export default function BreathingSession({ onClose, onComplete }) {
           BREATHING SESSION
         </div>
         <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>
-          Calm Your Mind · 7 Minutes
+          Calm Your Mind · {duration} Minutes
         </div>
       </motion.div>
 
@@ -187,7 +194,7 @@ export default function BreathingSession({ onClose, onComplete }) {
               Session Complete
             </h2>
             <p style={{ margin: '0 0 8px', fontSize: 14, color: '#B8B4D8', lineHeight: 1.6 }}>
-              7 minutes of mindful breathing done.
+              {duration} minutes of mindful breathing done.
             </p>
             <p style={{ margin: '0 0 36px', fontSize: 14, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6, fontStyle: 'italic' }}>
               Take a moment to notice how you feel right now.
