@@ -85,7 +85,7 @@ export default function Login() {
         </motion.div>
 
         {/* Hero Content */}
-        <div>
+        <motion.div>
           <motion.h1
             className="text-5xl font-bold text-white leading-tight mb-4"
             initial={{ opacity: 0, y: 20 }}
@@ -139,7 +139,7 @@ export default function Login() {
               </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Stats */}
         <motion.div
@@ -162,7 +162,7 @@ export default function Login() {
             </div>
           ))}
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* ── RIGHT PANEL: Auth Card ── */}
       <div className="w-full lg:w-7/12 flex items-center justify-center p-6 md:p-8 bg-white">
