@@ -4,10 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const STYLES = `
   @keyframes footerFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-10px) scale(1.02)} }
   @keyframes footerPulse { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
-  @keyframes crisisPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.05); }
-  }
+  @keyframes crisisPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.05)} }
   @keyframes particleDrift {
     0%  { transform:translateY(0)   translateX(0)   opacity:0; }
     10% { opacity:0.6; }
