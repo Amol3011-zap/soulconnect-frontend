@@ -186,7 +186,22 @@ export default function Footer() {
         <div style={{ maxWidth:1140, margin:'0 auto' }}>
           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap: 24 }}>
             <div style={{ display:'flex', alignItems:'center', gap:14 }}>
-              <span style={{ fontSize:28, lineHeight:1 }}>🆘</span>
+              {/* Crisis Logo */}
+              <div style={{
+                width:56, height:56, borderRadius:14, flexShrink:0,
+                background: 'linear-gradient(135deg,#DC2626,#991B1B)',
+                display:'flex', alignItems:'center', justifyContent:'center',
+                boxShadow:'0 8px 24px rgba(220,38,38,0.35)',
+                position:'relative',
+              }}>
+                <span style={{ fontSize:28, lineHeight:1, animation:'pulse 2s ease-in-out infinite' }}>🆘</span>
+                <style>{`
+                  @keyframes pulse {
+                    0%, 100% { opacity: 1; transform: scale(1); }
+                    50% { opacity: 0.8; transform: scale(1.05); }
+                  }
+                `}</style>
+              </div>
               <div>
                 <p style={{ margin:0, color:'#FCA5A5', fontWeight:800, fontSize:15, lineHeight:1.2 }}>In Crisis? Get Immediate Support</p>
                 <p style={{ margin:0, color:'rgba(255,255,255,0.55)', fontSize:12, marginTop:4 }}>
