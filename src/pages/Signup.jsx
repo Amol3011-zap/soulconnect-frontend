@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import { useAuthStore } from '../store/auth';
 import { authAPI } from '../services/api';
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════════════════════════ */
+const P    = '#6D4AFF';  // Primary Purple
+const LAV  = '#A78BFA'; // Lavender
+const GLD  = '#F5B841'; // Gold
+const PNK  = '#F472B6'; // Pink
+const DARK = '#120B2E'; // Dark Purple
+const BG_GRADIENT = 'linear-gradient(155deg, #0A0222 0%, #120B2E 40%, #1E0848 70%, #0A0222 100%)';
 
 const PROBLEMS = [
   { value: 'anxiety', label: 'Anxiety', icon: '😰' },
@@ -67,120 +78,263 @@ const INDIA_STATES = [
   'Delhi', 'Jammu & Kashmir', 'Ladakh', 'Puducherry', 'Chandigarh',
 ];
 
-const inputClass = "w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-500 transition-colors bg-white";
-const selectClass = "w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 focus:outline-none focus:border-purple-500 transition-colors bg-white appearance-none cursor-pointer";
-const labelClass = "block text-sm font-semibold text-gray-700 mb-2";
+/* ═══════════════════════════════════════════════════════════════════════════════
+   REUSABLE COMPONENTS
+═══════════════════════════════════════════════════════════════════════════════ */
 
-function LeftPanel({ role }) {
-  const isHealer = role === 'healer';
-  // Landing page palette: forest green + amber for user, deep teal for healer
-  const bg = isHealer
-    ? 'linear-gradient(160deg, #0f3d2e 0%, #134e3a 50%, #0d3528 100%)'
-    : 'linear-gradient(160deg, #1a3d2e 0%, #1e4d38 50%, #152e23 100%)';
-  const glowColor = isHealer ? '#34d399' : '#86efac';
-  const logoGrad = isHealer
+function RoleCard({ role, isSelected, onClick, title, description, tags, icon }) {
+  const roleColor = role === 'healer' ? '#059669' : P;
+  const roleGrad = role === 'healer'
     ? 'linear-gradient(135deg, #059669, #0d9488)'
-    : 'linear-gradient(135deg, #2d6a4f, #f59e0b)';
-  const highlightColor = isHealer ? '#34d399' : '#f59e0b';
+    : 'linear-gradient(135deg, #6D4AFF, #8B5CF6)';
 
   return (
-    <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 relative overflow-hidden"
-      style={{ background: bg }}>
-      {/* Subtle glow orbs */}
-      <div className="absolute top-16 left-8 w-72 h-72 rounded-full opacity-20"
-        style={{ background: `radial-gradient(circle, ${glowColor}, transparent)`, filter: 'blur(50px)' }} />
-      <div className="absolute bottom-24 right-8 w-80 h-80 rounded-full opacity-10"
-        style={{ background: 'radial-gradient(circle, #f59e0b, transparent)', filter: 'blur(60px)' }} />
-
-      <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-        {/* Logo */}
-        <div className="flex items-center">
-          <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 64, width: 'auto', objectFit: 'contain', maxWidth: 260, borderRadius: 10 }} />
+    <motion.button
+      onClick={onClick}
+      className="w-full text-left rounded-2xl p-6 border-2 transition-all"
+      style={{
+        background: isSelected ? 'rgba(0,0,0,0.02)' : 'transparent',
+        borderColor: isSelected ? roleColor : 'rgba(0,0,0,0.1)',
+        boxShadow: isSelected ? `0 0 20px ${roleColor}33` : 'none',
+      }}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <div className="flex items-start gap-4">
+        <div className="text-4xl">{icon}</div>
+        <div className="flex-1">
+          <h3 className="font-bold text-lg text-gray-900 mb-1">{title}</h3>
+          <p className="text-sm text-gray-600 mb-3">{description}</p>
+          <div className="flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-xs font-medium px-2.5 py-1 rounded-full"
+                style={{
+                  background: role === 'healer' ? '#D1FAE5' : '#EDE9FE',
+                  color: role === 'healer' ? '#065F46' : '#4C1D95',
+                }}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-
-        {/* Hero copy */}
-        <div>
-          <h2 className="text-4xl font-bold text-white leading-tight mb-4">
-            {isHealer ? 'Share your gift.' : "You don't have to"}<br />
-            <span style={{ color: highlightColor }}>
-              {isHealer ? 'Transform lives.' : 'go through this alone.'}
-            </span>
-          </h2>
-          <p className="text-lg leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            {isHealer
-              ? 'Join our verified healer network and connect with people who need your expertise and compassion.'
-              : "Connect with real people who truly understand — because they've been there too."}
-          </p>
-
-          {isHealer ? (
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { icon: '✅', label: 'Verified Profile' },
-                { icon: '💰', label: 'Set Your Fees' },
-                { icon: '📅', label: 'Flexible Schedule' },
-                { icon: '🌍', label: 'Reach Thousands' },
-              ].map(({ icon, label }) => (
-                <div key={label} className="rounded-xl p-3 flex items-center gap-2"
-                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <span>{icon}</span>
-                  <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>{label}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {[
-                { quote: 'Finally found someone who gets my anxiety without judgment.', name: 'Priya S., Mumbai' },
-                { quote: 'Real connections, real healing. SoulConnect changed my life.', name: 'Rahul M., Delhi' },
-              ].map((t, i) => (
-                <div key={i} className="rounded-2xl p-4"
-                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <p className="text-sm italic mb-2" style={{ color: 'rgba(255,255,255,0.8)' }}>"{t.quote}"</p>
-                  <p className="text-xs font-semibold" style={{ color: highlightColor }}>— {t.name}</p>
-                </div>
-              ))}
-            </div>
+        <motion.div
+          className="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+          style={{ borderColor: isSelected ? roleColor : '#ddd' }}
+        >
+          {isSelected && (
+            <motion.div
+              className="w-3 h-3 rounded-full"
+              style={{ background: roleColor }}
+              layoutId="selectedRoleIndicator"
+            />
           )}
-        </div>
-
-        {/* Stats */}
-        <div className="flex gap-8">
-          {(isHealer
-            ? [['Pre-Launch', 'Platform'], ['Building', 'Together'], ['Community', 'First']]
-            : [['Early', 'Access'], ['Building', 'In Public'], ['Community', 'First']]
-          ).map(([val, label]) => (
-            <div key={label}>
-              <div className="font-bold text-xl" style={{ color: highlightColor }}>{val}</div>
-              <div className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</div>
-            </div>
-          ))}
-        </div>
+        </motion.div>
       </div>
+    </motion.button>
+  );
+}
+
+function FormInput({ label, type = 'text', value, onChange, placeholder, error, required = false }) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-gray-900 mb-2.5">
+        {label}
+        {required && <span style={{ color: P }}>*</span>}
+      </label>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-full py-3 px-4 rounded-xl border-2 transition-all focus:outline-none font-medium"
+        style={{
+          borderColor: error ? '#EF4444' : '#E5E7EB',
+          background: error ? '#FEF2F2' : '#FAFAF9',
+        }}
+        onFocus={(e) => {
+          if (!error) e.target.style.borderColor = LAV;
+        }}
+        onBlur={(e) => {
+          if (!error) e.target.style.borderColor = '#E5E7EB';
+        }}
+      />
+      {error && <p className="text-xs text-red-600 mt-1.5">⚠️ {error}</p>}
     </div>
   );
 }
 
+function FormSelect({ label, value, onChange, options, error, required = false }) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-gray-900 mb-2.5">
+        {label}
+        {required && <span style={{ color: P }}>*</span>}
+      </label>
+      <select
+        value={value}
+        onChange={onChange}
+        className="w-full py-3 px-4 rounded-xl border-2 transition-all focus:outline-none font-medium appearance-none cursor-pointer"
+        style={{
+          borderColor: error ? '#EF4444' : '#E5E7EB',
+          background: error ? '#FEF2F2' : '#FAFAF9',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'right 12px center',
+          paddingRight: '36px',
+        }}
+      >
+        <option value="">Select {label.toLowerCase()}</option>
+        {options.map((opt) => (
+          <option key={opt} value={opt}>
+            {opt}
+          </option>
+        ))}
+      </select>
+      {error && <p className="text-xs text-red-600 mt-1.5">⚠️ {error}</p>}
+    </div>
+  );
+}
+
+function GradientButton({ children, loading = false, type = 'button', onClick }) {
+  return (
+    <motion.button
+      type={type}
+      onClick={onClick}
+      disabled={loading}
+      className="w-full py-3.5 rounded-xl font-semibold text-white transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+      style={{
+        background: `linear-gradient(135deg, ${P}, #8B5CF6)`,
+      }}
+      whileHover={!loading ? { y: -2 } : {}}
+      whileTap={!loading ? { scale: 0.98 } : {}}
+    >
+      {loading ? (
+        <>
+          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          Creating account...
+        </>
+      ) : (
+        <>
+          {children}
+          <span>→</span>
+        </>
+      )}
+    </motion.button>
+  );
+}
+
+function LeftPanel() {
+  return (
+    <div
+      className="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center"
+      style={{ background: BG_GRADIENT }}
+    >
+      <motion.div
+        className="relative z-10 w-full px-12 py-20 flex flex-col justify-center items-center text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.8 }}
+      >
+        {/* Lotus Illustration */}
+        <motion.div
+          className="text-8xl mb-8"
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          🪷
+        </motion.div>
+
+        {/* Sunrise Elements */}
+        <motion.div
+          className="absolute top-20 left-1/2 -translate-x-1/2"
+          animate={{ opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 6, repeat: Infinity }}
+        >
+          <div className="text-6xl">🌅</div>
+        </motion.div>
+
+        {/* Hero Text */}
+        <motion.h1
+          className="text-4xl font-bold text-white mb-4 leading-tight"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          You don't have to go through this alone.
+        </motion.h1>
+
+        <motion.p
+          className="text-lg text-white/70 max-w-md mb-8 leading-relaxed"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          Every meaningful connection starts with one small step. Join a community built around empathy, healing, and real conversations.
+        </motion.p>
+
+        {/* Trust Cards */}
+        <motion.div
+          className="grid grid-cols-3 gap-3 w-full max-w-md"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          {[
+            { icon: '🔒', label: 'Anonymous' },
+            { icon: '✔️', label: 'Verified Professionals' },
+            { icon: '🤝', label: 'Community First' },
+          ].map((card) => (
+            <motion.div
+              key={card.label}
+              className="rounded-xl p-3 text-center"
+              style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.1)' }}
+              whileHover={{ y: -4 }}
+            >
+              <div className="text-2xl mb-2">{card.icon}</div>
+              <p className="text-xs font-medium text-white/80">{card.label}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Quote */}
+        <motion.blockquote
+          className="mt-16 italic text-white/60 text-sm border-l-4 border-white/30 pl-4 py-2 max-w-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+        >
+          "Sometimes healing begins with simply being heard."
+        </motion.blockquote>
+      </motion.div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   MAIN SIGNUP COMPONENT
+═══════════════════════════════════════════════════════════════════════════════ */
+
 export default function Signup() {
-  const [role, setRole] = useState(''); // 'user' | 'healer'
-  const [step, setStep] = useState(0); // 0 = role select, 1–4 = form steps
+  const [role, setRole] = useState('');
+  const [step, setStep] = useState(0);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [pendingNav, setPendingNav] = useState('');
 
-  // Shared fields
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [country, setCountry] = useState('India');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
-
-  // User-only
   const [selectedProblems, setSelectedProblems] = useState([]);
 
-  // Healer-only
   const [healerType, setHealerType] = useState('');
   const [specializations, setSpecializations] = useState([]);
   const [experience, setExperience] = useState('');
@@ -190,8 +344,8 @@ export default function Signup() {
   const [languages, setLanguages] = useState('');
 
   const [gpsLocation, setGpsLocation] = useState(null);
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [pendingNav, setPendingNav] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+
   const { setAuth } = useAuthStore();
   const navigate = useNavigate();
 
@@ -205,47 +359,65 @@ export default function Signup() {
 
   const STEPS = role === 'healer'
     ? ['Basic Info', 'Location', 'Professional', 'Review']
-    : ['Basic Info', 'Location', 'Your Struggle', 'Review'];
+    : ['Basic Info', 'Location', 'Your Struggles', 'Review'];
 
-  const toggleSpec = (s) => setSpecializations((prev) =>
-    prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
-  );
+  const toggleProblem = (val) =>
+    setSelectedProblems((prev) =>
+      prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
+    );
+
+  const toggleSpec = (s) =>
+    setSpecializations((prev) =>
+      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
+    );
 
   const validate = () => {
+    const errs = {};
+
     if (step === 1) {
-      if (!phone.trim() || phone.replace(/\D/g, '').length < 10) return 'Enter a valid phone number';
-      if (!password || password.length < 6) return 'Password must be at least 6 characters';
-      if (!name.trim()) return 'Your name is required';
-      if (!age || isNaN(age) || +age < 13 || +age > 100) return 'Enter a valid age (13–100)';
-      if (!gender) return 'Please select your gender';
+      if (!phone.trim() || phone.replace(/\D/g, '').length < 10) errs.phone = 'Valid phone required';
+      if (!password || password.length < 6) errs.password = 'Min 6 characters';
+      if (!name.trim()) errs.name = 'Name is required';
+      if (!age || isNaN(age) || +age < 13 || +age > 100) errs.age = 'Enter valid age (13–100)';
+      if (!gender) errs.gender = 'Gender required';
     }
     if (step === 2) {
-      if (!country) return 'Please select your country';
-      if (!state.trim()) return 'Please enter your state';
-      if (!city.trim()) return 'Please enter your city';
+      if (!country) errs.country = 'Country required';
+      if (!state.trim()) errs.state = 'State required';
+      if (!city.trim()) errs.city = 'City required';
     }
-    if (step === 3 && role === 'user' && selectedProblems.length < 2) return 'Please select at least 2 things you are going through';
+    if (step === 3 && role === 'user' && selectedProblems.length < 2) {
+      errs.problems = 'Select at least 2 struggles';
+    }
     if (step === 3 && role === 'healer') {
-      if (!healerType) return 'Please select your profession type';
-      if (!experience) return 'Please enter your years of experience';
-      if (!bio.trim() || bio.length < 30) return 'Bio must be at least 30 characters';
-      if (!sessionFee) return 'Please enter your session fee';
+      if (!healerType) errs.healerType = 'Select profession';
+      if (!experience) errs.experience = 'Years required';
+      if (!bio.trim() || bio.length < 30) errs.bio = 'Min 30 chars';
+      if (!sessionFee) errs.sessionFee = 'Session fee required';
     }
-    return '';
+
+    setFieldErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const next = () => {
-    const err = validate();
-    if (err) { setError(err); return; }
+    if (!validate()) return;
     setError('');
     setStep((s) => s + 1);
   };
 
-  const back = () => { setError(''); setStep((s) => s - 1); };
+  const back = () => {
+    setError('');
+    setFieldErrors({});
+    setStep((s) => s - 1);
+  };
 
   const handleSignup = async () => {
+    if (!validate()) return;
+
     setLoading(true);
     setError('');
+
     try {
       const payload = {
         phone: phone.replace(/\D/g, ''),
@@ -274,538 +446,663 @@ export default function Signup() {
           bio: bio.trim(),
           session_fee: parseFloat(sessionFee),
           languages: languages.split(',').map((l) => l.trim()).filter(Boolean),
-          primary_problem: 'anxiety', // required by backend, placeholder for healers
+          primary_problem: 'anxiety',
           secondary_problems: [],
         }),
       };
+
       const response = await authAPI.signup(payload);
       setAuth(response.data, response.data.access_token, role);
       const dest = role === 'healer' ? '/healer-dashboard' : '/onboarding';
       setPendingNav(dest);
       setShowWelcome(true);
+
+      setTimeout(() => navigate(dest), 2000);
     } catch (err) {
       const detail = err.response?.data?.detail;
       if (Array.isArray(detail)) {
         setError(detail.map((e) => `${e.loc?.slice(-1)[0]}: ${e.msg}`).join(' | '));
       } else {
-        setError(detail || err.message || 'Signup failed. Please try again.');
+        setError(detail || err.message || 'Signup failed');
       }
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleProblem = (val) => setSelectedProblems((prev) =>
-    prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
-  );
   const selectedHealerType = HEALER_TYPES.find((h) => h.value === healerType);
-  const accentColor = role === 'healer' ? '#059669' : '#1a3d2e';
-  const accentGrad = role === 'healer'
-    ? 'linear-gradient(135deg, #059669, #0d9488)'
-    : 'linear-gradient(135deg, #1a3d2e, #2d6a4f)';
 
-  // ── Role Selection (Step 0) ──
+  /* ── STEP 0: Role Selection ── */
   if (step === 0) {
     return (
       <div className="min-h-screen flex">
-        <LeftPanel role={role || 'user'} />
-        <div className="flex-1 flex items-center justify-center p-6" style={{ background: '#f5f5f0' }}>
-          <div className="w-full max-w-md">
+        <LeftPanel />
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+          <motion.div
+            className="w-full max-w-md"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {/* Mobile Logo */}
             <div className="flex items-center gap-2 mb-8 lg:hidden">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
-                style={{ background: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>🌿</div>
-              <span className="text-gray-800 text-lg font-bold">SoulConnect</span>
+              <img
+                src="/logo-footer.png"
+                alt="SoulConnect"
+                style={{
+                  height: 40,
+                  width: 'auto',
+                  objectFit: 'contain',
+                  maxWidth: 160,
+                }}
+              />
             </div>
 
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Join SoulConnect</h1>
-            <p className="text-gray-500 mb-8">How would you like to join us?</p>
+            <p className="text-gray-600 mb-8">How would you like to join us?</p>
 
             <div className="space-y-4 mb-8">
-              {[
-                {
-                  value: 'user',
-                  icon: '🌱',
-                  title: 'I\'m seeking support',
-                  desc: 'Connect with peers who understand your struggle and join a community that heals together.',
-                  tags: ['Peer matching', 'Anonymous', 'Free to join'],
-                  grad: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)',
-                  ring: '#2d6a4f',
-                  tagBg: '#dcfce7', tagColor: '#166534',
-                },
-                {
-                  value: 'healer',
-                  icon: '🧘',
-                  title: 'I\'m a healer / professional',
-                  desc: 'Offer your expertise as a counsellor, therapist, coach, or wellness practitioner.',
-                  tags: ['Set your own fee', 'Verified profile', 'Grow your practice'],
-                  grad: 'linear-gradient(135deg, #059669, #0d9488)',
-                  ring: '#059669',
-                  tagBg: '#d1fae5', tagColor: '#065f46',
-                },
-              ].map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => setRole(opt.value)}
-                  className={`w-full text-left rounded-2xl p-5 border-2 transition-all duration-200 ${
-                    role === opt.value
-                      ? 'border-transparent shadow-lg scale-[1.01]'
-                      : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
-                  }`}
-                  style={role === opt.value ? { background: 'white', boxShadow: `0 0 0 2px ${opt.ring}, 0 8px 24px rgba(0,0,0,0.08)` } : {}}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0"
-                      style={{ background: opt.grad }}>
-                      {opt.icon}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-bold text-gray-900">{opt.title}</h3>
-                        <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all"
-                          style={role === opt.value ? { background: opt.grad, borderColor: 'transparent' } : { borderColor: '#d1d5db' }}>
-                          {role === opt.value && <span className="text-white text-xs">✓</span>}
-                        </div>
-                      </div>
-                      <p className="text-gray-500 text-sm mb-3">{opt.desc}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {opt.tags.map((tag) => (
-                          <span key={tag} className="text-xs px-2 py-0.5 rounded-full font-medium"
-                            style={role === opt.value
-                              ? { background: opt.tagBg, color: opt.tagColor }
-                              : { background: '#f3f4f6', color: '#6b7280' }}>
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              ))}
+              <RoleCard
+                role="user"
+                isSelected={role === 'user'}
+                onClick={() => {
+                  setRole('user');
+                  setStep(1);
+                }}
+                icon="🌱"
+                title="I'm seeking support"
+                description="Connect with peers who understand your struggle and join a community that heals together."
+                tags={['Peer matching', 'Anonymous', 'Free to join']}
+              />
+              <RoleCard
+                role="healer"
+                isSelected={role === 'healer'}
+                onClick={() => {
+                  setRole('healer');
+                  setStep(1);
+                }}
+                icon="🧘"
+                title="I'm a healer / professional"
+                description="Offer your expertise as a counsellor, therapist, coach, or wellness practitioner."
+                tags={['Set your own fee', 'Verified profile', 'Grow your practice']}
+              />
             </div>
 
-            <button
-              onClick={() => { if (!role) { setError('Please select how you\'d like to join'); return; } setError(''); setStep(1); }}
-              disabled={!role}
-              className="w-full py-3.5 rounded-xl font-semibold text-white transition-all hover:opacity-90 active:scale-95 disabled:opacity-40"
-              style={{ background: role === 'healer' ? 'linear-gradient(135deg, #059669, #0d9488)' : 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>
-              Get Started →
-            </button>
-            {error && <p className="text-red-500 text-sm text-center mt-3">{error}</p>}
-
-            <p className="text-center text-sm text-gray-500 mt-4">
+            <p className="text-center text-sm text-gray-600">
               Already have an account?{' '}
-              <Link to="/login" className="text-purple-600 font-semibold hover:underline">Sign in</Link>
+              <Link to="/login" className="font-semibold transition-colors hover:opacity-80" style={{ color: P }}>
+                Sign In →
+              </Link>
             </p>
-          </div>
+          </motion.div>
         </div>
       </div>
     );
   }
 
-  // ── Steps 1–4 ──
-  return (
-    <div className="min-h-screen flex">
-
-      {/* Welcome dialogue after signup */}
-      {showWelcome && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6"
-          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}>
-          <div className="w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl"
-            style={{ background: 'white' }}>
-            <div className="text-5xl mb-5">🤗</div>
-            <h2 className="text-lg font-bold mb-3" style={{ color: '#1a3d2e' }}>
-              Welcome to SoulConnect
-            </h2>
-            <p className="text-base leading-relaxed mb-6 font-medium"
-              style={{ color: '#374151', fontStyle: 'italic' }}>
-              "Kabhi kabhi ek jadoo ki jhappi aur dil se baat kar lena hi kaafi hota hai"
-            </p>
-            <button
-              onClick={() => { setShowWelcome(false); navigate(pendingNav); }}
-              className="w-full py-3 rounded-xl font-bold text-white text-sm"
-              style={{ background: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>
-              Let's Begin →
-            </button>
-          </div>
-        </div>
-      )}
-
-      <LeftPanel role={role} />
-
-      <div className="flex-1 flex items-center justify-center p-6 overflow-y-auto" style={{ background: '#f5f5f0' }}>
-        <div className="w-full max-w-md py-8">
-
-          {/* Mobile logo */}
-          <div className="flex items-center mb-6 lg:hidden">
-            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 40, width: 'auto', objectFit: 'contain', maxWidth: 180 }} />
-          </div>
-
-          {/* Role badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-4"
-            style={{ background: role === 'healer' ? '#d1fae5' : '#dcfce7', color: accentColor }}>
-            {role === 'healer' ? '🧘 Healer / Professional' : '🌱 Seeking Support'}
-            <button onClick={() => { setStep(0); setError(''); }} className="ml-1 hover:opacity-70 text-xs">✕ change</button>
-          </div>
-
-          <div className="mb-5">
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">Create your account</h1>
-            <p className="text-gray-500 text-sm">Step {step} of {STEPS.length} — {STEPS[step - 1]}</p>
-          </div>
-
-          {/* Step indicators */}
-          <div className="flex items-center mb-7">
-            {STEPS.map((label, i) => {
-              const s = i + 1;
-              const done = s < step;
-              const active = s === step;
-              return (
-                <React.Fragment key={s}>
-                  <div className="flex flex-col items-center shrink-0">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                      done || active ? 'text-white' : 'bg-gray-200 text-gray-400'
-                    }`} style={(done || active) ? { background: accentGrad } : {}}>
-                      {done ? '✓' : s}
-                    </div>
-                    <span className={`text-xs mt-1 font-medium hidden sm:block`}
-                      style={{ color: active ? accentColor : '#9ca3af' }}>{label}</span>
-                  </div>
-                  {i < STEPS.length - 1 && (
-                    <div className="flex-1 h-0.5 mx-2 mb-4 transition-all duration-300"
-                      style={{ background: s < step ? accentColor : '#e5e7eb' }} />
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </div>
-
-          {/* ── STEP 1: Basic Info ── */}
-          {step === 1 && (
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="sig-phone" className={labelClass}>Phone Number</label>
-                <div className="relative">
-                  <div aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium select-none">+91</div>
-                  <input id="sig-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
-                    placeholder="98765 43210"
-                    aria-describedby="sig-phone-hint"
-                    autoComplete="tel"
-                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none transition-colors bg-white"
-                    onFocus={(e) => e.target.style.borderColor = accentColor}
-                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'} />
-                </div>
-                <p id="sig-phone-hint" className="text-xs text-gray-400 mt-1">Used to log in — never shared</p>
-              </div>
-              <div>
-                <label htmlFor="sig-password" className={labelClass}>Password</label>
-                <div className="relative">
-                  <input id="sig-password" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)}
-                    placeholder="At least 6 characters"
-                    aria-describedby="sig-password-hint"
-                    autoComplete="new-password"
-                    className="w-full pl-4 pr-12 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none transition-colors bg-white"
-                    onFocus={(e) => e.target.style.borderColor = accentColor}
-                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'} />
-                  <button type="button"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    aria-pressed={showPassword}
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 select-none"
-                    style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 }}>
-                    {showPassword ? '🙈' : '👁️'}
-                  </button>
-                </div>
-                <p id="sig-password-hint" className="text-xs text-gray-400 mt-1">Keep your account secure</p>
-              </div>
-              <div>
-                <label className={labelClass}>{role === 'healer' ? 'Full Name' : 'Your Name'}</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)}
-                  placeholder={role === 'healer' ? 'Dr. / Your full name' : 'What should we call you?'}
-                  className={inputClass}
-                  onFocus={(e) => e.target.style.borderColor = accentColor}
-                  onBlur={(e) => e.target.style.borderColor = '#e5e7eb'} />
-                {role === 'healer' && <p className="text-xs text-gray-400 mt-1">Your name will be visible to clients</p>}
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass}>Age</label>
-                  <input type="number" value={age} onChange={(e) => setAge(e.target.value)}
-                    placeholder="e.g. 30" min="13" max="100" className={inputClass}
-                    onFocus={(e) => e.target.style.borderColor = accentColor}
-                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'} />
-                </div>
-                <div>
-                  <label className={labelClass}>Gender</label>
-                  <div className="relative">
-                    <select value={gender} onChange={(e) => setGender(e.target.value)} className={selectClass}
-                      onFocus={(e) => e.target.style.borderColor = accentColor}
-                      onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}>
-                      <option value="">Select</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="non_binary">Non-binary</option>
-                      <option value="prefer_not_to_say">Prefer not to say</option>
-                    </select>
-                    <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">▾</div>
-                  </div>
-                </div>
-              </div>
-              {error && <p role="alert" className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
-              <button onClick={next} className="w-full py-3.5 rounded-xl font-semibold text-white transition-all hover:opacity-90"
-                style={{ background: accentGrad, minHeight: 48 }}>Continue →</button>
-              <p className="text-center text-sm text-gray-500">
-                Already have an account?{' '}
-                <Link to="/login" className="font-semibold hover:underline" style={{ color: accentColor }}>Sign in</Link>
-              </p>
-            </div>
-          )}
-
-          {/* ── STEP 2: Location ── */}
-          {step === 2 && (
-            <div className="space-y-4">
-              <div>
-                <label className={labelClass}>Country</label>
-                <div className="relative">
-                  <select value={country} onChange={(e) => { setCountry(e.target.value); setState(''); }} className={selectClass}>
-                    {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                  <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">▾</div>
-                </div>
-              </div>
-              <div>
-                <label className={labelClass}>State / Province</label>
-                {country === 'India' ? (
-                  <div className="relative">
-                    <select value={state} onChange={(e) => setState(e.target.value)} className={selectClass}>
-                      <option value="">Select state</option>
-                      {INDIA_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                    <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">▾</div>
-                  </div>
-                ) : (
-                  <input type="text" value={state} onChange={(e) => setState(e.target.value)}
-                    placeholder="Enter your state / province" className={inputClass} />
-                )}
-              </div>
-              <div>
-                <label className={labelClass}>City</label>
-                <input type="text" value={city} onChange={(e) => setCity(e.target.value)}
-                  placeholder="Enter your city" className={inputClass} />
-                <p className="text-xs text-gray-400 mt-1">
-                  {role === 'healer' ? 'Helps local clients find you' : 'Helps us find nearby peers & meetups'}
-                </p>
-              </div>
-              {error && <p role="alert" className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
-              <div className="flex gap-3 pt-1">
-                <button onClick={back} className="flex-1 py-3 rounded-xl font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200">Back</button>
-                <button onClick={next} className="flex-1 py-3 rounded-xl font-semibold text-white hover:opacity-90"
-                  style={{ background: accentGrad }}>Continue →</button>
-              </div>
-            </div>
-          )}
-
-          {/* ── STEP 3A: User — Struggle ── */}
-          {step === 3 && role === 'user' && (
-            <div>
-              <p className="text-sm font-semibold text-gray-700 mb-1">What are you going through?</p>
-              <p className="text-xs text-gray-400 mb-1">Select at least 2 — your first pick is your primary focus</p>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-1.5 flex-1 rounded-full bg-gray-100 overflow-hidden">
-                  <div className="h-full rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min((selectedProblems.length / 2) * 100, 100)}%`, background: accentGrad }} />
-                </div>
-                <span className="text-xs font-semibold shrink-0" style={{ color: selectedProblems.length >= 2 ? accentColor : '#9ca3af' }}>
-                  {selectedProblems.length} selected{selectedProblems.length >= 2 ? ' ✓' : ' (min 2)'}
+  /* ── STEP 1: Basic Info ── */
+  if (step === 1) {
+    return (
+      <div className="min-h-screen flex">
+        <LeftPanel />
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+          <motion.div
+            className="w-full max-w-md"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+          >
+            {/* Progress */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">Basic Info</h2>
+                <span className="text-sm font-medium text-gray-500">
+                  Step {step} of {STEPS.length}
                 </span>
               </div>
-              {/* No max-height/overflow — all items visible, page scrolls naturally */}
-              <div className="grid grid-cols-2 gap-2 mb-5" role="group" aria-label="Select your challenges">
-                {PROBLEMS.map((prob) => {
-                  const isSelected = selectedProblems.includes(prob.value);
-                  const order = selectedProblems.indexOf(prob.value);
-                  return (
-                    <button key={prob.value} onClick={() => toggleProblem(prob.value)}
-                      aria-pressed={isSelected}
-                      aria-label={`${prob.label}${isSelected ? ', selected' : ''}`}
-                      className={`p-3 rounded-xl text-left transition-all border-2 relative ${
-                        isSelected ? 'border-purple-500 bg-purple-50' : 'border-gray-100 bg-white hover:border-purple-200'
-                      }`}>
-                      {isSelected && (
-                        <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full text-white text-xs flex items-center justify-center font-bold"
-                          style={{ background: accentGrad }}>
-                          {order === 0 ? '★' : order + 1}
-                        </span>
-                      )}
-                      <div className="text-xl mb-1">{prob.icon}</div>
-                      <div className="text-xs font-medium text-gray-700 leading-tight">{prob.label}</div>
-                    </button>
-                  );
-                })}
-              </div>
-              {error && <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2 mb-3">{error}</p>}
-              <div className="flex gap-3">
-                <button onClick={back} className="flex-1 py-3 rounded-xl font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200">Back</button>
-                <button onClick={next} disabled={selectedProblems.length < 2} className="flex-1 py-3 rounded-xl font-semibold text-white disabled:opacity-40"
-                  style={{ background: accentGrad }}>Continue →</button>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <motion.div
+                  className="h-2 rounded-full"
+                  style={{ background: `linear-gradient(90deg, ${P}, #8B5CF6)` }}
+                  initial={{ width: '0%' }}
+                  animate={{ width: `${(step / STEPS.length) * 100}%` }}
+                  transition={{ duration: 0.5 }}
+                />
               </div>
             </div>
-          )}
 
-          {/* ── STEP 3B: Healer — Professional Info ── */}
-          {step === 3 && role === 'healer' && (
-            <div className="space-y-5">
-              {/* Profession Type */}
-              <div>
-                <label className={labelClass}>Your Profession</label>
-                <div className="grid grid-cols-2 gap-2 max-h-52 overflow-y-auto pr-1"
-                  style={{ scrollbarWidth: 'thin' }}>
-                  {HEALER_TYPES.map((h) => (
-                    <button key={h.value} onClick={() => setHealerType(h.value)}
-                      className={`p-3 rounded-xl text-left transition-all border-2 ${
-                        healerType === h.value ? 'border-cyan-500 bg-cyan-50' : 'border-gray-100 bg-white hover:border-cyan-200'
-                      }`}>
-                      <div className="text-xl mb-1">{h.icon}</div>
-                      <div className="text-xs font-semibold text-gray-800">{h.label}</div>
-                      <div className="text-xs text-gray-500 leading-tight mt-0.5">{h.desc}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 rounded-xl flex items-start gap-3"
+                style={{ background: '#FEF2F2', borderLeft: `4px solid #EF4444` }}
+              >
+                <span className="text-xl">⚠️</span>
+                <span className="text-sm text-red-700">{error}</span>
+              </motion.div>
+            )}
 
-              {/* Specializations */}
-              <div>
-                <label className={labelClass}>Specializations <span className="text-gray-400 font-normal">(select all that apply)</span></label>
-                <div className="flex flex-wrap gap-2">
-                  {SPECIALIZATIONS.map((s) => (
-                    <button key={s} onClick={() => toggleSpec(s)}
-                      className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-all ${
-                        specializations.includes(s) ? 'border-cyan-500 bg-cyan-50 text-cyan-700' : 'border-gray-200 bg-white text-gray-600 hover:border-cyan-300'
-                      }`}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Experience + Fee */}
+            <div className="space-y-5 mb-8">
+              <FormInput
+                label="Full Name"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setFieldErrors({ ...fieldErrors, name: '' });
+                }}
+                placeholder="Your full name"
+                error={fieldErrors.name}
+                required
+              />
+              <FormInput
+                label="Phone Number"
+                type="tel"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setFieldErrors({ ...fieldErrors, phone: '' });
+                }}
+                placeholder="98765 43210"
+                error={fieldErrors.phone}
+                required
+              />
+              <FormInput
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setFieldErrors({ ...fieldErrors, password: '' });
+                }}
+                placeholder="••••••••"
+                error={fieldErrors.password}
+                required
+              />
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass}>Experience (yrs)</label>
-                  <input type="number" value={experience} onChange={(e) => setExperience(e.target.value)}
-                    placeholder="e.g. 5" min="0" max="60" className={inputClass} />
-                </div>
-                <div>
-                  <label className={labelClass}>Session Fee (₹)</label>
-                  <input type="number" value={sessionFee} onChange={(e) => setSessionFee(e.target.value)}
-                    placeholder="e.g. 500" min="0" className={inputClass} />
-                </div>
-              </div>
-
-              {/* Credentials */}
-              <div>
-                <label className={labelClass}>Credentials / Qualifications</label>
-                <input type="text" value={credentials} onChange={(e) => setCredentials(e.target.value)}
-                  placeholder="e.g. M.A. Psychology, RCI Licensed" className={inputClass} />
-              </div>
-
-              {/* Languages */}
-              <div>
-                <label className={labelClass}>Languages Spoken</label>
-                <input type="text" value={languages} onChange={(e) => setLanguages(e.target.value)}
-                  placeholder="e.g. English, Hindi, Marathi" className={inputClass} />
-                <p className="text-xs text-gray-400 mt-1">Separate with commas</p>
-              </div>
-
-              {/* Bio */}
-              <div>
-                <label className={labelClass}>About You <span className="text-gray-400 font-normal">({bio.length}/300)</span></label>
-                <textarea value={bio} onChange={(e) => setBio(e.target.value.slice(0, 300))}
-                  placeholder="Tell potential clients about your approach, background, and how you can help them..."
-                  rows={3}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:border-cyan-500 transition-colors bg-white resize-none" />
-              </div>
-
-              {error && <p role="alert" className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
-              <div className="flex gap-3">
-                <button onClick={back} className="flex-1 py-3 rounded-xl font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200">Back</button>
-                <button onClick={next} className="flex-1 py-3 rounded-xl font-semibold text-white hover:opacity-90"
-                  style={{ background: accentGrad }}>Continue →</button>
+                <FormInput
+                  label="Age"
+                  type="number"
+                  value={age}
+                  onChange={(e) => {
+                    setAge(e.target.value);
+                    setFieldErrors({ ...fieldErrors, age: '' });
+                  }}
+                  placeholder="18"
+                  error={fieldErrors.age}
+                  required
+                />
+                <FormSelect
+                  label="Gender"
+                  value={gender}
+                  onChange={(e) => {
+                    setGender(e.target.value);
+                    setFieldErrors({ ...fieldErrors, gender: '' });
+                  }}
+                  options={['Male', 'Female', 'Non-binary', 'Prefer not to say']}
+                  error={fieldErrors.gender}
+                  required
+                />
               </div>
             </div>
-          )}
 
-          {/* ── STEP 4: Review ── */}
-          {step === 4 && (
-            <div>
-              <div className="rounded-2xl border-2 border-gray-100 bg-gray-50 p-5 mb-4 space-y-2.5">
-                <h3 className="font-semibold text-gray-700 text-sm mb-2">Review your profile</h3>
-                {[
-                  { label: 'Phone', value: `+91 ${phone}` },
-                  { label: 'Name', value: name },
-                  { label: 'Age', value: `${age} years` },
-                  { label: 'Gender', value: gender.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) },
-                  { label: 'Location', value: `${city}, ${state}, ${country}` },
-                  ...(role === 'user' ? [
-                    { label: 'Primary focus', value: selectedProblems[0] ? `${PROBLEMS.find(p=>p.value===selectedProblems[0])?.icon} ${PROBLEMS.find(p=>p.value===selectedProblems[0])?.label}` : '' },
-                    ...(selectedProblems.length > 1 ? [{ label: 'Also going through', value: selectedProblems.slice(1).map(v => PROBLEMS.find(p=>p.value===v)?.label).join(', ') }] : []),
-                  ] : [
-                    { label: 'Profession', value: selectedHealerType ? `${selectedHealerType.icon} ${selectedHealerType.label}` : '' },
-                    { label: 'Experience', value: `${experience} years` },
-                    { label: 'Session Fee', value: `₹${sessionFee}` },
-                    { label: 'Credentials', value: credentials || '—' },
-                    { label: 'Languages', value: languages || '—' },
-                    ...(specializations.length ? [{ label: 'Specializations', value: specializations.join(', ') }] : []),
-                  ]),
-                ].map(({ label, value }) => (
-                  <div key={label} className="flex justify-between items-start border-b border-gray-200 pb-2 last:border-0 last:pb-0">
-                    <span className="text-xs text-gray-500 font-medium shrink-0 mr-4">{label}</span>
-                    <span className="text-sm text-gray-800 font-semibold text-right">{value}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex items-start gap-2 rounded-xl p-3 mb-4 border"
-                style={{ background: role === 'healer' ? '#e0f2fe' : '#fefce8', borderColor: role === 'healer' ? '#bae6fd' : '#fde68a' }}>
-                <span className="mt-0.5 shrink-0">{role === 'healer' ? 'ℹ️' : '🔒'}</span>
-                <p className="text-xs" style={{ color: role === 'healer' ? '#0369a1' : '#92400e' }}>
-                  {role === 'healer'
-                    ? 'Your profile will be reviewed within 24 hours. You\'ll receive a confirmation once verified.'
-                    : 'Your info is private. Only your first name and struggle category are visible to matched peers.'}
-                </p>
-              </div>
-
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl mb-4 text-sm flex gap-2">
-                  <span>⚠️</span> {error}
-                </div>
-              )}
-
-              <div className="flex gap-3">
-                <button onClick={back} className="flex-1 py-3 rounded-xl font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200">Back</button>
-                <button onClick={handleSignup} disabled={loading}
-                  className="flex-1 py-3 rounded-xl font-semibold text-white disabled:opacity-60 flex items-center justify-center gap-2"
-                  style={{ background: accentGrad }}>
-                  {loading
-                    ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Creating...</>
-                    : role === 'healer' ? 'Join as Healer 🧘' : 'Join SoulConnect 🌿'}
-                </button>
-              </div>
-
-              <p className="text-xs text-gray-400 text-center mt-4">
-                By joining, you agree to our{' '}
-                <Link to="/terms" target="_blank" className="font-semibold hover:underline" style={{ color: '#2d6a4f' }}>Terms</Link>{' '}&{' '}
-                <Link to="/terms#privacy" target="_blank" className="font-semibold hover:underline" style={{ color: '#2d6a4f' }}>Privacy Policy</Link>
-              </p>
-              <div className="mt-4 p-3 rounded-xl text-xs text-gray-500 text-center leading-relaxed"
-                style={{ background: '#F9FAFB', border: '1px solid #E5E7EB' }}>
-                ⚕️ <strong>Disclaimer:</strong> SoulConnect is a peer-support and wellness platform.
-                We do not provide medical, psychiatric, psychological, or emergency services.
-                If you are in crisis, please call emergency services or visit{' '}
-                <Link to="/crisis-support" className="underline" style={{ color: '#6D4AFF' }}>Crisis Resources</Link>.
+            {/* Navigation */}
+            <div className="flex gap-3">
+              <motion.button
+                onClick={() => setStep(0)}
+                className="flex-1 py-3 rounded-xl font-semibold border-2 transition-all"
+                style={{
+                  borderColor: '#E5E7EB',
+                  color: '#6B7280',
+                }}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Back
+              </motion.button>
+              <div className="flex-1">
+                <GradientButton onClick={next}>Next</GradientButton>
               </div>
             </div>
-          )}
+          </motion.div>
         </div>
       </div>
+    );
+  }
+
+  /* ── STEP 2: Location ── */
+  if (step === 2) {
+    return (
+      <div className="min-h-screen flex">
+        <LeftPanel />
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+          <motion.div
+            className="w-full max-w-md"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+          >
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">Location</h2>
+                <span className="text-sm font-medium text-gray-500">
+                  Step {step} of {STEPS.length}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <motion.div
+                  className="h-2 rounded-full"
+                  style={{ background: `linear-gradient(90deg, ${P}, #8B5CF6)` }}
+                  initial={{ width: '0%' }}
+                  animate={{ width: `${(step / STEPS.length) * 100}%` }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-5 mb-8">
+              <FormSelect
+                label="Country"
+                value={country}
+                onChange={(e) => {
+                  setCountry(e.target.value);
+                  setFieldErrors({ ...fieldErrors, country: '' });
+                }}
+                options={COUNTRIES}
+                error={fieldErrors.country}
+                required
+              />
+              {country === 'India' ? (
+                <FormSelect
+                  label="State"
+                  value={state}
+                  onChange={(e) => {
+                    setState(e.target.value);
+                    setFieldErrors({ ...fieldErrors, state: '' });
+                  }}
+                  options={INDIA_STATES}
+                  error={fieldErrors.state}
+                  required
+                />
+              ) : (
+                <FormInput
+                  label="State / Province"
+                  value={state}
+                  onChange={(e) => {
+                    setState(e.target.value);
+                    setFieldErrors({ ...fieldErrors, state: '' });
+                  }}
+                  placeholder="Your state"
+                  error={fieldErrors.state}
+                  required
+                />
+              )}
+              <FormInput
+                label="City"
+                value={city}
+                onChange={(e) => {
+                  setCity(e.target.value);
+                  setFieldErrors({ ...fieldErrors, city: '' });
+                }}
+                placeholder="Your city"
+                error={fieldErrors.city}
+                required
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <motion.button
+                onClick={back}
+                className="flex-1 py-3 rounded-xl font-semibold border-2 transition-all"
+                style={{
+                  borderColor: '#E5E7EB',
+                  color: '#6B7280',
+                }}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Back
+              </motion.button>
+              <div className="flex-1">
+                <GradientButton onClick={next}>Next</GradientButton>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── STEP 3: Struggles (User) or Professional (Healer) ── */
+  if (step === 3) {
+    return (
+      <div className="min-h-screen flex">
+        <LeftPanel />
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+          <motion.div
+            className="w-full max-w-md"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+          >
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {role === 'user' ? 'Your Struggles' : 'Professional Info'}
+                </h2>
+                <span className="text-sm font-medium text-gray-500">
+                  Step {step} of {STEPS.length}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <motion.div
+                  className="h-2 rounded-full"
+                  style={{ background: `linear-gradient(90deg, ${P}, #8B5CF6)` }}
+                  initial={{ width: '0%' }}
+                  animate={{ width: `${(step / STEPS.length) * 100}%` }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+            </div>
+
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 rounded-xl flex items-start gap-3"
+                style={{ background: '#FEF2F2', borderLeft: `4px solid #EF4444` }}
+              >
+                <span className="text-xl">⚠️</span>
+                <span className="text-sm text-red-700">{error}</span>
+              </motion.div>
+            )}
+
+            {role === 'user' ? (
+              <div className="space-y-4 mb-8">
+                <p className="text-sm text-gray-600 font-medium">
+                  What are you dealing with? (Select at least 2)
+                </p>
+                <div className="grid grid-cols-2 gap-2 max-h-96 overflow-y-auto">
+                  {PROBLEMS.map((p) => (
+                    <motion.button
+                      key={p.value}
+                      onClick={() => toggleProblem(p.value)}
+                      className="text-left p-3 rounded-lg border-2 transition-all text-sm font-medium flex items-center gap-2"
+                      style={{
+                        borderColor: selectedProblems.includes(p.value) ? P : '#E5E7EB',
+                        background: selectedProblems.includes(p.value) ? `${P}10` : '#F9FAFB',
+                        color: selectedProblems.includes(p.value) ? P : '#374151',
+                      }}
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <span>{p.icon}</span>
+                      {p.label}
+                    </motion.button>
+                  ))}
+                </div>
+                {fieldErrors.problems && (
+                  <p className="text-xs text-red-600">⚠️ {fieldErrors.problems}</p>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-6 mb-8">
+                <FormSelect
+                  label="Profession Type"
+                  value={healerType}
+                  onChange={(e) => {
+                    setHealerType(e.target.value);
+                    setFieldErrors({ ...fieldErrors, healerType: '' });
+                  }}
+                  options={HEALER_TYPES.map((h) => h.value)}
+                  error={fieldErrors.healerType}
+                  required
+                />
+
+                {selectedHealerType && (
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2.5">Specializations</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {SPECIALIZATIONS.map((s) => (
+                        <motion.button
+                          key={s}
+                          onClick={() => toggleSpec(s)}
+                          className="text-left p-2.5 rounded-lg border-2 transition-all text-xs font-medium"
+                          style={{
+                            borderColor: specializations.includes(s) ? '#059669' : '#E5E7EB',
+                            background: specializations.includes(s) ? '#D1FAE510' : '#F9FAFB',
+                            color: specializations.includes(s) ? '#059669' : '#374151',
+                          }}
+                          whileHover={{ y: -1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          {s}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <FormInput
+                  label="Years of Experience"
+                  type="number"
+                  value={experience}
+                  onChange={(e) => {
+                    setExperience(e.target.value);
+                    setFieldErrors({ ...fieldErrors, experience: '' });
+                  }}
+                  placeholder="5"
+                  error={fieldErrors.experience}
+                  required
+                />
+
+                <FormInput
+                  label="Bio"
+                  type="textarea"
+                  value={bio}
+                  onChange={(e) => {
+                    setBio(e.target.value);
+                    setFieldErrors({ ...fieldErrors, bio: '' });
+                  }}
+                  placeholder="Tell clients about your approach..."
+                  error={fieldErrors.bio}
+                  required
+                />
+
+                <FormInput
+                  label="Session Fee (₹)"
+                  type="number"
+                  value={sessionFee}
+                  onChange={(e) => {
+                    setSessionFee(e.target.value);
+                    setFieldErrors({ ...fieldErrors, sessionFee: '' });
+                  }}
+                  placeholder="500"
+                  error={fieldErrors.sessionFee}
+                  required
+                />
+
+                <FormInput
+                  label="Languages (comma-separated)"
+                  value={languages}
+                  onChange={(e) => setLanguages(e.target.value)}
+                  placeholder="English, Hindi, Marathi"
+                />
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <motion.button
+                onClick={back}
+                className="flex-1 py-3 rounded-xl font-semibold border-2 transition-all"
+                style={{
+                  borderColor: '#E5E7EB',
+                  color: '#6B7280',
+                }}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Back
+              </motion.button>
+              <div className="flex-1">
+                <GradientButton onClick={next}>Review</GradientButton>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── STEP 4: Review & Submit ── */
+  return (
+    <div className="min-h-screen flex">
+      <LeftPanel />
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 overflow-y-auto" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+        <motion.div
+          className="w-full max-w-md"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+        >
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-gray-900">Review</h2>
+              <span className="text-sm font-medium text-gray-500">
+                Step {step} of {STEPS.length}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <motion.div
+                className="h-2 rounded-full"
+                style={{ background: `linear-gradient(90deg, ${P}, #8B5CF6)` }}
+                initial={{ width: '0%' }}
+                animate={{ width: `100%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+          </div>
+
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 p-4 rounded-xl flex items-start gap-3"
+              style={{ background: '#FEF2F2', borderLeft: `4px solid #EF4444` }}
+            >
+              <span className="text-xl">⚠️</span>
+              <span className="text-sm text-red-700">{error}</span>
+            </motion.div>
+          )}
+
+          <div className="space-y-4 mb-8">
+            <ReviewRow label="Name" value={name} />
+            <ReviewRow label="Phone" value={phone} />
+            <ReviewRow label="Age" value={age} />
+            <ReviewRow label="Gender" value={gender} />
+            <ReviewRow label="City, State" value={`${city}, ${state}`} />
+            <ReviewRow label="Country" value={country} />
+
+            {role === 'user' && selectedProblems.length > 0 && (
+              <ReviewRow
+                label="Your Struggles"
+                value={selectedProblems.map((p) => PROBLEMS.find((x) => x.value === p)?.label).join(', ')}
+              />
+            )}
+
+            {role === 'healer' && (
+              <>
+                <ReviewRow
+                  label="Profession"
+                  value={selectedHealerType?.label}
+                />
+                <ReviewRow
+                  label="Experience"
+                  value={`${experience} years`}
+                />
+                <ReviewRow
+                  label="Session Fee"
+                  value={`₹${sessionFee}`}
+                />
+              </>
+            )}
+          </div>
+
+          <div className="flex gap-3">
+            <motion.button
+              onClick={back}
+              className="flex-1 py-3 rounded-xl font-semibold border-2 transition-all"
+              style={{
+                borderColor: '#E5E7EB',
+                color: '#6B7280',
+              }}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Back
+            </motion.button>
+            <div className="flex-1">
+              <GradientButton loading={loading} onClick={handleSignup}>
+                Create Account
+              </GradientButton>
+            </div>
+          </div>
+
+          <p className="text-center text-xs text-gray-600 mt-6">
+            By signing up, you agree to our{' '}
+            <Link to="/terms" className="font-semibold hover:opacity-80" style={{ color: P }}>
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link to="/privacy" className="font-semibold hover:opacity-80" style={{ color: P }}>
+              Privacy Policy
+            </Link>
+          </p>
+        </motion.div>
+      </div>
+
+      {/* Welcome Modal */}
+      <AnimatePresence>
+        {showWelcome && (
+          <motion.div
+            className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-2xl p-8 text-center max-w-sm"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+            >
+              <motion.div
+                className="text-6xl mb-4"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              >
+                🎉
+              </motion.div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Welcome to SoulConnect!</h3>
+              <p className="text-gray-600 mb-6">Your account has been created successfully.</p>
+              <p className="text-sm text-gray-500">Redirecting you now...</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
+  );
+}
+
+function ReviewRow({ label, value }) {
+  return (
+    <motion.div
+      className="flex justify-between items-center p-3 rounded-lg"
+      style={{ background: '#F9FAFB' }}
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+    >
+      <span className="text-sm font-medium text-gray-600">{label}</span>
+      <span className="text-sm font-semibold text-gray-900">{value}</span>
+    </motion.div>
   );
 }

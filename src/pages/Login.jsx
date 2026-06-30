@@ -1,7 +1,190 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { useAuthStore } from '../store/auth';
 import { authAPI } from '../services/api';
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS (matching Landing.jsx)
+═══════════════════════════════════════════════════════════════════════════════ */
+const P    = '#6D4AFF';  // Primary Purple
+const LAV  = '#A78BFA'; // Lavender
+const GLD  = '#F5B841'; // Gold
+const PNK  = '#F472B6'; // Pink
+const DARK = '#120B2E'; // Dark Purple
+const BG_GRADIENT = 'linear-gradient(155deg, #0A0222 0%, #120B2E 40%, #1E0848 70%, #0A0222 100%)';
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   COMPONENTS
+═══════════════════════════════════════════════════════════════════════════════ */
+
+function FloatingParticles() {
+  const particles = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    size: Math.random() * 4 + 2,
+    delay: Math.random() * 5,
+    duration: Math.random() * 15 + 20,
+  }));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            left: `${p.left}%`,
+            top: `${p.top}%`,
+            width: p.size,
+            height: p.size,
+            background: [P, LAV, GLD, PNK][p.id % 4],
+            opacity: 0.1,
+          }}
+          animate={{
+            y: [0, -20, 0],
+            opacity: [0.05, 0.15, 0.05],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function FeatureCard({ icon, title, description }) {
+  return (
+    <motion.div
+      className="rounded-2xl p-4 backdrop-blur-md border transition-all hover:scale-105 cursor-pointer"
+      style={{
+        background: 'rgba(255, 255, 255, 0.08)',
+        borderColor: 'rgba(255, 255, 255, 0.12)',
+      }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="text-3xl mb-3">{icon}</div>
+      <h4 className="text-sm font-semibold text-white mb-1">{title}</h4>
+      <p className="text-xs text-white/60 leading-relaxed">{description}</p>
+    </motion.div>
+  );
+}
+
+function StatCard({ value, label }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: Math.random() * 0.3 }}
+    >
+      <div className="font-bold text-xl" style={{ color: GLD }}>
+        {value}
+      </div>
+      <div className="text-xs text-white/50 mt-1">{label}</div>
+    </motion.div>
+  );
+}
+
+function AuthInput({ label, type = 'text', value, onChange, placeholder, error, icon, showPasswordToggle, onTogglePassword, showPassword }) {
+  const isPassword = type === 'password';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 }}
+    >
+      <label className="block text-sm font-semibold text-white/90 mb-2.5">{label}</label>
+      <div className="relative">
+        {icon && (
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg">{icon}</div>
+        )}
+        <input
+          type={showPassword ? 'text' : type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className="w-full py-3.5 px-4 rounded-xl border-2 transition-all duration-300 font-medium text-white placeholder-white/40"
+          style={{
+            background: 'rgba(255, 255, 255, 0.08)',
+            borderColor: error ? '#EF4444' : 'rgba(255, 255, 255, 0.15)',
+            paddingLeft: icon ? '48px' : undefined,
+          }}
+          onFocus={(e) => {
+            if (!error) {
+              e.target.style.borderColor = LAV;
+              e.target.style.background = 'rgba(255, 255, 255, 0.12)';
+            }
+          }}
+          onBlur={(e) => {
+            if (!error) {
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+              e.target.style.background = 'rgba(255, 255, 255, 0.08)';
+            }
+          }}
+        />
+        {showPasswordToggle && isPassword && (
+          <button
+            type="button"
+            onClick={onTogglePassword}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white transition-colors text-lg"
+          >
+            {showPassword ? '👁️' : '🙈'}
+          </button>
+        )}
+      </div>
+      {error && (
+        <motion.p
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-xs text-red-400 mt-2"
+        >
+          ⚠️ {error}
+        </motion.p>
+      )}
+    </motion.div>
+  );
+}
+
+function GradientButton({ children, onClick, loading = false, type = 'button' }) {
+  return (
+    <motion.button
+      type={type}
+      onClick={onClick}
+      disabled={loading}
+      className="w-full py-3.5 rounded-xl font-semibold text-white transition-all duration-300 relative overflow-hidden disabled:opacity-60 flex items-center justify-center gap-2"
+      style={{
+        background: `linear-gradient(135deg, ${P}, #8B5CF6)`,
+      }}
+      whileHover={!loading ? { y: -2 } : {}}
+      whileTap={!loading ? { scale: 0.98 } : {}}
+    >
+      {loading ? (
+        <>
+          <div
+            className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
+          />
+          Signing in...
+        </>
+      ) : (
+        <>
+          {children}
+          <span>→</span>
+        </>
+      )}
+    </motion.button>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   MAIN LOGIN COMPONENT
+═══════════════════════════════════════════════════════════════════════════════ */
 
 export default function Login() {
   const [phone, setPhone] = useState('');
@@ -9,6 +192,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldError, setFieldError] = useState({ phone: '', password: '' });
 
   const { setAuth } = useAuthStore();
   const navigate = useNavigate();
@@ -17,151 +201,308 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!phone) { setError('Please enter your phone number'); return; }
-    if (!password) { setError('Please enter your password'); return; }
+    const newErrors = { phone: '', password: '' };
+
+    if (!phone) {
+      newErrors.phone = 'Phone number is required';
+    }
+    if (!password) {
+      newErrors.password = 'Password is required';
+    }
+
+    setFieldError(newErrors);
+
+    if (newErrors.phone || newErrors.password) return;
+
     setLoading(true);
     setError('');
+
     try {
       const response = await authAPI.login(phone, password);
       setAuth(response.data, response.data.access_token, response.data.role);
-      navigate('/dashboard');
+      navigate('/home');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Incorrect phone number or password.');
+      const errorMsg = err.response?.data?.detail || 'Incorrect phone number or password. Try again.';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Panel — forest green matching landing page */}
-      <div className="hidden lg:flex lg:w-5/12 xl:w-1/2 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #1a3d2e 0%, #1e4d38 50%, #152e23 100%)' }}>
-        <div className="absolute top-20 left-10 w-64 h-64 rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, #86efac, transparent)', filter: 'blur(40px)' }} />
-        <div className="absolute bottom-32 right-10 w-80 h-80 rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, #f59e0b, transparent)', filter: 'blur(60px)' }} />
+    <div className="min-h-screen flex overflow-hidden">
+      {/* ── LEFT PANEL: Premium Hero ── */}
+      <div
+        className="hidden lg:flex lg:w-1/2 relative overflow-hidden items-center justify-center"
+        style={{ background: BG_GRADIENT }}
+      >
+        <FloatingParticles />
 
-        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <div className="flex items-center">
-            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 64, width: 'auto', objectFit: 'contain', maxWidth: 260, borderRadius: 10 }} />
-          </div>
+        <motion.div
+          className="relative z-10 w-full px-12 py-20 flex flex-col justify-between h-full"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+        >
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <img
+              src="/logo-footer.png"
+              alt="SoulConnect"
+              style={{
+                height: 56,
+                width: 'auto',
+                objectFit: 'contain',
+                maxWidth: 220,
+                borderRadius: 12,
+              }}
+            />
+          </motion.div>
 
-          <div>
-            <h2 className="text-4xl font-bold text-white leading-tight mb-4">
-              Welcome back.<br />
-              <span style={{ color: '#f59e0b' }}>Your people missed you.</span>
-            </h2>
-            <p className="text-lg leading-relaxed mb-10" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              Your healing journey continues here — with real people who understand what you're going through.
-            </p>
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { icon: '🤝', label: 'Peer Matches' },
-                { icon: '💬', label: 'Safe Chats' },
-                { icon: '🧘', label: 'Healer Sessions' },
-              ].map(({ icon, label }) => (
-                <div key={label} className="rounded-2xl p-4 text-center"
-                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <div className="text-2xl mb-2">{icon}</div>
-                  <div className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>{label}</div>
-                </div>
-              ))}
+          {/* Hero Content */}
+          <div className="my-auto">
+            <motion.h1
+              className="text-5xl font-bold text-white leading-tight mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              Welcome back.
+            </motion.h1>
+            <motion.div
+              className="text-5xl font-bold mb-6 leading-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              style={{ background: `linear-gradient(135deg, ${LAV}, ${GLD})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+            >
+              Your healing journey continues.
+            </motion.div>
+            <motion.p
+              className="text-lg text-white/70 mb-10 leading-relaxed max-w-md"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              Reconnect with people who understand you. Continue your healing with meaningful conversations and support that feels like home.
+            </motion.p>
+
+            {/* Feature Cards */}
+            <div className="grid grid-cols-3 gap-3 mb-12">
+              <FeatureCard
+                icon="🤝"
+                title="Peer Connections"
+                description="Find people who truly understand your journey."
+              />
+              <FeatureCard
+                icon="💜"
+                title="Safe Conversations"
+                description="Private and judgment-free conversations."
+              />
+              <FeatureCard
+                icon="🪷"
+                title="Guided Healing"
+                description="Mindfulness and daily healing practices."
+              />
             </div>
           </div>
 
-          <div className="flex gap-8">
-            {[['10K+', 'Members'], ['95%', 'Feel Better'], ['Safe', '& Anonymous']].map(([val, label]) => (
-              <div key={label}>
-                <div className="font-bold text-xl" style={{ color: '#f59e0b' }}>{val}</div>
-                <div className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+          {/* Stats */}
+          <motion.div
+            className="flex justify-between pt-8 border-t border-white/10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+          >
+            <StatCard value="12K+" label="Members" />
+            <StatCard value="98%" label="Feel Supported" />
+            <StatCard value="Private" label="Anonymous" />
+          </motion.div>
+        </motion.div>
       </div>
 
-      {/* Right Panel */}
-      <div className="flex-1 flex items-center justify-center p-6" style={{ background: '#f5f5f0' }}>
-        <div className="w-full max-w-md">
+      {/* ── RIGHT PANEL: Auth Card ── */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8" style={{ background: 'rgba(250, 250, 248, 0.98)' }}>
+        <motion.div
+          className="w-full max-w-md"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        >
+          {/* Mobile Logo */}
+          <motion.div className="flex items-center mb-8 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <img
+              src="/logo-footer.png"
+              alt="SoulConnect"
+              style={{
+                height: 40,
+                width: 'auto',
+                objectFit: 'contain',
+                maxWidth: 160,
+              }}
+            />
+          </motion.div>
 
-          {/* Mobile logo */}
-          <div className="flex items-center mb-8 lg:hidden">
-            <img src="/logo-footer.png" alt="SoulConnect" style={{ height: 40, width: 'auto', objectFit: 'contain', maxWidth: 180 }} />
-          </div>
+          {/* Heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mb-8"
+          >
+            <h2 className="text-4xl font-bold text-gray-900 mb-2">Sign in</h2>
+            <p className="text-gray-600 text-base">Your community is waiting for you</p>
+          </motion.div>
 
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-1">Sign in</h1>
-            <p className="text-gray-500">Welcome back — your community is waiting</p>
-          </div>
+          {/* Success Message */}
+          {successMsg && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 p-4 rounded-xl flex items-center gap-3"
+              style={{ background: '#ECFDF5', borderLeft: `4px solid #10B981` }}
+            >
+              <span className="text-xl">✅</span>
+              <span className="text-sm font-medium text-green-700">{successMsg}</span>
+            </motion.div>
+          )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            {/* Phone */}
+          {/* Error Message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 p-4 rounded-xl flex items-center gap-3"
+              style={{ background: '#FEF2F2', borderLeft: `4px solid #EF4444` }}
+            >
+              <span className="text-xl">⚠️</span>
+              <span className="text-sm font-medium text-red-700">{error}</span>
+            </motion.div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-6">
+            <AuthInput
+              label="Phone Number"
+              type="tel"
+              value={phone}
+              onChange={(e) => {
+                setPhone(e.target.value);
+                setFieldError({ ...fieldError, phone: '' });
+              }}
+              placeholder="98765 43210"
+              error={fieldError.phone}
+              icon="📱"
+            />
+
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">+91</div>
-                <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
-                  placeholder="98765 43210" autoFocus
-                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none transition-colors bg-white"
-                  onFocus={e => e.target.style.borderColor = '#1a3d2e'}
-                  onBlur={e => e.target.style.borderColor = '#e5e7eb'} />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-semibold text-gray-700">Password</label>
-                <Link to="/forgot-password" className="text-xs font-semibold hover:underline" style={{ color: '#1a3d2e' }}>
+              <div className="flex items-center justify-between mb-2.5">
+                <label className="block text-sm font-semibold text-white/90">Password</label>
+                <Link
+                  to="/forgot-password"
+                  className="text-xs font-semibold transition-colors hover:opacity-80"
+                  style={{ color: P }}
+                >
                   Forgot password?
                 </Link>
               </div>
-              <div className="relative">
-                <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full pl-4 pr-12 py-3.5 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none transition-colors bg-white"
-                  onFocus={e => e.target.style.borderColor = '#1a3d2e'}
-                  onBlur={e => e.target.style.borderColor = '#e5e7eb'} />
-                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm">
-                  {showPassword ? '🙈' : '👁️'}
-                </button>
-              </div>
+              <AuthInput
+                label=""
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setFieldError({ ...fieldError, password: '' });
+                }}
+                placeholder="••••••••"
+                error={fieldError.password}
+                icon="🔐"
+                showPasswordToggle
+                showPassword={showPassword}
+                onTogglePassword={() => setShowPassword(!showPassword)}
+              />
             </div>
 
-            {successMsg && (
-              <div className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-xl text-sm flex items-center gap-2">
-                <span>✅</span> {successMsg}
-              </div>
-            )}
+            {/* Remember Me & Forgot Password (inline) */}
+            <motion.div
+              className="flex items-center justify-between"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <label className="flex items-center gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 rounded"
+                  style={{ accentColor: P }}
+                />
+                <span className="text-sm text-gray-700 font-medium">Remember me</span>
+              </label>
+            </motion.div>
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-sm flex items-center gap-2">
-                <span>⚠️</span> {error}
-              </div>
-            )}
-
-            <button type="submit" disabled={loading}
-              className="w-full py-3.5 rounded-xl font-semibold text-white transition-all hover:opacity-90 active:scale-95 disabled:opacity-60 flex items-center justify-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #1a3d2e, #2d6a4f)' }}>
-              {loading
-                ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Signing in...</>
-                : 'Sign In →'}
-            </button>
-
-            <p className="text-center text-sm text-gray-500">
-              New to SoulConnect?{' '}
-              <Link to="/signup" className="font-semibold hover:underline" style={{ color: '#1a3d2e' }}>Create account</Link>
-            </p>
+            {/* Sign In Button */}
+            <GradientButton type="submit" loading={loading}>
+              Sign In
+            </GradientButton>
           </form>
 
-          <div className="mt-8 flex items-center gap-2 rounded-xl p-3"
-            style={{ background: '#dcfce7', border: '1px solid #bbf7d0' }}>
-            <span>🔒</span>
-            <p className="text-xs" style={{ color: '#166534' }}>Your account is private and anonymous. We never share your information.</p>
-          </div>
-        </div>
+          {/* Divider */}
+          <motion.div
+            className="my-8 flex items-center gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-sm text-gray-500 font-medium">Or continue with</span>
+            <div className="flex-1 h-px bg-gray-200" />
+          </motion.div>
+
+          {/* OAuth Buttons */}
+          <motion.div
+            className="grid grid-cols-3 gap-3 mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+          >
+            {[
+              { icon: '🔵', label: 'Google', color: '#4F46E5' },
+              { icon: '🍎', label: 'Apple', color: '#000' },
+              { icon: '📞', label: 'OTP', color: P },
+            ].map((btn) => (
+              <motion.button
+                key={btn.label}
+                type="button"
+                className="py-3 rounded-xl font-medium transition-all text-sm flex items-center justify-center gap-2"
+                style={{
+                  background: 'rgba(0,0,0,0.04)',
+                  border: '1px solid rgba(0,0,0,0.08)',
+                }}
+                whileHover={{ y: -2, background: 'rgba(0,0,0,0.06)' }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span>{btn.icon}</span>
+              </motion.button>
+            ))}
+          </motion.div>
+
+          {/* Sign Up Link */}
+          <motion.p
+            className="text-center text-sm text-gray-600"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            Don't have an account?{' '}
+            <Link to="/signup" className="font-semibold transition-colors hover:opacity-80" style={{ color: P }}>
+              Create Account →
+            </Link>
+          </motion.p>
+        </motion.div>
       </div>
     </div>
   );
