@@ -149,6 +149,8 @@ export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
     );
   }
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+
   return (
     <>
       <motion.div
@@ -158,7 +160,7 @@ export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
           background: getMoodBackground(),
           border: `1.5px solid ${getMoodBorderColor()}`,
           borderRadius: 24,
-          padding: '28px',
+          padding: isMobile ? '16px' : '28px',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -254,9 +256,9 @@ export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
 
         <div style={{ position: 'relative', zIndex: 1 }}>
           {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-            <span style={{ fontSize: 24 }}>🌿</span>
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: isMobile ? 14 : 20 }}>
+            <span style={{ fontSize: isMobile ? 20 : 24 }}>🌿</span>
+            <h2 style={{ fontSize: isMobile ? 18 : 22, fontWeight: 800, color: '#fff', margin: 0 }}>
               Today's Focus
             </h2>
           </div>
@@ -286,7 +288,7 @@ export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
             <p style={{ fontSize: 12, fontWeight: 600, color: 'rgba(196, 181, 253, 0.6)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '0 0 12px' }}>
               Choose Duration
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: isMobile ? 6 : 8 }}>
               {[3, 5, 7].map((dur) => (
                 <motion.button
                   key={dur}
@@ -294,7 +296,7 @@ export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setDuration(dur)}
                   style={{
-                    padding: '10px 12px',
+                    padding: isMobile ? '8px 6px' : '10px 12px',
                     borderRadius: 12,
                     border:
                       duration === dur
@@ -305,7 +307,7 @@ export default function TodaysFocusCard({ selectedMood, onSessionComplete }) {
                         ? 'rgba(139, 92, 246, 0.15)'
                         : 'rgba(139, 92, 246, 0.08)',
                     color: '#E2DEFF',
-                    fontSize: 12,
+                    fontSize: isMobile ? 11 : 12,
                     fontWeight: 600,
                     cursor: 'pointer',
                     transition: 'all 0.2s',
