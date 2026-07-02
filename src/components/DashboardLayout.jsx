@@ -2,13 +2,14 @@ import React from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { motion, AnimatePresence } from 'motion/react';
-import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound } from 'lucide-react';
+import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound, BarChart3 } from 'lucide-react';
 
 /* ── Desktop sidebar nav ── */
 const NAV_ITEMS = [
   { icon: Home,          label: 'Home',          to: '/home'          },
   { icon: BookHeart,     label: 'Stories',        to: '/stories'       },
   { icon: Users,         label: 'Circles',        to: '/community'     },
+  { icon: BarChart3,     label: 'Mood Tracker',   to: '/mood'          },
   { icon: Stethoscope,   label: 'Professionals',  to: '/professionals' },
   { icon: MessageCircle, label: 'Messages',       to: '/messages'      },
   { icon: UserRound,     label: 'Profile',        to: '/profile'       },
