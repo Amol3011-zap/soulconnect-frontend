@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
 
-export default function WeeklyMood({ onViewFull, moods = [9, 7, 5, 7, 9, 8, 7] }) {
+export default function WeeklyMood({ onViewFull, moods = [5, 5, 5, 5, 5, 5, 5] }) {
   const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
   const moodEmojis = { 1: '😭', 3: '😔', 5: '😐', 7: '🙂', 9: '😁' };
 
   const getMoodEmoji = (score) => {
+    if (!score) return '😐';
     return Object.entries(moodEmojis).reduce(([bestScore, bestEmoji], [s, emoji]) =>
       Math.abs(parseInt(s) - score) < Math.abs(parseInt(bestScore) - score)
         ? [s, emoji]
@@ -14,14 +15,30 @@ export default function WeeklyMood({ onViewFull, moods = [9, 7, 5, 7, 9, 8, 7] }
     )[1];
   };
 
+  // Use only the 7 days
+  const displayMoods = useMemo(() => {
+    const last7 = moods.slice(-7);
+    // Pad with neutral mood if less than 7 days
+    while (last7.length < 7) {
+      last7.unshift(5);
+    }
+    return last7;
+  }, [moods]);
+
   // Calculate line coordinates
   const width = 240;
   const height = 50;
-  const points = moods.map((mood, i) => {
-    const x = (i / (moods.length - 1)) * width;
+  const points = displayMoods.map((mood, i) => {
+    const x = (i / 6) * width;
     const y = height - ((mood - 1) / 9) * height;
     return `${x},${y}`;
   }).join(' ');
+
+  // Calculate sentiment
+  const avgMood = Math.round(displayMoods.reduce((a, b) => a + b, 0) / displayMoods.length);
+  const sentiment = avgMood >= 7 ? 'Keep it up! You had more good days this week.' :
+                    avgMood >= 5 ? 'You\'re staying balanced. Keep going!' :
+                    'We\'re here for you. It gets better!';
 
   return (
     <motion.div
@@ -43,7 +60,7 @@ export default function WeeklyMood({ onViewFull, moods = [9, 7, 5, 7, 9, 8, 7] }
             Your Mood This Week
           </h3>
           <p style={{ fontSize: 12, color: 'rgba(184, 180, 216, 0.6)', margin: 0 }}>
-            Keep it up! You had more good days this week.
+            {sentiment}
           </p>
         </div>
         <motion.button
@@ -71,7 +88,7 @@ export default function WeeklyMood({ onViewFull, moods = [9, 7, 5, 7, 9, 8, 7] }
       </div>
 
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, justifyContent: 'space-between' }}>
-        {moods.map((mood, i) => (
+        {displayMoods.map((mood, i) => (
           <motion.div
             key={i}
             initial={{ scale: 0 }}

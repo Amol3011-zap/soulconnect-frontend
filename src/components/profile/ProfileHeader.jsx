@@ -1,25 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { useMoodData } from '../../hooks/useMoodData';
 
-export default function ProfileHeader({ user, streak, mood, onEditClick }) {
-  const initials = (user?.name || 'S')
+export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) {
+  const { store: moodStore } = useMoodData();
+  const [todayMood, setTodayMood] = useState(null);
+
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    setTodayMood(moodStore[today]?.mood);
+  }, [moodStore]);
+
+  const initials = (user?.full_name || user?.name || 'S')
     .split(' ')
     .map(n => n[0])
     .join('')
     .toUpperCase()
     .slice(0, 2);
 
-  const moodEmoji = {
-    1: '😭', 3: '😔', 5: '😐', 7: '🙂', 9: '😁'
+  const moodEmoji = { 1: '😭', 3: '😔', 5: '😐', 7: '🙂', 9: '😁' };
+
+  const getMoodEmoji = (score) => {
+    if (!score) return '😊';
+    return Object.entries(moodEmoji).reduce(([bestScore, bestEmoji], [s, emoji]) =>
+      Math.abs(parseInt(s) - score) < Math.abs(parseInt(bestScore) - score)
+        ? [s, emoji]
+        : [bestScore, bestEmoji]
+    )[1];
   };
 
-  const getMoodEmoji = () => {
-    if (!mood) return '😊';
-    return Object.entries(moodEmoji).reduce(([bestScore], [score]) =>
-      Math.abs(parseInt(score) - mood) < Math.abs(parseInt(bestScore) - mood)
-        ? [score]
-        : [bestScore]
-    )[0].split('').reverse()[0] || moodEmoji[Math.round(mood)];
+  const getMoodLabel = (score) => {
+    if (!score) return 'No mood logged';
+    const moodLabels = { 1: 'Awful', 3: 'Not Good', 5: 'Okay', 7: 'Good', 9: 'Amazing' };
+    return Object.entries(moodLabels).reduce(([bestScore, bestLabel], [s, label]) =>
+      Math.abs(parseInt(s) - score) < Math.abs(parseInt(bestScore) - score)
+        ? [s, label]
+        : [bestScore, bestLabel]
+    )[1];
   };
 
   return (
@@ -41,23 +58,37 @@ export default function ProfileHeader({ user, streak, mood, onEditClick }) {
     >
       {/* Left: Avatar + Online */}
       <div style={{ position: 'relative', flexShrink: 0 }}>
-        <div
-          style={{
-            width: 64,
-            height: 64,
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 24,
-            fontWeight: 700,
-            color: '#fff',
-            border: '2px solid rgba(255, 255, 255, 0.12)',
-          }}
-        >
-          {initials}
-        </div>
+        {user?.avatar_url ? (
+          <img
+            src={user.avatar_url}
+            alt="Avatar"
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: '50%',
+              border: '2px solid rgba(255, 255, 255, 0.12)',
+              objectFit: 'cover',
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 24,
+              fontWeight: 700,
+              color: '#fff',
+              border: '2px solid rgba(255, 255, 255, 0.12)',
+            }}
+          >
+            {initials}
+          </div>
+        )}
         {/* Online indicator */}
         <div
           style={{
@@ -76,15 +107,15 @@ export default function ProfileHeader({ user, streak, mood, onEditClick }) {
       {/* Center: Name + Mood + Streak */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
-          {user?.name || 'Soul Traveler'}
+          {user?.full_name || user?.name || 'Soul Traveler'}
         </div>
         <div style={{ fontSize: 12, color: 'rgba(184, 180, 216, 0.6)', marginBottom: 8 }}>
-          You don't have to go through it alone.
+          {user?.bio || "You don't have to go through it alone."}
         </div>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(184, 180, 216, 0.8)' }}>
-            <span>{getMoodEmoji()}</span>
-            <span>Hopeful</span>
+            <span>{getMoodEmoji(todayMood)}</span>
+            <span>{getMoodLabel(todayMood)}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(184, 180, 216, 0.8)' }}>
             <span>🔥</span>
@@ -92,7 +123,7 @@ export default function ProfileHeader({ user, streak, mood, onEditClick }) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(184, 180, 216, 0.8)' }}>
             <span>🌱</span>
-            <span>Level 4</span>
+            <span>Level {level}</span>
           </div>
         </div>
       </div>

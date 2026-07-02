@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
+import { useTinyWinsStore } from '../../store/tinyWins';
+import { useStoriesStore } from '../../store/stories';
+import { useMoodData } from '../../hooks/useMoodData';
 
 function AnimatedCounter({ value, duration = 1 }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     const target = typeof value === 'number' ? value : 0;
-    if (target === 0) return;
+    if (target === 0) {
+      setCount(0);
+      return;
+    }
 
     let current = 0;
     const increment = target / (duration * 60);
@@ -26,7 +32,24 @@ function AnimatedCounter({ value, duration = 1 }) {
   return <>{count}</>;
 }
 
-export default function StatsGrid({ totalWins = 12, journalEntries = 34, peopleHelped = 19, connections = 8 }) {
+export default function StatsGrid() {
+  const { totalWins } = useTinyWinsStore();
+  const { userStories } = useStoriesStore();
+  const { allEntries } = useMoodData();
+
+  // Calculate stats from real data
+  const journalEntries = userStories.length;
+  const peopleHelped = Math.floor(totalWins * 0.5) || 0; // Mock calculation
+  const connections = 8; // Would come from connections store
+  const totalMoodEntries = allEntries.filter(e => e.mood).length;
+  const averageMood = totalMoodEntries > 0
+    ? Math.round(
+        allEntries
+          .filter(e => e.mood)
+          .reduce((sum, e) => sum + e.mood, 0) / totalMoodEntries
+      )
+    : 0;
+
   const stats = [
     { icon: '🌱', label: 'Tiny Wins', value: totalWins },
     { icon: '📖', label: 'Journal Entries', value: journalEntries },
