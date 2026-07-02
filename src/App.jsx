@@ -50,6 +50,7 @@ const MoodTracker   = lazy(() => import('./pages/MoodTracker'));
 const Meditate      = lazy(() => import('./pages/Meditations'));
 const Professionals = lazy(() => import('./pages/Professionals'));
 const Profile       = lazy(() => import('./pages/Profile'));
+const Settings      = lazy(() => import('./pages/Settings'));
 
 // Soul Stories sub-pages
 const StoryDetail        = lazy(() => import('./pages/StoryDetail'));
@@ -74,14 +75,14 @@ const LAUNCH_READY = import.meta.env.VITE_LAUNCH_READY === 'true';
 
 // Routes that use DashboardLayout
 const DASHBOARD_PATHS = [
-  '/home', '/stories', '/community', '/messages',
-  '/meditate', '/professionals', '/profile', '/tiny-wins',
+  '/home', '/stories', '/community', '/messages', '/mood',
+  '/meditate', '/professionals', '/profile', '/account', '/tiny-wins',
   '/story', '/saved',
   // legacy aliases still routed through layout
   '/dashboard', '/healers', '/meetups', '/premium',
-  '/account', '/onboarding', '/journey',
+  '/onboarding', '/journey',
   // old routes now redirected
-  '/journal', '/mood', '/matches', '/circles', '/meditations', '/challenges', '/resources',
+  '/journal', '/matches', '/circles', '/meditations', '/challenges', '/resources',
 ];
 
 function PageLoader() {
@@ -194,6 +195,7 @@ function AppInner() {
                 <Route path="/meditate"      element={<Suspense fallback={<PageLoader />}><Meditate /></Suspense>} />
                 <Route path="/professionals" element={<Suspense fallback={<PageLoader />}><Professionals /></Suspense>} />
                 <Route path="/profile"       element={<Suspense fallback={<PageLoader />}><Profile /></Suspense>} />
+                <Route path="/account"       element={<Suspense fallback={<PageLoader />}><Settings /></Suspense>} />
                 <Route path="/tiny-wins"    element={<Suspense fallback={<PageLoader />}><TinyWins /></Suspense>} />
                 <Route path="/story/:id"   element={<Suspense fallback={<PageLoader />}><StoryDetail /></Suspense>} />
                 <Route path="/saved"         element={<Suspense fallback={<PageLoader />}><SavedStories /></Suspense>} />
