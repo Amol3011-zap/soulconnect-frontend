@@ -298,10 +298,9 @@ export default function Settings() {
 
       {/* Settings Content */}
       <div style={{ padding: '20px 16px', maxWidth: 700, margin: '0 auto' }}>
-        <AnimatePresence>
-          {/* Account Settings */}
-          {(!filteredSettings || 'account'.includes(filteredSettings) || 'profile'.includes(filteredSettings) || 'password'.includes(filteredSettings)) && (
-            <SettingsGroup title="Account" icon="👤" searchQuery={filteredSettings}>
+        {/* Account Settings */}
+        {(!filteredSettings || 'account'.includes(filteredSettings) || 'profile'.includes(filteredSettings) || 'password'.includes(filteredSettings)) && (
+          <SettingsGroup title="Account" icon="👤" searchQuery={filteredSettings}>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -484,238 +483,9 @@ export default function Settings() {
             </SettingsGroup>
           )}
 
-          {/* Privacy & Safety */}
-          {(!filteredSettings || 'privacy'.includes(filteredSettings) || 'safety'.includes(filteredSettings)) && (
-            <SettingsGroup title="Privacy & Safety" icon="🔒" searchQuery={filteredSettings}>
-              <SettingSwitch
-                label="Private Profile"
-                description="Only approved followers can see your profile"
-                value={settings.privateProfile}
-                onChange={() => settings.updateSetting('privateProfile', !settings.privateProfile)}
-              />
-              <SettingSwitch
-                label="Hide Online Status"
-                description="Others won't see when you're active"
-                value={settings.hideOnlineStatus}
-                onChange={() => settings.updateSetting('hideOnlineStatus', !settings.hideOnlineStatus)}
-              />
-              <SettingSwitch
-                label="Hide Last Seen"
-                description="Hide when you were last online"
-                value={settings.hideLastSeen}
-                onChange={() => settings.updateSetting('hideLastSeen', !settings.hideLastSeen)}
-              />
-              <SettingSwitch
-                label="Allow Friend Requests"
-                description="Accept new connection requests"
-                value={settings.allowFriendRequests}
-                onChange={() => settings.updateSetting('allowFriendRequests', !settings.allowFriendRequests)}
-              />
-              <SettingSwitch
-                label="Allow Direct Messages"
-                description="Receive direct messages from followers"
-                value={settings.allowDirectMessages}
-                onChange={() => settings.updateSetting('allowDirectMessages', !settings.allowDirectMessages)}
-              />
-            </SettingsGroup>
-          )}
-
-          {/* Emotional Safety */}
-          {(!filteredSettings || 'emotional'.includes(filteredSettings) || 'safety'.includes(filteredSettings)) && (
-            <SettingsGroup title="Emotional Safety" icon="💜" searchQuery={filteredSettings}>
-              <SettingSwitch
-                label="Safe Mode"
-                description="Hide potentially triggering content"
-                value={settings.safeMode}
-                onChange={() => settings.updateSetting('safeMode', !settings.safeMode)}
-              />
-              <SettingSwitch
-                label="Anonymous Mode"
-                description="Browse without showing your profile"
-                value={settings.anonymousMode}
-                onChange={() => settings.updateSetting('anonymousMode', !settings.anonymousMode)}
-              />
-              <SettingSwitch
-                label="Pause Friend Requests"
-                description="Temporarily disable new connections"
-                value={settings.pauseFriendRequests}
-                onChange={() => settings.updateSetting('pauseFriendRequests', !settings.pauseFriendRequests)}
-              />
-              <SettingSwitch
-                label="Pause Conversations"
-                description="Take a break from messaging"
-                value={settings.pauseConversations}
-                onChange={() => settings.updateSetting('pauseConversations', !settings.pauseConversations)}
-              />
-              <SettingSwitch
-                label="Reduce Notifications"
-                description="Minimize notification frequency"
-                value={settings.reduceNotifications}
-                onChange={() => settings.updateSetting('reduceNotifications', !settings.reduceNotifications)}
-              />
-              <SettingSwitch
-                label="Show Crisis Resources"
-                description="Always available on home screen"
-                value={settings.showCrisisResources}
-                onChange={() => settings.updateSetting('showCrisisResources', !settings.showCrisisResources)}
-              />
-
-              {/* Trigger Topics */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                style={{
-                  padding: '14px 16px',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                }}
-              >
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', marginBottom: 10 }}>
-                  Topics to Hide
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
-                  {TRIGGER_TOPICS.map((topic) => (
-                    <motion.button
-                      key={topic}
-                      onClick={() => {
-                        if (settings.triggerTopics.includes(topic)) {
-                          settings.removeTriggerTopic(topic);
-                        } else {
-                          settings.addTriggerTopic(topic);
-                        }
-                      }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.95 }}
-                      style={{
-                        padding: '8px 12px',
-                        borderRadius: 10,
-                        border: settings.triggerTopics.includes(topic)
-                          ? '2px solid #7C3AED'
-                          : '1px solid rgba(139, 92, 246, 0.3)',
-                        background: settings.triggerTopics.includes(topic)
-                          ? 'rgba(124, 58, 237, 0.2)'
-                          : 'transparent',
-                        color: '#fff',
-                        fontSize: 12,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        fontFamily: 'inherit',
-                      }}
-                    >
-                      {topic}
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-            </SettingsGroup>
-          )}
-
-          {/* Notifications */}
-          {(!filteredSettings || 'notification'.includes(filteredSettings)) && (
-            <SettingsGroup title="Notifications" icon="🔔" searchQuery={filteredSettings}>
-              <SettingSwitch
-                label="Push Notifications"
-                description="Receive browser notifications"
-                value={settings.pushNotifications}
-                onChange={() => settings.updateSetting('pushNotifications', !settings.pushNotifications)}
-              />
-              <SettingSwitch
-                label="Email Notifications"
-                description="Receive emails from SoulConnect"
-                value={settings.emailNotifications}
-                onChange={() => settings.updateSetting('emailNotifications', !settings.emailNotifications)}
-              />
-              <SettingSwitch
-                label="Mood Reminder"
-                description="Daily reminder to log your mood"
-                value={settings.moodReminder}
-                onChange={() => settings.updateSetting('moodReminder', !settings.moodReminder)}
-              />
-              <SettingSwitch
-                label="Journal Reminder"
-                description="Reminder to write in your journal"
-                value={settings.journalReminder}
-                onChange={() => settings.updateSetting('journalReminder', !settings.journalReminder)}
-              />
-              <SettingSwitch
-                label="Messages"
-                description="New message notifications"
-                value={settings.messageNotifications}
-                onChange={() => settings.updateSetting('messageNotifications', !settings.messageNotifications)}
-              />
-              <SettingSwitch
-                label="Community Replies"
-                description="Replies to your posts"
-                value={settings.communityReplyNotifications}
-                onChange={() => settings.updateSetting('communityReplyNotifications', !settings.communityReplyNotifications)}
-              />
-              <SettingSwitch
-                label="Weekly Report"
-                description="Summary of your week"
-                value={settings.weeklyReport}
-                onChange={() => settings.updateSetting('weeklyReport', !settings.weeklyReport)}
-              />
-
-              <SettingSelect
-                label="Reminder Time"
-                description="When to send reminders"
-                value={settings.reminderTime}
-                onChange={(value) => settings.updateSetting('reminderTime', value)}
-                options={[
-                  { label: '8:00 AM', value: '08:00' },
-                  { label: '9:00 AM', value: '09:00' },
-                  { label: '12:00 PM', value: '12:00' },
-                  { label: '3:00 PM', value: '15:00' },
-                  { label: '6:00 PM', value: '18:00' },
-                  { label: '9:00 PM', value: '21:00' },
-                ]}
-              />
-            </SettingsGroup>
-          )}
-
-          {/* Appearance */}
-          {(!filteredSettings || 'appearance'.includes(filteredSettings) || 'theme'.includes(filteredSettings)) && (
-            <SettingsGroup title="Appearance" icon="🎨" searchQuery={filteredSettings}>
-              <SettingSwitch
-                label="Dark Mode"
-                description="Use dark theme (currently enabled)"
-                value={dark}
-                onChange={toggle}
-              />
-              <SettingSelect
-                label="Font Size"
-                description="Adjust text size"
-                value={settings.fontSize}
-                onChange={(value) => settings.updateSetting('fontSize', value)}
-                options={[
-                  { label: 'Small', value: 'small' },
-                  { label: 'Normal', value: 'normal' },
-                  { label: 'Large', value: 'large' },
-                ]}
-              />
-              <SettingSwitch
-                label="Reduce Motion"
-                description="Minimize animations"
-                value={settings.reduceMotion}
-                onChange={() => settings.updateSetting('reduceMotion', !settings.reduceMotion)}
-              />
-              <SettingSwitch
-                label="High Contrast"
-                description="Increase text contrast"
-                value={settings.highContrast}
-                onChange={() => settings.updateSetting('highContrast', !settings.highContrast)}
-              />
-              <SettingSwitch
-                label="Compact Mode"
-                description="Use compact spacing"
-                value={settings.compactMode}
-                onChange={() => settings.updateSetting('compactMode', !settings.compactMode)}
-              />
-            </SettingsGroup>
-          )}
-
-          {/* Help & Support */}
-          {(!filteredSettings || 'help'.includes(filteredSettings) || 'support'.includes(filteredSettings)) && (
-            <SettingsGroup title="Help & Support" icon="❤️" searchQuery={filteredSettings}>
+        {/* Help & Support */}
+        {(!filteredSettings || 'help'.includes(filteredSettings) || 'support'.includes(filteredSettings)) && (
+          <SettingsGroup title="Help & Support" icon="❤️" searchQuery={filteredSettings}>
               <motion.button
                 onClick={() => navigate('/safety')}
                 style={{
@@ -802,9 +572,9 @@ export default function Settings() {
                 <ChevronRight size={16} color="rgba(184, 180, 216, 0.5)" />
               </motion.button>
             </SettingsGroup>
-          )}
+        )}
 
-          {/* Logout Button */}
+        {/* Logout Button */}
           <motion.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -836,7 +606,6 @@ export default function Settings() {
             <LogOut size={16} />
             Log Out
           </motion.button>
-        </AnimatePresence>
 
         {/* Delete Account Confirmation Modal */}
         <AnimatePresence>
