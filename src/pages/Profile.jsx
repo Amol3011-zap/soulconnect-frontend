@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
@@ -15,11 +15,9 @@ export default function Profile() {
   const { userStories, savedIds } = useStoriesStore();
 
   const MENU = [
-    { icon: '📖', label: 'Saved Stories',   sub: `${savedIds.length} saved`,         action: () => navigate('/saved')     },
     { icon: '🏆', label: 'Achievements',    sub: '12 Badges',                        action: () => {}                     },
     { icon: '⚙️', label: 'Settings',        sub: null,                               action: () => navigate('/account')   },
     { icon: '🛡️', label: 'Privacy & Safety', sub: null,                              action: () => navigate('/privacy')   },
-    { icon: '🔔', label: 'Notifications',   sub: 'Manage reminders',                 action: () => {}                     },
     { icon: '❓', label: 'Help & Support',  sub: null,                               action: () => navigate('/safety')    },
   ];
 
@@ -101,58 +99,6 @@ export default function Profile() {
             </div>
           ))}
         </div>
-      </motion.div>
-
-      {/* Soul Climate History Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
-        onClick={() => navigate('/home')}
-        style={{
-          background: '#211044',
-          border: '1px solid rgba(255,255,255,0.07)',
-          borderRadius: 20,
-          padding: 20,
-          marginBottom: 12,
-          cursor: 'pointer',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: '#F4C542', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            Soul Climate History
-          </span>
-          <ChevronRight size={16} color="#8A84B6" />
-        </div>
-        <div style={{ fontSize: 12, color: '#8A84B6', marginBottom: 14 }}>This Week</div>
-
-        {/* Mini SVG Line Chart */}
-        <svg viewBox="0 0 240 60" width="100%" height="60" style={{ display: 'block' }}>
-          <defs>
-            <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <polyline
-            points="0,45 40,35 80,20 120,30 160,15 200,25 240,10"
-            fill="none"
-            stroke="#8B5CF6"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <polyline
-            points="0,45 40,35 80,20 120,30 160,15 200,25 240,10 240,60 0,60"
-            fill="url(#chartFill)"
-            stroke="none"
-          />
-          {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
-            <text key={d + i} x={i * 40} y={58} fontSize="9" fill="#8A84B6" textAnchor="middle">
-              {d}
-            </text>
-          ))}
-        </svg>
       </motion.div>
 
       {/* Menu Items */}
