@@ -1,185 +1,83 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { useWeatherStore } from '../store/weather';
 import { useTinyWinsStore } from '../store/tinyWins';
 import { useStoriesStore } from '../store/stories';
-import { ChevronRight, LogOut } from 'lucide-react';
+import ProfileHeader from '../components/profile/ProfileHeader';
+import LifeChapterCard from '../components/profile/LifeChapterCard';
+import StatsGrid from '../components/profile/StatsGrid';
+import WeeklyMood from '../components/profile/WeeklyMood';
+import RecentActivity from '../components/profile/RecentActivity';
+import Achievements from '../components/profile/Achievements';
+import MyCircle from '../components/profile/MyCircle';
+import SettingsList from '../components/profile/SettingsList';
 
 export default function Profile() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const { streak } = useWeatherStore();
   const { totalWins } = useTinyWinsStore();
-  const { userStories, savedIds } = useStoriesStore();
+  const { userStories } = useStoriesStore();
 
-  const MENU = [
-    { icon: '🏆', label: 'Achievements',    sub: '12 Badges',                        action: () => {}                     },
-    { icon: '⚙️', label: 'Settings',        sub: null,                               action: () => navigate('/account')   },
-    { icon: '🛡️', label: 'Privacy & Safety', sub: null,                              action: () => navigate('/privacy')   },
-    { icon: '❓', label: 'Help & Support',  sub: null,                               action: () => navigate('/safety')    },
+  const journalEntries = 34;
+  const peopleHelped = 19;
+  const connections = 8;
+
+  const MENU_ITEMS = [
+    { icon: '⚙️', label: 'Settings', action: () => navigate('/account') },
+    { icon: '🛡️', label: 'Privacy & Safety', action: () => navigate('/privacy') },
+    { icon: '❓', label: 'Help & Support', action: () => navigate('/safety') },
   ];
-
-  const storiesShared = userStories.length;
 
   return (
     <div
       style={{
-        padding: '20px 24px',
+        padding: '16px 16px',
         minHeight: '100vh',
-        background: '#0D0B1A',
-        fontFamily: 'Inter, sans-serif',
-        paddingBottom: 24,
+        background: '#0B0618',
+        fontFamily: "'Inter', -apple-system, sans-serif",
+        paddingBottom: 32,
       }}
     >
-      {/* Profile Hero */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        style={{
-          background: 'linear-gradient(135deg, #1A0A3E, #2D1260)',
-          border: '1px solid rgba(139,92,246,0.2)',
-          borderRadius: 24,
-          padding: 24,
-          marginBottom: 20,
-          textAlign: 'center',
+      {/* Profile Header */}
+      <ProfileHeader
+        user={user}
+        streak={streak}
+        onEditClick={() => navigate('/account')}
+      />
+
+      {/* Life Chapter */}
+      <LifeChapterCard />
+
+      {/* Stats Grid */}
+      <StatsGrid
+        totalWins={totalWins}
+        journalEntries={journalEntries}
+        peopleHelped={peopleHelped}
+        connections={connections}
+      />
+
+      {/* Weekly Mood */}
+      <WeeklyMood onViewFull={() => navigate('/mood')} />
+
+      {/* Recent Activity */}
+      <RecentActivity onViewAll={() => {}} />
+
+      {/* Achievements */}
+      <Achievements onViewAll={() => {}} />
+
+      {/* My Circle */}
+      <MyCircle connectionCount={connections} />
+
+      {/* Settings */}
+      <SettingsList
+        items={MENU_ITEMS}
+        onLogout={() => {
+          logout();
+          navigate('/');
         }}
-      >
-        {/* Avatar */}
-        <div
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 32,
-            fontWeight: 700,
-            color: '#fff',
-            margin: '0 auto 14px',
-          }}
-        >
-          {(user?.name || 'S')[0].toUpperCase()}
-        </div>
-
-        {/* Name */}
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 6 }}>
-          {user?.name || 'Soul Traveler'}
-        </div>
-
-        {/* View Profile link */}
-        <div
-          onClick={() => navigate('/account')}
-          style={{ fontSize: 14, color: '#A78BFA', cursor: 'pointer', marginBottom: 20 }}
-        >
-          View Profile ›
-        </div>
-
-        {/* Stats row */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            borderTop: '1px solid rgba(255,255,255,0.07)',
-            paddingTop: 16,
-          }}
-        >
-          {[
-            { label: 'Tiny Wins',  value: totalWins       },
-            { label: 'Stories',    value: storiesShared   },
-            { label: 'Day Streak', value: `${streak || 0}d` },
-          ].map((stat) => (
-            <div key={stat.label} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>{stat.value}</div>
-              <div style={{ fontSize: 11, color: '#8A84B6', marginTop: 2 }}>{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Menu Items */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.2 }}
-      >
-        {MENU.map((item, idx) => (
-          <motion.div
-            key={item.label}
-            onClick={item.action}
-            whileTap={{ scale: 0.98 }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 14,
-              padding: '14px 16px',
-              background: '#211044',
-              borderRadius: 14,
-              marginBottom: 8,
-              cursor: 'pointer',
-            }}
-          >
-            {/* Emoji icon circle */}
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: '50%',
-                background: 'rgba(139,92,246,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 16,
-                flexShrink: 0,
-              }}
-            >
-              {item.icon}
-            </div>
-
-            {/* Label + sub */}
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{item.label}</div>
-              {item.sub && (
-                <div style={{ fontSize: 12, color: '#8A84B6', marginTop: 1 }}>{item.sub}</div>
-              )}
-            </div>
-
-            <ChevronRight size={16} color="#8A84B6" />
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Logout button */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.35 }}
-        onClick={() => { logout(); navigate('/'); }}
-        style={{
-          width: '100%',
-          padding: '14px',
-          borderRadius: 14,
-          background: 'rgba(239,68,68,0.1)',
-          border: '1px solid rgba(239,68,68,0.25)',
-          color: '#EF4444',
-          fontSize: 14,
-          fontWeight: 600,
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 8,
-          fontFamily: 'Inter, sans-serif',
-          marginTop: 8,
-        }}
-      >
-        <LogOut size={16} />
-        Log Out
-      </motion.button>
+      />
     </div>
   );
 }
