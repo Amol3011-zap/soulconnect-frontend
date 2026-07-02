@@ -307,6 +307,13 @@ export function useMoodData() {
     setTimeout(() => setSaved(false), 2500);
   }, [persist, mood, reflection, triggers, emotions, gratitude, wins, energy, stress, sleepHours, waterIntake]);
 
+  const handleDeleteEntry = useCallback((dateToDelete) => {
+    const next = { ...store };
+    delete next[dateToDelete];
+    setStore(next);
+    saveStore(next);
+  }, [store]);
+
   // Computed values
   const streak = computeStreak(store);
   const longestStreak = computeLongestStreak(store);
@@ -362,6 +369,7 @@ export function useMoodData() {
     handleWin,
     handleGratitude,
     handleSave,
+    handleDeleteEntry,
     setReflection,
     setEnergy,
     setStress,

@@ -51,7 +51,14 @@ export default function MoodSelector({ mood, onMoodSelect, todayMoodMeta }) {
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10 }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(70px, 1fr))',
+            gap: 10,
+            justifyItems: 'stretch',
+          }}
+        >
           {MOODS_5.map((m, i) => (
             <motion.button
               key={m.score}
@@ -79,12 +86,13 @@ export default function MoodSelector({ mood, onMoodSelect, todayMoodMeta }) {
                 gap: 8,
                 boxShadow: mood === m.score ? `0 8px 24px ${m.color}40` : 'none',
                 transition: 'all 0.2s',
+                minWidth: 0,
               }}
             >
               <span style={{ fontSize: mood === m.score ? 32 : 28, transition: 'font-size 0.2s' }}>
                 {m.emoji}
               </span>
-              <span style={{ fontSize: 11, fontWeight: 600, textAlign: 'center' }}>
+              <span style={{ fontSize: 11, fontWeight: 600, textAlign: 'center', overflowWrap: 'break-word' }}>
                 {m.label}
               </span>
             </motion.button>

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuthStore } from '../store/auth';
 import { useMoodData, MOODS_5, TRIGGERS, EMOTION_TAGS, WINS, JOURNEY_STAGES, GUIDED_PROMPTS } from '../hooks/useMoodData';
 import MoodSelector from '../components/mood/MoodSelector';
 import MoodStats from '../components/mood/MoodStats';
+import MoodBreakdown from '../components/mood/MoodBreakdown';
+import RecentEntries from '../components/mood/RecentEntries';
 
 // ── Lotus Icon ─────────────────────────────────────────────────────────────
 
@@ -192,6 +194,12 @@ export default function MoodTracker() {
   const moodData = useMoodData();
   const [showModal, setShowModal] = useState(false);
   const [modalStep, setModalStep] = useState(1);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleSaveAndRefresh = useCallback(async () => {
+    await moodData.handleSave();
+    setRefreshTrigger(prev => prev + 1);
+  }, [moodData]);
 
   const firstName = user?.full_name?.split(' ')[0] || 'Friend';
   const userInitials = user?.full_name
@@ -300,6 +308,7 @@ export default function MoodTracker() {
               borderRadius: 24,
               padding: 28,
               backdropFilter: 'blur(24px)',
+              marginBottom: 24,
             }}
           >
             <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 20px' }}>
@@ -329,6 +338,19 @@ export default function MoodTracker() {
                 </motion.div>
               ))}
             </div>
+          </motion.div>
+
+          {/* Mood Breakdown */}
+          <motion.div key={refreshTrigger}>
+            <MoodBreakdown moodBreakdown={moodData.moodBreakdown} />
+          </motion.div>
+
+          {/* Recent Entries */}
+          <motion.div style={{ marginBottom: 32 }}>
+            <RecentEntries
+              allEntries={moodData.allEntries}
+              onDelete={moodData.handleDeleteEntry}
+            />
           </motion.div>
         </div>
       </div>
@@ -766,7 +788,7 @@ export default function MoodTracker() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={async () => {
-                              await moodData.handleSave();
+                              await handleSaveAndRefresh();
                               setShowModal(false);
                             }}
                             style={{
