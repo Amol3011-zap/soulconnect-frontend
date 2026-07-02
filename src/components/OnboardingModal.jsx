@@ -70,6 +70,7 @@ export default function OnboardingModal({ onComplete }) {
     setLoading(true);
     try {
       await onboardingAPI.complete(data);
+      localStorage.setItem('onboarding-completed', 'true');
       onComplete?.();
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to complete onboarding');
@@ -478,27 +479,6 @@ export default function OnboardingModal({ onComplete }) {
             >
               {loading ? 'Loading...' : step === 8 ? 'Get Started →' : 'Next →'}
             </motion.button>
-
-            {step < 8 && (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleSkip}
-                style={{
-                  padding: '12px 20px',
-                  borderRadius: 12,
-                  border: '1px solid rgba(168, 139, 250, 0.2)',
-                  background: 'transparent',
-                  color: 'rgba(184, 180, 216, 0.6)',
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                }}
-              >
-                Skip
-              </motion.button>
-            )}
           </div>
         </motion.div>
       </motion.div>

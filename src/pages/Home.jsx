@@ -603,14 +603,25 @@ export default function Home() {
   // Check if user completed onboarding
   useEffect(() => {
     const checkOnboarding = async () => {
+      // Check localStorage first (fast path)
+      const onboardingDone = localStorage.getItem('onboarding-completed');
+      if (onboardingDone === 'true') {
+        setShowOnboarding(false);
+        return;
+      }
+
+      // Check API
       try {
         const res = await onboardingAPI.getStatus();
-        if (!res.data.completed) {
+        if (res.data.completed) {
+          localStorage.setItem('onboarding-completed', 'true');
+          setShowOnboarding(false);
+        } else {
           setShowOnboarding(true);
         }
       } catch (err) {
-        console.log('Onboarding check failed, showing modal');
-        setShowOnboarding(true);
+        // If API fails, don't show onboarding (user likely already completed it)
+        setShowOnboarding(false);
       }
     };
     checkOnboarding();
