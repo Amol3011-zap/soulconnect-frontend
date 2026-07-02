@@ -45,6 +45,7 @@ const Home          = lazy(() => import('./pages/Home'));
 const Stories       = lazy(() => import('./pages/Stories'));
 const Community     = lazy(() => import('./pages/Community'));
 const Messages      = lazy(() => import('./pages/Messages'));
+const MoodTracker   = lazy(() => import('./pages/MoodTracker'));
 // Journal removed for MVP — see FEATURE_FLAGS.js for v2 Reflection roadmap
 const Meditate      = lazy(() => import('./pages/Meditations'));
 const Professionals = lazy(() => import('./pages/Professionals'));
@@ -188,6 +189,7 @@ function AppInner() {
                 <Route path="/home"          element={<Suspense fallback={<PageLoader />}><Home /></Suspense>} />
                 <Route path="/stories"       element={<Suspense fallback={<PageLoader />}><Stories /></Suspense>} />
                 <Route path="/community"     element={<Suspense fallback={<PageLoader />}><Community /></Suspense>} />
+                <Route path="/mood"          element={<Suspense fallback={<PageLoader />}><MoodTracker /></Suspense>} />
                 <Route path="/messages"      element={<Suspense fallback={<PageLoader />}><Messages /></Suspense>} />
                 <Route path="/meditate"      element={<Suspense fallback={<PageLoader />}><Meditate /></Suspense>} />
                 <Route path="/professionals" element={<Suspense fallback={<PageLoader />}><Professionals /></Suspense>} />
@@ -207,7 +209,6 @@ function AppInner() {
                 {/* Redirects from old / removed routes */}
                 <Route path="/journal"       element={<Navigate to="/home"          replace />} />
                 <Route path="/journal/*"     element={<Navigate to="/home"          replace />} />
-                <Route path="/mood"          element={<Navigate to="/home"          replace />} />
                 <Route path="/account"       element={<Navigate to="/profile"       replace />} />
                 <Route path="/matches"       element={<Navigate to="/home"          replace />} />
                 <Route path="/circles"       element={<Navigate to="/community"     replace />} />
