@@ -63,6 +63,13 @@ function IconYouTube() {
     </svg>
   );
 }
+function IconX() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.657l-5.207-6.8-5.979 6.8h-3.393l7.732-8.835L2.678 2.25h6.826l4.722 6.244 5.418-6.244zM17.002 18.335h1.834L6.822 4.126H4.881z"/>
+    </svg>
+  );
+}
 
 // Floating particles
 function Particles() {
@@ -338,7 +345,8 @@ export default function Footer() {
             <div style={{ display:'flex', gap:10 }}>
               {[
                 { icon:<IconInstagram />, href:'https://instagram.com/soulconnect.health', label:'Instagram', color:'#E1306C' },
-                { icon:<IconLinkedIn />,  href:'https://www.linkedin.com/company/%E2%9C%85soulconnect/', label:'LinkedIn',  color:'#0A66C2' },
+                { icon:<IconX />,         href:'https://x.com/SoulConnectHQ', label:'X (Twitter)', color:'#000000' },
+                { icon:<IconLinkedIn />,  href:'https://www.linkedin.com/company/%E2%9C%85soulconnect/?viewAsMember=true', label:'LinkedIn',  color:'#0A66C2' },
               ].map((s,i) => (
                 <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
                   className="sc-social-btn"
