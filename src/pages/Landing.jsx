@@ -1917,7 +1917,13 @@ export default function Landing() {
                   </svg>,
                 },
                 {
-                  label:'LinkedIn', href:'https://www.linkedin.com/company/%E2%9C%85soulconnect/',
+                  label:'X (Twitter)', href:'https://x.com/SoulConnectHQ',
+                  svg:<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.657l-5.207-6.8-5.979 6.8h-3.393l7.732-8.835L2.678 2.25h6.826l4.722 6.244 5.418-6.244zM17.002 18.335h1.834L6.822 4.126H4.881z"/>
+                  </svg>,
+                },
+                {
+                  label:'LinkedIn', href:'https://www.linkedin.com/company/%E2%9C%85soulconnect/?viewAsMember=true',
                   svg:<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M20 0H4C1.794 0 0 1.794 0 4v16c0 2.206 1.794 4 4 4h16c2.206 0 4-1.794 4-4V4c0-2.206-1.794-4-4-4zM8 19H5v-9h3v9zM6.5 8.25C5.5 8.25 4.75 7.5 4.75 6.5C4.75 5.5 5.5 4.75 6.5 4.75C7.5 4.75 8.25 5.5 8.25 6.5C8.25 7.5 7.5 8.25 6.5 8.25zm12.5 10.75h-3v-4.5c0-1.5-1-2-2-2c-1.5 0-2.5 1-2.5 2v4.5h-3v-9h3v1.25c.5-.75 1.5-2.25 4-2.25c2.5 0 4.5 1.5 4.5 5v5z"/>
                   </svg>,
