@@ -236,49 +236,6 @@ export default function ExploreHub() {
               ))}
             </div>
           )}
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            style={{
-              marginTop: '64px',
-              padding: '32px',
-              background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(168, 85, 247, 0.1))',
-              border: '1px solid rgba(124, 58, 237, 0.2)',
-              borderRadius: '16px',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '32px',
-              textAlign: 'center',
-            }}
-          >
-            <div>
-              <div style={{ fontSize: '32px', fontWeight: '700', color: '#A78BFA', marginBottom: '8px' }}>
-                25
-              </div>
-              <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '14px' }}>
-                Emotion Categories
-              </p>
-            </div>
-            <div>
-              <div style={{ fontSize: '32px', fontWeight: '700', color: '#A78BFA', marginBottom: '8px' }}>
-                {categories.length}
-              </div>
-              <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '14px' }}>
-                Available Today
-              </p>
-            </div>
-            <div>
-              <div style={{ fontSize: '32px', fontWeight: '700', color: '#A78BFA', marginBottom: '8px' }}>
-                100%
-              </div>
-              <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '14px' }}>
-                Evidence-Based
-              </p>
-            </div>
-          </motion.div>
         </div>
       </div>
     </div>
