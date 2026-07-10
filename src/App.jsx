@@ -52,6 +52,16 @@ const Professionals = lazy(() => import('./pages/Professionals'));
 const Profile       = lazy(() => import('./pages/Profile'));
 const Settings      = lazy(() => import('./pages/Settings'));
 
+// Emotion Library (Phase 4) - now public
+const ExploreHub             = lazy(() => import('./pages/explore/ExploreHub'));
+const ExploreEmotionDetail   = lazy(() => import('./pages/explore/ExploreEmotionDetail'));
+
+// Advanced Features (Phase 5)
+const UserProfilePage    = lazy(() => import('./pages/UserProfilePage'));
+const GuidedJourneysPage = lazy(() => import('./pages/GuidedJourneysPage'));
+const SupportCirclesPage = lazy(() => import('./pages/SupportCirclesPage'));
+const AdminDashboard     = lazy(() => import('./pages/AdminDashboard'));
+
 // Soul Stories sub-pages
 const StoryDetail        = lazy(() => import('./pages/StoryDetail'));
 const SavedStories       = lazy(() => import('./pages/SavedStories'));
@@ -78,6 +88,8 @@ const DASHBOARD_PATHS = [
   '/home', '/stories', '/community', '/messages', '/mood',
   '/meditate', '/professionals', '/profile', '/account', '/tiny-wins',
   '/story', '/saved',
+  // user engagement (Phase 5)
+  '/journeys', '/circles', '/admin',
   // legacy aliases still routed through layout
   '/dashboard', '/healers', '/meetups', '/premium',
   '/onboarding', '/journey',
@@ -142,6 +154,10 @@ function AppInner() {
       <Route path="/blog/:slug"      element={<Suspense fallback={<PageLoader />}><BlogDetail /></Suspense>} />
       <Route path="/how-it-works"    element={<Suspense fallback={<PageLoader />}><HowItWorks /></Suspense>} />
       <Route path="/trust-safety"    element={<Suspense fallback={<PageLoader />}><TrustSafety /></Suspense>} />
+
+      {/* Public Explore Hub - Emotion Library */}
+      <Route path="/explore"                    element={<Suspense fallback={<PageLoader />}><ExploreHub /></Suspense>} />
+      <Route path="/explore/i-feel-:emotionSlug" element={<Suspense fallback={<PageLoader />}><ExploreEmotionDetail /></Suspense>} />
     </>
   );
 
@@ -200,6 +216,11 @@ function AppInner() {
                 <Route path="/story/:id"   element={<Suspense fallback={<PageLoader />}><StoryDetail /></Suspense>} />
                 <Route path="/saved"         element={<Suspense fallback={<PageLoader />}><SavedStories /></Suspense>} />
                 <Route path="/notifications" element={<Suspense fallback={<PageLoader />}><NotificationPage /></Suspense>} />
+
+                {/* User Engagement (Phase 5) */}
+                <Route path="/journeys"              element={<Suspense fallback={<PageLoader />}><GuidedJourneysPage /></Suspense>} />
+                <Route path="/circles"               element={<Suspense fallback={<PageLoader />}><SupportCirclesPage /></Suspense>} />
+                <Route path="/admin"                 element={<Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>} />
 
                 {/* Legacy pages inside layout */}
                 <Route path="/healers"       element={<Suspense fallback={<PageLoader />}><Healers /></Suspense>} />

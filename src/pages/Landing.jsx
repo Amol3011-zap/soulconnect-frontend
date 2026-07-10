@@ -12,6 +12,7 @@ const DARK = '#120B2E';
 const SQ3  = 1.7320508;
 
 const NAV_LINKS = [
+  { label: 'Explore',      href: '/explore', isRoute: true },
   { label: 'About Us',     href: '/about',  isRoute: true  },
   { label: 'How It Works', href: '/how-it-works', isRoute: true },
   { label: 'Trust & Safety', href: '/trust-safety', isRoute: true },

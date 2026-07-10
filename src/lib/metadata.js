@@ -130,14 +130,41 @@ export const METADATA = {
     ogType: 'website',
     keywords: 'community safety, privacy protection, moderation, verified professionals, trust, transparency, data security',
   },
+  '/explore': {
+    title: 'Emotion Library | SoulConnect - Mental Health Support',
+    description: 'Explore 25 emotions with expert-reviewed guides, coping strategies, and support resources for anxiety, depression, stress, and more.',
+    canonical: 'https://soulconnect.health/explore',
+    ogType: 'website',
+    keywords: 'emotion library, mental health, anxiety help, depression support, stress management, emotional wellness, emotional support',
+  },
 };
 
 /**
  * Get metadata for a route
  * Falls back to homepage metadata if route not found
+ * Handles dynamic routes like /explore/i-feel-anxiety
  */
 export function getMetadata(pathname) {
-  return METADATA[pathname] || METADATA['/'];
+  // Check for exact match first
+  if (METADATA[pathname]) {
+    return METADATA[pathname];
+  }
+
+  // Handle dynamic emotion routes: /explore/i-feel-{slug}
+  if (pathname.startsWith('/explore/i-feel-')) {
+    const emotionSlug = pathname.replace('/explore/i-feel-', '').replace(/-/g, ' ').trim();
+    const emotionName = emotionSlug.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+    return {
+      title: `${emotionName} Support Guide | SoulConnect`,
+      description: `Explore evidence-based strategies, coping techniques, and support resources for ${emotionName}. Find community support and expert guidance.`,
+      canonical: `https://soulconnect.health${pathname}`,
+      ogType: 'article',
+      keywords: `${emotionName}, mental health support, coping strategies, emotional wellness, anxiety help, support guide`,
+    };
+  }
+
+  return METADATA['/'];
 }
 
 /**

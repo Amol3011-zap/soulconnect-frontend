@@ -128,3 +128,5 @@ export const onboardingAPI = {
   saveCity: (data) => api.post('/onboarding/step/city', data),
   saveNotifications: (data) => api.post('/onboarding/step/notifications', data),
 };
+
+export default api;
