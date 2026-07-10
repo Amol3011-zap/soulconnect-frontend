@@ -139,11 +139,7 @@ export default function ExploreHub() {
       {/* Categories Grid */}
       <div style={{ padding: '64px 32px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          {isLoading ? (
-            <div style={{ textAlign: 'center', padding: '64px 0', color: 'rgba(255,255,255,0.5)' }}>
-              Loading emotion categories...
-            </div>
-          ) : filteredCategories.length === 0 ? (
+          {filteredCategories.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
