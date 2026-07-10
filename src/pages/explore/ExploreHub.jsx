@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search as SearchIcon, ArrowRight, Home } from 'lucide-react';
-import api from '../../services/api';
+import { emotions } from '../../data/emotions';
 
 const CATEGORY_ICONS = {
   anxiety: '🧠',
@@ -37,10 +37,16 @@ export default function ExploreHub() {
   const [categories, setCategories] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [filteredCategories, setFilteredCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetchCategories();
+    // Use static emotion data instead of API call
+    const formattedCategories = emotions.map((e) => ({
+      slug: e.slug,
+      name: e.displayName,
+      description: e.shortDescription,
+    }));
+    setCategories(formattedCategories);
+    setFilteredCategories(formattedCategories);
   }, []);
 
   useEffect(() => {
@@ -53,19 +59,6 @@ export default function ExploreHub() {
       setFilteredCategories(categories);
     }
   }, [searchInput, categories]);
-
-  const fetchCategories = async () => {
-    try {
-      setIsLoading(true);
-      const res = await api.get('/categories');
-      setCategories(res.data);
-      setFilteredCategories(res.data);
-    } catch (error) {
-      console.error('Failed to fetch categories:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleCategoryClick = (category) => {
     navigate(`/explore/i-feel-${category.slug}`);
