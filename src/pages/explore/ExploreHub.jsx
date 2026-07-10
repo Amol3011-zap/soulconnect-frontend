@@ -235,6 +235,30 @@ export default function ExploreHub() {
               ))}
             </div>
           )}
+
+          {/* Coming Soon Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            style={{
+              marginTop: '64px',
+              padding: '48px 40px',
+              background: 'rgba(34, 18, 73, 0.72)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(124, 58, 237, 0.3)',
+              borderRadius: '16px',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ fontSize: '24px', marginBottom: '12px' }}>✨</div>
+            <h3 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 12px 0' }}>
+              Coming Soon
+            </h3>
+            <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '15px', maxWidth: '500px', marginLeft: 'auto', marginRight: 'auto' }}>
+              More emotion categories and specialized support resources are being developed to help you on your healing journey.
+            </p>
+          </motion.div>
         </div>
       </div>
     </div>
