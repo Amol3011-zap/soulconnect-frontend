@@ -244,16 +244,6 @@ export const emotions: Emotion[] = [
     shortDescription: 'Help with substance and behavioral addictions'
   },
   {
-    slug: 'body-image',
-    title: 'Body Image Support & Self-Acceptance | SoulConnect',
-    description: 'Build a healthy relationship with your body with peer support. Connect with others working on body acceptance and intuitive living.',
-    keywords: ['body image support', 'body confidence', 'eating disorder support', 'self-acceptance', 'body positivity'],
-    image: '/og/body-image.jpg',
-    color: '#EC4899',
-    displayName: 'Body Image',
-    shortDescription: 'Support for body confidence and acceptance'
-  },
-  {
     slug: 'imposter-syndrome',
     title: 'Imposter Syndrome Support & Confidence | Career Help',
     description: 'Overcome imposter syndrome with peer validation and strategies. Connect with high-achievers sharing similar self-doubt despite their success.',

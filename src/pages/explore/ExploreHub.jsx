@@ -27,7 +27,6 @@ const CATEGORY_ICONS = {
   shame: '🛡️',
   trauma: '🚨',
   addiction: '🚫',
-  'body-image': '🪞',
   'imposter-syndrome': '🎭',
   'purpose-meaning': '🧭',
 };
