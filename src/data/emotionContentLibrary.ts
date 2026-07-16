@@ -1263,7 +1263,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       title: 'Struggling with social anxiety?',
       subtitle: 'Social anxiety can make everyday interactions feel overwhelming, but it is treatable. The fear of being judged or embarrassed often feels very real, even when others aren\'t thinking about you as much as you imagine.',
     },
-    summary: 'Social anxiety is intense fear in social situations—worrying you\'ll be judged, embarrassed, or rejected. It causes avoidance of parties, meetings, or speaking up. Social anxiety is different from shyness; it causes significant distress. The hopeful news: exposure therapy and cognitive work reduce social anxiety dramatically.',
+    summary: 'Social anxiety is intense fear in social situations—worrying you\'ll be judged, embarrassed, or rejected. It causes avoidance of parties, meetings, or speaking up. Social anxiety is different from shyness; it causes significant distress. The hopeful news: therapy, gradual exposure, and coping strategies can significantly reduce social anxiety over time.',
     relatable: [
       'You rehearse conversations obsessively',
       'You imagine worst-case social scenarios',
@@ -1288,7 +1288,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Start small: attend one low-pressure social event',
       'Focus on others, not yourself—ask questions, listen',
       'Remember: most people are too focused on themselves to judge you harshly',
-      'Do some exposure: talk to one cashier, initiate one conversation',
+      'Practice small steps: talk to one cashier, ask a simple question, or start a brief conversation',
       'Practice self-compassion when anxiety shows up',
       'Don\'t use alcohol to manage social anxiety; it deepens anxiety long-term',
       'Breathing exercises before social situations help calm the nervous system',
@@ -1301,7 +1301,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Who in your life makes you feel comfortable and accepted?',
       'What\'s one small social step you could take?',
     ],
-    whenToSeekSupport: 'Seek help if: social anxiety is preventing you from work, school, or relationships; it\'s causing depression; you\'re isolating; or you\'re using substances to cope. Cognitive-behavioral therapy and exposure therapy are highly effective.',
+    whenToSeekSupport: 'Seek professional support if social anxiety is interfering with work, school, relationships, or daily life; if you\'re isolating yourself; if it\'s contributing to depression; or if you\'re relying on alcohol or substances to cope. Cognitive-behavioral therapy and exposure therapy are highly effective.',
     relatedCategories: ['anxiety', 'self-doubt', 'perfectionism', 'loneliness', 'low-self-esteem'],
     faq: [
       {
