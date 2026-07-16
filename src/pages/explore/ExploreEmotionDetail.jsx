@@ -173,6 +173,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common signs of low self-esteem'
                 : emotionSlug === 'burnout'
                 ? 'Common signs of burnout'
+                : emotionSlug === 'jealousy'
+                ? 'Common signs of jealousy'
                 : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -210,6 +212,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common causes and triggers of low self-esteem'
                 : emotionSlug === 'burnout'
                 ? 'Common causes and triggers of burnout'
+                : emotionSlug === 'jealousy'
+                ? 'Common causes and triggers of jealousy'
                 : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -296,6 +300,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Build confidence and self-worth'
                 : emotionSlug === 'burnout'
                 ? 'Recover and recharge'
+                : emotionSlug === 'jealousy'
+                ? 'Build trust and emotional security'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
@@ -317,6 +323,8 @@ export default function ExploreEmotionDetail() {
                 ? 'You don\'t have to face perfectionism alone. SoulConnect helps people manage self-criticism, build confidence, and develop healthier expectations for themselves:'
                 : emotionSlug === 'overwhelm'
                 ? 'You don\'t have to navigate overwhelm alone. SoulConnect helps people reduce stress, organize their thoughts, and find support during difficult periods:'
+                : emotionSlug === 'jealousy'
+                ? 'You don\'t have to navigate jealousy and insecurity alone. SoulConnect helps people strengthen relationships, build confidence, and find support during difficult moments:'
                 : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>

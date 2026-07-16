@@ -257,11 +257,11 @@ export const METADATA = {
     keywords: 'burnout, job burnout, burnout recovery, workplace exhaustion, caregiver burnout, stress management, rest and recovery, work-life balance',
   },
   '/explore/jealousy': {
-    title: 'Jealousy in Relationships: Signs, Causes & Support | SoulConnect',
-    description: 'Learn about jealousy, insecurity, and relationship anxiety. Explore common triggers, coping strategies, and support with SoulConnect.',
+    title: 'Jealousy and Insecurity: Signs, Causes & Support | SoulConnect',
+    description: 'Learn about jealousy and insecurity in relationships, including common triggers, coping strategies, and ways to build trust and confidence.',
     canonical: 'https://soulconnect.health/explore/jealousy',
     ogType: 'article',
-    keywords: 'jealousy, relationship jealousy, insecurity, trust issues, relationship anxiety, jealousy symptoms, mental health support',
+    keywords: 'jealousy, insecurity, relationship jealousy, trust issues, relationship anxiety, jealousy symptoms, emotional security',
   },
 };
 
