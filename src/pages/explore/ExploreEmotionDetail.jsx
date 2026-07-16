@@ -140,6 +140,8 @@ export default function ExploreEmotionDetail() {
                 ? 'What are panic attacks?'
                 : emotionSlug === 'jealousy'
                 ? 'What is jealousy and insecurity?'
+                : emotionSlug === 'motivation'
+                ? 'What is low motivation?'
                 : `What is ${emotion.displayName.toLowerCase()}?`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: 0 }}>
@@ -373,6 +375,8 @@ export default function ExploreEmotionDetail() {
                     ? 'Join anonymously with others who understand perfectionism, burnout, self-doubt, and the pressure to succeed'
                     : emotionSlug === 'overwhelm'
                     ? 'Join anonymously with others who understand overwhelm, burnout, decision fatigue, and the pressure of everyday life'
+                    : emotionSlug === 'motivation'
+                    ? 'Join anonymously with others who understand burnout, procrastination, feeling stuck, and loss of motivation'
                     : `Join anonymously with others who understand ${emotion.displayName.toLowerCase()}`}
                 </p>
               </div>
@@ -442,7 +446,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.65 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently asked questions about {emotionSlug === 'financial-worry' ? 'financial stress' : emotionSlug === 'sleep-issues' ? 'sleep problems' : emotionSlug === 'panic-attacks' ? 'panic attacks' : emotionSlug === 'overwhelm' ? 'feeling overwhelmed' : emotion.displayName.toLowerCase()}</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently asked questions about {emotionSlug === 'financial-worry' ? 'financial stress' : emotionSlug === 'sleep-issues' ? 'sleep problems' : emotionSlug === 'panic-attacks' ? 'panic attacks' : emotionSlug === 'overwhelm' ? 'feeling overwhelmed' : emotionSlug === 'motivation' ? 'low motivation' : emotion.displayName.toLowerCase()}</h2>
             <div style={{ display: 'grid', gap: '16px' }}>
               {emotion.faq.map((item, idx) => (
                 <div key={idx}>
