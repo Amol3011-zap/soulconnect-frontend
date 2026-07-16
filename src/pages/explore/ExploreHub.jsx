@@ -130,34 +130,6 @@ export default function ExploreHub() {
         </motion.div>
       </div>
 
-      {/* Coming Soon Section */}
-      <div style={{ padding: '32px' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            style={{
-              padding: '32px',
-              background: 'rgba(34, 18, 73, 0.72)',
-              backdropFilter: 'blur(24px)',
-              border: '1px solid rgba(124, 58, 237, 0.3)',
-              borderRadius: '16px',
-              textAlign: 'center',
-              marginBottom: '32px',
-            }}
-          >
-            <div style={{ fontSize: '20px', marginBottom: '12px' }}>✨</div>
-            <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#FFF', margin: '0 0 8px 0' }}>
-              Coming Soon
-            </h3>
-            <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)', fontSize: '14px' }}>
-              More emotion categories and specialized support resources are being developed
-            </p>
-          </motion.div>
-        </div>
-      </div>
-
       {/* Categories Grid */}
       <div style={{ padding: '64px 32px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
