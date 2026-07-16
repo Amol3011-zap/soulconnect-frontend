@@ -228,6 +228,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'social anxiety, social anxiety disorder, fear of judgment, social phobia, anxiety in social situations, social anxiety symptoms, overcoming social anxiety, confidence, mental health',
   },
+  '/explore/perfectionism': {
+    title: 'Perfectionism: Signs, Causes & How to Let Go | SoulConnect',
+    description: 'Learn about perfectionism, including common signs, causes, and practical strategies to overcome self-criticism, procrastination, and unrealistic expectations.',
+    canonical: 'https://soulconnect.health/explore/perfectionism',
+    ogType: 'article',
+    keywords: 'perfectionism, perfectionist, perfectionism symptoms, perfectionism causes, procrastination, burnout, self-criticism, self-esteem, anxiety, mental health',
+  },
 };
 
 /**
