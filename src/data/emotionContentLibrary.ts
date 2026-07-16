@@ -584,7 +584,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'You feel like your anger controls you, not the other way around',
       'You feel guilty or ashamed after angry reactions',
       'You blame others for your anger',
-      'Anger scares you—or scares people around you',
+      'You worry about how your anger affects you or the people around you',
       'You hold grudges for a long time',
     ],
     situations: [
