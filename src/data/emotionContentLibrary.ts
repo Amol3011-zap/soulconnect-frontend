@@ -1116,7 +1116,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
       {
         question: 'What\'s the difference between insomnia and just having a bad night?',
-        answer: 'Everyone has occasional bad nights. Insomnia is persistent sleep problems (3+ nights/week for 3+ weeks) that affect functioning.',
+        answer: 'Everyone has occasional bad nights. Insomnia involves ongoing difficulty falling asleep, staying asleep, or getting restful sleep that affects daily life.',
       },
       {
         question: 'Can I get addicted to sleep medicine?',
