@@ -179,6 +179,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'anger management, managing anger, anger triggers, healthy coping, emotional regulation, conflict resolution, mental health support',
   },
+  '/explore/self-doubt': {
+    title: 'Self-Esteem, Self-Doubt & Building Confidence | SoulConnect',
+    description: 'Learn about self-doubt, low self-esteem, confidence, and practical ways to build self-worth through SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/self-doubt',
+    ogType: 'article',
+    keywords: 'self-doubt, low self-esteem, building confidence, self-worth, self-esteem, imposter syndrome, confidence building',
+  },
 };
 
 /**

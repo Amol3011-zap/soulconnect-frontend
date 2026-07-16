@@ -661,7 +661,7 @@ export const emotionContentLibrary: EmotionContent[] = [
 
   {
     slug: 'self-doubt',
-    displayName: 'Self-Doubt',
+    displayName: 'Self-Esteem & Self-Doubt',
     seo: {
       title: 'Self-Doubt Support | Building Confidence & Self-Trust',
       description: 'Overcome self-doubt and imposter syndrome. You\'re more capable than you believe. Build genuine confidence from within.',
@@ -675,14 +675,14 @@ export const emotionContentLibrary: EmotionContent[] = [
       title: 'Struggling with self-doubt?',
       subtitle: 'That voice questioning your abilities is loud, but it\'s not always telling you the truth. You have more capability than you think.',
     },
-    summary: 'Self-doubt is that voice that questions your abilities, worth, and decisions. It whispers, "You\'re not good enough," "You\'ll fail," or "Everyone will figure out you\'re a fraud." Everyone experiences self-doubt sometimes. The difference is: some manage it, others let it paralyze them. Self-doubt is changeable through awareness, evidence, and compassion.',
+    summary: 'What are self-doubt and low self-esteem? Self-doubt is that voice that questions your abilities, worth, and decisions. It whispers, "You\'re not good enough," "You\'ll fail," or "Everyone will figure out you\'re a fraud." Self-doubt and low self-esteem often go together. When you repeatedly question your abilities or worth, it can become difficult to trust yourself. Everyone experiences self-doubt sometimes. The difference is: some manage it, others let it paralyze them. Self-doubt is changeable through awareness, evidence, and compassion.',
     relatable: [
       'You attribute success to luck instead of ability',
       'You compare yourself to others and always come up short',
       'You overanalyze mistakes or criticism',
       'You\'re afraid to try new things in case you fail',
       'You don\'t speak up even when you have valuable input',
-      'You apologize for taking up space',
+      'You downplay your achievements or hesitate to share your opinions',
       'You seek constant reassurance from others',
       'You sabotage yourself before others can reject you',
     ],
@@ -700,7 +700,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Write down your doubt, then write evidence against it (past successes, skills, proof)',
       'Practice self-compassion: talk to yourself like you\'d talk to a friend',
       'Do something small that scares you; you\'ll realize you can handle more than doubt says',
-      'Track your wins—you forget them; write them down and review when doubt hits',
+      'Take a moment to remember past successes and challenges you\'ve already overcome',
       'Limit comparison: unfollow accounts that make you feel inadequate',
       'Speak up in one small way today—your voice matters',
       'Remember: everyone doubts themselves; it\'s part of being human',
@@ -734,7 +734,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
       {
         question: 'What if people\'s doubts are making me doubt myself?',
-        answer: 'Others\' opinions shouldn\'t define you. If many trusted people doubt you, it\'s worth considering. But often, people project their insecurities. Trust yourself, especially if others have believed in you before.',
+        answer: 'Other people\'s opinions can influence how you see yourself, but they don\'t define your worth or potential. If many trusted people doubt you, it\'s worth considering. But often, people project their insecurities. Trust yourself, especially if others have believed in you before.',
       },
       {
         question: 'Can I ever get rid of self-doubt completely?',
