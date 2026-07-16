@@ -675,7 +675,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       title: 'Struggling with self-doubt?',
       subtitle: 'That voice questioning your abilities is loud, but it\'s not always telling you the truth. You have more capability than you think.',
     },
-    summary: 'What are self-doubt and low self-esteem? Self-doubt is that voice that questions your abilities, worth, and decisions. It whispers, "You\'re not good enough," "You\'ll fail," or "Everyone will figure out you\'re a fraud." Self-doubt and low self-esteem often go together. When you repeatedly question your abilities or worth, it can become difficult to trust yourself. Everyone experiences self-doubt sometimes. The difference is: some manage it, others let it paralyze them. Self-doubt is changeable through awareness, evidence, and compassion.',
+    summary: 'Self-doubt is that voice that questions your abilities, worth, and decisions. It whispers, "You\'re not good enough," "You\'ll fail," or "Everyone will figure out you\'re a fraud." Self-doubt and low self-esteem often go together. When you repeatedly question your abilities or worth, it can become difficult to trust yourself. Everyone experiences self-doubt sometimes. The difference is: some manage it, others let it paralyze them. Self-doubt is changeable through awareness, evidence, and compassion.',
     relatable: [
       'You attribute success to luck instead of ability',
       'You compare yourself to others and always come up short',
@@ -697,7 +697,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Taking on challenges beyond your comfort zone',
     ],
     tips: [
-      'Write down your doubt, then write evidence against it (past successes, skills, proof)',
+      'Challenge your doubts by remembering past successes, skills, and situations you\'ve already overcome',
       'Practice self-compassion: talk to yourself like you\'d talk to a friend',
       'Do something small that scares you; you\'ll realize you can handle more than doubt says',
       'Take a moment to remember past successes and challenges you\'ve already overcome',

@@ -209,7 +209,7 @@ export default function ExploreEmotionDetail() {
             style={{ marginBottom: '48px', padding: '32px', background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(124, 58, 237, 0.08) 100%)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '16px' }}
           >
             <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              💜 Find {emotion.displayName.toLowerCase()} support
+              💜 {emotionSlug === 'self-doubt' ? 'Build confidence and self-worth' : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
               You don't have to carry {emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage {emotion.displayName.toLowerCase()} and mental health challenges:
