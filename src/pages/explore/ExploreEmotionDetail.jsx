@@ -167,6 +167,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common signs of perfectionism'
                 : emotionSlug === 'overwhelm'
                 ? 'Common signs of overwhelm'
+                : emotionSlug === 'low-self-esteem'
+                ? 'Common signs of low self-esteem'
                 : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -200,6 +202,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common causes and triggers of perfectionism'
                 : emotionSlug === 'overwhelm'
                 ? 'Common causes and triggers of overwhelm'
+                : emotionSlug === 'low-self-esteem'
+                ? 'Common causes and triggers of low self-esteem'
                 : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
