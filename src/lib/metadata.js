@@ -221,6 +221,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'panic attacks, panic symptoms, anxiety help, grounding techniques, panic management, panic disorder, panic relief, anxiety support',
   },
+  '/explore/social-anxiety': {
+    title: 'Social Anxiety: Symptoms, Causes & How to Cope | SoulConnect',
+    description: 'Learn about social anxiety, including symptoms, triggers, and practical coping strategies. Discover ways to manage fear of judgment, build confidence, and find support.',
+    canonical: 'https://soulconnect.health/explore/social-anxiety',
+    ogType: 'article',
+    keywords: 'social anxiety, social anxiety disorder, fear of judgment, social phobia, anxiety in social situations, social anxiety symptoms, overcoming social anxiety, confidence, mental health',
+  },
 };
 
 /**
