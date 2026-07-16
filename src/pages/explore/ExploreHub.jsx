@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search as SearchIcon, ArrowRight, Home } from 'lucide-react';
-import { emotions } from '../../data/emotions';
+import emotionContentLibrary from '../../data/emotionContentLibrary';
 
 const CATEGORY_ICONS = {
   anxiety: '🧠',
@@ -32,17 +32,16 @@ const CATEGORY_ICONS = {
 };
 
 export default function ExploreHub() {
-  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [filteredCategories, setFilteredCategories] = useState([]);
 
   useEffect(() => {
-    // Use static emotion data instead of API call
-    const formattedCategories = emotions.map((e) => ({
+    // Use static emotion data from emotionContentLibrary
+    const formattedCategories = emotionContentLibrary.map((e) => ({
       slug: e.slug,
       name: e.displayName,
-      description: e.shortDescription,
+      description: e.seo.description,
     }));
     setCategories(formattedCategories);
     setFilteredCategories(formattedCategories);
@@ -58,10 +57,6 @@ export default function ExploreHub() {
       setFilteredCategories(categories);
     }
   }, [searchInput, categories]);
-
-  const handleCategoryClick = (category) => {
-    navigate(`/explore/i-feel-${category.slug}`);
-  };
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)' }}>
@@ -203,26 +198,29 @@ export default function ExploreHub() {
               gap: '24px',
             }}>
               {filteredCategories.map((category, index) => (
-                <motion.div
-                  key={category.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ y: -8 }}
-                  onClick={() => handleCategoryClick(category)}
-                  style={{
-                    padding: '28px',
-                    background: 'rgba(34, 18, 73, 0.72)',
-                    backdropFilter: 'blur(24px)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '16px',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '16px',
-                  }}
+                <Link
+                  key={category.slug}
+                  to={`/explore/${category.slug}`}
+                  style={{ textDecoration: 'none' }}
                 >
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    whileHover={{ y: -8 }}
+                    style={{
+                      padding: '28px',
+                      background: 'rgba(34, 18, 73, 0.72)',
+                      backdropFilter: 'blur(24px)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '16px',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '16px',
+                    }}
+                  >
                   {/* Icon & Title */}
                   <div>
                     <div style={{ fontSize: '40px', marginBottom: '12px' }}>
@@ -259,7 +257,8 @@ export default function ExploreHub() {
                     Explore
                     <ArrowRight size={14} />
                   </div>
-                </motion.div>
+                  </motion.div>
+                </Link>
               ))}
             </div>
           )}
