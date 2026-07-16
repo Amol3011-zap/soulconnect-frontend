@@ -868,7 +868,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       keywords: ['work stress', 'job stress', 'workplace anxiety', 'career pressure', 'job burnout'],
     },
     hero: {
-      title: 'Overwhelmed by work?',
+      title: 'Struggling with work stress?',
       subtitle: 'Work stress is real, but your worth isn\'t defined by your job. You can set boundaries and protect your well-being.',
     },
     summary: 'Work stress comes from long hours, high expectations, difficult colleagues, job insecurity, or misalignment with your values. It bleeds into your personal life, affecting sleep, relationships, and health. The key: recognizing that you can\'t control everything at work, but you can control your boundaries and how much of your energy you give.',
@@ -893,7 +893,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Major projects or transitions',
     ],
     tips: [
-      'Set clear work hours and stick to them—no emails after 6pm',
+      'Set clear work boundaries and stick to them. Protect your personal time whenever possible.',
       'Communicate expectations with your boss: "What does success look like?"',
       'Break big projects into smaller milestones to reduce overwhelm',
       'Take your breaks and lunch—not selfish, necessary',
@@ -903,7 +903,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Consider: Is this job sustainable? What would change need to happen?',
     ],
     reflectionQuestions: [
-      'What specific aspects of work stress you most?',
+      'What specific aspects of work are causing you the most stress?',
       'What boundaries do you need to set?',
       'Is this job aligned with your values and well-being?',
       'What would feel like a "good day" at work?',

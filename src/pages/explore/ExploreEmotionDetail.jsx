@@ -226,6 +226,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Build confidence and self-worth'
                 : emotionSlug === 'relationship-issues'
                 ? 'Strengthen your relationships'
+                : emotionSlug === 'work-stress'
+                ? 'Protect your well-being'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
@@ -233,6 +235,8 @@ export default function ExploreEmotionDetail() {
                 ? 'You don\'t have to face self-doubt alone. SoulConnect helps people build confidence, strengthen self-worth, and connect with supportive communities:'
                 : emotionSlug === 'relationship-issues'
                 ? 'You don\'t have to navigate relationship challenges alone. SoulConnect helps people improve communication, build healthier connections, and find support during difficult times:'
+                : emotionSlug === 'work-stress'
+                ? 'You don\'t have to carry work stress alone. SoulConnect helps people manage pressure, set healthier boundaries, and protect their mental well-being:'
                 : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
@@ -243,6 +247,8 @@ export default function ExploreEmotionDetail() {
                     ? 'Join anonymously with others who understand self-doubt, confidence struggles, and low self-esteem'
                     : emotionSlug === 'relationship-issues'
                     ? 'Join anonymously with others who understand relationship challenges, breakups, trust issues, and communication struggles'
+                    : emotionSlug === 'work-stress'
+                    ? 'Join anonymously with others who understand workplace pressure, burnout, difficult colleagues, and career stress'
                     : `Join anonymously with others who understand ${emotion.displayName.toLowerCase()}`}
                 </p>
               </div>
