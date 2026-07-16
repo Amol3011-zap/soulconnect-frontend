@@ -127,7 +127,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.1 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 16px 0' }}>What is anxiety?</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 16px 0' }}>What is {emotion.displayName.toLowerCase()}?</h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: 0 }}>
               {emotion.summary}
             </p>
@@ -140,7 +140,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.2 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Common anxiety symptoms</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Common {emotion.displayName.toLowerCase()} symptoms</h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {emotion.relatable.map((item, idx) => (
                 <p key={idx} style={{ fontSize: '15px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>
@@ -157,7 +157,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.3 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Common anxiety triggers</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Common {emotion.displayName.toLowerCase()} triggers</h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {emotion.situations.map((item, idx) => (
                 <p key={idx} style={{ fontSize: '15px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>
@@ -174,7 +174,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.4 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>How to calm anxiety: techniques you can try today</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>How to manage {emotion.displayName.toLowerCase()}: techniques you can try today</h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {emotion.tips.map((item, idx) => (
                 <p key={idx} style={{ fontSize: '15px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>
@@ -191,7 +191,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.45 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Questions to understand your anxiety</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Questions to understand your {emotion.displayName.toLowerCase()}</h2>
             <div style={{ display: 'grid', gap: '16px' }}>
               {emotion.reflectionQuestions.map((question, idx) => (
                 <div key={idx} style={{ padding: '16px', background: 'rgba(124, 58, 237, 0.08)', border: '1px solid rgba(124, 58, 237, 0.15)', borderRadius: '8px' }}>
@@ -285,7 +285,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.65 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently asked questions about anxiety</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently asked questions about {emotion.displayName.toLowerCase()}</h2>
             <div style={{ display: 'grid', gap: '16px' }}>
               {emotion.faq.map((item, idx) => (
                 <div key={idx}>
