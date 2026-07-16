@@ -136,6 +136,8 @@ export default function ExploreEmotionDetail() {
                 ? 'What is financial stress?'
                 : emotionSlug === 'sleep-issues'
                 ? 'What are sleep issues?'
+                : emotionSlug === 'panic-attacks'
+                ? 'What are panic attacks?'
                 : `What is ${emotion.displayName.toLowerCase()}?`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: 0 }}>
@@ -157,6 +159,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common signs of financial stress'
                 : emotionSlug === 'sleep-issues'
                 ? 'Common signs of sleep problems'
+                : emotionSlug === 'panic-attacks'
+                ? 'Common signs of panic attacks'
                 : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -182,6 +186,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common causes of financial stress'
                 : emotionSlug === 'sleep-issues'
                 ? 'Common causes of sleep problems'
+                : emotionSlug === 'panic-attacks'
+                ? 'Common causes and triggers of panic attacks'
                 : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -224,6 +230,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Questions to understand your relationship with money'
                 : emotionSlug === 'sleep-issues'
                 ? 'Questions to understand your sleep'
+                : emotionSlug === 'panic-attacks'
+                ? 'Questions to understand your experience with panic'
                 : `Questions to understand your ${emotion.displayName.toLowerCase()}`}
             </h2>
             <div style={{ display: 'grid', gap: '16px' }}>
@@ -254,6 +262,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Build financial confidence and stability'
                 : emotionSlug === 'sleep-issues'
                 ? 'Improve your sleep and well-being'
+                : emotionSlug === 'panic-attacks'
+                ? 'Find support for panic and anxiety'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
@@ -267,6 +277,8 @@ export default function ExploreEmotionDetail() {
                 ? 'You don\'t have to navigate financial stress alone. SoulConnect helps people understand their finances, build confidence with money, and find support during tough times:'
                 : emotionSlug === 'sleep-issues'
                 ? 'You don\'t have to deal with sleep problems alone. SoulConnect helps people understand sleep challenges, reduce stress, and build healthier habits:'
+                : emotionSlug === 'panic-attacks'
+                ? 'You don\'t have to face panic attacks alone. SoulConnect helps people understand panic, build coping skills, and find support during difficult moments:'
                 : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
@@ -283,6 +295,8 @@ export default function ExploreEmotionDetail() {
                     ? 'Join anonymously with others who understand financial stress, money anxiety, and building financial confidence'
                     : emotionSlug === 'sleep-issues'
                     ? 'Join anonymously with others who understand insomnia, restless nights, racing thoughts, and sleep struggles'
+                    : emotionSlug === 'panic-attacks'
+                    ? 'Join anonymously with others who understand panic attacks, anxiety, fear, and overwhelming emotions'
                     : `Join anonymously with others who understand ${emotion.displayName.toLowerCase()}`}
                 </p>
               </div>
@@ -352,7 +366,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.65 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently asked questions about {emotionSlug === 'financial-worry' ? 'financial stress' : emotionSlug === 'sleep-issues' ? 'sleep problems' : emotion.displayName.toLowerCase()}</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently asked questions about {emotionSlug === 'financial-worry' ? 'financial stress' : emotionSlug === 'sleep-issues' ? 'sleep problems' : emotionSlug === 'panic-attacks' ? 'panic attacks' : emotion.displayName.toLowerCase()}</h2>
             <div style={{ display: 'grid', gap: '16px' }}>
               {emotion.faq.map((item, idx) => (
                 <div key={idx}>

@@ -1164,7 +1164,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       title: 'Experiencing panic attacks?',
       subtitle: 'Panic feels life-threatening but it\'s not. Your body is in overdrive. With support, panic is manageable.',
     },
-    summary: 'Panic attacks are sudden bursts of intense fear with physical symptoms: racing heart, difficulty breathing, dizziness, chest pain. They feel like a heart attack or dying. The truth: panic attacks are not dangerous, though they feel terrifying. They peak in 5-10 minutes then subside. Repeated panic attacks can become panic disorder (fear of having more panic). Professional support and grounding techniques help.',
+    summary: 'Panic attacks are sudden episodes of intense fear that can cause physical symptoms such as a racing heart, dizziness, chest tightness, sweating, and difficulty breathing. They feel like a heart attack or dying. The truth: panic attacks are not dangerous, though they feel terrifying. They peak in 5-10 minutes then subside. Repeated panic attacks can become panic disorder (fear of having more panic). Professional support and grounding techniques help.',
     relatable: [
       'Your heart races without warning',
       'You feel like you\'re dying or losing control',
@@ -1239,7 +1239,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
     ],
     trustSafety: {
-      disclaimer: 'If you\'re experiencing chest pain or breathing difficulty for the first time, seek medical evaluation to rule out heart problems.',
+      disclaimer: 'This content is educational and not a substitute for medical advice. If you\'re experiencing chest pain, breathing difficulties, or panic symptoms for the first time, seek medical evaluation to rule out other health conditions.',
       lastReviewedDate: '2025-02-15',
     },
   },
