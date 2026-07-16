@@ -168,7 +168,6 @@ export default function TodaysReflectionModal({
                 borderRadius: 28,
                 padding: '30px 28px 26px',
                 boxShadow: '0 24px 80px rgba(0,0,0,0.65), 0 0 80px rgba(124,58,237,0.2), inset 0 1px 0 rgba(255,255,255,0.07)',
-                position: 'fixed',
               }}
             >
               {/* Particles */}

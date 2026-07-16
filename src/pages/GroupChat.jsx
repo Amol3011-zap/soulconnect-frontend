@@ -1036,8 +1036,8 @@ export default function GroupChat() {
                       onKeyPress={e => e.key === 'Enter' && sendMessage()}
                       placeholder="Share your thoughts... (You're in a safe space)"
                       style={{
-                        flex: 1, padding: '12px 80px 12px 16px', borderRadius: 20, border: 'none', outline: 'none',
-                        background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(109,74,255,0.2)',
+                        flex: 1, padding: '12px 80px 12px 16px', borderRadius: 20, border: '1px solid rgba(109,74,255,0.2)', outline: 'none',
+                        background: 'rgba(255,255,255,0.05)',
                         color: '#fff', fontSize: 14,
                         fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
                         width: '100%', boxSizing: 'border-box',

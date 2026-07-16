@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search as SearchIcon, ArrowRight, Home } from 'lucide-react';
 import emotionContentLibrary from '../../data/emotionContentLibrary';
@@ -32,6 +32,7 @@ const CATEGORY_ICONS = {
 };
 
 export default function ExploreHub() {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [filteredCategories, setFilteredCategories] = useState([]);
