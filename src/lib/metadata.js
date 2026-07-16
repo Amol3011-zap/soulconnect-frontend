@@ -298,6 +298,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'emotional exhaustion, emotional burnout, caregiver stress, compassion fatigue, mental exhaustion, burnout recovery, mental health support',
   },
+  '/explore/overthinking': {
+    title: 'Overthinking: Signs, Causes & How to Quiet Racing Thoughts | SoulConnect',
+    description: 'Learn about overthinking, including common signs, causes, and practical strategies to manage racing thoughts, reduce anxiety, and find clarity.',
+    canonical: 'https://soulconnect.health/explore/overthinking',
+    ogType: 'article',
+    keywords: 'overthinking, rumination, racing thoughts, anxiety, intrusive thoughts, mental health support, stress management',
+  },
 };
 
 /**

@@ -146,6 +146,8 @@ export default function ExploreEmotionDetail() {
                 ? 'What does it mean to feel lost?'
                 : emotionSlug === 'emotional-exhaustion'
                 ? 'What does emotional exhaustion mean?'
+                : emotionSlug === 'overthinking'
+                ? 'What does overthinking mean?'
                 : `What is ${emotion.displayName.toLowerCase()}?`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: 0 }}>
@@ -191,6 +193,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common signs of feeling lost'
                 : emotionSlug === 'emotional-exhaustion'
                 ? 'Common signs of emotional exhaustion'
+                : emotionSlug === 'overthinking'
+                ? 'Common signs of overthinking'
                 : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -240,6 +244,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common causes and triggers of feeling lost'
                 : emotionSlug === 'emotional-exhaustion'
                 ? 'Common causes and triggers of emotional exhaustion'
+                : emotionSlug === 'overthinking'
+                ? 'Common causes and triggers of overthinking'
                 : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -338,6 +344,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Find clarity and support'
                 : emotionSlug === 'emotional-exhaustion'
                 ? 'Recover and reconnect'
+                : emotionSlug === 'overthinking'
+                ? 'Find clarity and support'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
@@ -371,6 +379,8 @@ export default function ExploreEmotionDetail() {
                 ? 'You don\'t have to navigate uncertainty alone. SoulConnect helps people explore change, reconnect with their values, and find support during difficult transitions:'
                 : emotionSlug === 'emotional-exhaustion'
                 ? 'You don\'t have to navigate emotional exhaustion alone. SoulConnect helps people manage stress, set healthier boundaries, and reconnect with themselves:'
+                : emotionSlug === 'overthinking'
+                ? 'You don\'t have to navigate overthinking alone. SoulConnect helps people manage racing thoughts, reduce stress, and build healthier coping strategies:'
                 : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
@@ -401,6 +411,8 @@ export default function ExploreEmotionDetail() {
                     ? 'Join anonymously with others who understand uncertainty, life transitions, identity changes, and feeling lost'
                     : emotionSlug === 'emotional-exhaustion'
                     ? 'Join anonymously with others who understand caregiving stress, burnout, emotional exhaustion, and feeling overwhelmed'
+                    : emotionSlug === 'overthinking'
+                    ? 'Join anonymously with others who understand overthinking, anxiety, self-doubt, and racing thoughts'
                     : `Join anonymously with others who understand ${emotion.displayName.toLowerCase()}`}
                 </p>
               </div>
