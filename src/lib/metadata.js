@@ -152,8 +152,8 @@ export const METADATA = {
     keywords: 'depression support, depression symptoms, depression triggers, coping with depression, depression treatment, mental health support, emotional wellness, depression help',
   },
   '/explore/stress': {
-    title: 'Stress Management: Symptoms, Triggers & Coping Techniques | SoulConnect',
-    description: 'Understand stress symptoms and common triggers. Learn practical coping strategies and find supportive communities for managing stress and building resilience.',
+    title: 'Stress Management, Symptoms & Coping Techniques | SoulConnect',
+    description: 'Learn about stress symptoms, common triggers, coping strategies, and ways to find support through SoulConnect.',
     canonical: 'https://soulconnect.health/explore/stress',
     ogType: 'article',
     keywords: 'stress management, stress symptoms, stress relief, coping with stress, stress triggers, anxiety relief, mental health support, emotional wellness',
