@@ -270,6 +270,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'guilt, self-blame, guilt symptoms, self-forgiveness, regret, emotional healing, mental health support',
   },
+  '/explore/shame': {
+    title: 'Shame: Signs, Causes & Self-Acceptance Support | SoulConnect',
+    description: 'Learn about shame, self-worth, and emotional healing. Explore common causes, coping strategies, and ways to build self-compassion with SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/shame',
+    ogType: 'article',
+    keywords: 'shame, toxic shame, self-worth, self-compassion, emotional healing, trauma, mental health support',
+  },
 };
 
 /**
