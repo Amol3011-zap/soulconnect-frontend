@@ -144,6 +144,34 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'anxiety support, anxiety symptoms, signs of anxiety, how to calm anxiety, coping with anxiety, what does anxiety feel like, anxiety management, breathing exercises, mental health support, anxiety relief',
   },
+  '/explore/depression': {
+    title: 'Depression Support, Symptoms & Coping Strategies | SoulConnect',
+    description: 'Learn about depression symptoms, common triggers, coping strategies, and ways to find support through SoulConnect. Explore depression support communities and mental health guidance.',
+    canonical: 'https://soulconnect.health/explore/depression',
+    ogType: 'article',
+    keywords: 'depression support, depression symptoms, depression triggers, coping with depression, depression treatment, mental health support, emotional wellness, depression help',
+  },
+  '/explore/stress': {
+    title: 'Stress Management: Symptoms, Triggers & Coping Techniques | SoulConnect',
+    description: 'Understand stress symptoms and common triggers. Learn practical coping strategies and find supportive communities for managing stress and building resilience.',
+    canonical: 'https://soulconnect.health/explore/stress',
+    ogType: 'article',
+    keywords: 'stress management, stress symptoms, stress relief, coping with stress, stress triggers, anxiety relief, mental health support, emotional wellness',
+  },
+  '/explore/grief': {
+    title: 'Grief Support & Bereavement: Processing Loss & Mourning | SoulConnect',
+    description: 'Navigate grief and loss with compassion. Learn healthy ways to process grief, honor your loss, and connect with supportive communities who understand your journey.',
+    canonical: 'https://soulconnect.health/explore/grief',
+    ogType: 'article',
+    keywords: 'grief support, bereavement, loss, mourning, grief counseling, emotional support, coping with loss, grief resources',
+  },
+  '/explore/loneliness': {
+    title: 'Loneliness Support: Build Meaningful Connections | SoulConnect',
+    description: 'Address loneliness and build meaningful connections. Discover ways to combat isolation and find supportive communities on SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/loneliness',
+    ogType: 'article',
+    keywords: 'loneliness support, overcoming isolation, social anxiety, meaningful connections, community, emotional support, mental health',
+  },
 };
 
 /**
