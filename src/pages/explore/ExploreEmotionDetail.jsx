@@ -212,7 +212,9 @@ export default function ExploreEmotionDetail() {
               💜 {emotionSlug === 'self-doubt' ? 'Build confidence and self-worth' : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
-              You don't have to carry {emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage {emotion.displayName.toLowerCase()} and mental health challenges:
+              {emotionSlug === 'self-doubt'
+                ? 'You don\'t have to face self-doubt alone. SoulConnect helps people build confidence, strengthen self-worth, and connect with supportive communities:'
+                : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
               <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
