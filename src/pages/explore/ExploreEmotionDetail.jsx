@@ -144,6 +144,8 @@ export default function ExploreEmotionDetail() {
                 ? 'What is low motivation?'
                 : emotionSlug === 'feeling-lost'
                 ? 'What does it mean to feel lost?'
+                : emotionSlug === 'emotional-exhaustion'
+                ? 'What does emotional exhaustion mean?'
                 : `What is ${emotion.displayName.toLowerCase()}?`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: 0 }}>
@@ -187,6 +189,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common signs of low motivation'
                 : emotionSlug === 'feeling-lost'
                 ? 'Common signs of feeling lost'
+                : emotionSlug === 'emotional-exhaustion'
+                ? 'Common signs of emotional exhaustion'
                 : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -234,6 +238,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common causes and triggers of low motivation'
                 : emotionSlug === 'feeling-lost'
                 ? 'Common causes and triggers of feeling lost'
+                : emotionSlug === 'emotional-exhaustion'
+                ? 'Common causes and triggers of emotional exhaustion'
                 : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -330,6 +336,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Rediscover purpose and momentum'
                 : emotionSlug === 'feeling-lost'
                 ? 'Find clarity and support'
+                : emotionSlug === 'emotional-exhaustion'
+                ? 'Recover and reconnect'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
@@ -361,6 +369,8 @@ export default function ExploreEmotionDetail() {
                 ? 'You don\'t have to navigate low motivation alone. SoulConnect helps people reconnect with their goals, build healthy habits, and find support during difficult times:'
                 : emotionSlug === 'feeling-lost'
                 ? 'You don\'t have to navigate uncertainty alone. SoulConnect helps people explore change, reconnect with their values, and find support during difficult transitions:'
+                : emotionSlug === 'emotional-exhaustion'
+                ? 'You don\'t have to navigate emotional exhaustion alone. SoulConnect helps people manage stress, set healthier boundaries, and reconnect with themselves:'
                 : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
@@ -389,6 +399,8 @@ export default function ExploreEmotionDetail() {
                     ? 'Join anonymously with others who understand burnout, procrastination, feeling stuck, and loss of motivation'
                     : emotionSlug === 'feeling-lost'
                     ? 'Join anonymously with others who understand uncertainty, life transitions, identity changes, and feeling lost'
+                    : emotionSlug === 'emotional-exhaustion'
+                    ? 'Join anonymously with others who understand caregiving stress, burnout, emotional exhaustion, and feeling overwhelmed'
                     : `Join anonymously with others who understand ${emotion.displayName.toLowerCase()}`}
                 </p>
               </div>

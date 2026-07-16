@@ -291,6 +291,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'feeling lost, lack of direction, life transitions, purpose, identity crisis, uncertainty, mental health support',
   },
+  '/explore/emotional-exhaustion': {
+    title: 'Emotional Exhaustion: Signs, Causes & How to Recover | SoulConnect',
+    description: 'Learn about emotional exhaustion, including common signs, causes, and ways to recover through boundaries, support, and self-care.',
+    canonical: 'https://soulconnect.health/explore/emotional-exhaustion',
+    ogType: 'article',
+    keywords: 'emotional exhaustion, emotional burnout, caregiver stress, compassion fatigue, mental exhaustion, burnout recovery, mental health support',
+  },
 };
 
 /**
