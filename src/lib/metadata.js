@@ -277,6 +277,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'shame, toxic shame, self-worth, self-compassion, emotional healing, trauma, mental health support',
   },
+  '/explore/motivation': {
+    title: 'Low Motivation: Signs, Causes & Ways to Rebuild Momentum | SoulConnect',
+    description: 'Learn about low motivation, including common causes, signs, and practical strategies to regain energy, purpose, and momentum with SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/motivation',
+    ogType: 'article',
+    keywords: 'low motivation, lack of motivation, burnout, procrastination, mental health, productivity, motivation support',
+  },
 };
 
 /**
