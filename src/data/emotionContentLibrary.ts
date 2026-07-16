@@ -130,7 +130,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What activity or place has ever made you feel calm?',
     ],
     whenToSeekSupport: 'Consider speaking with a mental health professional if: anxiety is interfering with work, school, or relationships; you\'re having panic attacks; you\'re using alcohol or substances to cope; anxiety persists despite trying coping strategies; or you\'re having thoughts of harming yourself.',
-    relatedCategories: ['panic-attacks', 'social-anxiety', 'stress', 'overthinking', 'sleep-issues'],
+    relatedCategories: ['overthinking', 'stress', 'loneliness', 'panic-attacks', 'sleep-issues', 'depression', 'relationship-issues'],
     faq: [
       {
         question: 'Is anxiety the same as panic attacks?',
