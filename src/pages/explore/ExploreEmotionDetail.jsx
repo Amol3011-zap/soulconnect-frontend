@@ -198,29 +198,6 @@ export default function ExploreEmotionDetail() {
             </div>
           </motion.div>
 
-          {/* Stories */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            style={{ marginBottom: '48px' }}
-          >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Stories from People Like You</h2>
-            <div style={{ display: 'grid', gap: '20px' }}>
-              {emotion.stories.map((story, idx) => (
-                <div key={idx} style={{
-                  padding: '20px',
-                  background: 'rgba(34, 18, 73, 0.5)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '12px',
-                }}>
-                  <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>{story.title}</h3>
-                  <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>{story.content}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
           {/* FAQ */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
