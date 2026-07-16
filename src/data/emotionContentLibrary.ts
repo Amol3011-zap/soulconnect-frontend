@@ -1164,7 +1164,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       title: 'Experiencing panic attacks?',
       subtitle: 'Panic feels life-threatening but it\'s not. Your body is in overdrive. With support, panic is manageable.',
     },
-    summary: 'Panic attacks are sudden episodes of intense fear that can cause physical symptoms such as a racing heart, dizziness, chest tightness, sweating, and difficulty breathing. They feel like a heart attack or dying. The truth: panic attacks are not dangerous, though they feel terrifying. They peak in 5-10 minutes then subside. Repeated panic attacks can become panic disorder (fear of having more panic). Professional support and grounding techniques help.',
+    summary: 'Panic attacks are sudden episodes of intense fear that can cause physical symptoms such as a racing heart, dizziness, chest tightness, sweating, and difficulty breathing. They feel like a heart attack or dying. Panic attacks themselves are not physically dangerous, although they can feel overwhelming and frightening. They peak in 5-10 minutes then subside. Repeated panic attacks can become panic disorder (fear of having more panic). Professional support and grounding techniques help.',
     relatable: [
       'Your heart races without warning',
       'You feel like you\'re dying or losing control',
@@ -1188,7 +1188,7 @@ export const emotionContentLibrary: EmotionContent[] = [
     tips: [
       'Remember: panic is not dangerous. You won\'t faint, have a heart attack, or lose control',
       'Stay in the moment: use 5-4-3-2-1 grounding (name 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1 you taste)',
-      'Slow your breathing: breathe in for 4 counts, hold for 4, out for 6',
+      'Slow your breathing: take gentle, steady breaths and focus on making your exhale longer than your inhale',
       'Don\'t fight the panic; observe it like a cloud passing by',
       'Do something grounding: hold ice, splash cold water, press feet into ground',
       'Call someone you trust and tell them what\'s happening',
@@ -1202,7 +1202,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What grounds you and makes you feel safe?',
       'How has panic changed your life? What would change if you weren\'t afraid of panic?',
     ],
-    whenToSeekSupport: 'Seek help immediately if: panic attacks are frequent or worsening; you\'re avoiding places; you\'re using substances or alcohol to cope; or you\'re having thoughts of self-harm. Cognitive behavioral therapy and sometimes medication effectively treat panic disorder.',
+    whenToSeekSupport: 'Seek professional support if panic attacks are becoming frequent, affecting your daily life, causing you to avoid certain places, or leading you to rely on alcohol or substances. Seek immediate help if you\'re having thoughts of self-harm. Cognitive behavioral therapy and sometimes medication effectively treat panic disorder.',
     relatedCategories: ['anxiety', 'stress', 'agoraphobia', 'health-anxiety', 'trauma'],
     faq: [
       {
@@ -1211,7 +1211,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
       {
         question: 'Why do panic attacks happen?',
-        answer: 'Panic can be triggered by stress, anxiety, caffeine, hormones, or medical conditions. Sometimes there\'s no clear trigger. The why doesn\'t matter; treating it does.',
+        answer: 'Panic can be triggered by stress, anxiety, caffeine, hormones, or medical conditions. Sometimes there\'s no clear trigger. Understanding the cause can help, but learning how to manage panic is often the most important step.',
       },
       {
         question: 'How long do panic attacks last?',
