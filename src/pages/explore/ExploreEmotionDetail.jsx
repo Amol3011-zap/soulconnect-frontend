@@ -169,6 +169,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common signs of overwhelm'
                 : emotionSlug === 'low-self-esteem'
                 ? 'Common signs of low self-esteem'
+                : emotionSlug === 'burnout'
+                ? 'Common signs of burnout'
                 : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -204,6 +206,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common causes and triggers of overwhelm'
                 : emotionSlug === 'low-self-esteem'
                 ? 'Common causes and triggers of low self-esteem'
+                : emotionSlug === 'burnout'
+                ? 'Common causes and triggers of burnout'
                 : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -288,6 +292,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Find clarity and support'
                 : emotionSlug === 'low-self-esteem'
                 ? 'Build confidence and self-worth'
+                : emotionSlug === 'burnout'
+                ? 'Recover and recharge'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>

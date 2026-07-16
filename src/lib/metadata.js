@@ -249,6 +249,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'low self-esteem, self-worth, confidence, self-confidence, self-esteem issues, negative self-talk, self-doubt, mental health, emotional well-being',
   },
+  '/explore/burnout': {
+    title: 'Experiencing Burnout? Signs, Causes & Recovery Tips | SoulConnect',
+    description: 'Learn the signs and causes of burnout, understand how chronic stress affects well-being, and explore practical strategies for rest, recovery, and balance.',
+    canonical: 'https://soulconnect.health/explore/burnout',
+    ogType: 'article',
+    keywords: 'burnout, job burnout, burnout recovery, workplace exhaustion, caregiver burnout, stress management, rest and recovery, work-life balance',
+  },
 };
 
 /**
