@@ -89,7 +89,7 @@ export const emotionContentLibrary: EmotionContent[] = [
     },
     hero: {
       title: 'Feeling worried or on edge?',
-      subtitle: 'Anxiety is your mind\'s way of preparing you for potential threats. When it becomes constant, it can be exhausting. You\'re not alone.',
+      subtitle: 'Anxiety can make your thoughts race, your chest tighten, and everyday situations feel overwhelming. If you\'ve been carrying that weight, you\'re not alone.',
     },
     summary: 'Anxiety is a normal emotion that everyone experiences, but when worry becomes constant and affects your daily life, it deserves attention. Anxiety can feel like racing thoughts, physical tension, or a sense of dread. The good news: anxiety is treatable, manageable, and many people learn to live well with it.',
     relatable: [
