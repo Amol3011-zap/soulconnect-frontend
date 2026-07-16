@@ -310,52 +310,50 @@ export default function ExploreEmotionDetail() {
           </motion.div>
 
           {/* Related Emotions */}
-          {/* Related Topics - Always show for anxiety */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            style={{ marginBottom: '48px' }}
-          >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Related Topics</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-              {[
-                { slug: 'overthinking', name: '💭 Overthinking' },
-                { slug: 'stress', name: '🔥 Stress' },
-                { slug: 'loneliness', name: '😔 Loneliness' },
-                { slug: 'panic-attacks', name: '⚡ Panic Attacks' },
-                { slug: 'sleep-issues', name: '😴 Sleep Problems' },
-                { slug: 'depression', name: '🌧 Depression' },
-                { slug: 'relationship-issues', name: '❤️ Relationship Challenges' },
-              ].map(({ slug, name }) => (
-                <button
-                  key={slug}
-                  onClick={() => navigate(`/explore/${slug}`)}
-                  style={{
-                    padding: '16px',
-                    background: 'rgba(34, 18, 73, 0.72)',
-                    border: '1px solid rgba(124, 58, 237, 0.3)',
-                    borderRadius: '12px',
-                    color: '#A78BFA',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'rgba(124, 58, 237, 0.2)';
-                    e.target.style.borderColor = 'rgba(124, 58, 237, 0.5)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'rgba(34, 18, 73, 0.72)';
-                    e.target.style.borderColor = 'rgba(124, 58, 237, 0.3)';
-                  }}
-                >
-                  {name}
-                </button>
-              ))}
-            </div>
-          </motion.div>
+          {/* Related Topics */}
+          {emotion.relatedCategories && emotion.relatedCategories.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              style={{ marginBottom: '48px' }}
+            >
+              <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Related Topics</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                {emotion.relatedCategories.map((slug) => {
+                  const related = emotionContentLibrary.find(e => e.slug === slug);
+                  if (!related) return null;
+                  return (
+                    <button
+                      key={slug}
+                      onClick={() => navigate(`/explore/${slug}`)}
+                      style={{
+                        padding: '16px',
+                        background: 'rgba(34, 18, 73, 0.72)',
+                        border: '1px solid rgba(124, 58, 237, 0.3)',
+                        borderRadius: '12px',
+                        color: '#A78BFA',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = 'rgba(124, 58, 237, 0.2)';
+                        e.target.style.borderColor = 'rgba(124, 58, 237, 0.5)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = 'rgba(34, 18, 73, 0.72)';
+                        e.target.style.borderColor = 'rgba(124, 58, 237, 0.3)';
+                      }}
+                    >
+                      {related.displayName}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
 
           {/* Important Disclaimer */}
           <motion.div
@@ -379,10 +377,10 @@ export default function ExploreEmotionDetail() {
           >
             <p style={{ margin: '0 0 8px 0', fontWeight: '500', color: 'rgba(255,255,255,0.7)' }}>Medical and Editorial Review</p>
             <p style={{ margin: '0 0 8px 0' }}>
-              This content is educational and reviewed by the SoulConnect team. It is not a substitute for professional mental health advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for medical concerns.
+              {emotion.trustSafety?.disclaimer || 'This content is educational and reviewed by the SoulConnect team. It is not a substitute for professional mental health advice, diagnosis, or treatment.'}
             </p>
             <p style={{ margin: '12px 0 0 0', fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
-              Last reviewed: {emotion.trustSafety.lastReviewedDate}
+              Last reviewed: {emotion.trustSafety?.lastReviewedDate || 'February 2025'}
             </p>
           </motion.div>
         </div>
