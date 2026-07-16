@@ -283,7 +283,7 @@ export const emotionContentLibrary: EmotionContent[] = [
     },
     hero: {
       title: 'Grieving someone you lost?',
-      subtitle: 'Grief is the price of love. There\'s no "right way" to grieve. Your loss is real, your pain is valid, and healing is possible.',
+      subtitle: 'Grief is the price we pay for love. There\'s no "right way" to grieve. Your loss is real, your pain is valid, and healing is possible.',
     },
     summary: 'Grief is the emotional response to loss—whether death, breakup, relocation, or life change. It\'s not linear. You might feel sadness, anger, guilt, numbness, or unexpected moments of peace, often all in one day. Grief isn\'t something to "get over"; it\'s something to integrate. Over time, the sharp pain often softens, though missing someone never completely goes away.',
     relatable: [
