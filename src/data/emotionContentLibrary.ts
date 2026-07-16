@@ -11,7 +11,6 @@
  * - Common situations
  * - Practical tips
  * - Reflection questions
- * - Anonymous stories
  * - When to seek support
  * - Related categories
  * - FAQ
@@ -54,12 +53,6 @@ export interface EmotionContent {
 
   // Reflection questions
   reflectionQuestions: string[];
-
-  // Anonymous stories (3 stories)
-  stories: {
-    title: string;
-    content: string;
-  }[];
 
   // When to seek professional support
   whenToSeekSupport: string;
@@ -135,20 +128,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What\'s one worry that keeps returning? Can you separate what you can control from what you can\'t?',
       'Who in your life makes you feel safe and understood?',
       'What activity or place has ever made you feel calm?',
-    ],
-    stories: [
-      {
-        title: "Priya's Work Presentation",
-        content: 'Priya had crushing anxiety about presenting to her team. For weeks before, she couldn\'t sleep. The night before her presentation, she tried the 5-4-3-2-1 technique and felt a little calmer. During the presentation, her hands shook, but she did it anyway. Afterward, she realized that facing it was less scary than avoiding it.',
-      },
-      {
-        title: 'Marcus Discovers His Pattern',
-        content: 'Marcus noticed his anxiety spiked every Sunday evening, dreading Monday work. He started going for a run on Sunday afternoons, which helped. Then he talked to his manager about his workload. Small changes made a big difference—not eliminating anxiety, but making it manageable.',
-      },
-      {
-        title: "Sarah's Late-Night Spirals",
-        content: 'Sarah\'s worst anxiety came late at night when her mind wouldn\'t stop. She tried putting her phone away, limiting coffee after 2pm, and keeping a journal by her bed to "dump" worries. It didn\'t eliminate anxiety, but these habits gave her more control.',
-      },
     ],
     whenToSeekSupport: 'Consider speaking with a mental health professional if: anxiety is interfering with work, school, or relationships; you\'re having panic attacks; you\'re using alcohol or substances to cope; anxiety persists despite trying coping strategies; or you\'re having thoughts of harming yourself.',
     relatedCategories: ['panic-attacks', 'social-anxiety', 'stress', 'overthinking', 'sleep-issues'],
@@ -247,20 +226,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What does depression tell you about yourself? Is that true?',
       'If you could do one thing differently tomorrow, what would it be?',
     ],
-    stories: [
-      {
-        title: 'Aisha\'s Fog Lifting',
-        content: 'Aisha felt depressed for months after losing her job. Everything felt pointless. She started therapy and with her therapist\'s help, she took small steps—first, going for walks. Then joining a community group. Then volunteering. Recovery wasn\'t linear; some days were still hard. But slowly, the fog lifted. A year later, she was working again and felt more like herself.',
-      },
-      {
-        title: 'James\'s Turning Point',
-        content: 'James didn\'t realize he was depressed until his friend called him out for withdrawing. He\'d been blaming himself for "laziness," but his friend said, "That sounds like depression, not laziness." Hearing someone name it helped. He got support and learned depression wasn\'t a character flaw—it was a health issue that deserved treatment.',
-      },
-      {
-        title: 'Maya\'s Small Wins',
-        content: 'Maya\'s depression made everything feel impossible. Her therapist said, "Small wins count." So Maya celebrated getting out of bed, taking a shower, texting a friend. These felt huge when depression was present. Over time, as she celebrated small wins and built momentum, the weight lessened.',
-      },
-    ],
     whenToSeekSupport: 'Seek professional help if: low mood persists for more than 2 weeks; you\'re having thoughts of suicide or self-harm; depression is affecting work, school, or relationships; you\'re using substances to cope; or you feel hopeless about the future. If you\'re having suicidal thoughts, reach out to a crisis helpline immediately.',
     relatedCategories: ['grief', 'burnout', 'emotional-exhaustion', 'self-doubt', 'loneliness'],
     faq: [
@@ -357,20 +322,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What would they want for you right now?',
       'How has this loss changed you?',
       'What would honoring their memory look like for you?',
-    ],
-    stories: [
-      {
-        title: 'David\'s Grief Journey',
-        content: 'David lost his dad suddenly. For months, grief was all-consuming. He couldn\'t talk about his dad without breaking down. A year later, he joined a grief support group. Hearing others\' stories helped him feel less alone. Now, 3 years later, he can tell stories about his dad—still sad sometimes, but also laughing at memories.',
-      },
-      {
-        title: 'Sophia\'s Breakup Grief',
-        content: 'After her 7-year relationship ended, Sophia realized she was grieving—not just sadness, but the loss of a future she\'d imagined. She went to therapy and a support group for breakups. She wrote letters she never sent. Slowly, she grieved the relationship and began imagining a new future.',
-      },
-      {
-        title: 'Chen\'s Unexpected Loss',
-        content: 'Chen lost his best friend to suicide. The guilt was crushing: "Why didn\'t I see it? Could I have prevented it?" Therapy helped him understand that grief and guilt are different. He couldn\'t have fixed everything, but his love was real and mattered.',
-      },
     ],
     whenToSeekSupport: 'Consider professional support if: grief is intensifying after months; you\'re having thoughts of suicide; you\'re using substances to cope; you feel completely isolated; or grief is preventing basic self-care. Complicated grief (when grief doesn\'t soften after 1-2 years) also deserves professional attention.',
     relatedCategories: ['depression', 'anxiety', 'emotional-exhaustion', 'loneliness', 'guilt'],
@@ -469,20 +420,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What would it look like to let go of one thing?',
       'What small relief could you give yourself today?',
     ],
-    stories: [
-      {
-        title: 'James\'s Breaking Point',
-        content: 'James was working 60-hour weeks, skipping exercise, eating poorly. He felt constant chest tension. His doctor said, "Your body is in crisis." That woke him up. He set boundaries at work, started walking daily, and talked to his manager about workload. His stress didn\'t vanish, but it became manageable.',
-      },
-      {
-        title: 'Lisa\'s "No"',
-        content: 'Lisa said yes to everything—work projects, friend requests, family obligations. She was exhausted. Therapy helped her realize she couldn\'t do it all. She started saying no to things that drained her. It felt selfish at first, but her stress dropped dramatically.',
-      },
-      {
-        title: 'Miguel\'s Reset',
-        content: 'Miguel thought stress relief meant expensive vacations. His therapist suggested smaller resets: 20 minutes of yoga, a walk in the park, cooking a favorite meal. These small practices reduced his daily stress more than waiting for a yearly vacation.',
-      },
-    ],
     whenToSeekSupport: 'Seek help if: stress is affecting your health, relationships, or ability to function; you\'re having panic symptoms; you\'re using alcohol or substances to cope; stress doesn\'t improve with basic self-care; or you feel hopeless.',
     relatedCategories: ['anxiety', 'burnout', 'work-stress', 'sleep-issues', 'emotional-exhaustion'],
     faq: [
@@ -580,20 +517,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What\'s one small step toward connection you could take this week?',
       'What prevents you from reaching out? Is it fear, shame, or something else?',
     ],
-    stories: [
-      {
-        title: 'Ana\'s New City',
-        content: 'Ana moved to a big city for work. She was surrounded by millions of people but felt deeply alone. She forced herself to join a book club. First meeting was awkward, but she kept going. After 2 months, she had her first friend. A year later, she had a whole community. It started with showing up.',
-      },
-      {
-        title: 'Raj\'s Online Community',
-        content: 'Raj struggled to make friends in person. He felt nervous and awkward. But online, in communities around his hobbies (gaming, coding), he found his people. His online friendships eventually led to in-person meetups and real friendships. Connection found him through shared interests.',
-      },
-      {
-        title: 'Zara\'s Authenticity Shift',
-        content: 'Zara was lonely even in groups because she was hiding her true self—her quirks, her depression history, her unconventional interests. Therapy helped her realize that hiding deepened loneliness. When she started being more authentic, she attracted people who actually liked the real her.',
-      },
-    ],
     whenToSeekSupport: 'Seek help if: loneliness is persistent and causing depression or anxiety; you\'re isolating yourself; loneliness is linked to thoughts of self-harm; or you feel hopeless about ever connecting. A therapist can help address underlying issues and build connection skills.',
     relatedCategories: ['depression', 'social-anxiety', 'self-doubt', 'grief', 'anxiety'],
     faq: [
@@ -690,20 +613,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What do you need that you\'re not getting?',
       'When does anger serve you? When does it hurt you?',
       'How would you like to express anger more effectively?',
-    ],
-    stories: [
-      {
-        title: 'Marcus\'s Wake-Up Call',
-        content: 'Marcus yelled at his daughter over spilled milk. She cried. He felt ashamed. He realized his anger was really about work stress and feeling powerless at his job. Therapy helped him separate his work frustrations from his family. He learned to pause and identify what he was really angry about.',
-      },
-      {
-        title: 'Keisha\'s Boundary',
-        content: 'Keisha\'s anger with her friend was telling her something: her friend kept canceling plans. Keisha\'s anger wasn\'t the problem; it was useful information. She talked to her friend about the cancellations. Setting a boundary resolved the anger.',
-      },
-      {
-        title: 'Luis\'s Physical Release',
-        content: 'Luis had rage that burst out unexpectedly. He tried breathing exercises and talking, but his body needed release. He joined a boxing gym. The physical outlet helped him process anger before it exploded at people he loved.',
-      },
     ],
     whenToSeekSupport: 'Seek help if: you\'re hurting people (physically or emotionally); anger feels out of control; you\'re damaging relationships or property; you\'re having violent thoughts; or your anger is linked to substance use. Anger management therapy is effective.',
     relatedCategories: ['stress', 'frustration', 'overwhelm', 'relationship-issues', 'anxiety'],
@@ -804,20 +713,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What would believing in yourself change?',
       'Who in your life believes in you? Why?',
     ],
-    stories: [
-      {
-        title: 'Priya\'s Promotion',
-        content: 'Priya got promoted but felt like a fraud. She believed the company had made a mistake. Her impostor thoughts were loud. Her mentor said, "They promoted you because you\'re capable." Taking her mentor\'s word for it (when her own doubt was loud) helped. After months of proving herself, she finally believed.',
-      },
-      {
-        title: 'James\'s Public Speaking',
-        content: 'James wanted to give a presentation but doubt convinced him he\'d stumble or forget. He did it anyway. Yes, he was nervous. But he didn\'t mess up, and people found it valuable. That one small win cracked his doubt just enough.',
-      },
-      {
-        title: 'Sofia\'s Evidence Journal',
-        content: 'Sofia kept a notebook of positive feedback, wins, and times she handled challenges. When doubt hit hard, she read her evidence journal. Over time, the evidence of her capability outweighed doubt\'s voice.',
-      },
-    ],
     whenToSeekSupport: 'Seek help if: self-doubt is preventing you from pursuing goals or meaningful relationships; it\'s linked to depression or anxiety; it\'s affecting your work or school; or you\'re struggling to function. Therapy can help identify roots of self-doubt and rebuild confidence.',
     relatedCategories: ['perfectionism', 'anxiety', 'social-anxiety', 'low-self-esteem', 'imposter-syndrome'],
     faq: [
@@ -917,20 +812,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What would healthy conflict look like for you?',
       'Is this relationship fulfilling you, draining you, or both?',
     ],
-    stories: [
-      {
-        title: 'Ana & Luis\'s Communication Shift',
-        content: 'Ana and Luis argued constantly but never resolved anything. They\'d rehash old grievances instead of addressing current issues. Couples therapy helped them learn new communication: expressing needs clearly, listening without defensiveness, finding actual solutions.',
-      },
-      {
-        title: 'Mia\'s Boundary',
-        content: 'Mia suppressed her needs to keep her relationship peaceful. Over time, she resented her partner. Setting one small boundary—expressing a need—opened communication. Her partner actually wanted to know her needs.',
-      },
-      {
-        title: 'James\'s Perspective Shift',
-        content: 'James realized his partner wasn\'t criticizing him; she was expressing hurt. Hearing her pain instead of hearing attack changed everything. He started asking, "What do you need from me?" instead of defending.',
-      },
-    ],
     whenToSeekSupport: 'Seek couples therapy if: conflict is constant and unresolved; there\'s infidelity or broken trust; communication has broken down; or you\'re considering ending the relationship. Individual therapy also helps if your patterns are harming relationships.',
     relatedCategories: ['communication', 'heartbreak', 'anxiety', 'grief', 'loneliness'],
     faq: [
@@ -1027,20 +908,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Is this job aligned with your values and well-being?',
       'What would feel like a "good day" at work?',
       'What do you need from your employer to thrive?',
-    ],
-    stories: [
-      {
-        title: 'Sarah\'s Boundary',
-        content: 'Sarah worked 60-hour weeks and answered emails at 11pm. She felt guilty for leaving "early" (6pm). Her therapist challenged her: "Who told you this was necessary?" She set a boundary: work ends at 6pm. Her company didn\'t collapse. She felt better immediately.',
-      },
-      {
-        title: 'Michael\'s Conversation',
-        content: 'Michael was stressed about performance expectations. He assumed his boss wanted 80-hour weeks. In a 1:1, he asked, "What does success look like?" His boss said, "Quality work in 40 hours. I don\'t want you burning out." Michael had been torturing himself unnecessarily.',
-      },
-      {
-        title: 'Priya\'s Job Change',
-        content: 'Priya realized her toxic workplace wasn\'t sustainable. She started job hunting while employed and found a role with healthier culture. The transition was scary but worth it. She wished she\'d done it sooner.',
-      },
     ],
     whenToSeekSupport: 'Seek help if: work stress is affecting your health, sleep, or relationships; you\'re having panic symptoms at work; you\'re using substances to cope; or you\'re having thoughts of self-harm. A therapist can help you process stress and decide if changes are needed.',
     relatedCategories: ['burnout', 'stress', 'anxiety', 'perfectionism', 'sleep-issues'],
@@ -1139,20 +1006,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Who could you talk to about financial stress?',
       'What would financial stability look like for you?',
     ],
-    stories: [
-      {
-        title: 'Ahmed\'s Avoidance',
-        content: 'Ahmed avoided looking at his credit card debt for two years. The number in his head was worse than reality. When he finally looked, he created a payoff plan. It still took time, but knowing the number and the plan reduced anxiety dramatically.',
-      },
-      {
-        title: 'Maria\'s Emergency Fund',
-        content: 'Maria had no savings and panicked with every unexpected expense. She started saving $10/week in a separate account. After a year, she had $500. When the car broke down, she had something to draw from. Small progress made a big difference.',
-      },
-      {
-        title: 'Jamal\'s Reframe',
-        content: 'Jamal felt shame about his financial situation—comparing himself to wealthier friends. Therapy helped him reframe: his financial journey was his own. He stopped comparing and focused on his progress. Small wins felt bigger when not comparing.',
-      },
-    ],
     whenToSeekSupport: 'Seek help if: financial stress is causing depression or anxiety; you\'re unable to meet basic needs; you\'re avoiding bills or using substances to cope; or thoughts of self-harm emerge. Financial counseling and therapy both help.',
     relatedCategories: ['work-stress', 'stress', 'anxiety', 'depression', 'overwhelm'],
     faq: [
@@ -1249,20 +1102,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What\'s your ideal sleep schedule?',
       'What helps you feel calm before bed?',
       'How does poor sleep affect your mood and function?',
-    ],
-    stories: [
-      {
-        title: 'Rachel\'s Anxiety Loop',
-        content: 'Rachel couldn\'t sleep because she worried about not sleeping. Therapy helped her understand this loop. She learned to accept sleepless nights without panic. When she stopped fighting insomnia, sleep actually improved.',
-      },
-      {
-        title: 'David\'s Screen Time',
-        content: 'David worked late and scrolled his phone in bed. His therapist suggested: no screens 1 hour before bed. He tried reading instead. After 2 weeks, his sleep improved dramatically.',
-      },
-      {
-        title: 'Sofia\'s Consistency',
-        content: 'Sofia\'s sleep schedule was chaotic. She went to bed anytime from 10pm to midnight. Setting a consistent 10:30pm bedtime (even weekends) took weeks to adjust but transformed her sleep.',
-      },
     ],
     whenToSeekSupport: 'Seek professional help if: insomnia persists 3+ months; sleep is affecting your health or work; you\'re using substances or sleeping pills nightly; or sleep is linked to depression or anxiety. Sleep specialists and cognitive behavioral therapy for insomnia (CBT-I) are effective.',
     relatedCategories: ['anxiety', 'stress', 'depression', 'work-stress', 'overwhelm'],
@@ -1363,20 +1202,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What grounds you and makes you feel safe?',
       'How has panic changed your life? What would change if you weren\'t afraid of panic?',
     ],
-    stories: [
-      {
-        title: 'Marcus\'s First Panic',
-        content: 'Marcus had his first panic attack at work. He thought he was having a heart attack. The ER found nothing wrong. He had 5 more panic attacks before seeking help. Therapy taught him what panic is. Knowing it wasn\'t dangerous reduced fear, which reduced panic.',
-      },
-      {
-        title: 'Leah\'s Avoidance',
-        content: 'Leah\'s panic happened while driving. She avoided driving for months. Therapy used gradual exposure: sitting in car, then driving short distances, then highways. Facing the fear with support reduced panic.',
-      },
-      {
-        title: 'James\'s Grounding',
-        content: 'James learned the 5-4-3-2-1 technique. During his next panic attack, he used it. Focusing on sensations instead of fear helped him ride out the panic. The attack passed.',
-      },
-    ],
     whenToSeekSupport: 'Seek help immediately if: panic attacks are frequent or worsening; you\'re avoiding places; you\'re using substances or alcohol to cope; or you\'re having thoughts of self-harm. Cognitive behavioral therapy and sometimes medication effectively treat panic disorder.',
     relatedCategories: ['anxiety', 'stress', 'agoraphobia', 'health-anxiety', 'trauma'],
     faq: [
@@ -1476,20 +1301,6 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Who in your life makes you feel comfortable and accepted?',
       'What\'s one small social step you could take?',
     ],
-    stories: [
-      {
-        title: 'Priya\'s First Meetup',
-        content: 'Priya wanted to join a group around her hobby but social anxiety held her back. She went to one meeting with the goal of just showing up, not being the life of the party. She discovered people were focused on the activity, not judging her.',
-      },
-      {
-        title: 'James\'s Exposure',
-        content: 'James\'s therapist had him do small exposures: ask a cashier a question, start a conversation at a coffee shop. Each tiny exposure reduced anxiety. Six months of small exposures transformed his social confidence.',
-      },
-      {
-        title: 'Sofia\'s Realization',
-        content: 'Sofia was terrified of speaking up in meetings. When she finally said one thing, someone thanked her for the input. She realized her ideas mattered. That one win shifted her perception.',
-      },
-    ],
     whenToSeekSupport: 'Seek help if: social anxiety is preventing you from work, school, or relationships; it\'s causing depression; you\'re isolating; or you\'re using substances to cope. Cognitive-behavioral therapy and exposure therapy are highly effective.',
     relatedCategories: ['anxiety', 'self-doubt', 'perfectionism', 'loneliness', 'low-self-esteem'],
     faq: [
@@ -1548,7 +1359,6 @@ export const emotionContentLibrary: EmotionContent[] = [
     situations: ['Work or academic pressure', 'Creative projects or writing', 'Relationships (being the perfect partner)', 'Parenting (being the perfect parent)', 'Appearance or body image', 'Fear of failure in any domain', 'High-achieving environments', 'Childhood experiences with critical parents'],
     tips: ['"Done is better than perfect." Finish things even if imperfect', 'Set a time limit for tasks; perfectionism often means endless tweaking', 'Practice saying "good enough" and moving on', 'Celebrate mistakes as learning, not failure', 'Notice the cost: perfectionism costs time, joy, and opportunities', 'Do something intentionally imperfect (messy art, writing without editing)', 'Separate your worth from your achievements', 'Ask: "What\'s the worst that happens if this isn\'t perfect?" Usually, not much.'],
     reflectionQuestions: ['Where did your perfectionism come from?', 'What has perfectionism cost you?', 'What would you do differently if good enough was truly okay?', 'What\'s one area where you could relax standards?', 'How would your life feel with 20% fewer standards?'],
-    stories: [{ title: 'Maya\'s Procrastination', content: 'Maya hadn\'t written her novel because she couldn\'t get the opening perfect. A writer friend challenged her: "Submit imperfect work." Maya wrote a messy draft. Imperfection freed her.' }, { title: 'David\'s Reframe', content: 'David\'s perfectionism made him miss deadlines. His therapist reframed: "Imperfect and done beats perfect and never." He practiced submitting work that was "good enough." His life opened up.' }, { title: 'Lisa\'s Mistake', content: 'Lisa made a significant mistake at work and expected to be fired. Her boss said, "Everyone makes mistakes. How do we fix it?" The world didn\'t end. Her perfectionism softened.' }],
     whenToSeekSupport: 'Seek help if: perfectionism is preventing action; it\'s affecting mental health (anxiety, depression); it\'s damaging relationships; or it\'s linked to procrastination or avoidance.',
     relatedCategories: ['anxiety', 'self-doubt', 'overwhelm', 'burnout', 'procrastination'],
     faq: [{ question: 'Isn\'t perfectionism good?', answer: 'Some drive for excellence is good. Perfectionism—the belief that only perfection is acceptable—is harmful. Excellence is good enough; perfectionism is never enough.' }, { question: 'Will relaxing standards make me lazy?', answer: 'No. Most people work better with realistic standards. Perfectionism actually reduces productivity through procrastination and endless revision.' }, { question: 'How do I know when something is good enough?', answer: 'Ask: "Does this meet the actual requirements? Will it serve its purpose?" If yes, it\'s good enough. Often your standards are far higher than necessary.' }, { question: 'Can I be ambitious without being perfectionist?', answer: 'Yes. Ambition is wanting to achieve; perfectionism is believing only perfect outcomes are acceptable. High standards and perfectionism aren\'t the same.' }, { question: 'Why does perfectionism feel necessary?', answer: 'Often from past experiences: critical parents, conditional approval, or valuing performance over intrinsic worth. Therapy can address roots and loosen perfectionism\'s grip.' }, { question: 'How do I stop all-or-nothing thinking?', answer: 'Notice when you think "perfect or worthless." Interrupt that: "Actually, this is 7/10 and that\'s good." Practice gradation instead of extremes.' }, { question: 'Is perfectionism linked to anxiety or depression?', answer: 'Often yes. Perfectionism feeds anxiety (fear of not meeting standards) and depression (nothing ever feels good enough). Addressing perfectionism can improve both.' }, { question: 'Can perfectionism in one area (work) be okay?', answer: 'Maybe, but often perfectionism bleeds across domains. And even in one area, perfectionism usually costs more than it gains.' }],
@@ -1571,7 +1381,6 @@ export const emotionContentLibrary: EmotionContent[] = [
     situations: ['Multiple deadlines at once', 'Too many responsibilities (work, family, home)', 'Information overload (news, social media, emails)', 'Life transitions with many changes', 'Perfectionism plus high expectations', 'Lack of boundaries (saying yes to everything)', 'Disorganization or poor systems', 'Grief or major loss on top of daily stress'],
     tips: ['Write everything down—get it out of your head', 'Identify the 3 most important things this week', 'Do those 3 things before anything else', 'Stop saying yes to things that don\'t align with priorities', 'Batch similar tasks (all emails in one time, all calls in one time)', 'Disconnect from news/social media for set periods', 'Delegate or drop non-essential tasks', 'Break large tasks into tiny steps; small progress reduces overwhelm'],
     reflectionQuestions: ['What\'s making you most overwhelmed right now?', 'What of your current tasks actually matters most?', 'What could you stop doing or delegate?', 'What would it look like to simplify your life by 25%?', 'Where are you saying yes when you want to say no?'],
-    stories: [{ title: 'James\'s Prioritization', content: 'James had 47 tasks on his to-do list. He couldn\'t start anything. His coach had him identify 3 priorities. Focusing only on those 3 freed him.' }, { title: 'Sarah\'s Boundaries', content: 'Sarah volunteered for everything. She was drowning. Setting boundaries (saying no to new commitments) felt selfish but necessary.' }, { title: 'Miguel\'s Disconnection', content: 'Miguel was overwhelmed by news and social media. He set phone-free hours. The overwhelm from information overload decreased significantly.' }],
     whenToSeekSupport: 'Seek help if: overwhelm is causing anxiety or depression; you\'re not functioning in work or relationships; you\'re using substances to cope; or you\'re having thoughts of self-harm.',
     relatedCategories: ['stress', 'perfectionism', 'burnout', 'anxiety', 'time-management'],
     faq: [{ question: 'How do I distinguish overwhelm from anxiety?', answer: 'Overwhelm is usually triggered by too many tasks or information. Anxiety is the emotional response to threat. They often go together. Both improve with simplification and support.' }, { question: 'What if I really do have too much to do?', answer: 'Then something has to give. You can\'t do it all. Prioritize ruthlessly, delegate, or extend timelines. Doing less well is better than burning out.' }, { question: 'How do I say no without guilt?', answer: '"No" is a complete sentence. You don\'t need elaborate justification. Practice: "That doesn\'t fit my priorities right now." Guilt usually passes quickly.' }, { question: 'How do I stop multi-tasking?', answer: 'Research shows multitasking reduces efficiency. Focus on one task at a time. Use timers if needed. You\'ll finish more by doing less.' }, { question: 'What if my job demands I do too much?', answer: 'Document what\'s asked. Talk to your manager: "Help me prioritize." If your job is truly unsustainable, consider alternatives.' }, { question: 'How do I not feel guilty about relaxing?', answer: 'Relaxation is maintenance, not laziness. Your productivity depends on rest. Guilt about resting is often perfectionism in disguise.' }, { question: 'Can I ever get ahead?', answer: 'Usually not if you keep adding tasks. Getting ahead means doing less, not more. Redefine success as managing what matters well.' }, { question: 'How do I know what to prioritize?', answer: 'Ask: "What has real consequences if not done? What aligns with my values?" Not everything urgent is important. Distinguish between the two.' }],
