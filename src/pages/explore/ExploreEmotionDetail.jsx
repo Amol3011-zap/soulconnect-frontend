@@ -246,7 +246,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.4 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>How to manage {emotionSlug === 'financial-worry' ? 'financial stress' : emotion.displayName.toLowerCase()}: techniques you can try today</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>How to manage {emotionSlug === 'financial-worry' ? 'financial stress' : emotionSlug === 'motivation' ? 'low motivation' : emotion.displayName.toLowerCase()}: techniques you can try today</h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {emotion.tips.map((item, idx) => (
                 <p key={idx} style={{ fontSize: '15px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>
