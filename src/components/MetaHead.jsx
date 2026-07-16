@@ -81,18 +81,12 @@ export default function MetaHead() {
     updateOrCreateMeta('twitter:image', meta.twitter.image);
     updateOrCreateMeta('twitter:card', 'summary_large_image');
 
-    // Add comprehensive schema for emotion detail pages
-    if (location.pathname.startsWith('/explore/') && location.pathname !== '/explore') {
-      addFAQSchema();
-      addWebPageSchema();
-      addBreadcrumbSchema();
-      addOrganizationSchema();
-    } else {
-      removeFAQSchema();
-      removeWebPageSchema();
-      removeBreadcrumbSchema();
-      removeOrganizationSchema();
-    }
+    // Explore routes are currently disabled (redirected to home)
+    // Schema functions commented out until explore is re-enabled
+    removeFAQSchema();
+    removeWebPageSchema();
+    removeBreadcrumbSchema();
+    removeOrganizationSchema();
 
     // Scroll to top on route change
     window.scrollTo(0, 0);
@@ -120,7 +114,6 @@ function updateOrCreateMeta(name, content, attribute = 'name') {
 function addFAQSchema() {
   removeFAQSchema(); // Remove existing schema first
 
-  const emotionContentLibrary = require('../data/emotionContentLibrary').default;
   const pathname = window.location.pathname;
   const emotionSlug = pathname.split('/explore/')[1];
 
