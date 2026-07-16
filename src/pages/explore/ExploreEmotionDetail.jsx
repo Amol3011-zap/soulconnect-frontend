@@ -201,7 +201,7 @@ export default function ExploreEmotionDetail() {
             </div>
           </motion.div>
 
-          {/* Find Anxiety Support */}
+          {/* Find Support */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -209,19 +209,19 @@ export default function ExploreEmotionDetail() {
             style={{ marginBottom: '48px', padding: '32px', background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(124, 58, 237, 0.08) 100%)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '16px' }}
           >
             <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              💜 Find anxiety support
+              💜 Find {emotion.displayName.toLowerCase()} support
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
-              You don't have to carry anxiety alone. SoulConnect helps people manage anxiety and mental health challenges:
+              You don't have to carry {emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage {emotion.displayName.toLowerCase()} and mental health challenges:
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
               <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
                 <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>💬 Connect with peers</p>
-                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Join anonymously with others who understand anxiety</p>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Join anonymously with others who understand {emotion.displayName.toLowerCase()}</p>
               </div>
               <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
                 <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>🧘 Guided exercises</p>
-                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Access breathing and grounding exercises for anxiety relief</p>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Access techniques and exercises to help manage {emotion.displayName.toLowerCase()}</p>
               </div>
               <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
                 <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>👥 Support groups</p>
