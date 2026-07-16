@@ -221,7 +221,7 @@ export default function ExploreEmotionDetail() {
               </div>
               <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
                 <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>🧘 Guided exercises</p>
-                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Access techniques and exercises to help manage {emotion.displayName.toLowerCase()}</p>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Explore grounding techniques, calming exercises, and small daily steps that support emotional well-being</p>
               </div>
               <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
                 <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>👥 Support groups</p>
