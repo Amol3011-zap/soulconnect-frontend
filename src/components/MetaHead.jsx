@@ -81,11 +81,17 @@ export default function MetaHead() {
     updateOrCreateMeta('twitter:image', meta.twitter.image);
     updateOrCreateMeta('twitter:card', 'summary_large_image');
 
-    // Add FAQ schema for emotion detail pages
+    // Add comprehensive schema for emotion detail pages
     if (location.pathname.startsWith('/explore/') && location.pathname !== '/explore') {
       addFAQSchema();
+      addWebPageSchema();
+      addBreadcrumbSchema();
+      addOrganizationSchema();
     } else {
       removeFAQSchema();
+      removeWebPageSchema();
+      removeBreadcrumbSchema();
+      removeOrganizationSchema();
     }
 
     // Scroll to top on route change
@@ -114,14 +120,28 @@ function updateOrCreateMeta(name, content, attribute = 'name') {
 function addFAQSchema() {
   removeFAQSchema(); // Remove existing schema first
 
+  const emotionContentLibrary = require('../data/emotionContentLibrary').default;
+  const pathname = window.location.pathname;
+  const emotionSlug = pathname.split('/explore/')[1];
+
+  const emotion = emotionContentLibrary.find(e => e.slug === emotionSlug);
+
+  if (!emotion || !emotion.faq || emotion.faq.length === 0) {
+    return;
+  }
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: [],
+    mainEntity: emotion.faq.map(item => ({
+      '@type': 'Question',
+      'name': item.question,
+      'acceptedAnswer': {
+        '@type': 'Answer',
+        'text': item.answer
+      }
+    }))
   };
-
-  // This will be populated with actual FAQ data from the emotion pages
-  // The FAQ schema helps Google understand Q&A sections and display them in search results
 
   const script = document.createElement('script');
   script.type = 'application/ld+json';
@@ -135,6 +155,148 @@ function addFAQSchema() {
  */
 function removeFAQSchema() {
   const script = document.querySelector('script#faq-schema');
+  if (script) {
+    script.remove();
+  }
+}
+
+/**
+ * Add WebPage schema for emotion detail pages
+ */
+function addWebPageSchema() {
+  removeWebPageSchema();
+
+  const pathname = window.location.pathname;
+  const emotionSlug = pathname.split('/explore/')[1];
+  const emotionName = emotionSlug.charAt(0).toUpperCase() + emotionSlug.slice(1);
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    'url': `https://soulconnect.health${pathname}`,
+    'name': `${emotionName} Support | SoulConnect`,
+    'description': `Learn about ${emotionName} - understanding symptoms, coping strategies, and how to get support on SoulConnect's emotion library.`,
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'SoulConnect',
+      'logo': {
+        '@type': 'ImageObject',
+        'url': 'https://soulconnect.health/logo.png'
+      }
+    },
+    'isPartOf': {
+      '@type': 'WebSite',
+      'url': 'https://soulconnect.health',
+      'name': 'SoulConnect'
+    }
+  };
+
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'webpage-schema';
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+/**
+ * Remove WebPage schema
+ */
+function removeWebPageSchema() {
+  const script = document.querySelector('script#webpage-schema');
+  if (script) {
+    script.remove();
+  }
+}
+
+/**
+ * Add BreadcrumbList schema for emotion detail pages
+ */
+function addBreadcrumbSchema() {
+  removeBreadcrumbSchema();
+
+  const pathname = window.location.pathname;
+  const emotionSlug = pathname.split('/explore/')[1];
+  const emotionName = emotionSlug.charAt(0).toUpperCase() + emotionSlug.slice(1);
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://soulconnect.health'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Emotion Library',
+        'item': 'https://soulconnect.health/explore'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 3,
+        'name': emotionName,
+        'item': `https://soulconnect.health${pathname}`
+      }
+    ]
+  };
+
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'breadcrumb-schema';
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+/**
+ * Remove BreadcrumbList schema
+ */
+function removeBreadcrumbSchema() {
+  const script = document.querySelector('script#breadcrumb-schema');
+  if (script) {
+    script.remove();
+  }
+}
+
+/**
+ * Add Organization schema for SoulConnect
+ */
+function addOrganizationSchema() {
+  removeOrganizationSchema();
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    'name': 'SoulConnect',
+    'url': 'https://soulconnect.health',
+    'logo': 'https://soulconnect.health/logo.png',
+    'description': 'Peer support and mental health platform for anxiety, depression, grief, and emotional wellness in India',
+    'sameAs': [
+      'https://www.facebook.com/soulconnect',
+      'https://www.instagram.com/soulconnect',
+      'https://www.twitter.com/soulconnect'
+    ],
+    'contactPoint': {
+      '@type': 'ContactPoint',
+      'contactType': 'Customer Support',
+      'url': 'https://soulconnect.health/contact'
+    }
+  };
+
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'organization-schema';
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+/**
+ * Remove Organization schema
+ */
+function removeOrganizationSchema() {
+  const script = document.querySelector('script#organization-schema');
   if (script) {
     script.remove();
   }

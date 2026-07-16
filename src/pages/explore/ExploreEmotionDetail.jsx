@@ -124,7 +124,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.1 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 16px 0' }}>Overview</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 16px 0' }}>What is anxiety?</h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: 0 }}>
               {emotion.summary}
             </p>
@@ -137,7 +137,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.2 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>What This Might Feel Like</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Common anxiety symptoms</h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {emotion.relatable.map((item, idx) => (
                 <p key={idx} style={{ fontSize: '15px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>
@@ -154,7 +154,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.3 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Common Situations</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>What causes anxiety?</h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {emotion.situations.map((item, idx) => (
                 <p key={idx} style={{ fontSize: '15px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>
@@ -171,7 +171,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.4 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Things You Can Try Today</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>How to calm anxiety: techniques you can try today</h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {emotion.tips.map((item, idx) => (
                 <p key={idx} style={{ fontSize: '15px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>
@@ -188,7 +188,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.45 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Reflection Questions</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Questions to understand your anxiety</h2>
             <div style={{ display: 'grid', gap: '16px' }}>
               {emotion.reflectionQuestions.map((question, idx) => (
                 <div key={idx} style={{ padding: '16px', background: 'rgba(124, 58, 237, 0.08)', border: '1px solid rgba(124, 58, 237, 0.15)', borderRadius: '8px' }}>
@@ -198,14 +198,91 @@ export default function ExploreEmotionDetail() {
             </div>
           </motion.div>
 
+          {/* Find Anxiety Support */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+            style={{ marginBottom: '48px', padding: '32px', background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(124, 58, 237, 0.08) 100%)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '16px' }}
+          >
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              💜 Find anxiety support
+            </h2>
+            <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
+              You don't have to carry anxiety alone. SoulConnect helps people manage anxiety and mental health challenges:
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+              <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+                <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>💬 Connect with peers</p>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Join anonymously with others who understand anxiety</p>
+              </div>
+              <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+                <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>🧘 Guided exercises</p>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Access breathing and grounding exercises for anxiety relief</p>
+              </div>
+              <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+                <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>👥 Support groups</p>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Join communities dedicated to mental health and wellness</p>
+              </div>
+              <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
+                <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>👨‍⚕️ Professional help</p>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Connect with verified therapists and mental health professionals</p>
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+              <button
+                onClick={() => window.location.href = '/'}
+                style={{
+                  padding: '12px 24px',
+                  background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                  border: 'none',
+                  color: '#FFF',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
+                onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+              >
+                Join SoulConnect
+              </button>
+              <button
+                onClick={() => window.location.href = '/explore'}
+                style={{
+                  padding: '12px 24px',
+                  background: 'rgba(124, 58, 237, 0.2)',
+                  border: '1px solid rgba(124, 58, 237, 0.4)',
+                  color: '#A78BFA',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(124, 58, 237, 0.3)';
+                  e.target.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'rgba(124, 58, 237, 0.2)';
+                  e.target.style.transform = 'translateY(0)';
+                }}
+              >
+                Explore more emotions
+              </button>
+            </div>
+          </motion.div>
+
           {/* FAQ */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.65 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently Asked Questions</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently asked questions about anxiety</h2>
             <div style={{ display: 'grid', gap: '16px' }}>
               {emotion.faq.map((item, idx) => (
                 <div key={idx}>
@@ -245,7 +322,7 @@ export default function ExploreEmotionDetail() {
                   return (
                     <button
                       key={slug}
-                      onClick={() => navigate(`/explore/i-feel-${slug}`)}
+                      onClick={() => navigate(`/explore/${slug}`)}
                       style={{
                         padding: '16px',
                         background: 'rgba(34, 18, 73, 0.72)',
@@ -273,6 +350,19 @@ export default function ExploreEmotionDetail() {
               </div>
             </motion.div>
           )}
+
+          {/* Important Disclaimer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85 }}
+            style={{ padding: '20px', background: 'rgba(241, 65, 108, 0.08)', border: '1px solid rgba(241, 65, 108, 0.2)', borderRadius: '12px', fontSize: '13px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', marginBottom: '48px' }}
+          >
+            <p style={{ margin: '0 0 8px 0', fontWeight: '600', color: '#FFF' }}>⚠️ Important</p>
+            <p style={{ margin: 0 }}>
+              SoulConnect offers support, resources, and community, but it is not a substitute for professional medical advice. If you are in immediate danger or thinking about harming yourself, please contact emergency services or someone you trust immediately.
+            </p>
+          </motion.div>
 
           {/* Trust & Safety Disclaimer */}
           <motion.div

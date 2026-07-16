@@ -138,11 +138,11 @@ export const METADATA = {
     keywords: 'emotion library, mental health, anxiety help, depression support, stress management, emotional wellness, emotional support',
   },
   '/explore/anxiety': {
-    title: 'Anxiety Support, Symptoms & Coping Techniques | SoulConnect',
-    description: 'Learn about anxiety symptoms, coping techniques, breathing exercises, and ways to connect with supportive communities on SoulConnect.',
+    title: 'Anxiety Support: Symptoms, Signs & Coping Techniques | SoulConnect',
+    description: 'Understand anxiety symptoms and signs, learn how to calm anxiety with evidence-based techniques, and discover mental health support communities. Expert guidance on managing anxiety and finding help when you need it.',
     canonical: 'https://soulconnect.health/explore/anxiety',
     ogType: 'article',
-    keywords: 'anxiety support, anxiety symptoms, coping techniques, breathing exercises, anxiety management, mental health support',
+    keywords: 'anxiety support, anxiety symptoms, signs of anxiety, how to calm anxiety, coping with anxiety, what does anxiety feel like, anxiety management, breathing exercises, mental health support, anxiety relief',
   },
 };
 
