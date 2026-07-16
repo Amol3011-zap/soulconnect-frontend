@@ -166,8 +166,8 @@ export const METADATA = {
     keywords: 'grief support, bereavement, loss, mourning, grief counseling, emotional support, coping with loss, grief resources, loss of loved one',
   },
   '/explore/loneliness': {
-    title: 'Loneliness Support: Build Meaningful Connections | SoulConnect',
-    description: 'Address loneliness and build meaningful connections. Discover ways to combat isolation and find supportive communities on SoulConnect.',
+    title: 'Loneliness Support, Symptoms & Ways to Connect | SoulConnect',
+    description: 'Learn about loneliness, common signs, coping strategies, and ways to build meaningful connections through SoulConnect.',
     canonical: 'https://soulconnect.health/explore/loneliness',
     ogType: 'article',
     keywords: 'loneliness support, overcoming isolation, social anxiety, meaningful connections, community, emotional support, mental health',
