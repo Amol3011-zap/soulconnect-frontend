@@ -207,6 +207,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'financial stress, money anxiety, debt stress, financial worry, money problems, financial management, emotional wellness',
   },
+  '/explore/sleep-issues': {
+    title: 'Sleep Problems, Insomnia & Better Sleep | SoulConnect',
+    description: 'Learn about sleep problems, insomnia, racing thoughts at night, and practical ways to improve sleep and mental well-being through SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/sleep-issues',
+    ogType: 'article',
+    keywords: 'sleep problems, insomnia help, better sleep, sleep anxiety, racing thoughts, sleep issues, sleep quality',
+  },
 };
 
 /**
