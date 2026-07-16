@@ -163,6 +163,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common signs of panic attacks'
                 : emotionSlug === 'social-anxiety'
                 ? 'Common signs of social anxiety'
+                : emotionSlug === 'perfectionism'
+                ? 'Common signs of perfectionism'
                 : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -192,6 +194,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common causes and triggers of panic attacks'
                 : emotionSlug === 'social-anxiety'
                 ? 'Common causes and triggers of social anxiety'
+                : emotionSlug === 'perfectionism'
+                ? 'Common causes and triggers of perfectionism'
                 : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -270,6 +274,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Find support for panic and anxiety'
                 : emotionSlug === 'social-anxiety'
                 ? 'Build confidence and connection'
+                : emotionSlug === 'perfectionism'
+                ? 'Build self-compassion and confidence'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
@@ -287,6 +293,8 @@ export default function ExploreEmotionDetail() {
                 ? 'You don\'t have to face panic attacks alone. SoulConnect helps people understand panic, build coping skills, and find support during difficult moments:'
                 : emotionSlug === 'social-anxiety'
                 ? 'You don\'t have to face social anxiety alone. SoulConnect helps people build confidence, practice social connection, and find support in a safe environment:'
+                : emotionSlug === 'perfectionism'
+                ? 'You don\'t have to face perfectionism alone. SoulConnect helps people manage self-criticism, build confidence, and develop healthier expectations for themselves:'
                 : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
@@ -307,6 +315,8 @@ export default function ExploreEmotionDetail() {
                     ? 'Join anonymously with others who understand panic attacks, anxiety, fear, and overwhelming emotions'
                     : emotionSlug === 'social-anxiety'
                     ? 'Join anonymously with others who understand social anxiety, fear of judgment, loneliness, and social pressure'
+                    : emotionSlug === 'perfectionism'
+                    ? 'Join anonymously with others who understand perfectionism, burnout, self-doubt, and the pressure to succeed'
                     : `Join anonymously with others who understand ${emotion.displayName.toLowerCase()}`}
                 </p>
               </div>
