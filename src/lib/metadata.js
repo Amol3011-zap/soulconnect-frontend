@@ -200,6 +200,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'work stress, workplace pressure, job burnout, stress management, work-life balance, burnout recovery, mental health support',
   },
+  '/explore/financial-worry': {
+    title: 'Financial Stress, Money Anxiety & Mental Health | SoulConnect',
+    description: 'Learn about financial stress, money anxiety, debt, job insecurity, and practical ways to protect your mental well-being through SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/financial-worry',
+    ogType: 'article',
+    keywords: 'financial stress, money anxiety, debt stress, financial worry, money problems, financial management, emotional wellness',
+  },
 };
 
 /**

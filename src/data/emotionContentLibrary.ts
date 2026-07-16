@@ -992,7 +992,7 @@ export const emotionContentLibrary: EmotionContent[] = [
     tips: [
       'Face your numbers: write down income, expenses, debts. Knowledge reduces panic',
       'Create a small budget: track where money goes for one month',
-      'Automate one small savings goal—$5/week adds up',
+      'Start with one small savings goal—even a tiny amount saved regularly can build confidence over time',
       'Find one area to reduce spending that doesn\'t hurt (unused subscriptions, etc)',
       'Look into financial assistance programs if eligible',
       'Talk to someone you trust about finances (shame thrives in silence)',
@@ -1043,7 +1043,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
     ],
     trustSafety: {
-      disclaimer: 'This content is educational, not financial advice. Consult a financial advisor for personalized guidance.',
+      disclaimer: 'Financial stress is a real and valid experience. This content is educational and supportive, not financial or investment advice. Everyone\'s financial situation is unique. A financial advisor or counselor can help you create a personalized plan.',
       lastReviewedDate: '2025-02-15',
     },
   },

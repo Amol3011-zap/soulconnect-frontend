@@ -132,6 +132,8 @@ export default function ExploreEmotionDetail() {
                 ? 'What are self-doubt and low self-esteem?'
                 : emotionSlug === 'relationship-issues'
                 ? 'What are relationship issues?'
+                : emotionSlug === 'financial-worry'
+                ? 'What is financial stress?'
                 : `What is ${emotion.displayName.toLowerCase()}?`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: 0 }}>
@@ -147,7 +149,11 @@ export default function ExploreEmotionDetail() {
             style={{ marginBottom: '48px' }}
           >
             <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>
-              {emotionSlug === 'relationship-issues' ? 'Common relationship challenges' : `Common ${emotion.displayName.toLowerCase()} symptoms`}
+              {emotionSlug === 'relationship-issues'
+                ? 'Common relationship challenges'
+                : emotionSlug === 'financial-worry'
+                ? 'Common signs of financial stress'
+                : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {emotion.relatable.map((item, idx) => (
@@ -166,7 +172,11 @@ export default function ExploreEmotionDetail() {
             style={{ marginBottom: '48px' }}
           >
             <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>
-              {emotionSlug === 'relationship-issues' ? 'Common causes of relationship problems' : `Common ${emotion.displayName.toLowerCase()} triggers`}
+              {emotionSlug === 'relationship-issues'
+                ? 'Common causes of relationship problems'
+                : emotionSlug === 'financial-worry'
+                ? 'Common causes of financial stress'
+                : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
               {emotion.situations.map((item, idx) => (
@@ -202,7 +212,11 @@ export default function ExploreEmotionDetail() {
             style={{ marginBottom: '48px' }}
           >
             <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>
-              {emotionSlug === 'relationship-issues' ? 'Questions to understand your relationship' : `Questions to understand your ${emotion.displayName.toLowerCase()}`}
+              {emotionSlug === 'relationship-issues'
+                ? 'Questions to understand your relationship'
+                : emotionSlug === 'financial-worry'
+                ? 'Questions to understand your relationship with money'
+                : `Questions to understand your ${emotion.displayName.toLowerCase()}`}
             </h2>
             <div style={{ display: 'grid', gap: '16px' }}>
               {emotion.reflectionQuestions.map((question, idx) => (
@@ -228,6 +242,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Strengthen your relationships'
                 : emotionSlug === 'work-stress'
                 ? 'Protect your well-being'
+                : emotionSlug === 'financial-worry'
+                ? 'Build financial confidence and stability'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
@@ -237,6 +253,8 @@ export default function ExploreEmotionDetail() {
                 ? 'You don\'t have to navigate relationship challenges alone. SoulConnect helps people improve communication, build healthier connections, and find support during difficult times:'
                 : emotionSlug === 'work-stress'
                 ? 'You don\'t have to carry work stress alone. SoulConnect helps people manage pressure, set healthier boundaries, and protect their mental well-being:'
+                : emotionSlug === 'financial-worry'
+                ? 'You don\'t have to navigate financial stress alone. SoulConnect helps people understand their finances, build confidence with money, and find support during tough times:'
                 : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
@@ -249,6 +267,8 @@ export default function ExploreEmotionDetail() {
                     ? 'Join anonymously with others who understand relationship challenges, breakups, trust issues, and communication struggles'
                     : emotionSlug === 'work-stress'
                     ? 'Join anonymously with others who understand workplace pressure, burnout, difficult colleagues, and career stress'
+                    : emotionSlug === 'financial-worry'
+                    ? 'Join anonymously with others who understand financial stress, money anxiety, and building financial confidence'
                     : `Join anonymously with others who understand ${emotion.displayName.toLowerCase()}`}
                 </p>
               </div>
