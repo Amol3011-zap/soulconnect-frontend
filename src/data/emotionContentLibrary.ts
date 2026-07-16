@@ -1164,7 +1164,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       title: 'Experiencing panic attacks?',
       subtitle: 'Panic feels life-threatening but it\'s not. Your body is in overdrive. With support, panic is manageable.',
     },
-    summary: 'Panic attacks are sudden episodes of intense fear that can cause physical symptoms such as a racing heart, dizziness, chest tightness, sweating, and difficulty breathing. They feel like a heart attack or dying. Panic attacks themselves are not physically dangerous, although they can feel overwhelming and frightening. They peak in 5-10 minutes then subside. Repeated panic attacks can become panic disorder (fear of having more panic). Professional support and grounding techniques help.',
+    summary: 'Panic attacks are sudden episodes of intense fear that can cause physical symptoms such as a racing heart, dizziness, chest tightness, sweating, and difficulty breathing. They feel like a heart attack or dying. Panic attacks themselves are not physically dangerous, although they can feel overwhelming and frightening. They usually peak within 5-10 minutes and gradually subside. Repeated panic attacks can become panic disorder (fear of having more panic). Professional support and grounding techniques help.',
     relatable: [
       'Your heart races without warning',
       'You feel like you\'re dying or losing control',
@@ -1190,7 +1190,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Stay in the moment: use 5-4-3-2-1 grounding (name 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1 you taste)',
       'Slow your breathing: take gentle, steady breaths and focus on making your exhale longer than your inhale',
       'Don\'t fight the panic; observe it like a cloud passing by',
-      'Do something grounding: hold ice, splash cold water, press feet into ground',
+      'Do something grounding: hold ice, splash cold water on your face, or press your feet firmly into the ground',
       'Call someone you trust and tell them what\'s happening',
       'Remind yourself: "This will pass. I\'m safe."',
       'Get professional help; therapy (especially exposure therapy) is highly effective for panic',
