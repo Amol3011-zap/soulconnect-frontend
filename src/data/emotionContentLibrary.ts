@@ -477,7 +477,7 @@ export const emotionContentLibrary: EmotionContent[] = [
     },
     hero: {
       title: 'Feeling isolated or disconnected?',
-      subtitle: 'Loneliness can strike even when surrounded by people. It\'s your soul signaling the need for connection. That need is valid and can be met.',
+      subtitle: 'Loneliness can strike even when surrounded by people. Loneliness is often a sign that your need for connection isn\'t being met. That need is valid and can be met.',
     },
     summary: 'Loneliness is the painful gap between the connection you want and what you have. It\'s not the same as being alone. You can be surrounded by people and still feel lonely. Loneliness affects mental and physical health, but it\'s also changeable. Real, meaningful connections are possible—and they start with small steps.',
     relatable: [
@@ -487,7 +487,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'You want connection but don\'t know how to initiate it',
       'You feel like an outsider looking in',
       'Weekends or evenings feel especially lonely',
-      'You wonder if anyone would notice if you disappeared',
+      'You sometimes feel invisible or forgotten',
       'You feel like nobody really knows the real you',
     ],
     situations: [
