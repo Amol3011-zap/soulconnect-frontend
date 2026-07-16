@@ -235,6 +235,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'perfectionism, perfectionist, perfectionism symptoms, perfectionism causes, procrastination, burnout, self-criticism, self-esteem, anxiety, mental health',
   },
+  '/explore/overwhelm': {
+    title: 'Overwhelm: Signs, Causes & How to Find Clarity | SoulConnect',
+    description: 'Learn about overwhelm, including signs of information overload, causes, and practical strategies to reduce stress, prioritize tasks, and regain focus. Find support and resources on SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/overwhelm',
+    ogType: 'article',
+    keywords: 'overwhelm, overwhelmed, overwhelm symptoms, information overload, decision fatigue, burnout, stress management, prioritization, anxiety, mental health, emotional wellness',
+  },
 };
 
 /**
