@@ -382,7 +382,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       title: 'Feeling overwhelmed by pressure?',
       subtitle: 'Stress is your body\'s response to demands. Some stress is normal; too much stress exhausts you. You have more control than you think.',
     },
-    summary: 'Stress is your body and mind\'s reaction to pressure—work deadlines, relationship conflicts, financial worries, or life changes. A little stress can motivate you. Too much stress overwhelms your system. Physical symptoms include tension, headaches, sleep problems. Emotional symptoms include irritability, worry, and exhaustion. The good news: stress is manageable with awareness and action.',
+    summary: 'Feeling overwhelmed, tense, or constantly under pressure? Stress is your body and mind\'s reaction to pressure—work deadlines, relationship conflicts, financial worries, or life changes. A little stress can motivate you. Too much stress overwhelms your system. Physical symptoms can include muscle tension, headaches, fatigue, digestive issues, and trouble sleeping. Emotional symptoms include irritability, worry, and exhaustion. The good news: stress is manageable with awareness and action.',
     relatable: [
       'You feel tension in your neck, shoulders, or jaw',
       'Your mind races with everything you need to do',
