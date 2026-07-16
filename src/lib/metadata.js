@@ -172,6 +172,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'loneliness support, overcoming isolation, social anxiety, meaningful connections, community, emotional support, mental health',
   },
+  '/explore/anger': {
+    title: 'Anger Management, Symptoms & Healthy Coping | SoulConnect',
+    description: 'Learn about anger, common triggers, healthy coping strategies, and ways to find support through SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/anger',
+    ogType: 'article',
+    keywords: 'anger management, managing anger, anger triggers, healthy coping, emotional regulation, conflict resolution, mental health support',
+  },
 };
 
 /**

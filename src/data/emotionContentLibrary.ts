@@ -574,7 +574,7 @@ export const emotionContentLibrary: EmotionContent[] = [
     },
     hero: {
       title: 'Struggling with anger?',
-      subtitle: 'Anger is a valid emotion. The challenge is expressing it without harming yourself or others. You can learn this skill.',
+      subtitle: 'Anger is a natural human emotion. The challenge is understanding it and expressing it in healthy ways. With support and practice, anger can become easier to manage.',
     },
     summary: 'Anger is a natural, healthy emotion—a response to feeling disrespected, threatened, or wronged. The problem isn\'t anger itself; it\'s unmanaged anger. Healthy anger motivates you to set boundaries and stand up for yourself. Unhealthy anger damages relationships and hurts people you care about. The good news: anger management is a learnable skill.',
     relatable: [
@@ -582,7 +582,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Small things trigger disproportionate reactions',
       'You say things you regret when angry',
       'You feel like your anger controls you, not the other way around',
-      'You wonder if you\'re abusive or "too much"',
+      'You feel guilty or ashamed after angry reactions',
       'You blame others for your anger',
       'Anger scares you—or scares people around you',
       'You hold grudges for a long time',
@@ -601,7 +601,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Pause before reacting: count to 10, step away, breathe deeply',
       'Identify the real issue: anger often masks hurt, fear, or feeling powerless',
       'Express anger, not attack: say "I feel angry when..." not "You always..."',
-      'Use physical release: go for a run, punch a pillow, do hard exercise',
+      'Release tension safely: go for a walk, exercise, stretch, or take deep breaths',
       'Communicate when calm: never important conversations when angry',
       'Set boundaries: often anger signals a boundary that\'s been crossed',
       'Write it out: journal angry thoughts, then decide what to do',
@@ -631,7 +631,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
       {
         question: 'Is it okay to yell when angry?',
-        answer: 'Yelling can be a way to express intensity, but it often hurts people and escalates conflict. Finding ways to express anger loudly (exercising, screaming into a pillow) without directing it at people helps.',
+        answer: 'Strong emotions are normal, but shouting often escalates conflict and hurts relationships. Taking space, calming down, and returning to the conversation later usually leads to better outcomes.',
       },
       {
         question: 'Can anger management therapy really help?',
@@ -651,7 +651,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
     ],
     trustSafety: {
-      disclaimer: 'If you\'re engaging in violence or abusive behavior, seek professional help immediately. Abusive behavior toward others is never acceptable.',
+      disclaimer: 'This content is educational and not a substitute for professional mental health care. If anger feels overwhelming, affects your relationships, or leads to harmful behavior, consider speaking with a mental health professional.',
       lastReviewedDate: '2025-02-15',
     },
   },
