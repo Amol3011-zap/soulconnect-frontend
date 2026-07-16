@@ -201,7 +201,7 @@ export const emotionContentLibrary: EmotionContent[] = [
     ],
     situations: [
       'After a major loss or breakup',
-      'Following childbirth (postpartum depression)',
+      'Major life changes or transitions',
       'Chronic illness or pain',
       'Job loss or career setbacks',
       'Isolation or loneliness',
@@ -216,7 +216,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Maintain basic routines: eat, drink water, change clothes',
       'Limit negative self-talk—if you\'re not kind to yourself, be neutral instead',
       'Spend a few minutes outside in sunlight (vitamin D helps mood)',
-      'Try journaling without judgment—just let thoughts flow',
+      'Spend a few quiet minutes reflecting on your feelings without judging yourself',
       'Do one thing you used to enjoy, even if it doesn\'t feel fun yet',
     ],
     reflectionQuestions: [
@@ -227,7 +227,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'If you could do one thing differently tomorrow, what would it be?',
     ],
     whenToSeekSupport: 'Seek professional help if: low mood persists for more than 2 weeks; you\'re having thoughts of suicide or self-harm; depression is affecting work, school, or relationships; you\'re using substances to cope; or you feel hopeless about the future. If you\'re having suicidal thoughts, reach out to a crisis helpline immediately.',
-    relatedCategories: ['grief', 'burnout', 'emotional-exhaustion', 'self-doubt', 'loneliness'],
+    relatedCategories: ['overthinking', 'loneliness', 'burnout', 'grief', 'sleep-issues', 'anxiety', 'low-self-esteem'],
     faq: [
       {
         question: 'Is depression the same as sadness?',
@@ -259,7 +259,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
       {
         question: 'What if I don\'t want to be alive but I\'m not actively suicidal?',
-        answer: 'This is a sign you need immediate professional support. These thoughts are a symptom of depression, not a reflection of reality or your situation. Crisis helplines, therapists, and emergency rooms can help. You deserve support.',
+        answer: 'These thoughts can be a symptom of depression and are a sign that you deserve support. Please consider reaching out to a mental health professional, a trusted person, or local emergency services.',
       },
     ],
     trustSafety: {
