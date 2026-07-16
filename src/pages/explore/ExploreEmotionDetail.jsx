@@ -127,7 +127,9 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.1 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 16px 0' }}>What is {emotion.displayName.toLowerCase()}?</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 16px 0' }}>
+              {emotionSlug === 'self-doubt' ? 'What are self-doubt and low self-esteem?' : `What is ${emotion.displayName.toLowerCase()}?`}
+            </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: 0 }}>
               {emotion.summary}
             </p>
@@ -219,7 +221,11 @@ export default function ExploreEmotionDetail() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
               <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
                 <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>💬 Connect with peers</p>
-                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>Join anonymously with others who understand {emotion.displayName.toLowerCase()}</p>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0, lineHeight: '1.6' }}>
+                  {emotionSlug === 'self-doubt'
+                    ? 'Join anonymously with others who understand self-doubt, confidence struggles, and low self-esteem'
+                    : `Join anonymously with others who understand ${emotion.displayName.toLowerCase()}`}
+                </p>
               </div>
               <div style={{ padding: '16px', background: 'rgba(34, 18, 73, 0.72)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}>
                 <p style={{ fontSize: '14px', fontWeight: '600', color: '#A78BFA', margin: '0 0 8px 0' }}>🧘 Guided exercises</p>
