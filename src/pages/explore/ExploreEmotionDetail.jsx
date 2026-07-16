@@ -138,6 +138,8 @@ export default function ExploreEmotionDetail() {
                 ? 'What are sleep issues?'
                 : emotionSlug === 'panic-attacks'
                 ? 'What are panic attacks?'
+                : emotionSlug === 'jealousy'
+                ? 'What is jealousy and insecurity?'
                 : `What is ${emotion.displayName.toLowerCase()}?`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: 0 }}>
