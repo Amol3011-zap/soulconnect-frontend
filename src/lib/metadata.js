@@ -214,6 +214,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'sleep problems, insomnia help, better sleep, sleep anxiety, racing thoughts, sleep issues, sleep quality',
   },
+  '/explore/panic-attacks': {
+    title: 'Panic Attacks, Symptoms & Support | SoulConnect',
+    description: 'Learn about panic attacks, their symptoms, causes, and practical techniques to manage panic and anxiety through SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/panic-attacks',
+    ogType: 'article',
+    keywords: 'panic attacks, panic symptoms, anxiety help, grounding techniques, panic management, panic disorder, panic relief, anxiety support',
+  },
 };
 
 /**
