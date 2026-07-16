@@ -968,7 +968,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       title: 'Anxious about money?',
       subtitle: 'Financial stress is one of the biggest life stressors. It\'s not shameful. Many people struggle. Small steps create progress.',
     },
-    summary: 'Financial worry comes from debt, insufficient income, unexpected expenses, or job insecurity. Money anxiety affects sleep, relationships, and mental health. The challenge: financial stress often feels too big to face. The opportunity: even small steps toward understanding your finances reduce anxiety and build agency.',
+    summary: 'Financial stress can come from debt, insufficient income, unexpected expenses, or job insecurity. Money anxiety affects sleep, relationships, and mental health. The challenge: financial stress often feels too big to face. The opportunity: even small steps toward understanding your finances reduce anxiety and build agency.',
     relatable: [
       'You avoid checking your account balance',
       'Unexpected expenses trigger panic',
@@ -993,7 +993,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Face your numbers: write down income, expenses, debts. Knowledge reduces panic',
       'Create a small budget: track where money goes for one month',
       'Start with one small savings goal—even a tiny amount saved regularly can build confidence over time',
-      'Find one area to reduce spending that doesn\'t hurt (unused subscriptions, etc)',
+      'Look for one area where you can reduce spending without affecting your quality of life',
       'Look into financial assistance programs if eligible',
       'Talk to someone you trust about finances (shame thrives in silence)',
       'Seek free financial counseling (many nonprofits offer it)',
