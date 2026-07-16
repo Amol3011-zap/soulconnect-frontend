@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { generateMetaTags } from '../lib/metadata';
 import { getArticleBySlug } from '../data/articles';
+import emotionContentLibrary from '../data/emotionContentLibrary';
 
 /**
  * MetaHead - Dynamically injects unique metadata for each route
@@ -81,12 +82,17 @@ export default function MetaHead() {
     updateOrCreateMeta('twitter:image', meta.twitter.image);
     updateOrCreateMeta('twitter:card', 'summary_large_image');
 
-    // Explore routes are currently disabled (redirected to home)
-    // Schema functions commented out until explore is re-enabled
-    removeFAQSchema();
-    removeWebPageSchema();
-    removeBreadcrumbSchema();
-    removeOrganizationSchema();
+    // Add schema for explore pages
+    if (location.pathname.startsWith('/explore/') && location.pathname !== '/explore') {
+      const emotionSlug = location.pathname.split('/explore/')[1];
+      addArticleSchema(emotionSlug);
+      addFAQSchema(emotionSlug);
+      addBreadcrumbSchema(emotionSlug);
+    } else {
+      removeArticleSchema();
+      removeFAQSchema();
+      removeBreadcrumbSchema();
+    }
 
     // Scroll to top on route change
     window.scrollTo(0, 0);
@@ -109,13 +115,62 @@ function updateOrCreateMeta(name, content, attribute = 'name') {
 }
 
 /**
+ * Add Article schema structured data for emotion detail pages
+ */
+function addArticleSchema(emotionSlug) {
+  removeArticleSchema();
+
+  const emotion = emotionContentLibrary.find(e => e.slug === emotionSlug);
+
+  if (!emotion) {
+    return;
+  }
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    'headline': emotion.seo?.title || emotion.displayName,
+    'description': emotion.seo?.description,
+    'url': `https://soulconnect.health/explore/${emotion.slug}`,
+    'image': 'https://soulconnect.health/og-image.png',
+    'datePublished': emotion.datePublished || '2024-01-01',
+    'dateModified': emotion.lastReviewedDate || '2026-07-17',
+    'author': {
+      '@type': 'Organization',
+      'name': 'SoulConnect'
+    },
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'SoulConnect',
+      'logo': {
+        '@type': 'ImageObject',
+        'url': 'https://soulconnect.health/logo-icon-512.png'
+      }
+    }
+  };
+
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'article-schema';
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+/**
+ * Remove Article schema
+ */
+function removeArticleSchema() {
+  const script = document.querySelector('script#article-schema');
+  if (script) {
+    script.remove();
+  }
+}
+
+/**
  * Add FAQ schema structured data for emotion detail pages
  */
-function addFAQSchema() {
+function addFAQSchema(emotionSlug) {
   removeFAQSchema(); // Remove existing schema first
-
-  const pathname = window.location.pathname;
-  const emotionSlug = pathname.split('/explore/')[1];
 
   const emotion = emotionContentLibrary.find(e => e.slug === emotionSlug);
 
@@ -204,12 +259,13 @@ function removeWebPageSchema() {
 /**
  * Add BreadcrumbList schema for emotion detail pages
  */
-function addBreadcrumbSchema() {
+function addBreadcrumbSchema(emotionSlug) {
   removeBreadcrumbSchema();
 
-  const pathname = window.location.pathname;
-  const emotionSlug = pathname.split('/explore/')[1];
-  const emotionName = emotionSlug.charAt(0).toUpperCase() + emotionSlug.slice(1);
+  const emotion = emotionContentLibrary.find(e => e.slug === emotionSlug);
+  if (!emotion) {
+    return;
+  }
 
   const schema = {
     '@context': 'https://schema.org',
@@ -230,8 +286,8 @@ function addBreadcrumbSchema() {
       {
         '@type': 'ListItem',
         'position': 3,
-        'name': emotionName,
-        'item': `https://soulconnect.health${pathname}`
+        'name': emotion.displayName,
+        'item': `https://soulconnect.health/explore/${emotion.slug}`
       }
     ]
   };

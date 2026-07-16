@@ -90,7 +90,7 @@ export const METADATA = {
   },
   '/professionals': {
     title: 'Professional Therapists & Healers | Book Sessions',
-    description: 'Browse verified therapists, counsellors, and wellness professionals on SoulConnect. Book confidential sessions starting at ₹600.',
+    description: 'Browse verified therapists, counsellors, and wellness professionals on SoulConnect. Book confidential sessions with rates set by individual practitioners.',
     canonical: 'https://soulconnect.health/professionals',
     ogType: 'website',
     keywords: 'therapist booking, online counselling, mental health professionals, therapy sessions',
@@ -132,7 +132,7 @@ export const METADATA = {
   },
   '/explore': {
     title: 'Emotion Library | SoulConnect - Mental Health Support',
-    description: 'Explore 25 emotions with expert-reviewed guides, coping strategies, and support resources for anxiety, depression, stress, and more.',
+    description: 'Explore our emotion library with expert-reviewed guides, coping strategies, and support resources for anxiety, depression, stress, and more.',
     canonical: 'https://soulconnect.health/explore',
     ogType: 'website',
     keywords: 'emotion library, mental health, anxiety help, depression support, stress management, emotional wellness, emotional support',

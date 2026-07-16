@@ -42,6 +42,11 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="SoulConnect — Peer Support for Real Life Struggles" />
     <meta property="og:locale" content="en_IN" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- ── Application Metadata ── -->
+    <meta name="application-name" content="SoulConnect" />
+    <meta name="apple-itunes-app" content="app-id=1234567890" />
 
     <!-- ── Twitter / X ── -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -87,39 +92,26 @@
     }
     </script>
 
-    <!-- ── Structured Data: MedicalOrganization ── -->
+    <!-- ── Structured Data: HealthAndBeautyBusiness ── -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "MedicalOrganization",
+      "@type": "HealthAndBeautyBusiness",
       "name": "SoulConnect",
       "url": "https://soulconnect.health",
       "logo": "https://soulconnect.health/logo-icon-512.png",
-      "description": "Peer support platform and verified therapist network for mental health challenges including anxiety, depression, grief, trauma, and relationship issues.",
-      "medicalSpecialty": [
-        "Psychiatry",
-        "Psychology",
-        "MentalHealth",
-        "Counseling"
-      ],
-      "availableService": [
-        {
-          "@type": "MedicalTherapy",
-          "name": "Peer Support Matching",
-          "description": "Anonymous matching with peers experiencing the same mental health challenge"
-        },
-        {
-          "@type": "MedicalTherapy",
-          "name": "Verified Therapist Sessions",
-          "description": "One-on-one sessions with verified therapists and counsellors starting at ₹600/session"
-        },
-        {
-          "@type": "MedicalTherapy",
-          "name": "Support Circles",
-          "description": "Small anonymous group sessions of 6-15 people facilitated by trained hosts"
-        }
-      ],
-      "areaServed": "India"
+      "description": "Peer support platform connecting people experiencing mental health challenges with supportive peers and verified wellness professionals.",
+      "areaServed": "India",
+      "email": "support@soulconnect.health",
+      "knowsAbout": [
+        "Peer Support",
+        "Mental Wellness",
+        "Emotional Health",
+        "Anxiety Support",
+        "Depression Support",
+        "Grief Support",
+        "Relationship Support"
+      ]
     }
     </script>
 
@@ -145,7 +137,6 @@
       },
       "hasMap": "https://soulconnect.health",
       "openingHours": "Mo-Su 00:00-24:00",
-      "telephone": "+91-support",
       "email": "support@soulconnect.health",
       "sameAs": "https://soulconnect.health"
     }
@@ -182,7 +173,7 @@
           "name": "Is SoulConnect free to use?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. Peer matching, chat, guided healing, and support circles are completely free. Verified healer sessions are paid per booking, starting at ₹600/session."
+            "text": "Yes. Peer matching, chat, guided healing, and support circles are completely free. Verified healer sessions are paid per booking, with rates determined by individual healer qualifications."
           }
         },
         {
@@ -198,7 +189,7 @@
           "name": "Is SoulConnect a replacement for therapy?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. SoulConnect provides peer support — real people who understand your struggle. For clinical care, we connect you with verified therapists and counsellors across India at ₹600–₹2000 per session."
+            "text": "No. SoulConnect provides peer support — real people who understand your struggle. For clinical care, we connect you with verified therapists and counsellors across India. Healer rates vary based on qualifications and experience."
           }
         },
         {
@@ -310,16 +301,6 @@
         }
       ]
     }
-    </script>
-
-    <!-- Unregister any old service workers and clear stale caches -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => {
-          regs.forEach(r => r.unregister());
-        });
-        caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
-      }
     </script>
 
     <!-- Google tag (gtag.js) -->
