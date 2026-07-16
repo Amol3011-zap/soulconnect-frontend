@@ -1088,7 +1088,7 @@ export const emotionContentLibrary: EmotionContent[] = [
     ],
     tips: [
       'Keep a consistent sleep schedule (bedtime and wake time) even weekends',
-      'No screens 1-2 hours before bed (blue light disrupts sleep)',
+      'Reduce screen time before bed whenever possible. Bright screens and stimulating content can make it harder to fall asleep',
       'Keep bedroom dark, cool, and quiet',
       'Limit caffeine after 2pm',
       'Exercise during the day (not close to bedtime)',

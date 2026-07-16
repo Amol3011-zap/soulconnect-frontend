@@ -352,7 +352,7 @@ export default function ExploreEmotionDetail() {
             transition={{ delay: 0.65 }}
             style={{ marginBottom: '48px' }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently asked questions about {emotionSlug === 'financial-worry' ? 'financial stress' : emotion.displayName.toLowerCase()}</h2>
+            <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Frequently asked questions about {emotionSlug === 'financial-worry' ? 'financial stress' : emotionSlug === 'sleep-issues' ? 'sleep problems' : emotion.displayName.toLowerCase()}</h2>
             <div style={{ display: 'grid', gap: '16px' }}>
               {emotion.faq.map((item, idx) => (
                 <div key={idx}>
