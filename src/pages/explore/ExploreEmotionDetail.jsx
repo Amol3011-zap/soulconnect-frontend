@@ -161,6 +161,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common signs of sleep problems'
                 : emotionSlug === 'panic-attacks'
                 ? 'Common signs of panic attacks'
+                : emotionSlug === 'social-anxiety'
+                ? 'Common signs of social anxiety'
                 : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -188,6 +190,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common causes of sleep problems'
                 : emotionSlug === 'panic-attacks'
                 ? 'Common causes and triggers of panic attacks'
+                : emotionSlug === 'social-anxiety'
+                ? 'Common causes and triggers of social anxiety'
                 : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -264,6 +268,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Improve your sleep and well-being'
                 : emotionSlug === 'panic-attacks'
                 ? 'Find support for panic and anxiety'
+                : emotionSlug === 'social-anxiety'
+                ? 'Build confidence and connection'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
@@ -279,6 +285,8 @@ export default function ExploreEmotionDetail() {
                 ? 'You don\'t have to deal with sleep problems alone. SoulConnect helps people understand sleep challenges, reduce stress, and build healthier habits:'
                 : emotionSlug === 'panic-attacks'
                 ? 'You don\'t have to face panic attacks alone. SoulConnect helps people understand panic, build coping skills, and find support during difficult moments:'
+                : emotionSlug === 'social-anxiety'
+                ? 'You don\'t have to face social anxiety alone. SoulConnect helps people build confidence, practice social connection, and find support in a safe environment:'
                 : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
@@ -297,6 +305,8 @@ export default function ExploreEmotionDetail() {
                     ? 'Join anonymously with others who understand insomnia, restless nights, racing thoughts, and sleep struggles'
                     : emotionSlug === 'panic-attacks'
                     ? 'Join anonymously with others who understand panic attacks, anxiety, fear, and overwhelming emotions'
+                    : emotionSlug === 'social-anxiety'
+                    ? 'Join anonymously with others who understand social anxiety, fear of judgment, loneliness, and social pressure'
                     : `Join anonymously with others who understand ${emotion.displayName.toLowerCase()}`}
                 </p>
               </div>

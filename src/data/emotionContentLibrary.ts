@@ -1260,8 +1260,8 @@ export const emotionContentLibrary: EmotionContent[] = [
       keywords: ['social anxiety support', 'social fear', 'social anxiety disorder', 'overcoming shyness', 'anxiety in social situations'],
     },
     hero: {
-      title: 'Afraid of social situations?',
-      subtitle: 'Social anxiety is intense but treatable. The fear that people are judging you is usually just anxiety, not reality.',
+      title: 'Struggling with social anxiety?',
+      subtitle: 'Social anxiety can make everyday interactions feel overwhelming, but it is treatable. The fear of being judged or embarrassed often feels very real, even when others aren\'t thinking about you as much as you imagine.',
     },
     summary: 'Social anxiety is intense fear in social situations—worrying you\'ll be judged, embarrassed, or rejected. It causes avoidance of parties, meetings, or speaking up. Social anxiety is different from shyness; it causes significant distress. The hopeful news: exposure therapy and cognitive work reduce social anxiety dramatically.',
     relatable: [
@@ -1296,7 +1296,7 @@ export const emotionContentLibrary: EmotionContent[] = [
     ],
     reflectionQuestions: [
       'What\'s your biggest fear in social situations?',
-      'Has your fear come true before? Probably not.',
+      'Have your fears about social situations come true in the way you expected?',
       'What would you do socially if you weren\'t afraid?',
       'Who in your life makes you feel comfortable and accepted?',
       'What\'s one small social step you could take?',
@@ -1334,11 +1334,11 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
       {
         question: 'What if I\'m afraid of being judged for my appearance or accent?',
-        answer: 'These fears are common with social anxiety. Most people are accepting. Those who judge harshly aren\'t worth your energy. Find your people.',
+        answer: 'These fears are common with social anxiety. Many people are more accepting than social anxiety makes us believe. Finding supportive communities and people who value you can help build confidence over time.',
       },
     ],
     trustSafety: {
-      disclaimer: 'This content is supportive. If social anxiety is severe or linked to depression, seek professional help.',
+      disclaimer: 'This content is educational and supportive. If social anxiety is affecting your daily life, relationships, work, or mental health, consider speaking with a mental health professional.',
       lastReviewedDate: '2025-02-15',
     },
   },
