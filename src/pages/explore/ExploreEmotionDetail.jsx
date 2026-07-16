@@ -286,6 +286,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Build self-compassion and confidence'
                 : emotionSlug === 'overwhelm'
                 ? 'Find clarity and support'
+                : emotionSlug === 'low-self-esteem'
+                ? 'Build confidence and self-worth'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
