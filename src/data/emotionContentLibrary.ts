@@ -421,7 +421,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'What small relief could you give yourself today?',
     ],
     whenToSeekSupport: 'Seek help if: stress is affecting your health, relationships, or ability to function; you\'re having panic symptoms; you\'re using alcohol or substances to cope; stress doesn\'t improve with basic self-care; or you feel hopeless.',
-    relatedCategories: ['anxiety', 'burnout', 'work-stress', 'sleep-issues', 'emotional-exhaustion'],
+    relatedCategories: ['loneliness', 'overthinking', 'burnout', 'grief', 'anxiety', 'sleep-issues', 'low-self-esteem', 'relationship-issues'],
     faq: [
       {
         question: 'Is all stress bad?',
