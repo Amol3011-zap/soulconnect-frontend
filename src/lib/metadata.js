@@ -193,6 +193,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'relationship help, communication skills, relationship advice, trust issues, boundaries, couples therapy, relationship support',
   },
+  '/explore/work-stress': {
+    title: 'Work Stress, Burnout & Mental Well-Being | SoulConnect',
+    description: 'Learn about work stress, workplace pressure, burnout, boundaries, and practical ways to protect your mental well-being through SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/work-stress',
+    ogType: 'article',
+    keywords: 'work stress, workplace pressure, job burnout, stress management, work-life balance, burnout recovery, mental health support',
+  },
 };
 
 /**
