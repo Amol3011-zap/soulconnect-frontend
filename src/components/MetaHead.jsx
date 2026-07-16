@@ -81,6 +81,13 @@ export default function MetaHead() {
     updateOrCreateMeta('twitter:image', meta.twitter.image);
     updateOrCreateMeta('twitter:card', 'summary_large_image');
 
+    // Add FAQ schema for emotion detail pages
+    if (location.pathname.startsWith('/explore/') && location.pathname !== '/explore') {
+      addFAQSchema();
+    } else {
+      removeFAQSchema();
+    }
+
     // Scroll to top on route change
     window.scrollTo(0, 0);
   }, [location.pathname]);
@@ -99,4 +106,36 @@ function updateOrCreateMeta(name, content, attribute = 'name') {
     document.head.appendChild(tag);
   }
   tag.content = content;
+}
+
+/**
+ * Add FAQ schema structured data for emotion detail pages
+ */
+function addFAQSchema() {
+  removeFAQSchema(); // Remove existing schema first
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [],
+  };
+
+  // This will be populated with actual FAQ data from the emotion pages
+  // The FAQ schema helps Google understand Q&A sections and display them in search results
+
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'faq-schema';
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+/**
+ * Remove FAQ schema structured data
+ */
+function removeFAQSchema() {
+  const script = document.querySelector('script#faq-schema');
+  if (script) {
+    script.remove();
+  }
 }
