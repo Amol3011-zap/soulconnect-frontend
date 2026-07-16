@@ -110,9 +110,6 @@ export default function ExploreEmotionDetail() {
             <p style={{ fontSize: '18px', color: 'rgba(255,255,255,0.8)', margin: '0 0 20px 0', maxWidth: '700px', lineHeight: '1.6' }}>
               {emotion.hero.subtitle}
             </p>
-            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
-              5 min read • Reviewed by the SoulConnect team • Updated February 2025
-            </p>
           </motion.div>
         </div>
       </div>
