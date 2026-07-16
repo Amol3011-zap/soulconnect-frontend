@@ -284,6 +284,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'low motivation, lack of motivation, burnout, procrastination, mental health, productivity, motivation support',
   },
+  '/explore/feeling-lost': {
+    title: 'Feeling Lost? Signs, Causes & How to Find Direction | SoulConnect',
+    description: 'Learn why you may feel lost, disconnected, or uncertain about your future. Explore common causes, practical coping strategies, and ways to find clarity and direction.',
+    canonical: 'https://soulconnect.health/explore/feeling-lost',
+    ogType: 'article',
+    keywords: 'feeling lost, lack of direction, life transitions, purpose, identity crisis, uncertainty, mental health support',
+  },
 };
 
 /**
