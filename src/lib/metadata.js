@@ -159,11 +159,11 @@ export const METADATA = {
     keywords: 'stress management, stress symptoms, stress relief, coping with stress, stress triggers, anxiety relief, mental health support, emotional wellness',
   },
   '/explore/grief': {
-    title: 'Grief Support & Bereavement: Processing Loss & Mourning | SoulConnect',
-    description: 'Navigate grief and loss with compassion. Learn healthy ways to process grief, honor your loss, and connect with supportive communities who understand your journey.',
+    title: 'Grief Support, Loss & Healing Resources | SoulConnect',
+    description: 'Learn about grief, common emotions after loss, coping strategies, and ways to find support through SoulConnect.',
     canonical: 'https://soulconnect.health/explore/grief',
     ogType: 'article',
-    keywords: 'grief support, bereavement, loss, mourning, grief counseling, emotional support, coping with loss, grief resources',
+    keywords: 'grief support, bereavement, loss, mourning, grief counseling, emotional support, coping with loss, grief resources, loss of loved one',
   },
   '/explore/loneliness': {
     title: 'Loneliness Support: Build Meaningful Connections | SoulConnect',

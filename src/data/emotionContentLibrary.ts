@@ -271,7 +271,7 @@ export const emotionContentLibrary: EmotionContent[] = [
   // 3. GRIEF & LOSS
   {
     slug: 'grief',
-    displayName: 'Grief & Loss',
+    displayName: 'Grief',
     seo: {
       title: 'Grief Support & Bereavement | Processing Loss & Mourning',
       description: 'Grief is love with nowhere to go. Navigate your loss with compassion. Connect with others who understand what you\'re going through.',
@@ -304,7 +304,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'Diagnosis of a chronic illness',
       'Aging and loss of independence',
       'Loss of a friendship',
-      'Miscarriage or infertility',
+      'Unexpected life changes',
     ],
     tips: [
       'Honor their memory in a way that feels right: write, create, plant something, donate',
@@ -323,7 +323,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       'How has this loss changed you?',
       'What would honoring their memory look like for you?',
     ],
-    whenToSeekSupport: 'Consider professional support if: grief is intensifying after months; you\'re having thoughts of suicide; you\'re using substances to cope; you feel completely isolated; or grief is preventing basic self-care. Complicated grief (when grief doesn\'t soften after 1-2 years) also deserves professional attention.',
+    whenToSeekSupport: 'Consider professional support if: grief is intensifying after months; you\'re having thoughts of suicide; you\'re using substances to cope; you feel completely isolated; or grief is preventing basic self-care. If grief continues to feel overwhelming for a long period of time or makes daily life difficult, professional support can help.',
     relatedCategories: ['depression', 'anxiety', 'emotional-exhaustion', 'loneliness', 'guilt'],
     faq: [
       {
