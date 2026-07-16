@@ -154,9 +154,8 @@ function AppInner() {
       <Route path="/trust-safety"    element={<Suspense fallback={<PageLoader />}><TrustSafety /></Suspense>} />
 
       {/* Public Explore Hub - Emotion Library */}
-      {/* Explore routes restricted - redirects to home */}
-      <Route path="/explore/:emotionSlug"       element={<Navigate to="/" replace />} />
-      <Route path="/explore"                    element={<Navigate to="/" replace />} />
+      <Route path="/explore/:emotionSlug"       element={<Suspense fallback={<PageLoader />}><ExploreEmotionDetail /></Suspense>} />
+      <Route path="/explore"                    element={<Suspense fallback={<PageLoader />}><ExploreHub /></Suspense>} />
     </>
   );
 
