@@ -242,6 +242,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'feeling overwhelmed, overwhelm symptoms, overwhelm causes, burnout, stress management, decision fatigue, anxiety, productivity, mental health, SoulConnect',
   },
+  '/explore/low-self-esteem': {
+    title: 'Struggling With Low Self-Esteem? Signs, Causes & Ways to Build Confidence | SoulConnect',
+    description: 'Struggling with low self-esteem? Learn the signs, causes, and practical ways to build confidence, challenge negative beliefs, and strengthen your sense of self-worth.',
+    canonical: 'https://soulconnect.health/explore/low-self-esteem',
+    ogType: 'article',
+    keywords: 'low self-esteem, self-worth, confidence, self-confidence, self-esteem issues, negative self-talk, self-doubt, mental health, emotional well-being',
+  },
 };
 
 /**
