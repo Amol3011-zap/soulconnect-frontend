@@ -271,10 +271,12 @@ function App() {
 }
 
 export default function AppWithAnalytics() {
+  const isProduction = import.meta.env.MODE === 'production';
+
   return (
     <>
       <App />
-      <Analytics />
+      {isProduction && <Analytics />}
     </>
   );
 }
