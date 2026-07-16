@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search as SearchIcon, ArrowRight, Home } from 'lucide-react';
@@ -31,33 +31,106 @@ const CATEGORY_ICONS = {
   'purpose-meaning': '🧭',
 };
 
+const CategoryCard = React.memo(({ category, index }) => (
+  <Link
+    to={`/explore/${category.slug}`}
+    style={{ textDecoration: 'none' }}
+  >
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      whileHover={{ y: -8 }}
+      style={{
+        padding: '28px',
+        background: 'rgba(34, 18, 73, 0.72)',
+        backdropFilter: 'blur(24px)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: '16px',
+        cursor: 'pointer',
+        transition: 'all 0.3s',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+      }}
+    >
+      {/* Icon & Title */}
+      <div>
+        <div style={{ fontSize: '40px', marginBottom: '12px' }}>
+          {CATEGORY_ICONS[category.slug] || '✨'}
+        </div>
+        <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#FFF', margin: 0 }}>
+          {category.name}
+        </h3>
+      </div>
+
+      {/* Description */}
+      {category.description && (
+        <p style={{
+          fontSize: '13px',
+          color: 'rgba(255,255,255,0.6)',
+          margin: 0,
+          lineHeight: '1.5',
+          flex: 1,
+        }}>
+          {category.description}
+        </p>
+      )}
+
+      {/* CTA */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        color: '#A78BFA',
+        fontSize: '13px',
+        fontWeight: '500',
+        marginTop: '8px',
+      }}>
+        Explore
+        <ArrowRight size={14} />
+      </div>
+    </motion.div>
+  </Link>
+));
+
+CategoryCard.displayName = 'CategoryCard';
+
 export default function ExploreHub() {
   const navigate = useNavigate();
-  const [categories, setCategories] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
-  const [filteredCategories, setFilteredCategories] = useState([]);
-
-  useEffect(() => {
-    // Use static emotion data from emotionContentLibrary
-    const formattedCategories = emotionContentLibrary.map((e) => ({
+  const [categories] = useState(() =>
+    emotionContentLibrary.map((e) => ({
       slug: e.slug,
       name: e.displayName,
       description: e.seo.description,
-    }));
-    setCategories(formattedCategories);
-    setFilteredCategories(formattedCategories);
-  }, []);
+    }))
+  );
+  const [searchInput, setSearchInput] = useState('');
+  const [displayValue, setDisplayValue] = useState('');
+  const debounceTimer = useRef(null);
 
   useEffect(() => {
-    if (searchInput.trim()) {
-      const filtered = categories.filter((cat) =>
-        cat.name.toLowerCase().includes(searchInput.toLowerCase())
-      );
-      setFilteredCategories(filtered);
-    } else {
-      setFilteredCategories(categories);
+    return () => clearTimeout(debounceTimer.current);
+  }, []);
+
+  const filteredCategories = useMemo(() => {
+    if (!searchInput.trim()) {
+      return categories;
     }
+    const query = searchInput.toLowerCase();
+    return categories.filter((cat) =>
+      cat.name.toLowerCase().includes(query)
+    );
   }, [searchInput, categories]);
+
+  const handleSearchChange = useCallback((e) => {
+    const value = e.target.value;
+    setDisplayValue(value);
+    clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      setSearchInput(value);
+    }, 150);
+  }, []);
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)' }}>
@@ -116,8 +189,7 @@ export default function ExploreHub() {
             <input
               type="text"
               placeholder="Search emotions..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              onChange={handleSearchChange}
               style={{
                 flex: 1,
                 background: 'none',
@@ -147,7 +219,7 @@ export default function ExploreHub() {
                 color: 'rgba(255,255,255,0.6)',
               }}
             >
-              <p style={{ fontSize: '18px', margin: 0 }}>No emotions found matching "{searchInput}"</p>
+              <p style={{ fontSize: '18px', margin: 0 }}>No emotions found matching "{displayValue}"</p>
               <button
                 onClick={() => setSearchInput('')}
                 style={{
@@ -171,67 +243,7 @@ export default function ExploreHub() {
               gap: '24px',
             }}>
               {filteredCategories.map((category, index) => (
-                <Link
-                  key={category.slug}
-                  to={`/explore/${category.slug}`}
-                  style={{ textDecoration: 'none' }}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ y: -8 }}
-                    style={{
-                      padding: '28px',
-                      background: 'rgba(34, 18, 73, 0.72)',
-                      backdropFilter: 'blur(24px)',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '16px',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '16px',
-                    }}
-                  >
-                  {/* Icon & Title */}
-                  <div>
-                    <div style={{ fontSize: '40px', marginBottom: '12px' }}>
-                      {CATEGORY_ICONS[category.slug] || '✨'}
-                    </div>
-                    <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#FFF', margin: 0 }}>
-                      {category.name}
-                    </h3>
-                  </div>
-
-                  {/* Description */}
-                  {category.description && (
-                    <p style={{
-                      fontSize: '13px',
-                      color: 'rgba(255,255,255,0.6)',
-                      margin: 0,
-                      lineHeight: '1.5',
-                      flex: 1,
-                    }}>
-                      {category.description}
-                    </p>
-                  )}
-
-                  {/* CTA */}
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    color: '#A78BFA',
-                    fontSize: '13px',
-                    fontWeight: '500',
-                    marginTop: '8px',
-                  }}>
-                    Explore
-                    <ArrowRight size={14} />
-                  </div>
-                  </motion.div>
-                </Link>
+                <CategoryCard key={category.slug} category={category} index={index} />
               ))}
             </div>
           )}
