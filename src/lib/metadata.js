@@ -186,6 +186,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'self-doubt, low self-esteem, building confidence, self-worth, self-esteem, imposter syndrome, confidence building',
   },
+  '/explore/relationship-issues': {
+    title: 'Relationship Issues, Communication & Support | SoulConnect',
+    description: 'Learn about relationship challenges, communication problems, trust, boundaries, and ways to strengthen your connections through SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/relationship-issues',
+    ogType: 'article',
+    keywords: 'relationship help, communication skills, relationship advice, trust issues, boundaries, couples therapy, relationship support',
+  },
 };
 
 /**

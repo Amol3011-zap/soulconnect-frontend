@@ -849,7 +849,7 @@ export const emotionContentLibrary: EmotionContent[] = [
       },
     ],
     trustSafety: {
-      disclaimer: 'If there\'s abuse, seek help from a domestic violence hotline or professional immediately.',
+      disclaimer: 'This content is educational and not a substitute for professional support. If your relationship involves abuse, control, or violence, seek help from a trusted professional or support service.',
       lastReviewedDate: '2025-02-15',
     },
   },
