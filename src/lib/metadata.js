@@ -263,6 +263,13 @@ export const METADATA = {
     ogType: 'article',
     keywords: 'jealousy, insecurity, relationship jealousy, trust issues, relationship anxiety, jealousy symptoms, emotional security',
   },
+  '/explore/guilt': {
+    title: 'Guilt: Signs, Causes & Self-Forgiveness Support | SoulConnect',
+    description: 'Learn about guilt, self-blame, and self-forgiveness. Explore common triggers, coping strategies, and emotional support with SoulConnect.',
+    canonical: 'https://soulconnect.health/explore/guilt',
+    ogType: 'article',
+    keywords: 'guilt, self-blame, guilt symptoms, self-forgiveness, regret, emotional healing, mental health support',
+  },
 };
 
 /**

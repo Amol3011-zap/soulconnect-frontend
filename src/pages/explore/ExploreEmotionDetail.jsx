@@ -175,6 +175,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common signs of burnout'
                 : emotionSlug === 'jealousy'
                 ? 'Common signs of jealousy'
+                : emotionSlug === 'guilt'
+                ? 'Common signs of guilt'
                 : `Common ${emotion.displayName.toLowerCase()} symptoms`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -214,6 +216,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Common causes and triggers of burnout'
                 : emotionSlug === 'jealousy'
                 ? 'Common causes and triggers of jealousy'
+                : emotionSlug === 'guilt'
+                ? 'Common causes and triggers of guilt'
                 : `Common ${emotion.displayName.toLowerCase()} triggers`}
             </h2>
             <div style={{ display: 'grid', gap: '12px' }}>
@@ -302,6 +306,8 @@ export default function ExploreEmotionDetail() {
                 ? 'Recover and recharge'
                 : emotionSlug === 'jealousy'
                 ? 'Build trust and emotional security'
+                : emotionSlug === 'guilt'
+                ? 'Find understanding and support'
                 : `Find ${emotion.displayName.toLowerCase()} support`}
             </h2>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.8)', lineHeight: '1.8', margin: '0 0 24px 0' }}>
@@ -325,6 +331,8 @@ export default function ExploreEmotionDetail() {
                 ? 'You don\'t have to navigate overwhelm alone. SoulConnect helps people reduce stress, organize their thoughts, and find support during difficult periods:'
                 : emotionSlug === 'jealousy'
                 ? 'You don\'t have to navigate jealousy and insecurity alone. SoulConnect helps people strengthen relationships, build confidence, and find support during difficult moments:'
+                : emotionSlug === 'guilt'
+                ? 'You don\'t have to carry guilt alone. SoulConnect helps people process difficult emotions, practice self-compassion, and move forward:'
                 : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
