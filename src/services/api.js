@@ -115,6 +115,25 @@ export const dashboardAPI = {
   getLive: () => api.get('/dashboard/live').catch(() => ({ data: { souls_healing_now: 847 } })),
 };
 
+export const pulseAPI = {
+  getGlobal: () => api.get('/pulse/global').catch(err => {
+    const status = err?.response?.status;
+    if (status === 429) throw { type: 'rate_limited', message: 'Too many requests. Please try again shortly.' };
+    throw { type: 'network', message: 'Could not load Global Pulse data.' };
+  }),
+  checkIn: (problems, countryCode, countryName) =>
+    api.post('/pulse/checkin', {
+      problems,
+      country_code: countryCode || undefined,
+      country_name: countryName || undefined,
+    }).catch(err => {
+      const status = err?.response?.status;
+      if (status === 429) throw { type: 'rate_limited', message: 'Too many check-ins. Please wait a few minutes.' };
+      if (status === 422) throw { type: 'validation', message: 'Please choose 1-2 categories.' };
+      throw { type: 'network', message: 'Could not submit your check-in.' };
+    }),
+};
+
 export const onboardingAPI = {
   getStatus: () => api.get('/onboarding/status'),
   getProfile: () => api.get('/onboarding/profile'),

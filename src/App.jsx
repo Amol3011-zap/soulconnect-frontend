@@ -12,6 +12,7 @@ import DashboardLayout from './components/DashboardLayout';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import HealerDashboard from './pages/HealerDashboard';
+import Pulse from './pages/Pulse';
 import SafetyOnboarding, { useNeedsOnboarding } from './pages/SafetyOnboarding';
 
 // ── Lazy imports ──────────────────────────────────────────────────────────────
@@ -197,6 +198,9 @@ function AppInner() {
               <Route path="/groups"        element={<Suspense fallback={<PageLoader />}><GroupChat /></Suspense>} />
               <Route path="/terms"         element={<Suspense fallback={<PageLoader />}><TermsPrivacy /></Suspense>} />
               <Route path="/onboarding"    element={<Suspense fallback={<PageLoader />}><Onboarding /></Suspense>} />
+
+              {/* Global Emotional Pulse — dedicated full-page route */}
+              <Route path="/pulse"         element={<Pulse />} />
 
               {/* Dashboard routes — all inside persistent sidebar layout */}
               <Route element={<DashboardLayout />}>

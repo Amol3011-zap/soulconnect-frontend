@@ -660,6 +660,62 @@ export default function Landing() {
     }
     .l-btn-g:hover{background:rgba(255,255,255,0.18);transform:translateY(-3px);border-color:rgba(255,255,255,0.45);}
 
+    /* Global Pulse CTA */
+    @keyframes gpRingExpand{
+      0%{transform:scale(0.6);opacity:0.55;}
+      100%{transform:scale(2.2);opacity:0;}
+    }
+    @keyframes gpCoreGlow{
+      0%,100%{box-shadow:0 0 6px 1px rgba(167,139,250,0.55),0 0 0 0 rgba(244,114,182,0);}
+      50%{box-shadow:0 0 10px 3px rgba(167,139,250,0.85),0 0 14px 3px rgba(244,114,182,0.35);}
+    }
+    .l-btn-gp{
+      display:inline-flex;align-items:center;gap:12px;
+      padding:14px 26px;border-radius:14px;
+      background:rgba(255,255,255,0.06);
+      border:1.5px solid rgba(167,139,250,0.28);
+      cursor:pointer;text-decoration:none;font-family:inherit;color:inherit;
+      backdrop-filter:blur(10px);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),0 4px 18px rgba(109,74,255,0.14);
+      transition:all .25s ease;
+      position:relative;
+    }
+    .l-btn-gp:hover{
+      background:rgba(255,255,255,0.1);
+      border-color:rgba(167,139,250,0.55);
+      transform:translateY(-2px);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 10px 30px rgba(109,74,255,0.3);
+    }
+    .l-btn-gp-icon{
+      position:relative;flex-shrink:0;
+      width:30px;height:30px;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .l-btn-gp-core{
+      position:relative;z-index:2;
+      width:7px;height:7px;border-radius:50%;
+      background:radial-gradient(circle,#fff 0%,${LAV} 70%);
+      animation:gpCoreGlow 2.8s ease-in-out infinite;
+    }
+    .l-btn-gp-ring{
+      position:absolute;inset:0;margin:auto;
+      width:7px;height:7px;border-radius:50%;
+      border:1px solid rgba(167,139,250,0.55);
+      animation:gpRingExpand 2.8s cubic-bezier(0.2,0.6,0.4,1) infinite;
+    }
+    .l-btn-gp-ring:nth-child(2){animation-delay:0.6s;border-color:rgba(244,114,182,0.4);}
+    .l-btn-gp-ring:nth-child(3){animation-delay:1.2s;border-color:rgba(245,184,65,0.32);}
+    .l-btn-gp-text{display:flex;flex-direction:column;gap:2px;line-height:1.15;}
+    .l-btn-gp-eyebrow{
+      font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+      color:${LAV};opacity:0.85;
+    }
+    .l-btn-gp-main{font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;}
+    .l-btn-gp-arrow{transition:transform .25s ease;font-size:14px;color:rgba(255,255,255,0.7);}
+    .l-btn-gp:hover .l-btn-gp-arrow{transform:translateX(4px);color:#fff;}
+    .l-btn-gp:hover .l-btn-gp-core{animation-duration:1.6s;}
+    .l-btn-gp:hover .l-btn-gp-ring{animation-duration:1.6s;}
+
     /* Challenge cards */
     .l-struggle-card{
       background:#fff;border-radius:28px;
@@ -1013,12 +1069,17 @@ export default function Landing() {
                 style={{fontSize:16, padding:'16px 38px', borderRadius:15}}>
                 Find My Circle 💜
               </a>
-              <Link to="/how-it-works" className="l-btn-g" style={{fontSize:15, padding:'16px 28px'}}>
-                <span style={{width:30, height:30, borderRadius:'50%',
-                  background:'rgba(255,255,255,0.15)',
-                  display:'flex', alignItems:'center', justifyContent:'center',
-                  fontSize:11}}>▶</span>
-                How It Works
+              <Link to="/pulse" className="l-btn-gp" aria-label="Global Pulse — how are you feeling?">
+                <span className="l-btn-gp-icon">
+                  <span className="l-btn-gp-ring" />
+                  <span className="l-btn-gp-ring" />
+                  <span className="l-btn-gp-ring" />
+                  <span className="l-btn-gp-core" />
+                </span>
+                <span className="l-btn-gp-text">
+                  <span className="l-btn-gp-eyebrow">Global Pulse</span>
+                  <span className="l-btn-gp-main">How are you feeling? <span className="l-btn-gp-arrow">→</span></span>
+                </span>
               </Link>
             </div>
 

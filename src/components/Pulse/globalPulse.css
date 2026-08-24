@@ -1,0 +1,47 @@
+.pulse-main-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 27%) 1fr;
+  gap: 28px;
+  width: 100%;
+  align-items: stretch;
+  min-height: 640px;
+  height: 66vh;
+  max-height: 780px;
+}
+
+.pulse-cta-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+}
+
+@media (max-width: 1100px) {
+  .pulse-main-grid {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+  }
+
+  /* Mobile order: headline (outside grid) -> map stage -> stats panel */
+  .pulse-map-stage {
+    order: 1;
+  }
+  .pulse-stats-panel {
+    order: 2;
+  }
+
+  .pulse-map-stage .pulse-map-canvas-wrap {
+    min-height: 380px;
+    height: 62vh;
+    max-height: 520px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pulse-cta-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
