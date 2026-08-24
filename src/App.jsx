@@ -177,6 +177,10 @@ function AppInner() {
           <Route path="/" element={<Landing />} />
           {safetyRoutes}
 
+          {/* Global Emotional Pulse — anonymous, no auth required, reachable
+              from the landing page hero regardless of login state */}
+          <Route path="/pulse" element={<Pulse />} />
+
           {!token || !LAUNCH_READY ? (
             <>
               <Route path="/signup"          element={<Suspense fallback={<PageLoader />}><Signup /></Suspense>} />
@@ -198,9 +202,6 @@ function AppInner() {
               <Route path="/groups"        element={<Suspense fallback={<PageLoader />}><GroupChat /></Suspense>} />
               <Route path="/terms"         element={<Suspense fallback={<PageLoader />}><TermsPrivacy /></Suspense>} />
               <Route path="/onboarding"    element={<Suspense fallback={<PageLoader />}><Onboarding /></Suspense>} />
-
-              {/* Global Emotional Pulse — dedicated full-page route */}
-              <Route path="/pulse"         element={<Pulse />} />
 
               {/* Dashboard routes — all inside persistent sidebar layout */}
               <Route element={<DashboardLayout />}>
