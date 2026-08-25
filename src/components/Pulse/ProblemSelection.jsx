@@ -78,7 +78,7 @@ function ProblemSelection({ onSelect }) {
         }}
       >
         {[
-          { icon: '🔒', text: 'Anonymous' },
+          { icon: '🔒', text: 'No name or email required' },
           { icon: '⏱️', text: '60 seconds' },
           { icon: '✨', text: 'No account required' },
         ].map((badge, i) => (
