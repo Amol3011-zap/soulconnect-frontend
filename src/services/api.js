@@ -128,7 +128,7 @@ export const pulseAPI = {
       country_name: countryName || undefined,
     }).catch(err => {
       const status = err?.response?.status;
-      if (status === 429) throw { type: 'rate_limited', message: 'Too many check-ins. Please wait a few minutes.' };
+      if (status === 429) throw { type: 'rate_limited', message: err?.response?.data?.detail || 'Too many check-ins. Please try again later.' };
       if (status === 422) throw { type: 'validation', message: 'Please choose 1-2 categories.' };
       throw { type: 'network', message: 'Could not submit your check-in.' };
     }),
