@@ -5,6 +5,8 @@ import { useAuthStore } from '../store/auth';
 import { useWeatherStore } from '../store/weather';
 import { useTinyWinsStore } from '../store/tinyWins';
 import { CATEGORY_META } from '../data/tinyWinsChallenges';
+import ErrorToast from '../components/ErrorToast';
+import { DashboardSkeleton } from '../components/Skeletons';
 import {
   Search, Bell, Heart, MessageCircle, Bookmark, Clock,
   CheckCircle, MoreHorizontal,
@@ -581,6 +583,8 @@ export default function Home() {
   const [showBreathing, setShowBreathing] = useState(false);
   const [breathingDone, setBreathingDone] = useState(false);
   const [selectedWeather, setSelectedWeather] = useState(todayEntry?.weather || null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   // Today's Reflection modal
   const [reflectionModalOpen, setReflectionModalOpen] = useState(false);
@@ -600,31 +604,43 @@ export default function Home() {
   // Ref for "Continue Journey" smooth scroll to Today's Focus card
   const todaysFocusRef = useRef(null);
 
-  // Check if user completed onboarding
+  // Check if user completed onboarding and initialize dashboard
   useEffect(() => {
-    const checkOnboarding = async () => {
-      // Check localStorage first (fast path)
-      const onboardingDone = localStorage.getItem('onboarding-completed');
-      if (onboardingDone === 'true') {
-        setShowOnboarding(false);
-        return;
-      }
-
-      // Check API
+    const initializeDashboard = async () => {
       try {
-        const res = await onboardingAPI.getStatus();
-        if (res.data.completed) {
-          localStorage.setItem('onboarding-completed', 'true');
+        setLoading(true);
+        setError('');
+
+        // Check localStorage first (fast path)
+        const onboardingDone = localStorage.getItem('onboarding-completed');
+        if (onboardingDone === 'true') {
           setShowOnboarding(false);
-        } else {
-          setShowOnboarding(true);
+          setLoading(false);
+          return;
         }
+
+        // Check API
+        try {
+          const res = await onboardingAPI.getStatus();
+          if (res.data.completed) {
+            localStorage.setItem('onboarding-completed', 'true');
+            setShowOnboarding(false);
+          } else {
+            setShowOnboarding(true);
+          }
+        } catch (err) {
+          // If API fails, don't show onboarding (user likely already completed it)
+          setShowOnboarding(false);
+        }
+
+        setLoading(false);
       } catch (err) {
-        // If API fails, don't show onboarding (user likely already completed it)
-        setShowOnboarding(false);
+        console.error('Error initializing dashboard:', err);
+        setError('Failed to load dashboard. Please refresh.');
+        setLoading(false);
       }
     };
-    checkOnboarding();
+    initializeDashboard();
   }, []);
 
   function handleReflectionSaved() {
@@ -657,6 +673,50 @@ export default function Home() {
   const weeklyStats = getWeeklyStats();
   const completedCount = completedToday.length;
   const allDone = completedCount >= 3 && dailyWins.length > 0;
+
+  // Handle error state
+  if (error) {
+    return (
+      <>
+        <ErrorToast
+          message={error}
+          onRetry={() => window.location.reload()}
+          onDismiss={() => setError('')}
+        />
+        <div
+          style={{
+            minHeight: '100vh',
+            background: '#0D0B1A',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'Inter, sans-serif',
+            padding: '20px',
+          }}
+        >
+          <p style={{ color: '#8A84B6', textAlign: 'center', fontSize: 16 }}>
+            Unable to load dashboard. Please try again.
+          </p>
+        </div>
+      </>
+    );
+  }
+
+  // Handle loading state
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          background: '#0D0B1A',
+          padding: '24px 32px',
+          fontFamily: 'Inter, sans-serif',
+        }}
+      >
+        <DashboardSkeleton />
+      </div>
+    );
+  }
 
   return (
     <>

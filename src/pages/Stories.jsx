@@ -12,6 +12,8 @@ import {
 import { useAuthStore } from '../store/auth';
 import { useStoriesStore } from '../store/stories';
 import { STORIES_DB, REPLIES_DB } from '../data/storiesDB';
+import ErrorToast from '../components/ErrorToast';
+import { StoriesSkeleton } from '../components/Skeletons';
 
 /* ─── Design tokens ──────────────────────────────────────────────────────────── */
 const BG       = '#080812';
@@ -1142,10 +1144,29 @@ export default function Stories() {
   const [visibleCount, setVisibleCount] = useState(10);
   const [composerOpen, setComposerOpen] = useState(false);
   const sentinelRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const showToast = useCallback((message) => {
     setToast({ visible: true, message });
     setTimeout(() => setToast({ visible: false, message: '' }), 3200);
+  }, []);
+
+  // Load stories on mount (simulated - in real app would fetch from API)
+  useEffect(() => {
+    const loadStories = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 400));
+      } catch (err) {
+        setError('Failed to load stories. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadStories();
   }, []);
 
   // Merge feed
@@ -1223,6 +1244,41 @@ export default function Stories() {
   };
 
   const featuredStory = STORIES_DB[0];
+
+  if (error) {
+    return (
+      <>
+        <ErrorToast
+          message={error}
+          onRetry={() => window.location.reload()}
+          onDismiss={() => setError('')}
+        />
+        <div className="stories-root" style={{
+          minHeight: '100vh', background: BG,
+          fontFamily: "'Inter', -apple-system, sans-serif",
+          padding: '24px 32px', paddingBottom: 24,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <p style={{ color: TEXT_DIM, textAlign: 'center', fontSize: 16 }}>
+            Unable to load stories. Please try again.
+          </p>
+        </div>
+      </>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="stories-root" style={{
+        minHeight: '100vh', background: BG,
+        fontFamily: "'Inter', -apple-system, sans-serif",
+        padding: '24px 32px', paddingBottom: 24,
+        position: 'relative',
+      }}>
+        <StoriesSkeleton count={5} />
+      </div>
+    );
+  }
 
   return (
     <div className="stories-root" style={{

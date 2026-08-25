@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuthStore } from '../store/auth';
@@ -7,6 +7,8 @@ import MoodSelector from '../components/mood/MoodSelector';
 import MoodStats from '../components/mood/MoodStats';
 import MoodBreakdown from '../components/mood/MoodBreakdown';
 import RecentEntries from '../components/mood/RecentEntries';
+import ErrorToast from '../components/ErrorToast';
+import { DashboardSkeleton } from '../components/Skeletons';
 
 // ── Lotus Icon ─────────────────────────────────────────────────────────────
 
@@ -195,10 +197,35 @@ export default function MoodTracker() {
   const [showModal, setShowModal] = useState(false);
   const [modalStep, setModalStep] = useState(1);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Initialize mood tracker on mount
+  useEffect(() => {
+    const initializeMoodTracker = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        // Simulate loading mood data
+        await new Promise(resolve => setTimeout(resolve, 400));
+        setLoading(false);
+      } catch (err) {
+        console.error('Error loading mood tracker:', err);
+        setError('Failed to load mood tracker. Please try again.');
+        setLoading(false);
+      }
+    };
+    initializeMoodTracker();
+  }, []);
 
   const handleSaveAndRefresh = useCallback(async () => {
-    await moodData.handleSave();
-    setRefreshTrigger(prev => prev + 1);
+    try {
+      await moodData.handleSave();
+      setRefreshTrigger(prev => prev + 1);
+    } catch (err) {
+      console.error('Error saving mood:', err);
+      setError('Failed to save mood. Please try again.');
+    }
   }, [moodData]);
 
   const firstName = user?.full_name?.split(' ')[0] || 'Friend';
@@ -212,6 +239,50 @@ export default function MoodTracker() {
     : 'ME';
 
   const totalEntries = Object.keys(moodData.store).filter(k => moodData.store[k]?.mood).length;
+
+  // Handle error state
+  if (error) {
+    return (
+      <>
+        <ErrorToast
+          message={error}
+          onRetry={() => window.location.reload()}
+          onDismiss={() => setError('')}
+        />
+        <div
+          style={{
+            minHeight: '100vh',
+            background: '#0D0B1A',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'Inter, sans-serif',
+            padding: '20px',
+          }}
+        >
+          <p style={{ color: '#8A84B6', textAlign: 'center', fontSize: 16 }}>
+            Unable to load mood tracker. Please try again.
+          </p>
+        </div>
+      </>
+    );
+  }
+
+  // Handle loading state
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          background: '#0D0B1A',
+          padding: '24px 32px',
+          fontFamily: 'Inter, sans-serif',
+        }}
+      >
+        <DashboardSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div

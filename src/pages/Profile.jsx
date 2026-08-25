@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { useWeatherStore } from '../store/weather';
@@ -13,12 +13,34 @@ import RecentActivity from '../components/profile/RecentActivity';
 import Achievements from '../components/profile/Achievements';
 import MyCircle from '../components/profile/MyCircle';
 import SettingsList from '../components/profile/SettingsList';
+import ErrorToast from '../components/ErrorToast';
+import { ProfileSkeleton } from '../components/Skeletons';
 
 export default function Profile() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const { streak, longestStreak } = useWeatherStore();
   const { last7Days } = useMoodData();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Initialize profile on mount
+  useEffect(() => {
+    const initializeProfile = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        // Simulate loading profile data
+        await new Promise(resolve => setTimeout(resolve, 400));
+        setLoading(false);
+      } catch (err) {
+        console.error('Error loading profile:', err);
+        setError('Failed to load profile. Please try again.');
+        setLoading(false);
+      }
+    };
+    initializeProfile();
+  }, []);
 
   const MENU_ITEMS = [
     { icon: '⚙️', label: 'Settings', action: () => navigate('/account') },
@@ -38,6 +60,50 @@ export default function Profile() {
     logout();
     navigate('/');
   }, [logout, navigate]);
+
+  // Handle error state
+  if (error) {
+    return (
+      <>
+        <ErrorToast
+          message={error}
+          onRetry={() => window.location.reload()}
+          onDismiss={() => setError('')}
+        />
+        <div
+          style={{
+            minHeight: '100vh',
+            background: '#0B0618',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'Inter, sans-serif',
+            padding: '20px',
+          }}
+        >
+          <p style={{ color: '#8A84B6', textAlign: 'center', fontSize: 16 }}>
+            Unable to load profile. Please try again.
+          </p>
+        </div>
+      </>
+    );
+  }
+
+  // Handle loading state
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          background: '#0B0618',
+          padding: '24px 16px',
+          fontFamily: 'Inter, sans-serif',
+        }}
+      >
+        <ProfileSkeleton />
+      </div>
+    );
+  }
 
   if (!user) {
     return (

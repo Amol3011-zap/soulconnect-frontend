@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { chatAPI } from '../services/api';
 import ActivitySuggestions from '../components/ActivitySuggestions';
 import GuidedHealing from '../components/GuidedHealing';
+import ErrorToast from '../components/ErrorToast';
+import { ChatSkeleton } from '../components/Skeletons';
 
 const CRISIS_PHRASES = [
   'i want to die', 'want to die', 'kill myself', 'end my life', 'end it all',
@@ -82,6 +84,7 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [matchName, setMatchName] = useState('Your Match');
   const [problem, setProblem] = useState('anxiety');
   const [activeTab, setActiveTab] = useState('chat'); // chat, activities, healing
@@ -93,12 +96,15 @@ export default function Chat() {
 
   const fetchMessages = async () => {
     try {
+      setLoading(true);
+      setError('');
       const response = await chatAPI.getHistory(matchId);
       setMessages(response.data.messages || []);
       setMatchName(response.data.match_name || 'Your Match');
       setProblem(response.data.problem || 'anxiety');
     } catch (err) {
       console.error('Error fetching messages:', err);
+      setError('Failed to load conversation. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -118,8 +124,35 @@ export default function Chat() {
     }
   };
 
+  if (error) {
+    return (
+      <>
+        <ErrorToast
+          message={error}
+          onRetry={() => fetchMessages()}
+          onDismiss={() => setError('')}
+        />
+        <div style={{
+          minHeight: '100vh', background: '#0D0B1A',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
+        }}>
+          <p style={{ color: '#8A84B6', textAlign: 'center', fontSize: 16 }}>
+            Unable to load conversation. Please try again.
+          </p>
+        </div>
+      </>
+    );
+  }
+
   if (loading) {
-    return <div className="text-center py-8">Loading chat...</div>;
+    return (
+      <div style={{
+        minHeight: '100vh', background: '#0D0B1A',
+        padding: '20px', fontFamily: 'Inter, sans-serif',
+      }}>
+        <ChatSkeleton count={8} />
+      </div>
+    );
   }
 
   return (

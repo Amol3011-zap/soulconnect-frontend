@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Edit, RefreshCw, MessageCircle } from 'lucide-react';
+import ErrorToast from '../components/ErrorToast';
+import { MessagesSkeleton } from '../components/Skeletons';
 
 const CONVERSATIONS = [
   { id: 1, name: 'Dr. Meera Sharma', avatar: 'M', color: '#7C3AED', lastMsg: 'Typing...', time: '9:40 AM', unread: 0, isTyping: true, isOnline: true },
@@ -35,10 +37,89 @@ export default function Messages() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [hoveredId, setHoveredId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [conversations, setConversations] = useState(CONVERSATIONS);
 
-  const filtered = CONVERSATIONS.filter((c) =>
+  // Simulate loading conversations (in real app, would fetch from API)
+  useEffect(() => {
+    const loadConversations = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setConversations(CONVERSATIONS);
+      } catch (err) {
+        setError('Failed to load messages. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadConversations();
+  }, []);
+
+  const filtered = conversations.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (error) {
+    return (
+      <>
+        <ErrorToast
+          message={error}
+          onRetry={() => window.location.reload()}
+          onDismiss={() => setError('')}
+        />
+        <div
+          style={{
+            padding: '0',
+            minHeight: '100vh',
+            background: '#0D0B1A',
+            fontFamily: 'Inter, sans-serif',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <p style={{ color: '#8A84B6', textAlign: 'center' }}>
+            Unable to load messages. Please try again.
+          </p>
+        </div>
+      </>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          padding: '0',
+          minHeight: '100vh',
+          background: '#0D0B1A',
+          fontFamily: 'Inter, sans-serif',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <div
+          style={{
+            background: '#0D0B1A',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            padding: '20px 24px 16px',
+            position: 'sticky',
+            top: 0,
+            zIndex: 10,
+          }}
+        >
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#fff' }}>Messages</h2>
+        </div>
+        <div style={{ padding: '20px 24px', flex: 1 }}>
+          <MessagesSkeleton count={5} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

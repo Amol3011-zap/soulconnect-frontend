@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Star, Clock, MapPin, Filter, Search } from 'lucide-react';
+import ErrorToast from '../components/ErrorToast';
+import { ListSkeleton } from '../components/Skeletons';
 
 const BG = '#0D0B1A';
 const CARD = '#211044';
@@ -32,13 +34,34 @@ export default function Professionals() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showToast, setShowToast] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [professionals, setProfessionals] = useState(PROFESSIONALS);
+
+  // Load professionals on mount
+  useEffect(() => {
+    const loadProfessionals = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 400));
+        setProfessionals(PROFESSIONALS);
+      } catch (err) {
+        setError('Failed to load professionals. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadProfessionals();
+  }, []);
 
   const triggerToast = () => {
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const filteredPros = PROFESSIONALS.filter((p) => {
+  const filteredPros = professionals.filter((p) => {
     const matchSearch =
       searchQuery === '' ||
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -55,6 +78,51 @@ export default function Professionals() {
 
     return matchSearch && matchCategory;
   });
+
+  if (error) {
+    return (
+      <>
+        <ErrorToast
+          message={error}
+          onRetry={() => window.location.reload()}
+          onDismiss={() => setError('')}
+        />
+        <div
+          style={{
+            padding: 'clamp(16px, 4vw, 20px) clamp(16px, 4vw, 32px)',
+            minHeight: '100vh',
+            background: BG,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
+          <p style={{ color: TEXT2, textAlign: 'center', fontSize: 16 }}>
+            Unable to load professionals. Please try again.
+          </p>
+        </div>
+      </>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          padding: 'clamp(16px, 4vw, 20px) clamp(16px, 4vw, 32px)',
+          minHeight: '100vh',
+          background: BG,
+          fontFamily: "'Inter', sans-serif",
+        }}
+      >
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 20 }}>
+          Verified Professionals
+        </h1>
+        <ListSkeleton count={4} cardHeight={180} />
+      </div>
+    );
+  }
 
   return (
     <div
