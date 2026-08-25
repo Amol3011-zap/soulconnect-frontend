@@ -134,6 +134,11 @@ export const pulseAPI = {
     }),
 };
 
+export const analyticsAPI = {
+  sessionStart: (data) => api.post('/analytics/session/start', data).catch(() => {}),
+  sessionUpdate: (data) => api.post('/analytics/session/update', data).catch(() => {}),
+};
+
 export const onboardingAPI = {
   getStatus: () => api.get('/onboarding/status'),
   getProfile: () => api.get('/onboarding/profile'),

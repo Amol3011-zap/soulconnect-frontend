@@ -7,6 +7,7 @@ import { useThemeStore } from './store/theme';
 import { useWeatherStore } from './store/weather';
 import EmotionWeatherModal from './components/emotional-weather/EmotionWeatherModal';
 import DashboardLayout from './components/DashboardLayout';
+import { useVisitorTracking } from './hooks/useVisitorTracking';
 
 // ── Eager imports (critical path) ────────────────────────────────────────────
 import Landing from './pages/Landing';
@@ -122,6 +123,8 @@ function AppInner() {
   const needsOnboarding = useNeedsOnboarding();
   const [onboardingDone, setOnboardingDone] = useState(!needsOnboarding);
   const { showModal, checkTodayAndInit } = useWeatherStore();
+
+  useVisitorTracking();
 
   const userId = user?.id || user?.user_id;
   useEffect(() => {
