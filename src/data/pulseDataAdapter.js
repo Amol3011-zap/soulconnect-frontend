@@ -30,6 +30,8 @@ export async function fetchGlobalPulse() {
 
   return {
     total: data.total ?? 0,
+    recentCheckins: data.recent_checkins ?? 0,
+    recentWindowHours: data.recent_window_hours ?? null,
     categories: data.categories ?? [],
     countries: data.countries ?? [],
     map: data.map ?? [],

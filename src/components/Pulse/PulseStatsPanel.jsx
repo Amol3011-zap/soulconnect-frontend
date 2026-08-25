@@ -4,7 +4,7 @@ import { PROBLEMS } from '../../data/pulseExperienceData';
 import { getDisplayRange } from '../../data/pulseDataAdapter';
 
 function PulseStatsPanel({ problems, snapshot }) {
-  const { total, categories, countries, colors } = snapshot;
+  const { total, recentCheckins, recentWindowHours, categories, countries, colors } = snapshot;
   const firstProblem = problems[0];
   const problem = PROBLEMS.find((p) => p.id === firstProblem);
 
@@ -72,6 +72,34 @@ function PulseStatsPanel({ problems, snapshot }) {
         <p style={{ fontSize: '13px', fontWeight: 500, color: 'rgba(255,255,255,0.5)', margin: 0 }}>
           anonymous check-ins so far
         </p>
+
+        {recentCheckins > 0 && (
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              marginTop: '12px',
+              padding: '5px 10px',
+              borderRadius: '999px',
+              backgroundColor: 'rgba(74,222,128,0.1)',
+              border: '1px solid rgba(74,222,128,0.25)',
+            }}
+          >
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: '#4ADE80',
+                boxShadow: '0 0 6px rgba(74,222,128,0.8)',
+              }}
+            />
+            <span style={{ fontSize: '11px', fontWeight: 600, color: '#4ADE80' }}>
+              {recentCheckins} {recentCheckins === 1 ? 'person' : 'people'} checked in the last {recentWindowHours === 1 ? 'hour' : `${recentWindowHours} hours`}
+            </span>
+          </div>
+        )}
       </motion.div>
 
       {/* Problem breakdown */}
