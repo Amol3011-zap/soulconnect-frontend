@@ -5,8 +5,8 @@
 
 export const METADATA = {
   '/': {
-    title: 'SoulConnect | Peer Support for Mental Health & Wellness',
-    description: 'Find support, connection, and community for anxiety, depression, grief, and mental health challenges. Join India\'s peer support and healing platform.',
+    title: 'SoulConnect | You Don\'t Have To Go Through It Alone',
+    description: 'Find support, connection, healing circles, wellness tools, and community for anxiety, loneliness, burnout, grief, and personal growth. Building India\'s community-driven healing platform.',
     canonical: 'https://soulconnect.health/',
     ogType: 'website',
     keywords: 'peer support india, mental health support, anxiety support group, depression help, grief counselling, online community, peer counseling',
@@ -304,6 +304,20 @@ export const METADATA = {
     canonical: 'https://soulconnect.health/explore/overthinking',
     ogType: 'article',
     keywords: 'overthinking, rumination, racing thoughts, anxiety, intrusive thoughts, mental health support, stress management',
+  },
+  '/explore/heartbreak': {
+    title: 'Heartbreak: Signs, Healing & How to Move Forward | SoulConnect',
+    description: 'Learn about heartbreak, including common signs, emotional challenges, and practical ways to cope, heal, and rebuild after a breakup or relationship loss.',
+    canonical: 'https://soulconnect.health/explore/heartbreak',
+    ogType: 'article',
+    keywords: 'heartbreak, breakup recovery, coping with heartbreak, relationship loss, emotional healing, mental health support',
+  },
+  '/pulse': {
+    title: 'Global Pulse | How India Is Feeling Right Now | SoulConnect',
+    description: 'An anonymous, aggregate look at how people across India are feeling right now. Check in privately and see community-wide emotional trends on SoulConnect.',
+    canonical: 'https://soulconnect.health/pulse',
+    ogType: 'website',
+    keywords: 'emotional wellness india, how india feels, anonymous mood check-in, mental health trends india, global pulse',
   },
 };
 

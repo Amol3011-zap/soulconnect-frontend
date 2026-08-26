@@ -239,12 +239,21 @@ const STATIC_HTML = `
           <a href="/about" style="color:rgba(196,181,253,0.6);text-decoration:none;">About</a>
           <a href="/how-it-works" style="color:rgba(196,181,253,0.6);text-decoration:none;">How It Works</a>
           <a href="/faq" style="color:rgba(196,181,253,0.6);text-decoration:none;">FAQ</a>
+          <a href="/pulse" style="color:rgba(196,181,253,0.6);text-decoration:none;">Global Pulse</a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="/explore" style="color:rgba(196,181,253,0.6);text-decoration:none;">Explore (25 Topics)</a>
+          <a href="/professionals" style="color:rgba(196,181,253,0.6);text-decoration:none;">Professionals</a>
+          <a href="/healers" style="color:rgba(196,181,253,0.6);text-decoration:none;">Verified Healers</a>
+          <a href="/trust-safety" style="color:rgba(196,181,253,0.6);text-decoration:none;">Trust &amp; Safety</a>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <a href="/blog" style="color:rgba(196,181,253,0.6);text-decoration:none;">Blog</a>
           <a href="/blog/anxiety-management-tips" style="color:rgba(196,181,253,0.6);text-decoration:none;">Anxiety Guide</a>
           <a href="/blog/depression-treatment-support" style="color:rgba(196,181,253,0.6);text-decoration:none;">Depression Guide</a>
           <a href="/blog/grief-support-healing" style="color:rgba(196,181,253,0.6);text-decoration:none;">Grief Support</a>
+          <a href="/blog/panic-attacks-understanding" style="color:rgba(196,181,253,0.6);text-decoration:none;">Panic Attacks Guide</a>
+          <a href="/blog/meditation-mindfulness-guide" style="color:rgba(196,181,253,0.6);text-decoration:none;">Meditation Guide</a>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <a href="/crisis-support" style="color:rgba(196,181,253,0.6);text-decoration:none;">Crisis Support</a>
@@ -279,10 +288,26 @@ try {
     process.exit(0);
   }
 
-  // Replace the empty root div with full static content
+  // Replace the root div — which in the real build is NOT empty, it contains
+  // the #app-shell loading-spinner markup (see index.html) — with the full
+  // static content. A naive `<div id="root"></div>` match never fires against
+  // the actual built output, which silently no-ops this entire script.
+  // The root div is the last thing before </body> in both the source
+  // index.html and the Vite build output, so anchor on that boundary rather
+  // than on the following <script> tag (Vite relocates/rewrites script tags).
+  const rootDivPattern = /<div id="root">[\s\S]*?<\/div>\s*(<\/body>)/;
+
+  if (!rootDivPattern.test(html)) {
+    throw new Error(
+      'Could not locate <div id="root">...</div> block in dist/index.html — ' +
+      'the build output structure may have changed. Aborting without writing ' +
+      'to avoid silently producing an unchanged file.'
+    );
+  }
+
   html = html.replace(
-    /<div id="root"><\/div>/,
-    STATIC_HTML
+    rootDivPattern,
+    `${STATIC_HTML}\n  $1`
   );
 
   // Remove old MutationObserver script if present
@@ -290,6 +315,10 @@ try {
     /<script>\s*\/\/ Hide static shell[\s\S]*?<\/script>/,
     ''
   );
+
+  if (!html.includes('STATIC_INJECTION_MARKER')) {
+    throw new Error('Replacement ran but STATIC_INJECTION_MARKER is missing from the result — aborting write.');
+  }
 
   writeFileSync(distIndex, html, 'utf-8');
 

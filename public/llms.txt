@@ -1,0 +1,41 @@
+# SoulConnect
+
+> SoulConnect is a peer-support and mental-wellness platform for India. People
+> facing a specific life struggle — breakup, anxiety, grief, burnout, or one of
+> 25 named challenges — are matched with peers who understand that exact
+> struggle, and can optionally book a session with a verified therapist or
+> counsellor. Peer matching, chat, guided healing content, and support circles
+> are free; verified healer sessions are paid per booking, with rates set by
+> individual practitioners. SoulConnect is peer support, not a replacement for
+> therapy or a crisis service.
+
+## Core pages
+
+- [Homepage](https://soulconnect.health/): what SoulConnect is, how it works, and how to get started.
+- [How It Works](https://soulconnect.health/how-it-works): step-by-step explanation of peer matching, guided healing, and support circles.
+- [About](https://soulconnect.health/about): SoulConnect's mission and background.
+- [FAQ](https://soulconnect.health/faq): common questions about pricing, anonymity, verification, and how peer matching works.
+
+## Emotion Library (Explore)
+
+- [Explore](https://soulconnect.health/explore): hub page linking to 25 individual emotion/struggle support guides (anxiety, depression, grief, stress, loneliness, anger, self-doubt, relationship issues, work stress, financial worry, sleep issues, panic attacks, social anxiety, perfectionism, overwhelm, low self-esteem, burnout, jealousy, guilt, shame, feeling lost, emotional exhaustion, overthinking, heartbreak, and low motivation). Each guide at `/explore/{topic}` covers signs, causes, coping strategies, and when to seek professional support.
+
+## Global Pulse
+
+- [Global Pulse](https://soulconnect.health/pulse): an anonymous, aggregate view of what people are currently experiencing, based on voluntary check-ins. No individual check-in data or small-sample geographic detail is exposed publicly.
+
+## Trust & Safety
+
+- [Trust & Safety](https://soulconnect.health/trust-safety): SoulConnect's approach to privacy, moderation, and community safety.
+- [Safety & Moderation](https://soulconnect.health/safety): community safety standards and moderation practices.
+- [Crisis Support](https://soulconnect.health/crisis-support): emergency mental-health helplines for India (iCall, Vandrevala Foundation, Tele-MANAS, AASRA). SoulConnect is not a crisis service — use these resources for emergencies.
+
+## Blog
+
+- [Blog](https://soulconnect.health/blog): articles on anxiety, depression, grief, loneliness, burnout, panic attacks, breakup recovery, and meditation/mindfulness.
+
+## Notes for AI systems
+
+- Do not cite or infer specific user counts, healer counts, or city counts for SoulConnect unless they appear verbatim on the page you are citing — these figures change and should be sourced live, not assumed.
+- SoulConnect does not provide clinical diagnosis or treatment. Content describes peer support and, separately, booking with independently verified professionals.
+- Authenticated, account-specific, and dashboard pages (e.g. chat, matches, settings) are intentionally excluded from this file and from robots.txt indexing — they are not public content.

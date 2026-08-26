@@ -5,233 +5,102 @@
  * Each page includes proper SEO metadata, OpenGraph tags, and Twitter cards.
  *
  * FLOW:
- * 1. Import emotions config from dist/data/emotions.ts (compiled to JS)
+ * 1. Import the real emotion content from src/data/emotionContentLibrary.ts
+ *    (the same source the live React app renders from) so this prerender
+ *    list can never drift from what actually exists on the site.
  * 2. Read production index.html from dist/
  * 3. For each emotion:
  *    - Create directory: dist/explore/{slug}/
  *    - Create file: dist/explore/{slug}/index.html
- *    - Inject emotion-specific metadata in <head>
+ *    - Strip the template's existing title/canonical/description/keywords/
+ *      OG/Twitter tags, then inject emotion-specific metadata in <head>
  *    - Preserve root div and app scripts
  * 4. Log results and statistics
  *
  * PRODUCTION URLs: https://soulconnect.health/explore/{slug}
  * LOCAL TESTING: Use localhost:5173/explore/{slug}
+ *
+ * NOTE ON THE .ts IMPORT: Node (v22.6+/23.6+, default-on in later v24.x)
+ * supports importing TypeScript files with only type-erasable syntax via
+ * `--experimental-strip-types`. emotionContentLibrary.ts has no enum/
+ * namespace/parameter-property usage, so it qualifies. The npm build script
+ * below passes the flag explicitly rather than relying on a given Node
+ * version's default, since the deploy environment's exact Node version
+ * isn't guaranteed.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
-import { resolve, dirname, join } from 'path';
+import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { emotionContentLibrary } from '../src/data/emotionContentLibrary.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, '../dist');
 const distIndex = resolve(distDir, 'index.html');
 
 /**
- * Emotions configuration - manually defined here to avoid import issues
- * Keep in sync with src/data/emotions.ts
+ * Derive the prerender list directly from the real content library —
+ * the single source of truth also used by metadata.js and the live
+ * ExploreEmotionDetail page. Do not hand-maintain a parallel copy here.
  */
-const emotions = [
-  {
-    slug: 'anxiety',
-    title: 'Anxiety Support Community | Connect & Heal',
-    description: 'Find peer support for anxiety, panic attacks, and worry. Connect with people experiencing similar struggles and discover evidence-based coping strategies on SoulConnect.',
-    keywords: ['anxiety support', 'anxiety disorder', 'manage anxiety', 'anxiety help', 'stress relief'],
-    image: '/og/anxiety.jpg',
-    color: '#7C3AED'
-  },
-  {
-    slug: 'depression',
-    title: 'Depression Support & Peer Counseling | SoulConnect',
-    description: 'Connect with others experiencing depression. Access peer support, healing resources, and verified therapists to help you through depressive episodes on SoulConnect.',
-    keywords: ['depression support', 'depression help', 'manage depression', 'depression treatment', 'mental health'],
-    image: '/og/depression.jpg',
-    color: '#8B5CF6'
-  },
-  {
-    slug: 'grief',
-    title: 'Grief Support & Loss Counseling | Healing Community',
-    description: 'Navigate grief and loss with compassionate peer support. Share your feelings about losing a loved one and heal together with others who understand your pain.',
-    keywords: ['grief support', 'bereavement counseling', 'loss support', 'death of loved one', 'grief healing'],
-    image: '/og/grief.jpg',
-    color: '#A855F7'
-  },
-  {
-    slug: 'stress',
-    title: 'Stress Management & Relief | Peer Support Platform',
-    description: 'Manage overwhelming stress with peer support and coping techniques. Connect with others facing similar pressures and find sustainable relief strategies.',
-    keywords: ['stress management', 'stress relief', 'cope with stress', 'stress support', 'anxiety management'],
-    image: '/og/stress.jpg',
-    color: '#A855F7'
-  },
-  {
-    slug: 'loneliness',
-    title: 'Loneliness Support & Social Connection | SoulConnect',
-    description: 'Combat loneliness with a supportive peer community. Find meaningful connections and discover ways to build lasting relationships and combat social isolation.',
-    keywords: ['loneliness support', 'social isolation', 'connect with others', 'overcome loneliness', 'make friends'],
-    image: '/og/loneliness.jpg',
-    color: '#7C3AED'
-  },
-  {
-    slug: 'anger',
-    title: 'Anger Management Support & Emotional Control | SoulConnect',
-    description: 'Develop healthy ways to manage anger and frustration. Connect with peers and learn evidence-based techniques for emotional regulation and impulse control.',
-    keywords: ['anger management', 'control anger', 'anger support', 'emotional regulation', 'frustration management'],
-    image: '/og/anger.jpg',
-    color: '#EC4899'
-  },
-  {
-    slug: 'self-doubt',
-    title: 'Self-Doubt Support & Confidence Building | Peer Help',
-    description: 'Overcome self-doubt and build confidence with peer support. Connect with others and develop a healthier relationship with self-esteem.',
-    keywords: ['self-doubt support', 'lack of confidence', 'build confidence', 'self-esteem', 'self-worth'],
-    image: '/og/self-doubt.jpg',
-    color: '#8B5CF6'
-  },
-  {
-    slug: 'relationship-issues',
-    title: 'Relationship Support & Communication Help | SoulConnect',
-    description: 'Improve relationships with peer guidance and communication strategies. Connect with others navigating similar challenges in marriage, dating, or partnerships.',
-    keywords: ['relationship support', 'marriage counseling', 'dating advice', 'communication skills', 'relationship help'],
-    image: '/og/relationship-issues.jpg',
-    color: '#EC4899'
-  },
-  {
-    slug: 'work-stress',
-    title: 'Work Stress & Career Support | Professional Wellness',
-    description: 'Manage work-related stress and career challenges. Find peer support from professionals dealing with similar workplace issues and burnout.',
-    keywords: ['work stress', 'job stress', 'career support', 'workplace anxiety', 'professional stress'],
-    image: '/og/work-stress.jpg',
-    color: '#F97316'
-  },
-  {
-    slug: 'financial-worry',
-    title: 'Financial Stress Support & Money Anxiety Help | SoulConnect',
-    description: 'Manage financial anxiety and money worries with peer support. Connect with others navigating debt, savings, and economic stress.',
-    keywords: ['financial stress', 'money anxiety', 'financial help', 'debt support', 'money management'],
-    image: '/og/financial-worry.jpg',
-    color: '#10B981'
-  },
-  {
-    slug: 'sleep-issues',
-    title: 'Sleep Support & Insomnia Help | Better Sleep Community',
-    description: 'Overcome insomnia and sleep problems with peer support. Discover sleep strategies and connect with others dealing with rest disturbances.',
-    keywords: ['sleep support', 'insomnia help', 'sleep problems', 'sleep anxiety', 'sleep disorders'],
-    image: '/og/sleep-issues.jpg',
-    color: '#06B6D4'
-  },
-  {
-    slug: 'panic-attacks',
-    title: 'Panic Attack Support & Management | SoulConnect',
-    description: 'Learn to manage panic attacks with peer support and coping strategies. Connect with others who understand the fear and physical symptoms of panic.',
-    keywords: ['panic attacks', 'panic disorder', 'panic support', 'anxiety attacks', 'cope with panic'],
-    image: '/og/panic-attacks.jpg',
-    color: '#EF4444'
-  },
-  {
-    slug: 'social-anxiety',
-    title: 'Social Anxiety Support & Confidence | Peer Community',
-    description: 'Overcome social anxiety with supportive peers. Connect with others who fear social situations and learn gradual exposure techniques together.',
-    keywords: ['social anxiety', 'social phobia', 'anxiety in social situations', 'shyness support', 'social confidence'],
-    image: '/og/social-anxiety.jpg',
-    color: '#7C3AED'
-  },
-  {
-    slug: 'perfectionism',
-    title: 'Perfectionism Support & Balance | Breaking Free',
-    description: 'Overcome perfectionism and achieve balance. Connect with peers and learn to embrace imperfection and self-compassion.',
-    keywords: ['perfectionism support', 'perfectionist tendencies', 'performance anxiety', 'self-compassion', 'overcomplexity'],
-    image: '/og/perfectionism.jpg',
-    color: '#3B82F6'
-  },
-  {
-    slug: 'overwhelm',
-    title: 'Overwhelm Support & Coping Strategies | SoulConnect',
-    description: 'Manage feeling overwhelmed with practical peer support. Learn to prioritize and regain control when everything feels like too much.',
-    keywords: ['overwhelm support', 'feel overwhelmed', 'stress management', 'coping strategies', 'too much pressure'],
-    image: '/og/overwhelm.jpg',
-    color: '#F59E0B'
-  },
-  {
-    slug: 'low-self-esteem',
-    title: 'Low Self-Esteem Support & Confidence Building | SoulConnect',
-    description: 'Build self-esteem with peer support and evidence-based strategies. Connect with others working on self-worth and positive self-image.',
-    keywords: ['low self-esteem', 'build self-esteem', 'self-worth', 'confidence building', 'self-image'],
-    image: '/og/low-self-esteem.jpg',
-    color: '#8B5CF6'
-  },
-  {
-    slug: 'burnout',
-    title: 'Burnout Recovery & Prevention | Wellness Support',
-    description: 'Recover from professional burnout with peer guidance. Learn sustainable recovery strategies and reconnect with purpose and energy.',
-    keywords: ['burnout support', 'burnout recovery', 'work exhaustion', 'prevent burnout', 'emotional exhaustion'],
-    image: '/og/burnout.jpg',
-    color: '#F59E0B'
-  },
-  {
-    slug: 'jealousy',
-    title: 'Jealousy Support & Secure Attachment | SoulConnect',
-    description: 'Manage jealousy in relationships with peer support. Learn to address insecurity and build trust with compassion.',
-    keywords: ['jealousy support', 'manage jealousy', 'relationship jealousy', 'insecurity', 'trust in relationships'],
-    image: '/og/jealousy.jpg',
-    color: '#EC4899'
-  },
-  {
-    slug: 'guilt',
-    title: 'Guilt Support & Emotional Processing | Healing',
-    description: 'Process guilt and regret with compassionate peer support. Learn to forgive yourself and move forward with healing.',
-    keywords: ['guilt support', 'manage guilt', 'emotional guilt', 'forgive yourself', 'guilt processing'],
-    image: '/og/guilt.jpg',
-    color: '#8B5CF6'
-  },
-  {
-    slug: 'shame',
-    title: 'Shame Support & Self-Compassion | SoulConnect',
-    description: 'Overcome shame with peer support and self-compassion strategies. Connect with others and heal from shame-based thinking patterns.',
-    keywords: ['shame support', 'manage shame', 'shame resilience', 'self-compassion', 'shame healing'],
-    image: '/og/shame.jpg',
-    color: '#7C3AED'
-  },
-  {
-    slug: 'trauma',
-    title: 'Trauma Support & PTSD Help | Healing Community',
-    description: 'Process trauma with supportive peers and professional guidance. Connect with others on healing journeys and access verified trauma-informed therapists.',
-    keywords: ['trauma support', 'PTSD help', 'trauma healing', 'post-traumatic stress', 'trauma recovery'],
-    image: '/og/trauma.jpg',
-    color: '#EF4444'
-  },
-  {
-    slug: 'addiction',
-    title: 'Addiction Support & Recovery | Peer Community',
-    description: 'Find peer support for addiction recovery. Connect with others in recovery journeys and access verified addiction counselors and support resources.',
-    keywords: ['addiction support', 'addiction recovery', 'substance abuse help', 'recovery community', 'rehab support'],
-    image: '/og/addiction.jpg',
-    color: '#06B6D4'
-  },
-  {
-    slug: 'body-image',
-    title: 'Body Image Support & Self-Acceptance | SoulConnect',
-    description: 'Build a healthy relationship with your body with peer support. Connect with others working on body acceptance and intuitive living.',
-    keywords: ['body image support', 'body confidence', 'eating disorder support', 'self-acceptance', 'body positivity'],
-    image: '/og/body-image.jpg',
-    color: '#EC4899'
-  },
-  {
-    slug: 'imposter-syndrome',
-    title: 'Imposter Syndrome Support & Confidence | Career Help',
-    description: 'Overcome imposter syndrome with peer validation and strategies. Connect with high-achievers sharing similar self-doubt despite their success.',
-    keywords: ['imposter syndrome', 'imposter feelings', 'overcome self-doubt', 'career confidence', 'achievement anxiety'],
-    image: '/og/imposter-syndrome.jpg',
-    color: '#3B82F6'
-  },
-  {
-    slug: 'purpose-meaning',
-    title: 'Life Purpose & Meaning Support | Wellness Community',
-    description: 'Discover life purpose and meaning with peer exploration. Connect with others seeking direction and fulfillment in their lives.',
-    keywords: ['life purpose', 'find meaning', 'existential questions', 'life direction', 'personal fulfillment'],
-    image: '/og/purpose-meaning.jpg',
-    color: '#06B6D4'
-  }
-];
+const emotions = emotionContentLibrary.map((e) => ({
+  slug: e.slug,
+  title: e.seo.title.includes('SoulConnect') ? e.seo.title : `${e.seo.title} | SoulConnect`,
+  description: e.seo.description,
+  keywords: e.seo.keywords,
+  image: `/og/${e.slug}.jpg`,
+  color: '#7C3AED',
+  displayName: e.displayName,
+  heroSubtitle: e.hero?.subtitle || '',
+  summary: e.summary || '',
+  tips: (e.tips || []).slice(0, 3),
+}));
+
+/**
+ * A tiny per-page content block (H1 + real summary/tips text from
+ * emotionContentLibrary.ts) so non-JS crawlers see genuine, page-specific
+ * body content for this emotion rather than only the generic homepage
+ * shell that inject-static.js already baked into the dist/index.html
+ * template this script reuses. React's createRoot still overwrites all of
+ * #root on mount, same as it already does for the homepage shell, so this
+ * has no effect on the real rendered app.
+ */
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// Same as escapeHtml plus quote-escaping, for interpolation inside an
+// HTML attribute value (content="...") rather than a text node — without
+// this, a " in emotion.title/description/keywords breaks out of the
+// attribute and can inject an arbitrary tag into every prerendered page's
+// <head>. Current data has no such characters, but the content source
+// (emotionContentLibrary.ts) is ordinary marketing copy edited by hand,
+// not a trust boundary this script should rely on staying quote-free.
+function escapeAttr(str) {
+  return escapeHtml(str).replace(/"/g, '&quot;');
+}
+
+function generatePageContent(emotion, baseUrl) {
+  const tipsHtml = emotion.tips.length
+    ? `<ul style="text-align:left;max-width:560px;margin:0 auto;padding-left:20px;color:rgba(196,181,253,0.75);line-height:1.8;">${emotion.tips
+        .map((t) => `<li>${escapeHtml(t)}</li>`)
+        .join('')}</ul>`
+    : '';
+
+  return `
+  <section style="max-width:700px;margin:0 auto;padding:56px 24px 32px;text-align:center;">
+    <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#ede9fe;margin-bottom:16px;">${escapeHtml(
+      emotion.displayName
+    )}: Support &amp; Healing</h1>
+    ${emotion.heroSubtitle ? `<p style="font-size:1.05rem;color:rgba(196,181,253,0.8);line-height:1.7;margin-bottom:20px;">${escapeHtml(emotion.heroSubtitle)}</p>` : ''}
+    ${emotion.summary ? `<p style="font-size:1rem;color:rgba(196,181,253,0.7);line-height:1.75;margin-bottom:24px;">${escapeHtml(emotion.summary)}</p>` : ''}
+    ${tipsHtml}
+    <p style="margin-top:28px;"><a href="${baseUrl}/explore/${emotion.slug}" style="color:#a78bfa;font-weight:600;text-decoration:none;">Get peer support for ${escapeHtml(emotion.displayName.toLowerCase())} &rarr;</a></p>
+  </section>`;
+}
 
 /**
  * Determine the base URL for social media previews
@@ -251,16 +120,20 @@ function generateMetaHead(emotion, baseUrl) {
   const canonicalUrl = `${baseUrl}/explore/${emotion.slug}`;
   const ogImageUrl = `${baseUrl}${emotion.image}`;
 
+  const safeTitle = escapeAttr(emotion.title);
+  const safeDescription = escapeAttr(emotion.description);
+  const safeKeywords = escapeAttr(emotion.keywords.join(', '));
+
   return `
     <!-- Emotion-Specific Metadata (Prerendered) -->
-    <title>${emotion.title} | SoulConnect</title>
-    <meta name="description" content="${emotion.description}">
-    <meta name="keywords" content="${emotion.keywords.join(', ')}">
+    <title>${escapeHtml(emotion.title)}</title>
+    <meta name="description" content="${safeDescription}">
+    <meta name="keywords" content="${safeKeywords}">
     <link rel="canonical" href="${canonicalUrl}">
 
     <!-- Open Graph Tags -->
-    <meta property="og:title" content="${emotion.title}">
-    <meta property="og:description" content="${emotion.description}">
+    <meta property="og:title" content="${safeTitle}">
+    <meta property="og:description" content="${safeDescription}">
     <meta property="og:image" content="${ogImageUrl}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="${canonicalUrl}">
@@ -268,8 +141,8 @@ function generateMetaHead(emotion, baseUrl) {
 
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="${emotion.title}">
-    <meta name="twitter:description" content="${emotion.description}">
+    <meta name="twitter:title" content="${safeTitle}">
+    <meta name="twitter:description" content="${safeDescription}">
     <meta name="twitter:image" content="${ogImageUrl}">
     <meta name="twitter:site" content="@SoulConnect">
 
@@ -297,7 +170,7 @@ function generateMetaHead(emotion, baseUrl) {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "${emotion.title.replace(' | SoulConnect', '')}",
+          "name": ${JSON.stringify(emotion.title.replace(' | SoulConnect', ''))},
           "item": "${canonicalUrl}"
         }
       ]
@@ -343,9 +216,29 @@ async function generateEmotionPages() {
         // Generate metadata head
         const metaHead = generateMetaHead(emotion, baseUrl);
 
-        // Prepare emotion page HTML
-        // First remove any existing title tag to avoid duplicates
-        let emotionHtml = indexHtml.replace(/<title>.*?<\/title>/s, '');
+        // Prepare emotion page HTML.
+        // Strip every tag the template already defines that we're about to
+        // inject a replacement for — title, canonical, description, keywords,
+        // and OG/Twitter — so the emotion page ends up with exactly one of
+        // each instead of two conflicting copies (the previous version only
+        // stripped <title>, which left a duplicate, conflicting canonical on
+        // every prerendered explore page).
+        let emotionHtml = indexHtml
+          .replace(/<title>.*?<\/title>\s*\n?/s, '')
+          .replace(/<link rel="canonical"[^>]*>\s*\n?/, '')
+          .replace(/<meta name="description"[^>]*>\s*\n?/, '')
+          .replace(/<meta name="keywords"[^>]*>\s*\n?/, '')
+          .replace(/<meta property="og:title"[^>]*>\s*\n?/, '')
+          .replace(/<meta property="og:description"[^>]*>\s*\n?/, '')
+          .replace(/<meta property="og:url"[^>]*>\s*\n?/, '')
+          .replace(/<meta property="og:image"[^>]*>\s*\n?/, '')
+          .replace(/<meta property="og:image:width"[^>]*>\s*\n?/, '')
+          .replace(/<meta property="og:image:height"[^>]*>\s*\n?/, '')
+          .replace(/<meta property="og:image:alt"[^>]*>\s*\n?/, '')
+          .replace(/<meta name="twitter:card"[^>]*>\s*\n?/, '')
+          .replace(/<meta name="twitter:title"[^>]*>\s*\n?/, '')
+          .replace(/<meta name="twitter:description"[^>]*>\s*\n?/, '')
+          .replace(/<meta name="twitter:image"[^>]*>\s*\n?/, '');
 
         // Insert metadata before closing </head> tag
         emotionHtml = emotionHtml.replace(
@@ -353,10 +246,27 @@ async function generateEmotionPages() {
           `  ${metaHead}\n  </head>`
         );
 
-        // Add data attribute to root for client-side React to identify emotion page
+        // The reused template body (from inject-static.js's homepage shell)
+        // has its own <h1>You Are Not Alone in This.</h1>. Demote it to <h2>
+        // on this generated page only, so the page-specific <h1> we inject
+        // below (the real, unique heading for this emotion) is the page's
+        // only H1 — avoiding a duplicate-H1 issue. The homepage's own
+        // dist/index.html is untouched since this script only ever writes
+        // to dist/explore/{slug}/index.html.
+        emotionHtml = emotionHtml.replace(
+          /<h1 style="font-size:clamp\(2\.2rem,5vw,3\.8rem\)[^>]*>[\s\S]*?<\/h1>/,
+          (match) => `<h2${match.slice(3, -5)}</h2>`
+        );
+
+        // Add data attribute to root for client-side React to identify emotion page,
+        // and inject real per-emotion body content right inside #root so non-JS
+        // crawlers see genuine page-specific text, not just the generic homepage
+        // shell. React's createRoot still replaces all of #root's contents on
+        // mount, so this is purely additive for crawlers/pre-hydration and has
+        // no effect on the live rendered app.
         emotionHtml = emotionHtml.replace(
           '<div id="root">',
-          `<div id="root" data-emotion-slug="${emotion.slug}">`
+          `<div id="root" data-emotion-slug="${emotion.slug}">\n${generatePageContent(emotion, baseUrl)}`
         );
 
         // Write emotion page

@@ -14,6 +14,9 @@ Disallow: /healer-dashboard
 Disallow: /settings
 Disallow: /notifications
 Disallow: /messages
+Disallow: /login
+Disallow: /signup
+Disallow: /register
 
 # Block API endpoints
 Disallow: /api/

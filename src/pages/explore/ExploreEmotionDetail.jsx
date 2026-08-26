@@ -3,6 +3,22 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowLeft, Home } from 'lucide-react';
 import emotionContentLibrary from '../../data/emotionContentLibrary';
+import { getArticleBySlug } from '../../data/articles';
+
+// Reverse of BlogDetail.jsx's ARTICLE_TO_EMOTION_SLUG map — light
+// cross-linking from an emotion page to its one matching blog article,
+// using the same category/tags relationship, not new content. Only the
+// slug is hardcoded; the title is always read live from articles.js so
+// the two can't drift out of sync.
+const EMOTION_TO_ARTICLE_SLUG = {
+  anxiety: 'anxiety-management-tips',
+  depression: 'depression-treatment-support',
+  grief: 'grief-support-healing',
+  loneliness: 'overcoming-loneliness',
+  burnout: 'burnout-recovery-strategies',
+  'panic-attacks': 'panic-attacks-understanding',
+  heartbreak: 'breakup-recovery-healing',
+};
 
 export default function ExploreEmotionDetail() {
   const { emotionSlug } = useParams();
@@ -12,6 +28,9 @@ export default function ExploreEmotionDetail() {
   const emotion = useMemo(() => {
     return emotionContentLibrary.find((e) => e.slug === emotionSlug);
   }, [emotionSlug]);
+
+  const relatedArticleSlug = EMOTION_TO_ARTICLE_SLUG[emotionSlug];
+  const relatedArticle = relatedArticleSlug ? getArticleBySlug(relatedArticleSlug) : null;
 
   // If emotion not found, redirect to /explore
   if (!emotion) {
@@ -546,6 +565,45 @@ export default function ExploreEmotionDetail() {
                   );
                 })}
               </div>
+            </motion.div>
+          )}
+
+          {/* Related Reading (blog cross-link) */}
+          {relatedArticle && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.82 }}
+              style={{ marginBottom: '48px' }}
+            >
+              <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#FFF', margin: '0 0 24px 0' }}>Related Reading</h2>
+              <button
+                onClick={() => navigate(`/blog/${relatedArticle.slug}`)}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '20px',
+                  background: 'rgba(34, 18, 73, 0.72)',
+                  border: '1px solid rgba(124, 58, 237, 0.3)',
+                  borderRadius: '12px',
+                  color: '#A78BFA',
+                  cursor: 'pointer',
+                  fontSize: '15px',
+                  fontWeight: '600',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(124, 58, 237, 0.2)';
+                  e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(34, 18, 73, 0.72)';
+                  e.currentTarget.style.borderColor = 'rgba(124, 58, 237, 0.3)';
+                }}
+              >
+                {relatedArticle.title} →
+              </button>
             </motion.div>
           )}
 

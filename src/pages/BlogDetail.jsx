@@ -6,10 +6,24 @@ import Footer from '../components/Footer';
 const P = '#A78BFA';
 const BG = 'linear-gradient(155deg,#06011A 0%,#130530 40%,#1E0848 70%,#06011A 100%)';
 
+// Light cross-linking from blog articles to the matching /explore emotion
+// page, keyed off each article's existing category/tags — not new content,
+// just connecting what's already there.
+const ARTICLE_TO_EMOTION_SLUG = {
+  'anxiety-management-tips': { slug: 'anxiety', name: 'Anxiety' },
+  'depression-treatment-support': { slug: 'depression', name: 'Depression' },
+  'grief-support-healing': { slug: 'grief', name: 'Grief' },
+  'overcoming-loneliness': { slug: 'loneliness', name: 'Loneliness' },
+  'burnout-recovery-strategies': { slug: 'burnout', name: 'Burnout' },
+  'panic-attacks-understanding': { slug: 'panic-attacks', name: 'Panic Attacks' },
+  'breakup-recovery-healing': { slug: 'heartbreak', name: 'Heartbreak' },
+};
+
 export default function BlogDetail() {
   const { slug } = useParams();
   const article = getArticleBySlug(slug);
   const relatedArticles = article ? getRelatedArticles(article.id) : [];
+  const relatedEmotion = article ? ARTICLE_TO_EMOTION_SLUG[article.slug] : null;
 
   useEffect(() => {
     if (article) {
@@ -185,6 +199,14 @@ export default function BlogDetail() {
             }}>
               Get Support
             </Link>
+            {relatedEmotion && (
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginTop: 16 }}>
+                Want to go deeper? Visit our{' '}
+                <Link to={`/explore/${relatedEmotion.slug}`} style={{ color: P, fontWeight: 600, textDecoration: 'none' }}>
+                  {relatedEmotion.name} support guide
+                </Link>.
+              </p>
+            )}
           </div>
         </article>
 

@@ -142,7 +142,12 @@
     }
     </script>
 
-    <!-- ── Structured Data: WebSite (enables sitelinks search) ── -->
+    <!-- ── Structured Data: WebSite ── -->
+    <!-- No SearchAction: /healers is an authenticated, dashboard-tier route
+         (see App.jsx DASHBOARD_PATHS) and does not implement a ?q= query
+         param, so a sitelinks-search-box target would promise functionality
+         that doesn't exist. Re-add only once a real public search page with
+         working ?q= support exists. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -150,14 +155,22 @@
       "name": "SoulConnect",
       "url": "https://soulconnect.health",
       "description": "India's peer support platform for anxiety, breakups, grief, depression and mental wellness.",
-      "inLanguage": "en-IN",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://soulconnect.health/healers?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
+      "inLanguage": "en-IN"
+    }
+    </script>
+
+    <!-- ── Structured Data: WebPage (homepage) ── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "url": "https://soulconnect.health/",
+      "name": "SoulConnect | You Don't Have To Go Through It Alone",
+      "description": "Find support, connection, healing circles, wellness tools, and community for anxiety, loneliness, burnout, grief, and personal growth. Building India's community-driven healing platform.",
+      "isPartOf": {
+        "@type": "WebSite",
+        "url": "https://soulconnect.health",
+        "name": "SoulConnect"
       }
     }
     </script>
@@ -293,7 +306,7 @@
             "@type": "Service",
             "name": "Peer Support Circles",
             "description": "Anonymous group support sessions for grief, anxiety, breakups and more",
-            "url": "https://soulconnect.health/meetups",
+            "url": "https://soulconnect.health/how-it-works",
             "provider": { "@type": "Organization", "name": "SoulConnect" },
             "areaServed": "India",
             "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
@@ -315,7 +328,11 @@
     <!-- ── Preload fonts ── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" />
+    <!-- The preload URL must match the stylesheet URL exactly, or the
+         preload warms a resource that's never actually used and does
+         nothing for LCP/FCP. Previously these two URLs requested different
+         weight subsets. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <style>

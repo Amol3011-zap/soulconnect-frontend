@@ -209,54 +209,6 @@ function removeFAQSchema() {
 }
 
 /**
- * Add WebPage schema for emotion detail pages
- */
-function addWebPageSchema() {
-  removeWebPageSchema();
-
-  const pathname = window.location.pathname;
-  const emotionSlug = pathname.split('/explore/')[1];
-  const emotionName = emotionSlug.charAt(0).toUpperCase() + emotionSlug.slice(1);
-
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    'url': `https://soulconnect.health${pathname}`,
-    'name': `${emotionName} Support | SoulConnect`,
-    'description': `Learn about ${emotionName} - understanding symptoms, coping strategies, and how to get support on SoulConnect's emotion library.`,
-    'publisher': {
-      '@type': 'Organization',
-      'name': 'SoulConnect',
-      'logo': {
-        '@type': 'ImageObject',
-        'url': 'https://soulconnect.health/logo.png'
-      }
-    },
-    'isPartOf': {
-      '@type': 'WebSite',
-      'url': 'https://soulconnect.health',
-      'name': 'SoulConnect'
-    }
-  };
-
-  const script = document.createElement('script');
-  script.type = 'application/ld+json';
-  script.id = 'webpage-schema';
-  script.textContent = JSON.stringify(schema);
-  document.head.appendChild(script);
-}
-
-/**
- * Remove WebPage schema
- */
-function removeWebPageSchema() {
-  const script = document.querySelector('script#webpage-schema');
-  if (script) {
-    script.remove();
-  }
-}
-
-/**
  * Add BreadcrumbList schema for emotion detail pages
  */
 function addBreadcrumbSchema(emotionSlug) {
@@ -309,44 +261,3 @@ function removeBreadcrumbSchema() {
   }
 }
 
-/**
- * Add Organization schema for SoulConnect
- */
-function addOrganizationSchema() {
-  removeOrganizationSchema();
-
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    'name': 'SoulConnect',
-    'url': 'https://soulconnect.health',
-    'logo': 'https://soulconnect.health/logo.png',
-    'description': 'Peer support and mental health platform for anxiety, depression, grief, and emotional wellness in India',
-    'sameAs': [
-      'https://www.facebook.com/soulconnect',
-      'https://www.instagram.com/soulconnect',
-      'https://www.twitter.com/soulconnect'
-    ],
-    'contactPoint': {
-      '@type': 'ContactPoint',
-      'contactType': 'Customer Support',
-      'url': 'https://soulconnect.health/contact'
-    }
-  };
-
-  const script = document.createElement('script');
-  script.type = 'application/ld+json';
-  script.id = 'organization-schema';
-  script.textContent = JSON.stringify(schema);
-  document.head.appendChild(script);
-}
-
-/**
- * Remove Organization schema
- */
-function removeOrganizationSchema() {
-  const script = document.querySelector('script#organization-schema');
-  if (script) {
-    script.remove();
-  }
-}
