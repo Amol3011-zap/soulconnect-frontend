@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/inject-static.js && node --experimental-strip-types scripts/generate-emotion-pages.js && node scripts/generate-blog-pages.js",
+    "build": "vite build && node scripts/inject-static.js && node --experimental-strip-types scripts/generate-emotion-pages.js && node scripts/generate-blog-pages.js && node --experimental-strip-types scripts/generate-index-pages.js",
     "preview": "vite preview"
   },
   "engines": {
