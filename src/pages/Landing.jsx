@@ -917,7 +917,7 @@ export default function Landing() {
     {Icon:TrendingUp,title:'Soul Climate',           desc:'Track your mood'},
     {Icon:Leaf,      title:'Tiny Wins',              desc:'Small steps. Real progress.'},
     {Icon:UserRound, title:'Professional Healers',   desc:'Verified support'},
-    {Icon:GlobeIcon, title:'Global Pulse',           desc:'See the bigger picture'},
+    {Icon:GlobeIcon, title:'Global Pulse',           desc:'See the bigger picture', href:'/pulse'},
   ];
 
   return (
@@ -1545,29 +1545,45 @@ export default function Landing() {
         <div style={{maxWidth:1440, margin:'0 auto'}}>
           <div className="l-help-strip" style={{
             display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:16}}>
-            {HELPS.map(({Icon,title,desc},i)=>(
-              <div key={i} className="l-help-box" style={{
-                display:'flex', flexDirection:'column', alignItems:'center',
-                textAlign:'center', padding:'22px 14px',
-                background:'#FFFFFF', borderRadius:16,
-                border:'1px solid rgba(109,74,255,0.1)',
-                boxShadow:'0 4px 16px rgba(109,74,255,0.05)',
-                transition:'all .25s ease'}}>
-                <Icon size={26} strokeWidth={2} color={P} style={{marginBottom:8}}/>
-                <h3 style={{fontSize:13.5, fontWeight:800, color:DARK,
-                  margin:'0 0 4px 0', lineHeight:1.25}}>
-                  {title}
-                </h3>
-                <span style={{display:'inline-flex', alignItems:'center', gap:5}}>
-                  <span style={{width:4, height:4, borderRadius:'50%',
-                    background:P, display:'inline-block', flexShrink:0,
-                    animation:'pulse 2s ease-in-out infinite'}}/>
-                  <span style={{fontSize:10.5, fontWeight:700, color:P,
-                    letterSpacing:'0.04em'}}>Coming Soon</span>
-                </span>
-                <span style={{fontSize:11.5, color:'#6B7280', marginTop:2}}>{desc}</span>
-              </div>
-            ))}
+            {HELPS.map(({Icon,title,desc,href},i)=>{
+              const isLive = Boolean(href);
+              const Tag = isLive ? Link : 'div';
+              return (
+                <Tag key={i} {...(isLive ? {to:href} : {})} className="l-help-box" style={{
+                  display:'flex', flexDirection:'column', alignItems:'center',
+                  textAlign:'center', padding:'22px 14px',
+                  background:'#FFFFFF', borderRadius:16,
+                  border: isLive ? '1px solid rgba(52,195,143,0.25)' : '1px solid rgba(109,74,255,0.1)',
+                  boxShadow: isLive ? '0 4px 16px rgba(52,195,143,0.08)' : '0 4px 16px rgba(109,74,255,0.05)',
+                  transition:'all .25s ease',
+                  textDecoration:'none', color:'inherit', cursor: isLive ? 'pointer' : 'default',
+                }}>
+                  <Icon size={26} strokeWidth={2} color={isLive ? '#34C38F' : P} style={{marginBottom:8}}/>
+                  <h3 style={{fontSize:13.5, fontWeight:800, color:DARK,
+                    margin:'0 0 4px 0', lineHeight:1.25}}>
+                    {title}
+                  </h3>
+                  {isLive ? (
+                    <span style={{display:'inline-flex', alignItems:'center', gap:5}}>
+                      <span style={{width:4, height:4, borderRadius:'50%',
+                        background:'#34C38F', display:'inline-block', flexShrink:0,
+                        animation:'pulse 2s ease-in-out infinite'}}/>
+                      <span style={{fontSize:10.5, fontWeight:700, color:'#34C38F',
+                        letterSpacing:'0.04em'}}>Live now</span>
+                    </span>
+                  ) : (
+                    <span style={{display:'inline-flex', alignItems:'center', gap:5}}>
+                      <span style={{width:4, height:4, borderRadius:'50%',
+                        background:P, display:'inline-block', flexShrink:0,
+                        animation:'pulse 2s ease-in-out infinite'}}/>
+                      <span style={{fontSize:10.5, fontWeight:700, color:P,
+                        letterSpacing:'0.04em'}}>Coming Soon</span>
+                    </span>
+                  )}
+                  <span style={{fontSize:11.5, color:'#6B7280', marginTop:2}}>{desc}</span>
+                </Tag>
+              );
+            })}
           </div>
         </div>
       </section>

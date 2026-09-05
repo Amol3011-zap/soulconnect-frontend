@@ -180,8 +180,8 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
         ctx.beginPath();
         ctx.arc(jx, jy, r < 0.08 ? 1.6 : r < 0.3 ? 1.1 : 0.7, 0, Math.PI * 2);
         ctx.fillStyle = r < 0.08
-          ? 'rgba(224,214,255,0.95)'   // occasional brighter dot
-          : `rgba(196,181,253,${0.35 + r * 0.4})`;
+          ? 'rgba(148,140,190,0.85)'   // occasional brighter dot, still muted
+          : `rgba(110,118,160,${0.35 + r * 0.35})`;
         ctx.fill();
       }
     }
