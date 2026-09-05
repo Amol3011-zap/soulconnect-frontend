@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import WorldMapCanvas from './WorldMapCanvas';
+import Globe3D from './Globe3D';
 import { PROBLEMS } from '../../data/pulseExperienceData';
 
 function PulseMapStage({ problems, snapshot, selectedIso, onSelectCountry }) {
@@ -51,8 +51,7 @@ function PulseMapStage({ problems, snapshot, selectedIso, onSelectCountry }) {
         })}
       </div>
 
-      {/* The map itself — the hero element. Large, borderless stage rather
-          than a small rounded card, per design direction. */}
+      {/* The globe itself — the hero element. Large, borderless stage. */}
       <div
         className="pulse-map-canvas-wrap"
         style={{
@@ -66,7 +65,7 @@ function PulseMapStage({ problems, snapshot, selectedIso, onSelectCountry }) {
           overflow: 'hidden',
         }}
       >
-        <WorldMapCanvas
+        <Globe3D
           countries={snapshot.countries}
           mapPoints={snapshot.map}
           colors={snapshot.colors}

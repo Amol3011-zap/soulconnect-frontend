@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Users, BookOpen, TrendingUp, Leaf, UserRound, Globe as GlobeIcon } from 'lucide-react';
+import Globe3D from '../components/Pulse/Globe3D';
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    DESIGN TOKENS
@@ -18,6 +20,41 @@ const NAV_LINKS = [
   { label: 'Trust & Safety', href: '/trust-safety', isRoute: true },
   { label: 'Contact',      href: '/contact', isRoute: true  },
 ];
+
+/* Mock data for Global Pulse demo on landing page */
+const GLOBAL_PULSE_DATA = {
+  colors: {
+    anxiety: '#E879F9',
+    depression: '#A78BFA',
+    loneliness: '#60A5FA',
+    heartbreak: '#F472B6',
+    burnout: '#F59E0B',
+    grief: '#8B5CF6',
+    'relationship-issues': '#EC4899',
+    'work-stress': '#FBBF24',
+    other: '#A855F7',
+  },
+  countries: [
+    { code: 'IN', name: 'India', count_range: '100-499' },
+    { code: 'US', name: 'United States', count_range: '50-99' },
+    { code: 'GB', name: 'United Kingdom', count_range: '25-49' },
+    { code: 'CA', name: 'Canada', count_range: '10-24' },
+    { code: 'AU', name: 'Australia', count_range: '10-24' },
+    { code: 'BR', name: 'Brazil', count_range: '25-49' },
+    { code: 'DE', name: 'Germany', count_range: '10-24' },
+    { code: 'JP', name: 'Japan', count_range: '25-49' },
+  ],
+  map: [
+    { country_code: 'IN', count_range: '100-499', breakdown: { anxiety: 35, depression: 25, loneliness: 20, burnout: 15, other: 5 }},
+    { country_code: 'US', count_range: '50-99', breakdown: { anxiety: 30, depression: 28, heartbreak: 20, 'work-stress': 15, other: 7 }},
+    { country_code: 'GB', count_range: '25-49', breakdown: { depression: 35, anxiety: 25, loneliness: 25, grief: 10, other: 5 }},
+    { country_code: 'CA', count_range: '10-24', breakdown: { loneliness: 40, anxiety: 30, depression: 20, other: 10 }},
+    { country_code: 'AU', count_range: '10-24', breakdown: { anxiety: 35, burnout: 35, depression: 20, other: 10 }},
+    { country_code: 'BR', count_range: '25-49', breakdown: { heartbreak: 40, anxiety: 30, depression: 20, other: 10 }},
+    { country_code: 'DE', count_range: '10-24', breakdown: { 'work-stress': 45, anxiety: 30, depression: 15, other: 10 }},
+    { country_code: 'JP', count_range: '25-49', breakdown: { 'relationship-issues': 35, anxiety: 30, depression: 25, other: 10 }},
+  ],
+};
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    HERO SVG ILLUSTRATION
@@ -728,19 +765,11 @@ export default function Landing() {
     }
     .l-struggle-card:hover{transform:translateY(-12px);}
 
-    /* Help cards */
-    .l-help-card{
-      background:linear-gradient(145deg,#ffffff,#F7F4FF);
-      border-radius:24px;padding:32px 24px;
-      border:1.5px solid rgba(109,74,255,0.09);
-      box-shadow:0 4px 24px rgba(109,74,255,0.06);
-      transition:all .3s ease;
-      display:flex;flex-direction:column;min-height:220px;
-    }
-    .l-help-card:hover{
-      transform:translateY(-8px);
-      box-shadow:0 24px 60px rgba(109,74,255,0.16);
-      border-color:rgba(109,74,255,0.2);
+    /* Help strip boxes */
+    .l-help-box:hover{
+      transform:translateY(-4px);
+      box-shadow:0 12px 28px rgba(109,74,255,0.12);
+      border-color:rgba(109,74,255,0.22);
     }
 
     /* Vision feature tiles */
@@ -785,7 +814,16 @@ export default function Landing() {
       .l-hero-pills{justify-content:center!important;}
       .l-hero-btns{justify-content:center!important;}
       .l-struggle-grid{grid-template-columns:repeat(3,1fr)!important;}
-      .l-help-grid{grid-template-columns:repeat(3,1fr)!important;}
+      .l-help-strip{grid-template-columns:repeat(3,1fr)!important;row-gap:28px!important;}
+      .l-gp-row{grid-template-columns:1fr!important;gap:40px!important;}
+      .l-gp-row>div{min-width:0!important;}
+      .l-gp-row>div:first-child{order:1!important;align-items:center!important;text-align:center!important;}
+      .l-gp-row>div:first-child>div:first-child{max-width:100%!important;}
+      .l-gp-row>div:first-child>a{margin:0 auto!important;}
+      .l-gp-row>div:first-child>div:last-child{align-items:center!important;}
+      .l-gp-row>div:first-child>div:last-child>div:first-child{margin:0 auto!important;}
+      .l-gp-row>div:nth-child(2){order:2!important;}
+      .l-gp-row>div:last-child{order:3!important;justify-self:center!important;max-width:100%!important;width:100%!important;}
       .l-timeline-row{flex-direction:column!important;gap:28px!important;align-items:center!important;}
       .l-timeline-line{display:none!important;}
       .l-vision-inner{grid-template-columns:1fr!important;}
@@ -804,13 +842,16 @@ export default function Landing() {
     }
     @media(max-width:720px){
       .l-struggle-grid{grid-template-columns:repeat(2,1fr)!important;}
-      .l-help-grid{grid-template-columns:repeat(2,1fr)!important;}
+      .l-help-strip{grid-template-columns:repeat(2,1fr)!important;row-gap:28px!important;}
       .l-trust-row{flex-wrap:wrap!important;gap:18px!important;}
       .l-ft-bottom{flex-direction:column!important;align-items:center!important;gap:16px!important;}
       .l-ft-nav{flex-wrap:wrap!important;justify-content:center!important;}
     }
     @media(max-width:480px){
       .l-struggle-grid{grid-template-columns:repeat(2,1fr)!important;}
+      .l-help-strip{grid-template-columns:1fr!important;row-gap:14px!important;}
+      .l-gp-headline-break{display:none;}
+      .l-gp-headline{font-size:1.55rem!important;}
     }
 
     /* ── Values / "Building In Public" card grid ── */
@@ -871,12 +912,12 @@ export default function Landing() {
   ];
 
   const HELPS = [
-    {icon:'👥', grad:'135deg,rgba(109,74,255,0.18),rgba(167,139,250,0.12)', title:'Community\nMatching',  desc:'Find people who truly understand what you\'re going through.'},
-    {icon:'🫂', grad:'135deg,rgba(244,114,182,0.18),rgba(232,121,249,0.1)',  title:'Support\nCircles',    desc:'Join guided peer conversations and healing groups.'},
-    {icon:'📝', grad:'135deg,rgba(245,184,65,0.18),rgba(252,211,77,0.1)',    title:'Healing\nJournal',    desc:'Reflect, release, and understand yourself more deeply.'},
-    {icon:'📊', grad:'135deg,rgba(16,185,129,0.18),rgba(52,211,153,0.1)',    title:'Mood\nTracking',      desc:'Track your emotional journey and celebrate progress.'},
-    {icon:'🎯', grad:'135deg,rgba(59,130,246,0.18),rgba(99,102,241,0.1)',    title:'Guided\nChallenges',  desc:'Build healthy habits and routines step by step.'},
-    {icon:'🙏', grad:'135deg,rgba(124,58,237,0.18),rgba(109,74,255,0.1)',    title:'Wellness\nGuides',    desc:'Learn from trusted wellness frameworks and practices.'},
+    {Icon:Users,     title:'Meaningful Connections', desc:'Find people who understand'},
+    {Icon:BookOpen,  title:'Soul Stories',           desc:'Share. Relate. Heal.'},
+    {Icon:TrendingUp,title:'Soul Climate',           desc:'Track your mood'},
+    {Icon:Leaf,      title:'Tiny Wins',              desc:'Small steps. Real progress.'},
+    {Icon:UserRound, title:'Professional Healers',   desc:'Verified support'},
+    {Icon:GlobeIcon, title:'Global Pulse',           desc:'See the bigger picture'},
   ];
 
   return (
@@ -1103,60 +1144,190 @@ export default function Landing() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          SECTION 2 — WHAT ARE YOU STRUGGLING WITH
+          SECTION 2 — GLOBAL PULSE (3D Interactive Globe) — PREMIUM LIGHT THEME
       ══════════════════════════════════════════════════════════════════════ */}
-      <section id="struggling" style={{
-        background:'#fff',
-        padding:'120px 32px',
+      <section id="global-pulse" style={{
+        background:'#FFFFFF',
+        padding:'88px 32px 64px',
+        position:'relative',
+        overflow:'hidden',
       }}>
-        <div style={{maxWidth:1280, margin:'0 auto'}}>
-          <div style={{textAlign:'center', marginBottom:64}}>
-            <p style={{fontSize:12, fontWeight:700, color:P,
-              letterSpacing:'0.15em', textTransform:'uppercase', marginBottom:12}}>
-              YOU ARE NOT ALONE
-            </p>
-            <h2 style={{fontFamily:SF, fontSize:'clamp(2rem,3.2vw,52px)',
-              fontWeight:800, color:DARK, letterSpacing:'-0.028em', marginBottom:18}}>
-              What are you struggling with?
-            </h2>
-            <p style={{fontSize:17, color:'#6B7280', lineHeight:1.7, maxWidth:520, margin:'0 auto 24px'}}>
-              Thousands of people are on a similar journey. Find your people.
-            </p>
-            <div style={{width:60, height:4,
-              background:`linear-gradient(90deg,${P},${LAV})`,
-              borderRadius:99, margin:'0 auto'}}/>
-          </div>
+        {/* Soft atmospheric background glow behind the globe */}
+        <div style={{
+          position:'absolute',
+          top:'54%',
+          left:'50%',
+          transform:'translate(-50%, -50%)',
+          width:'1100px',
+          height:'1100px',
+          borderRadius:'50%',
+          background:'radial-gradient(circle, rgba(147,51,234,0.09) 0%, rgba(168,139,250,0.05) 35%, transparent 68%)',
+          pointerEvents:'none',
+          zIndex:0,
+        }}/>
 
-          <div className="l-struggle-grid" style={{
-            display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:20, marginBottom:44}}>
-            {CHALLENGES.map((c,i)=>(
-              <div key={i} className="l-struggle-card"
-                onMouseEnter={e=>{
-                  e.currentTarget.style.boxShadow=c.shadow;
-                  e.currentTarget.style.borderColor=c.border;
-                }}
-                onMouseLeave={e=>{
-                  e.currentTarget.style.boxShadow='0 4px 28px rgba(109,74,255,0.06)';
-                  e.currentTarget.style.borderColor='rgba(109,74,255,0.07)';
+        <div style={{maxWidth:1320, margin:'0 auto', position:'relative', zIndex:1}}>
+          {/* Main row: LEFT (headline + copy + CTA) | CENTER GLOBE | RIGHT */}
+          <div className="l-gp-row" style={{
+            display:'grid',
+            gridTemplateColumns:'1fr 1.5fr 1fr',
+            gap:24,
+            alignItems:'center',
+          }}>
+            {/* LEFT — Eyebrow, headline, copy, CTA, avatars (all together,
+                matching the reference's single left-column composition) */}
+            <div style={{display:'flex', flexDirection:'column', gap:20}}>
+              <div>
+                <p style={{fontSize:12, fontWeight:700, color:'#A78BFA',
+                  letterSpacing:'0.18em', textTransform:'uppercase', marginBottom:14}}>
+                  ◈ GLOBAL PULSE
+                </p>
+                <h2 className="l-gp-headline" style={{fontFamily:SF, fontSize:'clamp(1.6rem,2.6vw,2.6rem)',
+                  fontWeight:800, color:'#160B33', letterSpacing:'-0.02em', marginBottom:14,
+                  lineHeight:1.18,
                 }}>
-                <div style={{width:84, height:84, borderRadius:24,
-                  background:`radial-gradient(circle,${c.glow},transparent 72%)`,
-                  display:'flex', alignItems:'center', justifyContent:'center',
-                  fontSize:40, margin:'0 auto 18px',
-                  boxShadow:`0 0 28px ${c.glow}`,
-                  border:`1.5px solid ${c.border}`,
-                }}>
-                  {c.emoji}
-                </div>
-                <div style={{fontSize:14, fontWeight:800, color:DARK,
-                  lineHeight:1.4, whiteSpace:'pre-line'}}>{c.label}</div>
+                  Maybe what you're feeling<br className="l-gp-headline-break"/>{' '}
+                  <span style={{color:'#8B3DF0'}}>isn't only yours.</span>
+                </h2>
+                <p style={{fontSize:14.5, color:'#6B7280', lineHeight:1.75, margin:0, maxWidth:320}}>
+                  See anonymized emotional patterns from people around the world. Discover that your feelings are part of a bigger human story.
+                </p>
               </div>
-            ))}
-          </div>
 
-          <p style={{textAlign:'center', fontSize:16, color:P, fontWeight:600, fontStyle:'italic'}}>
-            If you've felt this — you belong here. 💜
-          </p>
+              <Link to="/pulse" style={{
+                display:'inline-flex',
+                alignItems:'center',
+                justifyContent:'center',
+                gap:8,
+                padding:'14px 26px',
+                borderRadius:24,
+                background:'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                color:'#FFFFFF',
+                fontSize:14,
+                fontWeight:600,
+                textDecoration:'none',
+                boxShadow:'0 8px 24px rgba(124,58,237,0.32)',
+                transition:'all 0.2s ease-out',
+                border:'none',
+                cursor:'pointer',
+                width:'fit-content',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 12px 32px rgba(124,58,237,0.42)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(124,58,237,0.32)';
+              }}>
+                Explore Global Pulse
+                <span>→</span>
+              </Link>
+
+              {/* Community avatars — abstract person icons, not photos:
+                  the page elsewhere promises "no fake testimonials", so
+                  these represent people without implying real member
+                  photos we don't have. */}
+              <div style={{display:'flex', alignItems:'center', gap:12}}>
+                <div style={{display:'flex'}}>
+                  {[1,2,3,4].map(i => (
+                    <div key={i} style={{
+                      width:34, height:34, borderRadius:'50%',
+                      background:`linear-gradient(135deg, hsl(${i*55+250},55%,68%), hsl(${i*55+280},55%,78%))`,
+                      border:'2px solid #FFFFFF',
+                      marginLeft: i > 1 ? -12 : 0,
+                      zIndex:10-i,
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                    }}>
+                      <UserRound size={16} strokeWidth={2} color="rgba(255,255,255,0.9)"/>
+                    </div>
+                  ))}
+                </div>
+                <span style={{fontSize:13, color:'#6B7280', lineHeight:1.4}}>Real people. Real feelings.<br/>A more connected world.</span>
+              </div>
+            </div>
+
+            {/* CENTER — 3D Globe, floating free (no card/border). Square
+                aspect so the sphere is never stretched/cropped by the
+                grid column's width. */}
+            <div style={{
+              position:'relative',
+              width:'100%',
+              display:'flex',
+              alignItems:'center',
+              justifyContent:'center',
+            }}>
+              <div style={{
+                position:'relative',
+                width:'min(clamp(240px, 34vw, 560px), 100%)',
+                height:'min(clamp(240px, 34vw, 560px), 100%)',
+                aspectRatio:'1/1',
+              }}>
+                <Globe3D
+                  colors={GLOBAL_PULSE_DATA.colors}
+                  lightTheme={true}
+                />
+              </div>
+            </div>
+
+            {/* RIGHT — Premium card, self-centered so it anchors to the
+                globe's vertical middle rather than stretching the full
+                grid row height */}
+            <div style={{ justifySelf:'end', alignSelf:'center' }}>
+              <div style={{
+                display:'flex',
+                flexDirection:'column',
+                gap:16,
+                padding:'28px 30px',
+                borderRadius:24,
+                background:'rgba(250, 249, 255, 0.85)',
+                backdropFilter:'blur(12px)',
+                border:'1px solid rgba(147, 51, 234, 0.12)',
+                boxShadow:'0 16px 48px rgba(109,74,255,0.08)',
+                maxWidth:340,
+              }}>
+                <p style={{fontSize:11, fontWeight:700, color:'#9333EA', letterSpacing:'0.12em', textTransform:'uppercase', margin:0}}>
+                  You are not alone
+                </p>
+                <h4 style={{fontSize:19, fontWeight:700, color:'#1F2937', margin:0, lineHeight:1.3}}>
+                  Different places.<br/>Similar feelings.
+                </h4>
+                <p style={{fontSize:13.5, color:'#6B7280', lineHeight:1.7, margin:0}}>
+                  Real stories. Real people. A global community reminding you that you don't have to navigate difficult feelings alone.
+                </p>
+
+                {/* Avatar row — abstract person icons, not photos (see
+                    note on the left-column avatars above) */}
+                <div style={{display:'flex'}}>
+                  {[1,2,3,4,5,6].map(i => (
+                    <div key={i} style={{
+                      width:32, height:32, borderRadius:'50%',
+                      background:`linear-gradient(135deg, hsl(${i*48+250},55%,68%), hsl(${i*48+280},55%,78%))`,
+                      border:'2px solid #FFFFFF',
+                      marginLeft: i > 1 ? -10 : 0,
+                      zIndex:10-i,
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                    }}>
+                      <UserRound size={15} strokeWidth={2} color="rgba(255,255,255,0.9)"/>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <div style={{
+                  paddingTop:14,
+                  borderTop:'1px solid rgba(147,51,234,0.1)',
+                }}>
+                  <p style={{fontSize:13.5, color:'#374151', lineHeight:1.6, margin:'0 0 6px 0', fontStyle:'italic'}}>
+                    "It helps to see that I'm not the only one feeling this way."
+                  </p>
+                  <p style={{fontSize:12, color:'#9CA3AF', margin:0}}>
+                    — Community member
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1368,54 +1539,33 @@ export default function Landing() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          SECTION 5 — HOW SOULCONNECT HELPS YOU  (glassmorphism cards)
+          SECTION 5 — HOW SOULCONNECT HELPS YOU  (compact line-icon strip)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section style={{background:'#fff', padding:'120px 32px'}}>
+      <section style={{background:'#F5F3FF', padding:'56px 32px'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
-          <div style={{textAlign:'center', marginBottom:64}}>
-            <p style={{fontSize:12, fontWeight:700, color:P,
-              letterSpacing:'0.15em', textTransform:'uppercase', marginBottom:12}}>
-              WHAT WE'RE BUILDING
-            </p>
-            <h2 style={{fontFamily:SF, fontSize:'clamp(2rem,3.2vw,52px)',
-              fontWeight:800, color:DARK, letterSpacing:'-0.028em', marginBottom:18}}>
-              How SoulConnect Helps You
-            </h2>
-            <div style={{width:60, height:4,
-              background:`linear-gradient(90deg,${P},${LAV})`,
-              borderRadius:99, margin:'0 auto'}}/>
-          </div>
-
-          <div className="l-help-grid" style={{
-            display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:20}}>
-            {HELPS.map((c,i)=>(
-              <div key={i} className="l-help-card">
-                {/* Gradient icon */}
-                <div style={{width:62, height:62, borderRadius:20,
-                  background:`linear-gradient(${c.grad})`,
-                  display:'flex', alignItems:'center', justifyContent:'center',
-                  fontSize:28, marginBottom:18, flexShrink:0,
-                  border:'1.5px solid rgba(109,74,255,0.1)',
-                }}>
-                  {c.icon}
-                </div>
-                <h3 style={{fontSize:15, fontWeight:800, color:DARK,
-                  marginBottom:8, lineHeight:1.3, whiteSpace:'pre-line'}}>
-                  {c.title}
+          <div className="l-help-strip" style={{
+            display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:16}}>
+            {HELPS.map(({Icon,title,desc},i)=>(
+              <div key={i} className="l-help-box" style={{
+                display:'flex', flexDirection:'column', alignItems:'center',
+                textAlign:'center', padding:'22px 14px',
+                background:'#FFFFFF', borderRadius:16,
+                border:'1px solid rgba(109,74,255,0.1)',
+                boxShadow:'0 4px 16px rgba(109,74,255,0.05)',
+                transition:'all .25s ease'}}>
+                <Icon size={26} strokeWidth={2} color={P} style={{marginBottom:8}}/>
+                <h3 style={{fontSize:13.5, fontWeight:800, color:DARK,
+                  margin:'0 0 4px 0', lineHeight:1.25}}>
+                  {title}
                 </h3>
-                <p style={{fontSize:13, color:'#6B7280', lineHeight:1.65,
-                  marginBottom:16, flex:1}}>{c.desc}</p>
-                {/* Coming Soon badge */}
-                <div style={{display:'inline-flex', alignItems:'center', gap:6,
-                  background:`linear-gradient(135deg,rgba(109,74,255,0.1),rgba(167,139,250,0.06))`,
-                  border:`1.5px solid rgba(109,74,255,0.18)`,
-                  borderRadius:99, padding:'6px 13px', alignSelf:'flex-start'}}>
-                  <span style={{width:5, height:5, borderRadius:'50%',
-                    background:P, display:'inline-block',
+                <span style={{display:'inline-flex', alignItems:'center', gap:5}}>
+                  <span style={{width:4, height:4, borderRadius:'50%',
+                    background:P, display:'inline-block', flexShrink:0,
                     animation:'pulse 2s ease-in-out infinite'}}/>
-                  <span style={{fontSize:10, fontWeight:700, color:P,
-                    letterSpacing:'0.07em'}}>Coming Soon</span>
-                </div>
+                  <span style={{fontSize:10.5, fontWeight:700, color:P,
+                    letterSpacing:'0.04em'}}>Coming Soon</span>
+                </span>
+                <span style={{fontSize:11.5, color:'#6B7280', marginTop:2}}>{desc}</span>
               </div>
             ))}
           </div>
