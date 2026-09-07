@@ -77,6 +77,8 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
   const autoRotateRef = useRef(true);
   const isDraggingRef = useRef(false);
   const lastDragXRef = useRef(0);
+  const pausedByDragRef = useRef(false);
+  const lastDragActivityRef = useRef(0);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -504,6 +506,7 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
         markerGroup.rotation.y += deltaX * 0.005;
         dotField.rotation.y += deltaX * 0.005;
         lastDragXRef.current = event.clientX;
+        lastDragActivityRef.current = performance.now();
         return;
       }
 
@@ -529,12 +532,15 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     const onPointerDown = (event) => {
       isDraggingRef.current = true;
       lastDragXRef.current = event.clientX;
+      lastDragActivityRef.current = performance.now();
+      pausedByDragRef.current = true;
       autoRotateRef.current = false;
       renderer.domElement.setPointerCapture?.(event.pointerId);
     };
 
     const onPointerUp = (event) => {
       isDraggingRef.current = false;
+      pausedByDragRef.current = false;
       setHoveredCountry(null);
       autoRotateRef.current = true;
       renderer.domElement.releasePointerCapture?.(event.pointerId);
@@ -562,9 +568,29 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     let rafId;
     let frameCount = 0;
     const projected = new THREE.Vector3();
+    const IDLE_RESUME_MS = 1500;
     const animate = () => {
       rafId = requestAnimationFrame(animate);
       frameCount++;
+
+      // Self-healing fallback for drag-pause only (not hover-pause — a
+      // stationary mouse hover legitimately stops moving while still
+      // wanting the pause). Some mobile WebKit versions can drop the
+      // pointerup/pointercancel that's supposed to flip autoRotateRef back
+      // on after a drag (observed with an active setPointerCapture +
+      // touch-action:pan-y canvas — the touch sequence gets handed to
+      // native scroll recognition without the JS event ever firing).
+      // Rather than depend on catching every such WebKit event-delivery
+      // edge case, treat prolonged silence since the last drag move as
+      // "the user let go" and resume on our own.
+      if (
+        pausedByDragRef.current &&
+        performance.now() - lastDragActivityRef.current > IDLE_RESUME_MS
+      ) {
+        autoRotateRef.current = true;
+        pausedByDragRef.current = false;
+        isDraggingRef.current = false;
+      }
 
       if (autoRotateRef.current && !prefersReducedMotion) {
         globe.rotation.y += rotationSpeedRef.current;
