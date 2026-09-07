@@ -487,6 +487,12 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     }
 
     // ── Interaction: hover pauses rotation, gentle drag to spin ──
+    // Pointer Events (not mouse-only) so this works uniformly on touch:
+    // a mouse-event-only implementation leaves auto-rotate stuck paused on
+    // mobile, because a touch drag fires touchmove/touchend, which don't
+    // reliably synthesize mousemove/mouseup — so onPointerDown's
+    // autoRotateRef.current = false never gets flipped back. pointerup/
+    // pointercancel cover both the release and the "scrolled away" case.
     const onPointerMove = (event) => {
       const rect = renderer.domElement.getBoundingClientRect();
       mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -500,6 +506,8 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
         lastDragXRef.current = event.clientX;
         return;
       }
+
+      if (event.pointerType && event.pointerType !== 'mouse') return;
 
       raycasterRef.current.setFromCamera(mouseRef.current, camera);
       const intersects = raycasterRef.current.intersectObjects(markersRef.current.map((m) => m.marker));
@@ -522,25 +530,30 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
       isDraggingRef.current = true;
       lastDragXRef.current = event.clientX;
       autoRotateRef.current = false;
+      renderer.domElement.setPointerCapture?.(event.pointerId);
     };
 
-    const onPointerUp = () => {
+    const onPointerUp = (event) => {
       isDraggingRef.current = false;
+      setHoveredCountry(null);
       autoRotateRef.current = true;
+      renderer.domElement.releasePointerCapture?.(event.pointerId);
     };
 
     const onMouseLeave = () => {
-      isDraggingRef.current = false;
+      if (isDraggingRef.current) return;
       setHoveredCountry(null);
       autoRotateRef.current = true;
     };
 
-    renderer.domElement.addEventListener('mousemove', onPointerMove);
-    renderer.domElement.addEventListener('mousedown', onPointerDown);
+    renderer.domElement.addEventListener('pointermove', onPointerMove);
+    renderer.domElement.addEventListener('pointerdown', onPointerDown);
     renderer.domElement.addEventListener('click', onClick);
-    window.addEventListener('mouseup', onPointerUp);
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
     renderer.domElement.addEventListener('mouseleave', onMouseLeave);
     renderer.domElement.style.cursor = 'grab';
+    renderer.domElement.style.touchAction = 'pan-y';
 
     // Respect reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -630,9 +643,10 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mouseup', onPointerUp);
-      renderer.domElement.removeEventListener('mousemove', onPointerMove);
-      renderer.domElement.removeEventListener('mousedown', onPointerDown);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
+      renderer.domElement.removeEventListener('pointermove', onPointerMove);
+      renderer.domElement.removeEventListener('pointerdown', onPointerDown);
       renderer.domElement.removeEventListener('click', onClick);
       renderer.domElement.removeEventListener('mouseleave', onMouseLeave);
       containerRef.current?.removeChild(renderer.domElement);
