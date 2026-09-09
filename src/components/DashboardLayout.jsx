@@ -2,11 +2,13 @@ import React from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { motion, AnimatePresence } from 'motion/react';
-import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound, BarChart3 } from 'lucide-react';
+import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound, BarChart3, Heart } from 'lucide-react';
 
-/* ── Desktop sidebar nav ── */
+/* ── Desktop sidebar nav ──
+   Every `to` maps to a route that already exists in App.jsx — no new routes. */
 const NAV_ITEMS = [
   { icon: Home,          label: 'Home',          to: '/home'          },
+  { icon: Heart,         label: 'SoulMatch',      to: '/soulmatch'     },
   { icon: BookHeart,     label: 'Stories',        to: '/stories'       },
   { icon: Users,         label: 'Circles',        to: '/community'     },
   { icon: BarChart3,     label: 'Mood Tracker',   to: '/mood'          },
@@ -18,9 +20,9 @@ const NAV_ITEMS = [
 /* ── Mobile bottom nav — 5 primary tabs per MOBILE_FIRST_RULES ── */
 const MOBILE_NAV = [
   { icon: Home,          label: 'Home',      to: '/home'      },
+  { icon: Heart,         label: 'SoulMatch', to: '/soulmatch' },
   { icon: BookHeart,     label: 'Stories',   to: '/stories'   },
-  { icon: Users,         label: 'Community', to: '/community' },
-  { icon: MessageCircle, label: 'Messages',  to: '/messages'  },
+  { icon: Users,         label: 'Circles',   to: '/community' },
   { icon: UserRound,     label: 'Profile',   to: '/profile'   },
 ];
 

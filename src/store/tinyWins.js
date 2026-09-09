@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { selectDailyWins, getRandomReflection } from '../engine/tinyWinsEngine';
+import { selectDailyWins, getRandomReflection, DAILY_WIN_COUNT } from '../engine/tinyWinsEngine';
 
 function todayString() {
   return new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
@@ -51,7 +51,7 @@ export const useTinyWinsStore = create(
         const today = todayString();
 
         // Already generated for today
-        if (state.dailyDate === today && state.dailyWins.length === 3) return;
+        if (state.dailyDate === today && state.dailyWins.length === DAILY_WIN_COUNT) return;
 
         // Get recently completed IDs (last 21 = last ~7 days × 3/day)
         const recentlyCompletedIds = state.completionHistory

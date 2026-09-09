@@ -12,7 +12,7 @@ import {
   CheckCircle, MoreHorizontal,
   Activity, Droplets, Wind, Brain, Flower2,
   Users, Zap, Star, Moon, Monitor, Leaf,
-  Target, Briefcase, BookOpen, Palette, Sparkles, Gift,
+  Target, Briefcase, BookOpen, Palette, Sparkles, Gift, ArrowRight,
 } from 'lucide-react';
 import AICompanionCard from '../components/AICompanionCard';
 import AIInsightCard from '../components/AIInsightCard';
@@ -47,7 +47,9 @@ const CATEGORY_ICONS = {
   'Kindness':          Gift,
 };
 import BreathingSession from '../components/BreathingSession';
-import TodaysFocusCard from '../components/TodaysFocusCard';
+import SoulMatchSection from '../components/dashboard/SoulMatchSection';
+import RightSidebar from '../components/dashboard/RightSidebar';
+import DashboardStyles from '../components/dashboard/dashboardStyles';
 import OnboardingModal from '../components/OnboardingModal';
 import { onboardingAPI } from '../services/api';
 
@@ -196,132 +198,73 @@ function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
   if (!win) return null;
   const meta = CATEGORY_META[win.category] || {};
   const IconComp = CATEGORY_ICONS[win.category];
+  const accent = meta.color || '#A78BFA';
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
+    <motion.button
+      type="button"
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] }}
+      transition={{ duration: 0.35, delay: index * 0.06, ease: [0.23, 1, 0.32, 1] }}
+      whileTap={{ scale: 0.975 }}
+      onClick={() => !isCompleted && onComplete(win.id)}
+      aria-pressed={isCompleted}
+      aria-label={`${win.title}${win.duration ? `, ${win.duration}` : ''}. ${isCompleted ? 'Completed' : 'Mark as complete'}`}
+      title={win.description || win.title}
+      className="tw-tile"
       style={{
-        flex: 1, minWidth: 0,
+        borderColor: isCompleted ? 'rgba(16,185,129,0.3)' : `${accent}24`,
         background: isCompleted
-          ? 'linear-gradient(145deg, rgba(16,185,129,0.08), rgba(34,18,73,0.7))'
-          : 'rgba(34,18,73,0.72)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        border: isCompleted
-          ? '1px solid rgba(16,185,129,0.25)'
-          : '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 24,
-        padding: '18px 16px',
-        position: 'relative',
-        overflow: 'hidden',
-        boxShadow: isCompleted
-          ? '0 0 30px rgba(16,185,129,0.08), 0 8px 24px rgba(0,0,0,0.3)'
-          : '0 8px 24px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.03)',
-        transition: 'box-shadow 0.3s, border 0.3s',
+          ? 'linear-gradient(160deg, rgba(16,185,129,0.10), rgba(28,16,60,0.72))'
+          : `linear-gradient(160deg, ${accent}1F 0%, rgba(30,17,62,0.78) 58%, rgba(22,13,48,0.82) 100%)`,
+        cursor: isCompleted ? 'default' : 'pointer',
       }}
     >
-      {/* Inner top highlight */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-      }} />
-
-      {/* Number badge */}
-      <div style={{
-        position: 'absolute', top: 14, left: 14,
-        width: 24, height: 24, borderRadius: '50%',
-        background: isCompleted
-          ? 'rgba(16,185,129,0.2)'
-          : `${meta.bg || 'rgba(139,92,246,0.15)'}`,
-        border: `1px solid ${isCompleted ? 'rgba(16,185,129,0.35)' : (meta.color ? meta.color + '44' : 'rgba(139,92,246,0.3)')}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 11, fontWeight: 700,
-        color: isCompleted ? '#10B981' : (meta.color || '#A78BFA'),
-      }}>
-        {isCompleted ? '✓' : index + 1}
-      </div>
-
-      {/* Category icon bubble */}
-      <div style={{
-        width: 60, height: 60, borderRadius: '50%',
-        background: meta.bg || 'rgba(139,92,246,0.15)',
-        border: `1px solid ${meta.color ? meta.color + '40' : 'rgba(139,92,246,0.25)'}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        margin: '10px auto 14px',
-        boxShadow: `0 0 24px ${meta.bg || 'rgba(139,92,246,0.1)'}, inset 0 1px 0 rgba(255,255,255,0.08)`,
-      }}>
+      {/* Icon chip */}
+      <span
+        className="tw-tile-icon"
+        style={{
+          background: `linear-gradient(145deg, ${accent}E6 0%, ${accent}99 55%, ${accent}66 100%)`,
+          border: `1px solid ${accent}80`,
+          boxShadow: `0 4px 14px ${accent}66, 0 0 22px ${accent}40, inset 0 1px 0 rgba(255,255,255,0.35)`,
+        }}
+      >
         {IconComp
-          ? <IconComp size={28} color={meta.color || '#A78BFA'} strokeWidth={1.5} />
-          : <span style={{ fontSize: 26 }}>{meta.icon || '✨'}</span>
-        }
-      </div>
+          ? <IconComp size={19} color="#fff" strokeWidth={2.1} aria-hidden="true"
+              style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.28))' }} />
+          : <span style={{ fontSize: 17 }} aria-hidden="true">{meta.icon || '✨'}</span>}
+      </span>
 
-      {/* Title */}
-      <div style={{
-        fontSize: 14, fontWeight: 700,
-        color: isCompleted ? '#86EFAC' : '#fff',
-        marginBottom: 6, lineHeight: 1.35,
-        paddingLeft: 2,
-        textDecoration: isCompleted ? 'none' : 'none',
-      }}>
-        {win.title}
-      </div>
+      {/* Label */}
+      <span
+        className="tw-tile-label"
+        style={{ color: isCompleted ? '#86EFAC' : 'rgba(240,238,255,0.94)' }}
+      >
+        {win.shortTitle || win.title}
+      </span>
 
-      {/* Description */}
-      <p style={{
-        fontSize: 12, color: 'rgba(184,180,216,0.7)',
-        margin: '0 0 12px', lineHeight: 1.55,
-        display: '-webkit-box', WebkitLineClamp: 2,
-        WebkitBoxOrient: 'vertical', overflow: 'hidden',
-      }}>
-        {win.description}
-      </p>
-
-      {/* Duration pill */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 4,
-        marginBottom: 12,
-      }}>
-        <Clock size={11} color="#8A84B6" />
-        <span style={{ fontSize: 11, color: '#8A84B6', fontWeight: 500 }}>{win.duration}</span>
-      </div>
-
-      {/* Complete button */}
-      {isCompleted ? (
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 380, damping: 22 }}
-          style={{
-            width: '100%', padding: '8px 0', borderRadius: 12, textAlign: 'center',
-            background: 'rgba(16,185,129,0.15)',
-            border: '1px solid rgba(16,185,129,0.3)',
-            color: '#10B981', fontSize: 12, fontWeight: 600,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
-          }}
-        >
-          <CheckCircle size={13} />
-          Completed
-        </motion.div>
-      ) : (
-        <motion.button
-          whileTap={{ scale: 0.96 }}
-          onClick={() => onComplete(win.id)}
-          style={{
-            width: '100%', padding: '8px 0', borderRadius: 12,
-            background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-            border: '1px solid rgba(168,85,247,0.3)',
-            color: '#fff', fontSize: 12, fontWeight: 600,
-            cursor: 'pointer', fontFamily: 'inherit',
-            boxShadow: '0 4px 14px rgba(124,58,237,0.35)',
-          }}
-        >
-          Complete ✓
-        </motion.button>
-      )}
-    </motion.div>
+      {/* Footer: check indicator + per-item progress */}
+      <span className="tw-tile-foot">
+        {isCompleted ? (
+          <CheckCircle size={17} color="#10B981" strokeWidth={2.2} aria-hidden="true" />
+        ) : (
+          <span
+            aria-hidden="true"
+            style={{
+              width: 17, height: 17, borderRadius: '50%',
+              border: '1.6px solid rgba(255,255,255,0.26)',
+              display: 'block',
+            }}
+          />
+        )}
+        <span style={{
+          fontSize: 11.5, fontWeight: 600,
+          color: isCompleted ? 'rgba(134,239,172,0.85)' : 'rgba(184,180,216,0.5)',
+        }}>
+          {isCompleted ? 1 : 0}/1
+        </span>
+      </span>
+    </motion.button>
   );
 }
 
@@ -672,7 +615,7 @@ export default function Home() {
 
   const weeklyStats = getWeeklyStats();
   const completedCount = completedToday.length;
-  const allDone = completedCount >= 3 && dailyWins.length > 0;
+  const allDone = dailyWins.length > 0 && completedCount >= dailyWins.length;
 
   // Handle error state
   if (error) {
@@ -720,6 +663,8 @@ export default function Home() {
 
   return (
     <>
+      <DashboardStyles />
+
       {/* ── Global keyframes ── */}
       <style>{`
         @keyframes particleDrift {
@@ -755,11 +700,25 @@ export default function Home() {
           display: flex; flex-direction: column;
           padding: 24px 16px 20px;
           z-index: 50;
-          overflow: hidden;
+          overflow-y: auto;
+          overflow-x: hidden;
+          scrollbar-width: none;
         }
+        .home-right-sidebar::-webkit-scrollbar { display: none; }
+        /* Below 1100px the rail stops being a rail: it flows after the main
+           feed as full-width cards rather than disappearing entirely. */
         @media (max-width: 1100px) {
-          .home-right-sidebar { display: none; }
-          .home-main { margin-right: 0 !important; padding-bottom: 100px; }
+          .home-right-sidebar {
+            position: static;
+            width: auto;
+            background: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border-left: none;
+            padding: 0;
+            overflow: visible;
+          }
+          .home-main { margin-right: 0 !important; padding-bottom: 20px; }
         }
 
         /* ── Mobile ≤ 768px ── */
@@ -1007,44 +966,48 @@ export default function Home() {
         </div>
 
         {/* ════════════════════════════════════════════════════════════
-            SECTION 2 — TINY WINS
+            SECTION 2 — PEOPLE WHO UNDERSTAND (SoulMatch)
         ════════════════════════════════════════════════════════════ */}
         <div className="home-section" style={{ margin: '0 32px 16px', position: 'relative', zIndex: 1 }}>
+          <SoulMatchSection onCheckIn={handleCheckIn} />
+        </div>
+
+        {/* ════════════════════════════════════════════════════════════
+            SECTION 3 — TINY WINS
+        ════════════════════════════════════════════════════════════ */}
+        <div className="home-section tw-panel" style={{ margin: '0 32px 16px', position: 'relative', zIndex: 1 }}>
 
           {/* Section header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div>
-              <div style={{ ...SECTION_LABEL, marginBottom: 2 }}>🌿 TINY WINS</div>
-              <div style={{ fontSize: 12, color: 'rgba(184,180,216,0.55)' }}>Small steps. Big change.</div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              {/* Progress dots */}
-              <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                <span style={{ fontSize: 11, color: '#8A84B6', marginRight: 4 }}>
-                  {completedCount} of {dailyWins.length} Completed
-                </span>
-                {dailyWins.map((_, i) => (
-                  <div key={i} style={{
-                    width: 8, height: 8, borderRadius: '50%',
-                    background: i < completedCount
-                      ? 'linear-gradient(135deg,#F4C542,#F59E0B)'
-                      : 'rgba(255,255,255,0.15)',
-                    boxShadow: i < completedCount ? '0 0 6px rgba(244,197,66,0.5)' : 'none',
-                  }} />
-                ))}
+          <div className="sc-section-head" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            gap: 12, marginBottom: 14,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+              <Leaf size={20} strokeWidth={2} color="#6EE7B7" aria-hidden="true" style={{ flexShrink: 0 }} />
+              <div style={{ minWidth: 0 }}>
+                <h2 style={{
+                  margin: 0, fontSize: 17, fontWeight: 700, color: '#F5F3FF',
+                  letterSpacing: '-0.02em', lineHeight: 1.2,
+                }}>
+                  Tiny Wins
+                </h2>
+                <p style={{ margin: '3px 0 0', fontSize: 12.5, color: 'rgba(184,180,216,0.55)' }}>
+                  Small steps. Big change.
+                </p>
               </div>
-              <button
-                onClick={() => navigate('/tiny-wins')}
-                style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
-              >
-                View All ›
-              </button>
             </div>
+            <button
+              onClick={() => navigate('/tiny-wins')}
+              className="sc-link-btn"
+              aria-label={`View all Tiny Wins. ${completedCount} of ${dailyWins.length} completed today.`}
+            >
+              View All <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
+            </button>
           </div>
 
-          {/* 3 win cards */}
+          {/* Win tiles */}
           {dailyWins.length > 0 ? (
-            <div className="wins-scroll" style={{ display: 'flex', gap: 12 }}>
+            <div className="tw-grid">
               {dailyWins.map((win, i) => (
                 <HomeTinyWinCard
                   key={win.id}
@@ -1186,48 +1149,12 @@ export default function Home() {
 
       </div>{/* end .home-main */}
 
-      {/* ════════════════════ RIGHT SIDEBAR ════════════════════ */}
-      <div className="home-right-sidebar">
-
-        {/* ── Card 1: Today's Focus (Premium Interactive) ── */}
-        <div ref={todaysFocusRef} style={{ marginBottom: 14 }}>
-          <TodaysFocusCard
-            selectedMood={selectedWeather}
-            onSessionComplete={() => setBreathingDone(true)}
-          />
-        </div>
-
-        {/* ── Card 3: Upcoming Session ── */}
-        <div className="sidebar-card-inner" style={{ ...CARD_STYLE, flex: 1, minHeight: 0, marginBottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <div style={SECTION_LABEL}>UPCOMING SESSION</div>
-
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
-            <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Online Therapy</div>
-              <div style={{ fontSize: 12, color: '#8A84B6', marginBottom: 6 }}>with Dr. Meera Sharma</div>
-              <div style={{ fontSize: 12, color: '#B8B4D8' }}>📅 Tomorrow, 11:00 AM</div>
-            </div>
-            <div style={{
-              width: 46, height: 46, borderRadius: '50%', flexShrink: 0,
-              background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 20, fontWeight: 700, color: '#fff',
-              boxShadow: '0 0 16px rgba(124,58,237,0.4)',
-            }}>
-              M
-            </div>
-          </div>
-
-          <button
-            onClick={() => navigate('/professionals')}
-            style={{ ...GLASS_BTN, width: '100%', padding: '9px', textAlign: 'center', marginTop: 10, borderRadius: 13 }}
-          >
-            View Session
-          </button>
-        </div>
-
-
-      </div>{/* end .home-right-sidebar */}
+      {/* ════════════════════ RIGHT SIDEBAR ════════════════════
+          Desktop: pinned right rail. Below 1100px the same cards render
+          inside the main feed instead (see .rs-stack in dashboardStyles). */}
+      <div className="home-right-sidebar" ref={todaysFocusRef}>
+        <RightSidebar />
+      </div>
 
       {/* ════════════════════ FLOATING COMPANION ════════════════════ */}
       <FloatingCompanion

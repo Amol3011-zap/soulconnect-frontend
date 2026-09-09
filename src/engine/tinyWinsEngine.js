@@ -63,6 +63,9 @@ function scoreChallenge(challenge, { weatherId, workMode, timeOfDay, dayType }) 
  * Given a scored list, pick 3 challenges that cover at least 3 different
  * top-level category groups (mental, physical, social).
  */
+/** How many Tiny Wins are served per day. */
+export const DAILY_WIN_COUNT = 5;
+
 const MENTAL_CATS   = new Set(['Mind', 'Meditation', 'Focus', 'Learning', 'Breathing', 'Creativity', 'Sleep', 'Digital Wellbeing']);
 const PHYSICAL_CATS = new Set(['Movement', 'Body', 'Nature', 'Self Care']);
 const SOCIAL_CATS   = new Set(['Connection', 'Relationships', 'Kindness', 'Gratitude', 'Confidence', 'Work']);
@@ -74,7 +77,7 @@ function getCatGroup(category) {
   return 'other';
 }
 
-function pickDiverseThree(scored) {
+function pickDiverseThree(scored, target = DAILY_WIN_COUNT) {
   const selected = [];
   const usedCategories = new Set();
   const usedGroups = new Set();
@@ -82,7 +85,7 @@ function pickDiverseThree(scored) {
   // Pass 1: try to get one from each group
   for (const group of ['mental', 'physical', 'social']) {
     for (const c of scored) {
-      if (selected.length >= 3) break;
+      if (selected.length >= target) break;
       if (usedCategories.has(c.category)) continue;
       if (getCatGroup(c.category) !== group) continue;
       selected.push(c);
@@ -93,9 +96,9 @@ function pickDiverseThree(scored) {
   }
 
   // Pass 2: fill remaining slots, avoiding duplicate categories
-  if (selected.length < 3) {
+  if (selected.length < target) {
     for (const c of scored) {
-      if (selected.length >= 3) break;
+      if (selected.length >= target) break;
       if (usedCategories.has(c.category)) continue;
       if (selected.find(s => s.id === c.id)) continue;
       selected.push(c);
@@ -104,15 +107,15 @@ function pickDiverseThree(scored) {
   }
 
   // Pass 3: last resort — allow duplicate categories but never duplicate IDs
-  if (selected.length < 3) {
+  if (selected.length < target) {
     for (const c of scored) {
-      if (selected.length >= 3) break;
+      if (selected.length >= target) break;
       if (selected.find(s => s.id === c.id)) continue;
       selected.push(c);
     }
   }
 
-  return selected.slice(0, 3);
+  return selected.slice(0, target);
 }
 
 // ── Main selector ─────────────────────────────────────────────────────────────

@@ -75,6 +75,7 @@ const Account       = lazy(() => import('./pages/Account'));
 const Onboarding    = lazy(() => import('./pages/Onboarding'));
 const SoulJourney   = lazy(() => import('./pages/SoulJourney'));
 const Matches       = lazy(() => import('./pages/Matches'));
+const SoulMatchPage = lazy(() => import('./pages/SoulMatch'));
 
 import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
@@ -87,7 +88,7 @@ const LAUNCH_READY = import.meta.env.VITE_LAUNCH_READY === 'true';
 const DASHBOARD_PATHS = [
   '/home', '/stories', '/community', '/messages', '/mood',
   '/meditate', '/professionals', '/account', '/tiny-wins',
-  '/story', '/saved',
+  '/story', '/saved', '/profile', '/soulmatch',
   // user engagement (Phase 5)
   '/journeys', '/circles',
   // legacy aliases still routed through layout
@@ -217,6 +218,8 @@ function AppInner() {
                 <Route path="/meditate"      element={<Suspense fallback={<PageLoader />}><Meditate /></Suspense>} />
                 <Route path="/professionals" element={<Suspense fallback={<PageLoader />}><Professionals /></Suspense>} />
                 <Route path="/account"       element={<Suspense fallback={<PageLoader />}><Settings /></Suspense>} />
+                <Route path="/profile"       element={<Suspense fallback={<PageLoader />}><Profile /></Suspense>} />
+                <Route path="/soulmatch"     element={<Suspense fallback={<PageLoader />}><SoulMatchPage /></Suspense>} />
                 <Route path="/tiny-wins"    element={<Suspense fallback={<PageLoader />}><TinyWins /></Suspense>} />
                 <Route path="/story/:id"   element={<Suspense fallback={<PageLoader />}><StoryDetail /></Suspense>} />
                 <Route path="/saved"         element={<Suspense fallback={<PageLoader />}><SavedStories /></Suspense>} />

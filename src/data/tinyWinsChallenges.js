@@ -54,6 +54,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-001', category: 'Mind', difficulty: 'easy', duration: '1 min',
     title: 'Name five things you can see',
+    shortTitle: 'Name five things',
     description: 'Look around and slowly name five things in your environment. Let each one land.',
     tip: 'This grounds you in the present moment instantly.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -63,6 +64,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-002', category: 'Mind', difficulty: 'easy', duration: '2 min',
     title: 'Write down one worry and let it go',
+    shortTitle: 'Name one worry',
     description: 'Put one nagging thought on paper. Just naming it reduces its power over you.',
     tip: 'You don\'t need to solve it. Just get it out of your head.',
     weather: LOW_MOOD, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -72,6 +74,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-003', category: 'Mind', difficulty: 'easy', duration: '1 min',
     title: 'Notice your thoughts without judgment',
+    shortTitle: 'Watch your thoughts',
     description: 'Sit for one minute. Watch thoughts like clouds passing. You are the sky, not the weather.',
     tip: 'You don\'t need to push thoughts away, just observe.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon', 'evening'],
@@ -81,6 +84,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-004', category: 'Mind', difficulty: 'easy', duration: '2 min',
     title: 'Say something kind to yourself',
+    shortTitle: 'Be kind to yourself',
     description: 'Speak one gentle, true sentence to yourself out loud or in your head. Treat yourself as you\'d treat a friend.',
     tip: 'If it feels hard, start with "I\'m doing my best."',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -90,6 +94,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-005', category: 'Mind', difficulty: 'easy', duration: '1 min',
     title: 'Take a mental snapshot of a good moment',
+    shortTitle: 'Mental snapshot',
     description: 'Think of one moment in the past week that felt okay. Let yourself relive it for 30 seconds.',
     tip: 'The brain tends to skip over good moments. This trains it to notice them.',
     weather: NEUTRAL, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -99,6 +104,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-006', category: 'Mind', difficulty: 'easy', duration: '3 min',
     title: 'Write three things on your mind right now',
+    shortTitle: 'Brain dump',
     description: 'A brain dump. No editing. Just three things occupying space in your head right now.',
     tip: 'It can be anything — tasks, feelings, random observations.',
     weather: FOG, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -108,6 +114,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-007', category: 'Mind', difficulty: 'easy', duration: '1 min',
     title: 'Ask yourself: what do I need right now?',
+    shortTitle: 'What do I need?',
     description: 'Pause and honestly ask what your body or mind actually needs in this moment. Hunger? Rest? Connection?',
     tip: 'You don\'t have to act on the answer. Just knowing counts.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -117,6 +124,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-008', category: 'Mind', difficulty: 'medium', duration: '4 min',
     title: 'Write a letter to your past self',
+    shortTitle: 'Letter to past self',
     description: 'Write three sentences to yourself from one year ago. What would you want them to know?',
     tip: 'This reframes how far you\'ve come.',
     weather: POSITIVE, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -126,6 +134,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-009', category: 'Mind', difficulty: 'easy', duration: '2 min',
     title: 'Count your wins from yesterday',
+    shortTitle: 'Count yesterday\'s wins',
     description: 'Think back to yesterday. Name two or three things that went okay, big or small.',
     tip: 'If yesterday was hard, even getting through it counts.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning'],
@@ -135,6 +144,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'mind-010', category: 'Mind', difficulty: 'easy', duration: '1 min',
     title: 'Let go of one thing mentally',
+    shortTitle: 'Let one thing go',
     description: 'Pick one small thing you\'ve been holding on to and consciously release it. Just this one, just for now.',
     tip: 'Let go doesn\'t mean forget. It means not carrying it constantly.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['evening', 'night'],
@@ -147,6 +157,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-001', category: 'Movement', difficulty: 'easy', duration: '3 min',
     title: 'Walk for three minutes',
+    shortTitle: '3 min walk',
     description: 'Stand up and take a slow, deliberate three-minute walk anywhere — hallway, outside, in place.',
     tip: 'Even indoor walking resets your nervous system.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -156,6 +167,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-002', category: 'Movement', difficulty: 'easy', duration: '2 min',
     title: 'Stretch your neck and shoulders',
+    shortTitle: 'Neck & shoulders',
     description: 'Tilt your head slowly to each side. Roll your shoulders back three times. Let go of the tension you\'ve been holding.',
     tip: 'We hold a lot of emotion in the neck and shoulders.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['morning', 'afternoon'],
@@ -165,6 +177,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-003', category: 'Movement', difficulty: 'easy', duration: '1 min',
     title: 'Stand up and shake it out',
+    shortTitle: 'Shake it out',
     description: 'Stand, shake your hands gently, and let your body release tension for thirty seconds. Strange but effective.',
     tip: 'Shaking is a natural nervous system reset used by many mammals.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['afternoon'],
@@ -174,6 +187,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-004', category: 'Movement', difficulty: 'easy', duration: '2 min',
     title: 'Take the long way',
+    shortTitle: 'Take the long way',
     description: 'Next time you go anywhere today — bathroom, kitchen, office — take the longer route. Add small steps.',
     tip: 'Micro-movement adds up across the day.',
     weather: ANY_WEATHER, workModes: ['office', 'remote', 'student'], timeOfDay: ['morning', 'afternoon'],
@@ -183,6 +197,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-005', category: 'Movement', difficulty: 'easy', duration: '3 min',
     title: 'Do five minutes of gentle stretching',
+    shortTitle: '5 min stretch',
     description: 'Find any stretch that feels right — arms overhead, hamstrings, wrists. Go slow and breathe into each one.',
     tip: 'You don\'t need a mat. The floor, bed, or chair all work.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'evening'],
@@ -192,6 +207,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-006', category: 'Movement', difficulty: 'easy', duration: '5 min',
     title: 'Walk outside for five minutes',
+    shortTitle: '5 min walk outside',
     description: 'No headphones. No phone. Just you and five minutes of the outside world.',
     tip: 'Natural light within the first hour of waking is powerful for mood.',
     weather: [...HOPE, ...BLOOMING, ...CLEAR], workModes: WORK_MODES_FLEX, timeOfDay: ['morning', 'afternoon'],
@@ -201,6 +217,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-007', category: 'Movement', difficulty: 'easy', duration: '2 min',
     title: 'Stand during one activity',
+    shortTitle: 'Stand up a while',
     description: 'For one thing you do today — a call, a read, a conversation — choose to stand instead of sit.',
     tip: 'Even five minutes standing reduces the effects of prolonged sitting.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['morning', 'afternoon'],
@@ -210,6 +227,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-008', category: 'Movement', difficulty: 'easy', duration: '2 min',
     title: 'Roll your shoulders back ten times',
+    shortTitle: 'Roll your shoulders',
     description: 'Sit or stand. Slowly roll your shoulders up, back, and down. Feel your posture open up.',
     tip: 'Posture directly affects how we feel emotionally.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -219,6 +237,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-009', category: 'Movement', difficulty: 'easy', duration: '3 min',
     title: 'Dance to one song alone',
+    shortTitle: 'Dance to one song',
     description: 'Pick one song. Close the door. Move any way that feels good. No performance, just you.',
     tip: 'Dancing alone releases endorphins without any social pressure.',
     weather: STORM, workModes: ['remote', 'student', 'weekend', 'retired', 'custom'], timeOfDay: ['afternoon', 'evening'],
@@ -228,6 +247,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'move-010', category: 'Movement', difficulty: 'easy', duration: '2 min',
     title: 'Wrist and hand stretches',
+    shortTitle: 'Wrist stretches',
     description: 'Extend your arms, fan your fingers wide, flex and release. Circle your wrists in each direction.',
     tip: 'Essential if you type, write, or use a phone regularly.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['afternoon', 'evening'],
@@ -240,6 +260,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'body-001', category: 'Body', difficulty: 'easy', duration: '1 min',
     title: 'Drink a glass of water',
+    shortTitle: 'Drink water',
     description: 'Get up and drink a full glass of water slowly. Notice how it feels. Your body likely needs it.',
     tip: 'Even mild dehydration affects mood and focus.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -249,6 +270,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'body-002', category: 'Body', difficulty: 'easy', duration: '3 min',
     title: 'Eat your next meal without your phone',
+    shortTitle: 'Phone-free meal',
     description: 'Put your phone face-down or in another room. Eat one meal present, noticing taste and texture.',
     tip: 'Mindful eating improves digestion and satisfaction.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon', 'evening'],
@@ -258,6 +280,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'body-003', category: 'Body', difficulty: 'easy', duration: '1 min',
     title: 'Relax your jaw',
+    shortTitle: 'Relax your jaw',
     description: 'Notice if your teeth are clenched. Let your jaw drop slightly open. Unclench. Breathe. Repeat.',
     tip: 'Jaw clenching is one of the most common signs of hidden stress.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -267,6 +290,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'body-004', category: 'Body', difficulty: 'easy', duration: '1 min',
     title: 'Drop your shoulders',
+    shortTitle: 'Drop your shoulders',
     description: 'Notice where your shoulders are. Inhale and raise them to your ears. Exhale and let them fall completely.',
     tip: 'Do this hourly. It takes five seconds and works every time.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -276,6 +300,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'body-005', category: 'Body', difficulty: 'easy', duration: '1 min',
     title: 'Rest your eyes for one minute',
+    shortTitle: 'Rest your eyes',
     description: 'Cover your eyes with your palms. See only darkness. Let the muscles relax completely.',
     tip: 'Especially important after screen time. The optic nerve is directly connected to your nervous system.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['afternoon', 'evening'],
@@ -285,6 +310,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'body-006', category: 'Body', difficulty: 'easy', duration: '2 min',
     title: 'Splash cold water on your face',
+    shortTitle: 'Cold water splash',
     description: 'Go to a sink. Splash cold water on your face three times. Pat dry. Notice the reset.',
     tip: 'Cold water triggers the dive reflex, immediately slowing your heart rate.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -294,6 +320,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'body-007', category: 'Body', difficulty: 'easy', duration: '2 min',
     title: 'Unclench your hands',
+    shortTitle: 'Unclench your hands',
     description: 'Open your hands completely. Stretch your fingers wide. Hold for five seconds. Repeat three times.',
     tip: 'We often hold fists or tight grips without realizing it.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -303,6 +330,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'body-008', category: 'Body', difficulty: 'easy', duration: '2 min',
     title: 'Sit with good posture for two minutes',
+    shortTitle: 'Fix your posture',
     description: 'Sit up straight, feet flat, shoulders back. Set a two-minute timer. Notice how different it feels.',
     tip: 'Open posture increases feelings of confidence and calm.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['morning', 'afternoon'],
@@ -312,6 +340,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'body-009', category: 'Body', difficulty: 'easy', duration: '1 min',
     title: 'Take a mindful sip of something warm',
+    shortTitle: 'Mindful sip',
     description: 'Make or find something warm to drink. Take one slow sip. Feel the warmth move through you.',
     tip: 'Warmth physically soothes the nervous system.',
     weather: [...STORM, ...FOG, ...HEAVY_RAIN], workModes: ALL_MODES, timeOfDay: ['morning', 'evening'],
@@ -324,6 +353,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'breath-001', category: 'Breathing', difficulty: 'easy', duration: '2 min',
     title: 'Three deep breaths before opening email',
+    shortTitle: 'Three deep breaths',
     description: 'Before touching your phone or inbox, take three full breaths. In through the nose, out through the mouth.',
     tip: 'This creates a mindful buffer between sleep and work-stress.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['morning'],
@@ -333,6 +363,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'breath-002', category: 'Breathing', difficulty: 'easy', duration: '3 min',
     title: 'Box breathing for calm',
+    shortTitle: 'Box breathing',
     description: 'Inhale 4 counts. Hold 4. Exhale 4. Hold 4. Repeat for three cycles. Used by special forces to manage stress.',
     tip: 'Perfect for moments of anxiety, pre-meeting nerves, or any overwhelm.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -342,6 +373,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'breath-003', category: 'Breathing', difficulty: 'easy', duration: '1 min',
     title: 'One long exhale',
+    shortTitle: 'One long exhale',
     description: 'Take a full breath in. Then exhale as slowly as possible — much longer than the inhale. Feel your nervous system settle.',
     tip: 'Long exhales activate the parasympathetic nervous system.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -351,6 +383,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'breath-004', category: 'Breathing', difficulty: 'easy', duration: '2 min',
     title: 'Breathe with your belly',
+    shortTitle: 'Belly breathing',
     description: 'Put one hand on your chest, one on your belly. Breathe so only the belly hand rises. Five breaths.',
     tip: 'Chest breathing triggers the stress response. Belly breathing reverses it.',
     weather: FOG, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -360,6 +393,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'breath-005', category: 'Breathing', difficulty: 'easy', duration: '1 min',
     title: 'Sigh it out',
+    shortTitle: 'Sigh it out',
     description: 'Take a full breath in. Then add a little more air on top of that. Then release with a long audible sigh.',
     tip: 'This physiological sigh is the fastest way to reduce stress in real time.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -369,6 +403,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'breath-006', category: 'Breathing', difficulty: 'easy', duration: '2 min',
     title: '4-7-8 breathing',
+    shortTitle: '4-7-8 breathing',
     description: 'Inhale for 4 counts. Hold for 7. Exhale for 8. Two to four rounds. Powerful for pre-sleep anxiety.',
     tip: 'Created by Dr. Andrew Weil. Can reduce anxiety within minutes.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['evening', 'night'],
@@ -378,6 +413,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'breath-007', category: 'Breathing', difficulty: 'easy', duration: '2 min',
     title: 'Breathe in a color you love',
+    shortTitle: 'Breathe in color',
     description: 'Close your eyes. Choose a color that feels calming. Imagine breathing that color in and letting gray out.',
     tip: 'Visualization combined with breath deepens the relaxation effect.',
     weather: FOG, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -387,6 +423,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'breath-008', category: 'Breathing', difficulty: 'easy', duration: '3 min',
     title: 'Alternate nostril breathing',
+    shortTitle: 'Alternate nostril',
     description: 'Block your right nostril, inhale left. Block left, exhale right. Inhale right. Switch. Repeat five cycles.',
     tip: 'Used in yoga to balance the brain hemispheres and reduce anxiety.',
     weather: ANY_WEATHER, workModes: WORK_MODES_FLEX, timeOfDay: ['morning', 'afternoon'],
@@ -396,6 +433,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'breath-009', category: 'Breathing', difficulty: 'easy', duration: '1 min',
     title: 'Breathe with your eyes closed',
+    shortTitle: 'Deep breathing',
     description: 'Close your eyes. Take three breaths. Don\'t count. Just feel the air arrive and leave.',
     tip: 'Closing your eyes reduces sensory input and allows the breath to deepen naturally.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -408,6 +446,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'med-001', category: 'Meditation', difficulty: 'easy', duration: '3 min',
     title: 'One-minute body scan',
+    shortTitle: 'Body scan',
     description: 'Sit still. Slowly move your attention from feet to head. Notice sensation, temperature, tension. No changes needed.',
     tip: 'The body scan trains awareness without requiring any effort to change.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -417,6 +456,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'med-002', category: 'Meditation', difficulty: 'easy', duration: '5 min',
     title: 'Sit in silence for three minutes',
+    shortTitle: 'Sit in silence',
     description: 'No music, no phone. Just sit. When your mind wanders, gently return to the present moment.',
     tip: 'The return to presence is the practice. It\'s okay that the mind wanders.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['morning', 'evening'],
@@ -426,6 +466,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'med-003', category: 'Meditation', difficulty: 'easy', duration: '2 min',
     title: 'Count ten breaths with intention',
+    shortTitle: 'Count ten breaths',
     description: 'Close your eyes. Count each exhale from one to ten. If you lose count, start again. No judgment.',
     tip: 'This simple practice trains focus as much as a longer meditation.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -435,6 +476,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'med-004', category: 'Meditation', difficulty: 'easy', duration: '3 min',
     title: 'Loving-kindness for yourself',
+    shortTitle: 'Loving-kindness',
     description: 'Place a hand on your heart. Silently say: "May I be well. May I be peaceful. May I be happy." Repeat slowly.',
     tip: 'This practice reduces self-criticism and increases self-compassion over time.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -444,6 +486,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'med-005', category: 'Meditation', difficulty: 'easy', duration: '2 min',
     title: 'Ground yourself with 5-4-3-2-1',
+    shortTitle: '5-4-3-2-1 grounding',
     description: 'Name 5 things you see, 4 you hear, 3 you can touch, 2 you smell, 1 you taste. Fully present now.',
     tip: 'The 5-4-3-2-1 technique interrupts anxiety spirals quickly.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -453,6 +496,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'med-006', category: 'Meditation', difficulty: 'easy', duration: '3 min',
     title: 'Visualize your safe place',
+    shortTitle: 'Your safe place',
     description: 'Close your eyes. Imagine a place — real or invented — where you feel safe and calm. Stay there.',
     tip: 'The brain cannot fully distinguish a vividly imagined safe space from a real one.',
     weather: FOG, workModes: ALL_MODES, timeOfDay: ['evening', 'night'],
@@ -462,6 +506,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'med-007', category: 'Meditation', difficulty: 'easy', duration: '2 min',
     title: 'Notice the space between thoughts',
+    shortTitle: 'Space between thoughts',
     description: 'Sit quietly. Don\'t try to think or not think. Just notice the brief pauses between thoughts. Extend them gently.',
     tip: 'This is the beginning of advanced meditation — noticing awareness itself.',
     weather: POSITIVE, workModes: WORK_MODES_FLEX, timeOfDay: ['morning', 'evening'],
@@ -471,6 +516,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'med-008', category: 'Meditation', difficulty: 'easy', duration: '1 min',
     title: 'Smile softly and hold it',
+    shortTitle: 'Smile softly',
     description: 'Softly relax your face into a slight smile. Hold it for thirty seconds. Notice if your mood shifts.',
     tip: 'Facial feedback — even a soft smile — sends calm signals to the brain.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -480,6 +526,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'med-009', category: 'Meditation', difficulty: 'easy', duration: '4 min',
     title: 'Send kindness to three people',
+    shortTitle: 'Send kindness',
     description: 'Think of three people. For each, silently wish them well: "May you be happy. May you be safe." No contact needed.',
     tip: 'This is loving-kindness (metta) meditation. Research shows it increases happiness in the sender.',
     weather: HEAVY_RAIN, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -492,6 +539,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conn-001', category: 'Connection', difficulty: 'easy', duration: '3 min',
     title: 'Message someone you\'re grateful for',
+    shortTitle: 'Message someone',
     description: 'Send one text or voice note to someone who has helped you. It can be as short as "Thinking of you."',
     tip: 'Acts of expressed gratitude improve wellbeing for both sender and receiver.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -501,6 +549,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conn-002', category: 'Connection', difficulty: 'easy', duration: '2 min',
     title: 'Check in on one person',
+    shortTitle: 'Check in on someone',
     description: 'Think of one person you haven\'t heard from in a while. Send a short, genuine "How are you?"',
     tip: 'People rarely reach out when struggling. Your message might matter more than you know.',
     weather: HEAVY_RAIN, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -510,6 +559,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conn-003', category: 'Connection', difficulty: 'easy', duration: '1 min',
     title: 'Smile at a stranger',
+    shortTitle: 'Smile at a stranger',
     description: 'Today, genuinely smile at one person you don\'t know. Eye contact optional. Presence required.',
     tip: 'Brief positive interactions with strangers reliably lift mood.',
     weather: POSITIVE, workModes: ['office', 'travel', 'student'], timeOfDay: ['morning', 'afternoon'],
@@ -519,6 +569,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conn-004', category: 'Connection', difficulty: 'easy', duration: '3 min',
     title: 'Share one honest feeling',
+    shortTitle: 'Share a feeling',
     description: 'Tell someone how you actually are. One sentence. Not "fine." Something real, even if small.',
     tip: 'Vulnerability in safe relationships builds intimacy and reduces loneliness.',
     weather: HEAVY_RAIN, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -528,6 +579,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conn-005', category: 'Connection', difficulty: 'easy', duration: '2 min',
     title: 'Compliment a colleague genuinely',
+    shortTitle: 'Compliment someone',
     description: 'Find one specific thing to genuinely compliment someone at work on today. Specific compliments mean more.',
     tip: 'Specific beats general: "Your explanation of that problem was so clear" beats "Good job."',
     weather: ANY_WEATHER, workModes: ['office', 'remote', 'student'], timeOfDay: ['morning', 'afternoon'],
@@ -537,6 +589,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conn-006', category: 'Connection', difficulty: 'easy', duration: '5 min',
     title: 'Have one screen-free conversation',
+    shortTitle: 'Screen-free talk',
     description: 'Talk to someone without phones on the table. Give them your full, undivided attention for a few minutes.',
     tip: 'The mere presence of a phone on the table reduces the quality of conversation.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -546,6 +599,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conn-007', category: 'Connection', difficulty: 'easy', duration: '2 min',
     title: 'Say thank you to someone unexpected',
+    shortTitle: 'Say thank you',
     description: 'Thank someone you don\'t usually thank — a bus driver, a barista, a colleague you overlook.',
     tip: 'Gratitude toward those often overlooked is especially meaningful.',
     weather: BLOOMING, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -555,6 +609,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conn-008', category: 'Connection', difficulty: 'easy', duration: '3 min',
     title: 'Ask someone a meaningful question',
+    shortTitle: 'Ask a real question',
     description: 'Instead of "How are you?" ask something real: "What\'s been good for you lately?" and actually listen.',
     tip: 'Open questions open people. Closed questions close them.',
     weather: POSITIVE, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -564,6 +619,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conn-009', category: 'Connection', difficulty: 'easy', duration: '2 min',
     title: 'Write a voice note instead of a text',
+    shortTitle: 'Send a voice note',
     description: 'To one person today, send a voice note instead of typing. Hearing your voice carries more warmth.',
     tip: 'Voice messages create stronger feelings of connection than text.',
     weather: HEAVY_RAIN, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -576,6 +632,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'grat-001', category: 'Gratitude', difficulty: 'easy', duration: '3 min',
     title: 'Write three things you\'re grateful for',
+    shortTitle: 'Three gratitudes',
     description: 'Not "my family." Get specific: "My sister texted me at the right moment." Specificity makes gratitude real.',
     tip: 'New specifics each time — don\'t repeat the same things.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'evening'],
@@ -585,6 +642,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'grat-002', category: 'Gratitude', difficulty: 'easy', duration: '2 min',
     title: 'Thank your body for something',
+    shortTitle: 'Thank your body',
     description: 'Put a hand on your chest and silently thank your body for something specific — your heartbeat, your healing, your lungs.',
     tip: 'We often notice our bodies only when something is wrong.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['morning', 'night'],
@@ -594,6 +652,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'grat-003', category: 'Gratitude', difficulty: 'easy', duration: '2 min',
     title: 'Find one beautiful small thing',
+    shortTitle: 'Find something lovely',
     description: 'Slow down for two minutes. Find one thing around you that has some small beauty in it. Sit with it.',
     tip: 'Beauty is everywhere at slow speeds.',
     weather: BLOOMING, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -603,6 +662,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'grat-004', category: 'Gratitude', difficulty: 'easy', duration: '1 min',
     title: 'Appreciate one thing about today',
+    shortTitle: 'Appreciate today',
     description: 'Before the day ends, find one thing — anything — about today that was at least okay.',
     tip: 'Even hard days contain something. This trains the brain to look.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening', 'night'],
@@ -612,6 +672,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'grat-005', category: 'Gratitude', difficulty: 'easy', duration: '2 min',
     title: 'Think of someone who shaped you',
+    shortTitle: 'Someone who shaped you',
     description: 'Recall a teacher, mentor, parent, or stranger who helped make you who you are. Sit with that memory.',
     tip: 'Remembering our influences reminds us we are never alone in our growth.',
     weather: HEAVY_RAIN, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -621,6 +682,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'grat-006', category: 'Gratitude', difficulty: 'easy', duration: '2 min',
     title: 'Appreciate one challenge that made you stronger',
+    shortTitle: 'Appreciate a challenge',
     description: 'Think of one hard thing you went through. What did it teach you? What did it build?',
     tip: 'Post-traumatic growth is real. Hardship can create depth.',
     weather: HOPE, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -630,6 +692,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'grat-007', category: 'Gratitude', difficulty: 'easy', duration: '1 min',
     title: 'Say thank you out loud to yourself',
+    shortTitle: 'Thank yourself aloud',
     description: 'Out loud, say "Thank you for getting through today." Mean it.',
     tip: 'Verbal self-acknowledgment is rare and powerful.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['evening', 'night'],
@@ -639,6 +702,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'grat-008', category: 'Gratitude', difficulty: 'easy', duration: '2 min',
     title: 'Appreciate what\'s working in your life',
+    shortTitle: 'Notice what\'s working',
     description: 'Name three things in your life that are currently working — relationships, health, moments of stability.',
     tip: 'We naturally focus on what\'s broken. Naming what works rebalances perception.',
     weather: NEUTRAL, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -648,6 +712,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'grat-009', category: 'Gratitude', difficulty: 'easy', duration: '3 min',
     title: 'Write a thank-you note you never send',
+    shortTitle: 'Write a thank-you note',
     description: 'Write a short thank-you to someone from your past who helped you. You don\'t have to send it. This is for you.',
     tip: 'Unsent letters are surprisingly powerful for emotional release.',
     weather: BLOOMING, workModes: WORK_MODES_FLEX, timeOfDay: ['evening'],
@@ -660,6 +725,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'sleep-001', category: 'Sleep', difficulty: 'easy', duration: '2 min',
     title: 'Dim your screens an hour before bed',
+    shortTitle: 'Dim your screens',
     description: 'Reduce brightness on all screens. Enable night mode or warm tones. Give your eyes a slow farewell to daylight.',
     tip: 'Blue light suppresses melatonin for up to three hours.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening', 'night'],
@@ -669,6 +735,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'sleep-002', category: 'Sleep', difficulty: 'easy', duration: '3 min',
     title: 'Write down tomorrow\'s top three tasks',
+    shortTitle: 'Plan tomorrow\'s top 3',
     description: 'Before bed, write down the three most important things for tomorrow. Then close the notebook and release the day.',
     tip: 'Offloading tomorrow\'s thoughts reduces overnight cognitive chatter.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening', 'night'],
@@ -678,6 +745,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'sleep-003', category: 'Sleep', difficulty: 'easy', duration: '4 min',
     title: 'Do a sleep body scan',
+    shortTitle: 'A sleep body scan',
     description: 'Lying in bed, slowly relax each body part starting from your toes. By the time you reach your face, you may be asleep.',
     tip: 'Progressive muscle relaxation significantly improves sleep onset.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['night'],
@@ -687,6 +755,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'sleep-004', category: 'Sleep', difficulty: 'easy', duration: '1 min',
     title: 'Leave your phone outside the bedroom',
+    shortTitle: 'Leave your phone outside',
     description: 'Charge your phone outside your bedroom tonight. See what changes when it\'s not the last thing you see.',
     tip: 'Phone-free sleep improves sleep quality and morning mood.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['night'],
@@ -696,6 +765,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'sleep-005', category: 'Sleep', difficulty: 'easy', duration: '3 min',
     title: 'Read three pages of a real book',
+    shortTitle: 'Read three pages',
     description: 'Pick up a physical book (not your phone). Read three pages as a wind-down ritual.',
     tip: 'Six minutes of reading reduces stress by 68%, according to University of Sussex research.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening', 'night'],
@@ -705,6 +775,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'sleep-006', category: 'Sleep', difficulty: 'easy', duration: '2 min',
     title: 'Cool your room down',
+    shortTitle: 'Cool your room down',
     description: 'Open a window or lower the thermostat slightly. A cooler room supports deeper sleep.',
     tip: 'Optimal sleep temperature is 65–68°F (18–20°C).',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['night'],
@@ -714,6 +785,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'sleep-007', category: 'Sleep', difficulty: 'easy', duration: '2 min',
     title: 'Set a consistent wake time',
+    shortTitle: 'Set a consistent wake',
     description: 'Set your alarm for the same time tomorrow as yesterday. Consistent wake time is the foundation of sleep health.',
     tip: 'Wake time consistency matters more than bedtime for circadian rhythm.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['night'],
@@ -723,6 +795,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'sleep-008', category: 'Sleep', difficulty: 'easy', duration: '2 min',
     title: 'Write down what you let go of today',
+    shortTitle: 'What you let go',
     description: 'Briefly write one thing you\'re releasing from today before sleep. Symbolically leave it on the page, not in your head.',
     tip: 'Release rituals signal to the brain that the day is complete.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['night'],
@@ -735,6 +808,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'digi-001', category: 'Digital Wellbeing', difficulty: 'easy', duration: '5 min',
     title: 'Avoid social media for ten minutes',
+    shortTitle: 'Ten minutes off social',
     description: 'Set a timer. No scrolling for ten minutes. Fill the time with anything else — even staring at the wall.',
     tip: 'The urge to scroll is often a signal to check in with how you\'re feeling.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -744,6 +818,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'digi-002', category: 'Digital Wellbeing', difficulty: 'easy', duration: '2 min',
     title: 'Delete one app that drains you',
+    shortTitle: 'Delete a draining app',
     description: 'Think of one app that leaves you feeling worse when you use it. Delete it. You can always reinstall it.',
     tip: 'If you hesitate, that\'s useful information too.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -753,6 +828,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'digi-003', category: 'Digital Wellbeing', difficulty: 'easy', duration: '2 min',
     title: 'Check your screen time and notice it',
+    shortTitle: 'Check your screen time',
     description: 'Look at your screen time report. Not with judgment — just with curiosity. What does it tell you?',
     tip: 'Awareness is the first step. You don\'t need to fix it today.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -762,6 +838,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'digi-004', category: 'Digital Wellbeing', difficulty: 'easy', duration: '1 min',
     title: 'Turn off non-essential notifications',
+    shortTitle: 'Mute notifications',
     description: 'Go to settings and turn off notifications from apps that aren\'t urgent. Reclaim your attention.',
     tip: 'Each notification is an interruption that costs 23 minutes of focus to recover from.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['morning'],
@@ -771,6 +848,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'digi-005', category: 'Digital Wellbeing', difficulty: 'easy', duration: '3 min',
     title: 'Put your phone away during meals',
+    shortTitle: 'Put your phone away',
     description: 'One meal today, phone completely away. Eat as if it\'s 2003.',
     tip: 'Phone-free meals improve digestion, satisfaction, and presence.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon', 'evening'],
@@ -780,6 +858,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'digi-006', category: 'Digital Wellbeing', difficulty: 'easy', duration: '2 min',
     title: 'Unsubscribe from one email list',
+    shortTitle: 'Unsubscribe from one list',
     description: 'Find one email you always ignore. Unsubscribe. A small act of reclaiming your mental inbox.',
     tip: 'Email clutter creates low-level cognitive load.',
     weather: FOG, workModes: WORK_MODES_DESK, timeOfDay: ['afternoon'],
@@ -789,6 +868,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'digi-007', category: 'Digital Wellbeing', difficulty: 'easy', duration: '2 min',
     title: 'Set your phone to grayscale for one hour',
+    shortTitle: 'Grayscale your phone',
     description: 'Enable grayscale mode in your phone\'s display settings. Apps become less visually stimulating and less addictive.',
     tip: 'Color is one of the primary hooks that keeps you on apps. Removing it works.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -798,6 +878,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'digi-008', category: 'Digital Wellbeing', difficulty: 'easy', duration: '1 min',
     title: 'Read the first paragraph of a long article',
+    shortTitle: 'Read the first paragraph',
     description: 'Instead of scrolling short content, open one long-form article. Read just the first paragraph. That counts.',
     tip: 'Slow reading rebuilds attention span eroded by quick-scroll content.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -810,6 +891,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'nat-001', category: 'Nature', difficulty: 'easy', duration: '2 min',
     title: 'Look outside for one minute',
+    shortTitle: 'Look outside',
     description: 'Go to a window or step outside. Look at the sky, trees, or ground. Just look, without agenda.',
     tip: 'Nature viewing lowers cortisol and heart rate within minutes.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -819,6 +901,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'nat-002', category: 'Nature', difficulty: 'easy', duration: '3 min',
     title: 'Feel the ground beneath your feet',
+    shortTitle: 'Feel the ground beneath',
     description: 'Remove your shoes. Stand on grass, earth, or at least a patch of floor. Feel the surface fully.',
     tip: 'Grounding (earthing) reduces inflammation and anxiety in preliminary research.',
     weather: POSITIVE, workModes: WORK_MODES_FLEX, timeOfDay: ['morning', 'afternoon'],
@@ -828,6 +911,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'nat-003', category: 'Nature', difficulty: 'easy', duration: '2 min',
     title: 'Notice the weather with full attention',
+    shortTitle: 'Notice the weather',
     description: 'Step outside (or to a window) and pay full attention to the weather. Feel the temperature. Notice the light.',
     tip: 'This anchors you in the present moment through natural sensation.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -837,6 +921,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'nat-004', category: 'Nature', difficulty: 'easy', duration: '1 min',
     title: 'Water a plant',
+    shortTitle: 'Water a plant',
     description: 'If you have a plant, water it. If not, consider a window herb. Tending something living is quietly profound.',
     tip: 'Caring for plants reduces loneliness and improves emotional wellbeing.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning'],
@@ -846,6 +931,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'nat-005', category: 'Nature', difficulty: 'easy', duration: '3 min',
     title: 'Listen to natural sounds',
+    shortTitle: 'Listen to natural sounds',
     description: 'Open your window or find a quiet outdoor moment. Listen specifically for natural sounds — wind, birds, water.',
     tip: 'Natural sounds reduce activity in the brain\'s default mode network (the anxious mind).',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -855,6 +941,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'nat-006', category: 'Nature', difficulty: 'easy', duration: '2 min',
     title: 'Sit near a window with sunlight',
+    shortTitle: 'Sit near a window',
     description: 'Find a patch of natural light. Sit in it for two minutes. Close your eyes and feel the warmth.',
     tip: 'Natural light exposure, even through glass, helps regulate melatonin and mood.',
     weather: [...CLEAR, ...HOPE], workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -864,6 +951,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'nat-007', category: 'Nature', difficulty: 'easy', duration: '5 min',
     title: 'Take a mindful outdoor walk',
+    shortTitle: 'Mindful outdoor walk',
     description: 'Walk outside for five minutes with no phone, no music. Notice everything — textures, sounds, smells.',
     tip: 'This is shinrin-yoku (forest bathing) at its simplest.',
     weather: [...HOPE, ...BLOOMING, ...CLEAR], workModes: WORK_MODES_FLEX, timeOfDay: ['morning', 'afternoon'],
@@ -873,6 +961,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'nat-008', category: 'Nature', difficulty: 'easy', duration: '2 min',
     title: 'Watch the sky for two minutes',
+    shortTitle: 'Watch the sky',
     description: 'Find the sky. Look at it for two minutes without purpose. Notice movement, color, depth.',
     tip: 'Sky gazing naturally calms scattered thinking.',
     weather: [...HOPE, ...CLEAR, ...BLOOMING], workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon', 'evening'],
@@ -885,6 +974,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'focus-001', category: 'Focus', difficulty: 'easy', duration: '5 min',
     title: 'Work for five minutes on one thing',
+    shortTitle: 'Work for five minutes',
     description: 'Pick one small task. Set a five-minute timer. Work on only that. When time\'s up, you\'re done (or may want to continue).',
     tip: 'The Pomodoro principle: starting is often the hardest part.',
     weather: FOG, workModes: WORK_MODES_DESK, timeOfDay: ['morning', 'afternoon'],
@@ -894,6 +984,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'focus-002', category: 'Focus', difficulty: 'easy', duration: '2 min',
     title: 'Clear your desk or workspace',
+    shortTitle: 'Clear your desk or',
     description: 'Spend two minutes removing clutter from your immediate workspace. Clear space supports clear thinking.',
     tip: 'Visual clutter competes for cognitive resources.',
     weather: FOG, workModes: WORK_MODES_DESK, timeOfDay: ['morning'],
@@ -903,6 +994,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'focus-003', category: 'Focus', difficulty: 'easy', duration: '1 min',
     title: 'Write down your single most important task',
+    shortTitle: 'Write down your single',
     description: 'Write down ONE thing that, if you do only that today, makes the day a success. Keep it in front of you.',
     tip: 'Having too many priorities means having none.',
     weather: FOG, workModes: WORK_MODES_DESK, timeOfDay: ['morning'],
@@ -912,6 +1004,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'focus-004', category: 'Focus', difficulty: 'easy', duration: '2 min',
     title: 'Close unused browser tabs',
+    shortTitle: 'Close unused tabs',
     description: 'Close every tab you don\'t need right now. Keep only the one you\'re working on. Notice the mental relief.',
     tip: 'Each open tab carries a low-level cognitive cost.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['morning', 'afternoon'],
@@ -921,6 +1014,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'focus-005', category: 'Focus', difficulty: 'easy', duration: '2 min',
     title: 'Read one paragraph fully before continuing',
+    shortTitle: 'Read one paragraph fully',
     description: 'Choose any text you\'re reading today. Read one full paragraph at a deliberate pace before scrolling.',
     tip: 'Training focused reading rebuilds attention span.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -930,6 +1024,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'focus-006', category: 'Focus', difficulty: 'medium', duration: '5 min',
     title: 'Do one thing without multitasking',
+    shortTitle: 'Single-task once',
     description: 'Pick one activity — eating, walking, working. For five minutes, do only that. Fully that.',
     tip: 'Multitasking reduces efficiency by up to 40%.',
     weather: FOG, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -939,6 +1034,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'focus-007', category: 'Focus', difficulty: 'easy', duration: '2 min',
     title: 'Decide what you won\'t do today',
+    shortTitle: 'Decide what you won\'t',
     description: 'Write one thing you are deliberately choosing NOT to do today. A clear no creates space for a better yes.',
     tip: 'Saying no to the nonessential is a form of focus.',
     weather: FOG, workModes: WORK_MODES_DESK, timeOfDay: ['morning'],
@@ -948,6 +1044,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'focus-008', category: 'Focus', difficulty: 'easy', duration: '1 min',
     title: 'Breathe before switching tasks',
+    shortTitle: 'Breathe between tasks',
     description: 'Every time you switch to a new task today, take one conscious breath before starting.',
     tip: 'This creates a transition ritual that reduces mental residue between tasks.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -960,6 +1057,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conf-001', category: 'Confidence', difficulty: 'easy', duration: '2 min',
     title: 'Stand tall for two minutes',
+    shortTitle: 'Stand tall',
     description: 'Stand up straight. Chin up. Shoulders back. Hold this posture for two minutes. Notice the shift.',
     tip: 'Power posing for as little as two minutes raises testosterone and lowers cortisol.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning'],
@@ -969,6 +1067,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conf-002', category: 'Confidence', difficulty: 'easy', duration: '3 min',
     title: 'Name three things you\'re good at',
+    shortTitle: 'Name three things you\'re',
     description: 'Write three specific things you do well. Not traits — actions and skills. Things others rely on you for.',
     tip: 'Identifying strengths primes the brain to use them.',
     weather: HOPE, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -978,6 +1077,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conf-003', category: 'Confidence', difficulty: 'medium', duration: '3 min',
     title: 'Do one thing outside your comfort zone',
+    shortTitle: 'Leave your comfort zone',
     description: 'Identify something slightly uncomfortable — a message you\'ve delayed, a request, a question. Do it now.',
     tip: 'Small acts of courage compound into a confident identity.',
     weather: HOPE, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -987,6 +1087,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conf-004', category: 'Confidence', difficulty: 'easy', duration: '2 min',
     title: 'Remind yourself of one past success',
+    shortTitle: 'Recall a past win',
     description: 'Recall one time you handled something difficult. Not your biggest win — just a real one. Sit with it.',
     tip: 'Self-efficacy (confidence in ability) is built by remembering past success.',
     weather: FOG, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -996,6 +1097,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conf-005', category: 'Confidence', difficulty: 'easy', duration: '2 min',
     title: 'Say "I am learning" instead of "I am failing"',
+    shortTitle: 'Say "I am learning"',
     description: 'When you catch yourself thinking "I failed," replace it with "I am learning to..." Try it three times.',
     tip: 'Language shapes reality. The brain processes these phrases differently.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1005,6 +1107,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conf-006', category: 'Confidence', difficulty: 'easy', duration: '3 min',
     title: 'Write what you would say if you weren\'t afraid',
+    shortTitle: 'Write what you would',
     description: 'Think of one thing you want to say but hold back. Write it down. You don\'t have to say it. Just write it.',
     tip: 'Writing unspoken truths releases their emotional grip.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -1014,6 +1117,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conf-007', category: 'Confidence', difficulty: 'easy', duration: '1 min',
     title: 'Accept a compliment without deflecting',
+    shortTitle: 'Accept a compliment',
     description: 'Next time someone says something positive, just say "Thank you." No minimizing. No immediate compliment back.',
     tip: 'Accepting compliments is a trainable skill that builds self-worth.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1023,6 +1127,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'conf-008', category: 'Confidence', difficulty: 'easy', duration: '2 min',
     title: 'Write one thing you\'re proud of recently',
+    shortTitle: 'Write one thing you\'re',
     description: 'No matter how small. Write one thing from the past week that you feel any level of pride about.',
     tip: 'Pride (the healthy kind) motivates continued positive behavior.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -1035,6 +1140,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'rel-001', category: 'Relationships', difficulty: 'easy', duration: '3 min',
     title: 'Tell someone what you appreciate about them',
+    shortTitle: 'Tell them you value them',
     description: 'Send a specific appreciation to one person: "I appreciate how you always [specific action]."',
     tip: 'Specific appreciation has more impact than generic praise.',
     weather: BLOOMING, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -1044,6 +1150,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'rel-002', category: 'Relationships', difficulty: 'easy', duration: '2 min',
     title: 'Repair a small rupture',
+    shortTitle: 'Repair a small rupture',
     description: 'Think of a small friction or tension with someone. Send one sentence to address it gently.',
     tip: 'Small repairs done early prevent large disconnections.',
     weather: HEAVY_RAIN, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -1053,6 +1160,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'rel-003', category: 'Relationships', difficulty: 'easy', duration: '5 min',
     title: 'Spend five mindful minutes with someone',
+    shortTitle: '5 mindful minutes',
     description: 'Give five minutes of full attention to someone you care about. Phone away. Eyes present.',
     tip: 'The quality of presence matters more than the quantity of time.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -1062,6 +1170,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'rel-004', category: 'Relationships', difficulty: 'easy', duration: '2 min',
     title: 'Listen without thinking about your response',
+    shortTitle: 'Just listen',
     description: 'In your next conversation, focus entirely on the other person\'s words. Don\'t plan your reply while they talk.',
     tip: 'People can tell when they\'re truly being heard. It\'s rare and powerful.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -1071,6 +1180,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'rel-005', category: 'Relationships', difficulty: 'easy', duration: '3 min',
     title: 'Share a memory with someone',
+    shortTitle: 'Share a memory',
     description: 'Message or tell someone about a shared positive memory. "Remember when we..." is a powerful reconnection.',
     tip: 'Shared memories are the connective tissue of relationships.',
     weather: BLOOMING, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -1080,6 +1190,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'rel-006', category: 'Relationships', difficulty: 'medium', duration: '4 min',
     title: 'Apologize for something small',
+    shortTitle: 'Apologize small',
     description: 'Think of a small thing you haven\'t apologized for — a short response, a cancelled plan. Briefly apologize.',
     tip: 'Small apologies are easy to make and quietly restorative.',
     weather: HEAVY_RAIN, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -1089,6 +1200,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'rel-007', category: 'Relationships', difficulty: 'easy', duration: '2 min',
     title: 'Express a boundary kindly',
+    shortTitle: 'Set a boundary',
     description: 'Identify one thing you need and state it simply and kindly. "I need a bit of quiet right now." Practice first.',
     tip: 'Boundaries expressed with kindness strengthen relationships.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1098,6 +1210,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'rel-008', category: 'Relationships', difficulty: 'easy', duration: '3 min',
     title: 'Tell someone you miss them',
+    shortTitle: 'Tell someone you miss',
     description: 'Think of someone you miss. Tell them. Three words or thirty.',
     tip: 'People don\'t know they\'re missed unless you tell them.',
     weather: HEAVY_RAIN, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -1110,6 +1223,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'work-001', category: 'Work', difficulty: 'easy', duration: '3 min',
     title: 'Stand during one meeting',
+    shortTitle: 'Stand during one meeting',
     description: 'In your next meeting (online or in-person), choose to stand. It improves energy and focus.',
     tip: 'Standing meetings are on average 34% shorter and equally productive.',
     weather: ANY_WEATHER, workModes: ['office', 'remote'], timeOfDay: ['morning', 'afternoon'],
@@ -1119,6 +1233,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'work-002', category: 'Work', difficulty: 'easy', duration: '2 min',
     title: 'Take a proper lunch break away from your desk',
+    shortTitle: 'Proper lunch break away',
     description: 'Step away from your workspace for your lunch break, even for ten minutes. You\'re a person, not a machine.',
     tip: 'Taking breaks improves afternoon focus and decision quality.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['afternoon'],
@@ -1128,6 +1243,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'work-003', category: 'Work', difficulty: 'easy', duration: '3 min',
     title: 'Write down one win from today at work',
+    shortTitle: 'Write down one win',
     description: 'What went well at work today, even slightly? Write it. This builds positive momentum.',
     tip: 'Workplaces often only track what goes wrong. Counter that habit.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['afternoon', 'evening'],
@@ -1137,6 +1253,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'work-004', category: 'Work', difficulty: 'easy', duration: '2 min',
     title: 'Set a clear end time for work today',
+    shortTitle: 'Set a clear end',
     description: 'Decide right now what time you will stop working today. Write it down. Honor it.',
     tip: 'Without a defined end, work expands to fill all available time.',
     weather: ANY_WEATHER, workModes: ['office', 'remote'], timeOfDay: ['morning', 'afternoon'],
@@ -1146,6 +1263,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'work-005', category: 'Work', difficulty: 'easy', duration: '5 min',
     title: 'Batch your email to one window today',
+    shortTitle: 'Batch your email',
     description: 'Decide you\'ll only check email at a specific time today. Spend five minutes now replying to anything urgent, then close it.',
     tip: 'Reactive email checking destroys deep work capacity.',
     weather: FOG, workModes: WORK_MODES_DESK, timeOfDay: ['morning'],
@@ -1155,6 +1273,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'work-006', category: 'Work', difficulty: 'easy', duration: '2 min',
     title: 'Acknowledge a colleague\'s effort',
+    shortTitle: 'Acknowledge effort',
     description: 'Find one colleague whose effort you can acknowledge publicly or privately. A sentence is enough.',
     tip: 'Recognition from peers is as motivating as recognition from managers.',
     weather: ANY_WEATHER, workModes: ['office', 'remote'], timeOfDay: ['afternoon'],
@@ -1164,6 +1283,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'work-007', category: 'Work', difficulty: 'easy', duration: '3 min',
     title: 'Write a clear "done for today" list',
+    shortTitle: 'Write a clear "done',
     description: 'At end of work, write what you actually completed. Not what you planned — what you did. This matters.',
     tip: 'Tracking actual completions builds an accurate picture of your productivity.',
     weather: ANY_WEATHER, workModes: WORK_MODES_DESK, timeOfDay: ['afternoon', 'evening'],
@@ -1173,6 +1293,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'work-008', category: 'Work', difficulty: 'easy', duration: '2 min',
     title: 'Ask for help with one thing',
+    shortTitle: 'Ask for help',
     description: 'Identify one thing you could use help with. Ask. The ask is the hard part.',
     tip: 'Asking for help is a sign of maturity, not weakness.',
     weather: FOG, workModes: WORK_MODES_DESK, timeOfDay: ['morning', 'afternoon'],
@@ -1185,6 +1306,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'learn-001', category: 'Learning', difficulty: 'easy', duration: '5 min',
     title: 'Read one page of a book',
+    shortTitle: 'Read one page',
     description: 'Find a book (any book). Read one page. That\'s it. That\'s the whole Tiny Win.',
     tip: 'One page a day is 365 pages a year — most books are shorter than that.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1194,6 +1316,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'learn-002', category: 'Learning', difficulty: 'easy', duration: '3 min',
     title: 'Learn one new word',
+    shortTitle: 'Learn one new word',
     description: 'Look up one word you don\'t know or half-know. Read its definition. Use it in a sentence in your head.',
     tip: 'Vocabulary is a proxy for depth of thinking.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -1203,6 +1326,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'learn-003', category: 'Learning', difficulty: 'easy', duration: '5 min',
     title: 'Watch a five-minute educational video',
+    shortTitle: 'Learn for 5 min',
     description: 'Find one short educational video about something you\'re curious about. Watch it with full attention.',
     tip: 'Curiosity-driven learning is more memorable than obligation-driven learning.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -1212,6 +1336,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'learn-004', category: 'Learning', difficulty: 'easy', duration: '2 min',
     title: 'Write down one thing you learned today',
+    shortTitle: 'Write down one thing',
     description: 'At end of day, write one new thing you learned — from a conversation, article, or experience.',
     tip: 'Writing what you learn consolidates memory significantly.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['evening'],
@@ -1221,6 +1346,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'learn-005', category: 'Learning', difficulty: 'easy', duration: '3 min',
     title: 'Learn about one place in the world',
+    shortTitle: 'Learn about one place',
     description: 'Pick any country, city, or location you know nothing about. Read three facts about it.',
     tip: 'Geographical curiosity is linked to empathy and open-mindedness.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -1230,6 +1356,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'learn-006', category: 'Learning', difficulty: 'medium', duration: '5 min',
     title: 'Practice a skill for five minutes',
+    shortTitle: 'Practice a skill',
     description: 'Choose any skill you\'re developing — language, instrument, drawing, coding. Practice for exactly five minutes.',
     tip: 'Consistent short practice beats infrequent long sessions.',
     weather: ANY_WEATHER, workModes: WORK_MODES_FLEX, timeOfDay: ['afternoon', 'evening'],
@@ -1239,6 +1366,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'learn-007', category: 'Learning', difficulty: 'easy', duration: '3 min',
     title: 'Ask someone what they\'re learning',
+    shortTitle: 'Ask someone what they\'re',
     description: 'Ask one person: "What\'s something you\'ve been learning lately?" Then genuinely listen.',
     tip: 'Learning conversations spark curiosity in both people.',
     weather: BLOOMING, workModes: ALL_MODES, timeOfDay: ['afternoon'],
@@ -1248,6 +1376,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'learn-008', category: 'Learning', difficulty: 'easy', duration: '4 min',
     title: 'Listen to a podcast for five minutes',
+    shortTitle: 'Listen to a podcast',
     description: 'Start any educational podcast. Listen for five minutes while doing something else — walking, eating, tidying.',
     tip: 'Passive learning during routine tasks is highly efficient.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -1260,6 +1389,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'creat-001', category: 'Creativity', difficulty: 'easy', duration: '3 min',
     title: 'Doodle without a goal',
+    shortTitle: 'Doodle without a goal',
     description: 'Get paper (or your phone). Draw anything. No outcome, no purpose. Just mark-making.',
     tip: 'Doodling activates the default mode network, which is where creative insight lives.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1269,6 +1399,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'creat-002', category: 'Creativity', difficulty: 'easy', duration: '3 min',
     title: 'Write the first three lines of a story',
+    shortTitle: 'Write the first three',
     description: 'Start with any character, any scene. Write three lines. Don\'t worry about where it goes.',
     tip: 'Starting is the act of creation. Everything else is editing.',
     weather: BLOOMING, workModes: WORK_MODES_FLEX, timeOfDay: ['afternoon', 'evening'],
@@ -1278,6 +1409,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'creat-003', category: 'Creativity', difficulty: 'easy', duration: '4 min',
     title: 'Make a playlist for your current mood',
+    shortTitle: 'Make a mood playlist',
     description: 'Create a short playlist of three to five songs that match exactly how you feel right now.',
     tip: 'This practice builds emotional literacy through music.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1287,6 +1419,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'creat-004', category: 'Creativity', difficulty: 'easy', duration: '2 min',
     title: 'Rearrange one small thing in your space',
+    shortTitle: 'Rearrange one thing',
     description: 'Move one object in your environment. A plant, a photo, a candle. Small shifts change perception.',
     tip: 'Environmental novelty stimulates creative thinking.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1296,6 +1429,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'creat-005', category: 'Creativity', difficulty: 'easy', duration: '3 min',
     title: 'Write a haiku about your day',
+    shortTitle: 'Write a haiku',
     description: 'Five syllables, then seven, then five. About anything that happened today. It doesn\'t have to be good.',
     tip: 'Constraint in creativity produces surprising results.',
     weather: ANY_WEATHER, workModes: WORK_MODES_FLEX, timeOfDay: ['evening'],
@@ -1305,6 +1439,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'creat-006', category: 'Creativity', difficulty: 'easy', duration: '2 min',
     title: 'Take a photo of something beautiful',
+    shortTitle: 'Photograph beauty',
     description: 'Find something beautiful in your current surroundings. Take a slow, intentional photo of it.',
     tip: 'Photography trains you to see what\'s already beautiful.',
     weather: BLOOMING, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -1314,6 +1449,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'creat-007', category: 'Creativity', difficulty: 'easy', duration: '3 min',
     title: 'Brainstorm ten ideas without judgment',
+    shortTitle: 'Brainstorm ten ideas',
     description: 'Pick any topic. Write ten ideas — solutions, stories, improvements. Ideas 7–10 are where the good ones hide.',
     tip: 'Quantity precedes quality in ideation. Judge later.',
     weather: CLEAR, workModes: WORK_MODES_DESK, timeOfDay: ['morning', 'afternoon'],
@@ -1323,6 +1459,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'creat-008', category: 'Creativity', difficulty: 'easy', duration: '5 min',
     title: 'Listen to one song with full attention',
+    shortTitle: 'Listen to one song',
     description: 'Pick one song you love. Listen completely — eyes closed, no other task. Notice every instrument.',
     tip: 'Deep listening to music is a form of meditation.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -1335,6 +1472,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'care-001', category: 'Self Care', difficulty: 'easy', duration: '2 min',
     title: 'Apply lotion slowly and mindfully',
+    shortTitle: 'Apply lotion slowly',
     description: 'Apply lotion to your hands or face slowly. This is five minutes of intentional care for your body.',
     tip: 'Slow, mindful self-care activates the same pathways as social bonding.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['morning', 'evening'],
@@ -1344,6 +1482,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'care-002', category: 'Self Care', difficulty: 'easy', duration: '3 min',
     title: 'Do something just for you',
+    shortTitle: 'Something for you',
     description: 'Identify one thing you would enjoy. A snack you love, a song, a short walk. Do it without justifying it.',
     tip: 'Enjoyment doesn\'t need to be earned.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1353,6 +1492,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'care-003', category: 'Self Care', difficulty: 'easy', duration: '2 min',
     title: 'Wash your face intentionally',
+    shortTitle: 'Wash your face',
     description: 'Wash your face slowly. Feel the temperature of the water. This is a moment for you, not just a task.',
     tip: 'Everyday acts done with intention become grounding rituals.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning'],
@@ -1362,6 +1502,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'care-004', category: 'Self Care', difficulty: 'easy', duration: '1 min',
     title: 'Wear something that makes you feel good',
+    shortTitle: 'Wear something good',
     description: 'Choose one item of clothing that makes you feel okay. Even when you\'re at home. This matters.',
     tip: 'Enclothed cognition — what we wear affects how we think and feel.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning'],
@@ -1371,6 +1512,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'care-005', category: 'Self Care', difficulty: 'easy', duration: '3 min',
     title: 'Make your bed',
+    shortTitle: 'Make your bed',
     description: 'Make your bed. Not for tidiness — as an act of respect toward the person who will sleep in it tonight.',
     tip: 'Making your bed is correlated with better sleep, higher productivity, and a greater sense of wellbeing.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning'],
@@ -1380,6 +1522,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'care-006', category: 'Self Care', difficulty: 'easy', duration: '3 min',
     title: 'Tidy one small area',
+    shortTitle: 'Tidy one small area',
     description: 'One surface, one drawer, one corner. Spend three minutes. Not the whole house. Just one small thing.',
     tip: 'Small order in physical space creates mental order.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -1389,6 +1532,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'care-007', category: 'Self Care', difficulty: 'easy', duration: '2 min',
     title: 'Let yourself rest without guilt',
+    shortTitle: 'Rest without guilt',
     description: 'For two minutes, close your eyes and do nothing. If guilt comes, acknowledge it and keep resting anyway.',
     tip: 'Rest is productive. The nervous system cannot function without it.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['afternoon'],
@@ -1398,6 +1542,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'care-008', category: 'Self Care', difficulty: 'easy', duration: '1 min',
     title: 'Cancel one optional obligation you dread',
+    shortTitle: 'Cancel one thing',
     description: 'Identify one optional commitment you dread. Cancel it gently. You don\'t owe anyone your exhaustion.',
     tip: 'Saying no to the things you dread creates space for things you value.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -1410,6 +1555,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'kind-001', category: 'Kindness', difficulty: 'easy', duration: '2 min',
     title: 'Leave an anonymous kind note',
+    shortTitle: 'Leave an anonymous kind',
     description: 'Write something kind on a sticky note. Leave it somewhere someone will find it unexpectedly.',
     tip: 'Anonymous kindness is one of the purest forms of the act.',
     weather: BLOOMING, workModes: ['office', 'student', 'travel', 'weekend'], timeOfDay: ['morning', 'afternoon'],
@@ -1419,6 +1565,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'kind-002', category: 'Kindness', difficulty: 'easy', duration: '2 min',
     title: 'Hold the door for someone',
+    shortTitle: 'Hold the door',
     description: 'Make a point to hold the door today. Make eye contact. Smile. It takes one second.',
     tip: 'Micro-acts of courtesy create positive ripples in shared spaces.',
     weather: POSITIVE, workModes: ['office', 'student', 'travel'], timeOfDay: ['morning', 'afternoon'],
@@ -1428,6 +1575,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'kind-003', category: 'Kindness', difficulty: 'easy', duration: '3 min',
     title: 'Leave a positive review for a local business',
+    shortTitle: 'Leave a positive review',
     description: 'Think of a local business you\'ve enjoyed. Leave them an honest, positive review.',
     tip: 'Reviews are disproportionately positive in impact for small businesses.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['afternoon', 'evening'],
@@ -1437,6 +1585,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'kind-004', category: 'Kindness', difficulty: 'easy', duration: '3 min',
     title: 'Do one task for someone without being asked',
+    shortTitle: 'One task for someone',
     description: 'Notice a task someone else would normally do. Do it for them before they have to.',
     tip: 'Proactive kindness is more impactful than reactive kindness.',
     weather: BLOOMING, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -1446,6 +1595,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'kind-005', category: 'Kindness', difficulty: 'easy', duration: '2 min',
     title: 'Share something useful without expecting anything back',
+    shortTitle: 'Share something useful',
     description: 'Share one useful article, tool, or recommendation with someone it would help. No context needed.',
     tip: 'Sharing without expecting reciprocation is a mark of generosity.',
     weather: BLOOMING, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1455,6 +1605,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'kind-006', category: 'Kindness', difficulty: 'easy', duration: '1 min',
     title: 'Let someone go ahead of you',
+    shortTitle: 'Let someone go ahead',
     description: 'In a line, a lane, an elevator. Let someone go before you. No announcement. Just do it.',
     tip: 'Yielding to others is a quiet, powerful form of kindness.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ['morning', 'afternoon'],
@@ -1464,6 +1615,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'kind-007', category: 'Kindness', difficulty: 'easy', duration: '3 min',
     title: 'Offer encouragement to someone who\'s trying',
+    shortTitle: 'Encourage someone',
     description: 'Notice someone working hard at something. Say one genuine sentence of encouragement.',
     tip: 'Encouragement given at the right moment can change someone\'s trajectory.',
     weather: ANY_WEATHER, workModes: ALL_MODES, timeOfDay: ALL_TIMES,
@@ -1473,6 +1625,7 @@ export const ALL_CHALLENGES = [
   {
     id: 'kind-008', category: 'Kindness', difficulty: 'easy', duration: '2 min',
     title: 'Be gentle with yourself today',
+    shortTitle: 'Be gentle with yourself',
     description: 'At some point today when you notice self-criticism, pause. Speak to yourself as you would a good friend.',
     tip: 'Self-kindness is not weakness. It\'s the foundation of sustainable care for others.',
     weather: STORM, workModes: ALL_MODES, timeOfDay: ALL_TIMES,

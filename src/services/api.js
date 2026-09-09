@@ -33,7 +33,9 @@ export const userAPI = {
 };
 
 export const matchAPI = {
-  findMatches: () => api.post('/matches/find'),
+  // `preferences` is forwarded for the future matching engine; the current
+  // backend ignores the body and derives matches from the stored profile.
+  findMatches: (preferences) => api.post('/matches/find', preferences || {}),
   acceptMatch: (matchedUserId) => api.post('/matches/accept', { matched_user_id: matchedUserId }),
   getHistory: () => api.get('/matches/history'),
 };
@@ -48,6 +50,15 @@ export const healerAPI = {
   listHealers: (problem) => api.get('/healers/', { params: { problem } }),
   getHealer: (healerId) => api.get(`/healers/${healerId}`),
   bookSession: (data) => api.post('/healers/book-session', data),
+};
+
+export const sessionAPI = {
+  // GET /api/sessions/my-sessions — the user's own booked healer sessions.
+  mySessions: () => api.get('/sessions/my-sessions').catch(err => {
+    const status = err?.response?.status;
+    if (status === 401) throw { type: 'auth', message: 'Session expired. Please log in again.' };
+    throw { type: 'network', message: 'Could not load your sessions.' };
+  }),
 };
 
 export const meetupAPI = {
