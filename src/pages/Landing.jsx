@@ -564,7 +564,7 @@ function PeopleSunset() {
 export default function Landing() {
   const [scrolled,       setScrolled]       = useState(false);
   const [menuOpen,       setMenuOpen]       = useState(false);
-  const [earlyForm,      setEarlyForm]      = useState({challenge:'',name:'',email:''});
+  const [earlyForm,      setEarlyForm]      = useState({challenge:'',name:'',email:'',referralSource:''});
   const [earlySubmitted, setEarlySubmitted] = useState(false);
 
   useEffect(()=>{
@@ -587,7 +587,7 @@ export default function Landing() {
 
   const handleSubmit = async e=>{
     e.preventDefault();
-    if(!earlyForm.name||!earlyForm.email) return;
+    if(!earlyForm.name||!earlyForm.email||!earlyForm.referralSource) return;
     try {
       const BASE = (import.meta.env.VITE_API_URL || 'https://soulconnect-backend-production.up.railway.app/api').replace(/\/+$/, '');
       const res = await fetch(`${BASE}/early-access/`, {
@@ -599,6 +599,7 @@ export default function Landing() {
           struggle: earlyForm.challenge || null,
           challenge: earlyForm.challenge || null,
           source: 'landing_page',
+          referral_source: earlyForm.referralSource,
         }),
       });
       if (res.ok) {
@@ -1820,6 +1821,25 @@ export default function Landing() {
                   value={earlyForm.email}
                   onChange={e=>setEarlyForm(f=>({...f,email:e.target.value}))}
                   className="l-form-field" required/>
+
+                <label style={{fontSize:13, fontWeight:600,
+                  color:'rgba(255,255,255,0.65)'}}>
+                  How did you hear about SoulConnect?
+                </label>
+                <div style={{position:'relative'}}>
+                  <select value={earlyForm.referralSource}
+                    onChange={e=>setEarlyForm(f=>({...f,referralSource:e.target.value}))}
+                    className="l-form-field" required>
+                    <option value="">Select an option</option>
+                    {['Instagram','X (Twitter)','LinkedIn','Reddit',
+                      'Google / Search','Blog / Article'].map(o=>(
+                      <option key={o} value={o}>{o}</option>
+                    ))}
+                  </select>
+                  <span style={{position:'absolute', right:16, top:'50%',
+                    transform:'translateY(-50%)', color:'rgba(255,255,255,0.4)',
+                    pointerEvents:'none', fontSize:11}}>▼</span>
+                </div>
 
                 <button type="submit" className="l-btn-p"
                   style={{marginTop:4, width:'100%', justifyContent:'center',
