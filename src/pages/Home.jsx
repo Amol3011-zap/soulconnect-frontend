@@ -200,28 +200,35 @@ function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
   const IconComp = CATEGORY_ICONS[win.category];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
+    <motion.button
+      type="button"
+      onClick={() => !isCompleted && onComplete(win.id)}
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] }}
+      whileTap={!isCompleted ? { scale: 0.96 } : undefined}
+      transition={{ duration: 0.35, delay: index * 0.06, ease: [0.23, 1, 0.32, 1] }}
       style={{
-        flex: 1, minWidth: 0,
+        flex: '1 1 0', minWidth: 0,
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        textAlign: 'center',
         background: isCompleted
-          ? 'linear-gradient(145deg, rgba(16,185,129,0.08), rgba(34,18,73,0.7))'
+          ? 'linear-gradient(145deg, rgba(16,185,129,0.1), rgba(34,18,73,0.7))'
           : 'rgba(34,18,73,0.72)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         border: isCompleted
-          ? '1px solid rgba(16,185,129,0.25)'
+          ? '1px solid rgba(16,185,129,0.3)'
           : '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 24,
-        padding: '18px 16px',
+        borderRadius: 18,
+        padding: '14px 8px 12px',
         position: 'relative',
         overflow: 'hidden',
+        cursor: isCompleted ? 'default' : 'pointer',
+        fontFamily: 'inherit',
         boxShadow: isCompleted
-          ? '0 0 30px rgba(16,185,129,0.08), 0 8px 24px rgba(0,0,0,0.3)'
-          : '0 8px 24px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.03)',
-        transition: 'box-shadow 0.3s, border 0.3s',
+          ? '0 0 20px rgba(16,185,129,0.08), 0 6px 16px rgba(0,0,0,0.3)'
+          : '0 6px 16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.03)',
+        transition: 'box-shadow 0.25s, border 0.25s, transform 0.15s',
       }}
     >
       {/* Inner top highlight */}
@@ -230,100 +237,49 @@ function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
         background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
       }} />
 
-      {/* Number badge */}
+      {/* Icon bubble */}
       <div style={{
-        position: 'absolute', top: 14, left: 14,
-        width: 24, height: 24, borderRadius: '50%',
-        background: isCompleted
-          ? 'rgba(16,185,129,0.2)'
-          : `${meta.bg || 'rgba(139,92,246,0.15)'}`,
-        border: `1px solid ${isCompleted ? 'rgba(16,185,129,0.35)' : (meta.color ? meta.color + '44' : 'rgba(139,92,246,0.3)')}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 11, fontWeight: 700,
-        color: isCompleted ? '#10B981' : (meta.color || '#A78BFA'),
-      }}>
-        {isCompleted ? '✓' : index + 1}
-      </div>
-
-      {/* Category icon bubble */}
-      <div style={{
-        width: 60, height: 60, borderRadius: '50%',
+        width: 40, height: 40, borderRadius: '50%',
         background: meta.bg || 'rgba(139,92,246,0.15)',
         border: `1px solid ${meta.color ? meta.color + '40' : 'rgba(139,92,246,0.25)'}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        margin: '10px auto 14px',
-        boxShadow: `0 0 24px ${meta.bg || 'rgba(139,92,246,0.1)'}, inset 0 1px 0 rgba(255,255,255,0.08)`,
+        marginBottom: 8, flexShrink: 0,
+        boxShadow: `0 0 14px ${meta.bg || 'rgba(139,92,246,0.1)'}, inset 0 1px 0 rgba(255,255,255,0.08)`,
       }}>
-        {IconComp
-          ? <IconComp size={28} color={meta.color || '#A78BFA'} strokeWidth={1.5} />
-          : <span style={{ fontSize: 26 }}>{meta.icon || '✨'}</span>
+        {isCompleted
+          ? <CheckCircle size={18} color="#10B981" strokeWidth={2} />
+          : IconComp
+            ? <IconComp size={18} color={meta.color || '#A78BFA'} strokeWidth={1.75} />
+            : <span style={{ fontSize: 17 }}>{meta.icon || '✨'}</span>
         }
       </div>
 
       {/* Title */}
       <div style={{
-        fontSize: 14, fontWeight: 700,
+        fontSize: 12, fontWeight: 700,
         color: isCompleted ? '#86EFAC' : '#fff',
-        marginBottom: 6, lineHeight: 1.35,
-        paddingLeft: 2,
-        textDecoration: isCompleted ? 'none' : 'none',
+        marginBottom: 8, lineHeight: 1.3,
+        display: '-webkit-box', WebkitLineClamp: 2,
+        WebkitBoxOrient: 'vertical', overflow: 'hidden',
       }}>
         {win.title}
       </div>
 
-      {/* Description */}
-      <p style={{
-        fontSize: 12, color: 'rgba(184,180,216,0.7)',
-        margin: '0 0 12px', lineHeight: 1.55,
-        display: '-webkit-box', WebkitLineClamp: 2,
-        WebkitBoxOrient: 'vertical', overflow: 'hidden',
-      }}>
-        {win.description}
-      </p>
-
-      {/* Duration pill */}
+      {/* Progress indicator */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 4,
-        marginBottom: 12,
+        fontSize: 10, fontWeight: 600,
+        color: isCompleted ? '#10B981' : '#8A84B6',
       }}>
-        <Clock size={11} color="#8A84B6" />
-        <span style={{ fontSize: 11, color: '#8A84B6', fontWeight: 500 }}>{win.duration}</span>
+        {isCompleted
+          ? <><CheckCircle size={11} /> 1/1</>
+          : <><span style={{
+              width: 12, height: 12, borderRadius: '50%',
+              border: '1.5px solid rgba(184,180,216,0.4)', display: 'inline-block',
+            }} /> 0/1</>
+        }
       </div>
-
-      {/* Complete button */}
-      {isCompleted ? (
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 380, damping: 22 }}
-          style={{
-            width: '100%', padding: '8px 0', borderRadius: 12, textAlign: 'center',
-            background: 'rgba(16,185,129,0.15)',
-            border: '1px solid rgba(16,185,129,0.3)',
-            color: '#10B981', fontSize: 12, fontWeight: 600,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
-          }}
-        >
-          <CheckCircle size={13} />
-          Completed
-        </motion.div>
-      ) : (
-        <motion.button
-          whileTap={{ scale: 0.96 }}
-          onClick={() => onComplete(win.id)}
-          style={{
-            width: '100%', padding: '8px 0', borderRadius: 12,
-            background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-            border: '1px solid rgba(168,85,247,0.3)',
-            color: '#fff', fontSize: 12, fontWeight: 600,
-            cursor: 'pointer', fontFamily: 'inherit',
-            boxShadow: '0 4px 14px rgba(124,58,237,0.35)',
-          }}
-        >
-          Complete ✓
-        </motion.button>
-      )}
-    </motion.div>
+    </motion.button>
   );
 }
 
