@@ -209,8 +209,8 @@ function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
       transition={{ duration: 0.35, delay: index * 0.06, ease: [0.23, 1, 0.32, 1] }}
       style={{
         flex: '1 1 0', minWidth: 0,
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        textAlign: 'center',
+        display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
+        textAlign: 'left',
         background: isCompleted
           ? 'linear-gradient(145deg, rgba(16,185,129,0.1), rgba(34,18,73,0.7))'
           : 'rgba(34,18,73,0.72)',
@@ -220,7 +220,7 @@ function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
           ? '1px solid rgba(16,185,129,0.3)'
           : '1px solid rgba(255,255,255,0.08)',
         borderRadius: 18,
-        padding: '14px 8px 12px',
+        padding: '16px 14px',
         position: 'relative',
         overflow: 'hidden',
         cursor: isCompleted ? 'default' : 'pointer',
@@ -239,26 +239,25 @@ function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
 
       {/* Icon bubble */}
       <div style={{
-        width: 40, height: 40, borderRadius: '50%',
-        background: meta.bg || 'rgba(139,92,246,0.15)',
-        border: `1px solid ${meta.color ? meta.color + '40' : 'rgba(139,92,246,0.25)'}`,
+        width: 44, height: 44, borderRadius: '50%',
+        background: meta.bg || 'rgba(139,92,246,0.18)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        marginBottom: 8, flexShrink: 0,
-        boxShadow: `0 0 14px ${meta.bg || 'rgba(139,92,246,0.1)'}, inset 0 1px 0 rgba(255,255,255,0.08)`,
+        marginBottom: 14, flexShrink: 0,
+        boxShadow: `0 0 18px ${meta.bg || 'rgba(139,92,246,0.35)'}`,
       }}>
         {isCompleted
-          ? <CheckCircle size={18} color="#10B981" strokeWidth={2} />
+          ? <CheckCircle size={20} color="#10B981" strokeWidth={2} />
           : IconComp
-            ? <IconComp size={18} color={meta.color || '#A78BFA'} strokeWidth={1.75} />
-            : <span style={{ fontSize: 17 }}>{meta.icon || '✨'}</span>
+            ? <IconComp size={20} color={meta.color || '#A78BFA'} strokeWidth={1.75} />
+            : <span style={{ fontSize: 19 }}>{meta.icon || '✨'}</span>
         }
       </div>
 
       {/* Title */}
       <div style={{
-        fontSize: 12, fontWeight: 700,
+        fontSize: 13, fontWeight: 700,
         color: isCompleted ? '#86EFAC' : '#fff',
-        marginBottom: 8, lineHeight: 1.3,
+        marginBottom: 10, lineHeight: 1.3,
         display: '-webkit-box', WebkitLineClamp: 2,
         WebkitBoxOrient: 'vertical', overflow: 'hidden',
       }}>
@@ -267,15 +266,15 @@ function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
 
       {/* Progress indicator */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 4,
-        fontSize: 10, fontWeight: 600,
+        display: 'flex', alignItems: 'center', gap: 6,
+        fontSize: 11, fontWeight: 600,
         color: isCompleted ? '#10B981' : '#8A84B6',
       }}>
         {isCompleted
-          ? <><CheckCircle size={11} /> 1/1</>
+          ? <><CheckCircle size={13} /> 1/1</>
           : <><span style={{
-              width: 12, height: 12, borderRadius: '50%',
-              border: '1.5px solid rgba(184,180,216,0.4)', display: 'inline-block',
+              width: 13, height: 13, borderRadius: '50%',
+              border: '1.5px solid rgba(184,180,216,0.4)', display: 'inline-block', flexShrink: 0,
             }} /> 0/1</>
         }
       </div>
