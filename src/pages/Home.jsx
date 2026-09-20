@@ -515,21 +515,111 @@ const STORIES = [
     name: 'Anonymous', avatar: '?', avatarColor: '#374151',
     time: '2h ago', tag: 'Growth', tagColor: '#10B981',
     preview: '"Today I finally said no without feeling guilty."',
-    hearts: 128, comments: 32,
+    hearts: 128, comments: 32, scene: 'sunset',
   },
   {
     name: 'Riya', avatar: 'R', avatarColor: '#7C3AED',
     time: '5h ago', tag: 'Overthinking', tagColor: '#8B5CF6',
     preview: '"After weeks of overthinking, I chose to let it go."',
-    hearts: 96, comments: 18,
+    hearts: 96, comments: 18, scene: 'mountains',
   },
   {
     name: 'Arjun', avatar: 'A', avatarColor: '#D97706',
     time: '8h ago', tag: 'Motivation', tagColor: '#F59E0B',
     preview: '"Small steps every day really do change everything."',
-    hearts: 112, comments: 24,
+    hearts: 112, comments: 24, scene: 'sunrise',
   },
 ];
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CINEMATIC SCENE BACKDROPS — CSS/SVG only, no external image assets.
+   Three distinct moods (dusk silhouette / misty peaks / golden sunrise) so
+   Soul Story cards read as photographic rather than flat UI panels.
+───────────────────────────────────────────────────────────────────────────── */
+function SceneBackdrop({ scene }) {
+  if (scene === 'mountains') {
+    return (
+      <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        <defs>
+          <linearGradient id="skyMountains" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#312E81" />
+            <stop offset="55%" stopColor="#4C1D95" />
+            <stop offset="100%" stopColor="#1E1B4B" />
+          </linearGradient>
+          <linearGradient id="peakFar" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#6D28D9" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#4C1D95" stopOpacity="0.55" />
+          </linearGradient>
+        </defs>
+        <rect width="300" height="200" fill="url(#skyMountains)" />
+        {/* Fog band */}
+        <rect x="0" y="95" width="300" height="30" fill="rgba(199,210,254,0.12)" />
+        {/* Far peaks */}
+        <polygon points="0,140 45,80 90,140" fill="url(#peakFar)" />
+        <polygon points="70,140 130,60 190,140" fill="url(#peakFar)" />
+        <polygon points="160,140 220,85 300,140" fill="url(#peakFar)" />
+        {/* Near peaks, darker */}
+        <polygon points="-10,200 60,110 140,200" fill="#2E1065" />
+        <polygon points="100,200 190,95 300,200" fill="#251057" />
+        {/* Moon */}
+        <circle cx="235" cy="45" r="16" fill="#EDE9FE" opacity="0.85" />
+      </svg>
+    );
+  }
+
+  if (scene === 'sunrise') {
+    return (
+      <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        <defs>
+          <linearGradient id="skySunrise" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#7C2D12" />
+            <stop offset="45%" stopColor="#C2410C" />
+            <stop offset="75%" stopColor="#F59E0B" />
+            <stop offset="100%" stopColor="#FDE68A" />
+          </linearGradient>
+          <radialGradient id="sunGlow" cx="50%" cy="100%" r="70%">
+            <stop offset="0%" stopColor="#FEF3C7" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#FEF3C7" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="300" height="200" fill="url(#skySunrise)" />
+        <circle cx="150" cy="150" r="90" fill="url(#sunGlow)" />
+        <circle cx="150" cy="150" r="34" fill="#FFFBEB" opacity="0.9" />
+        {/* Rolling hills, dark silhouette */}
+        <path d="M0,175 C60,150 100,185 160,165 C220,148 260,178 300,160 L300,200 L0,200 Z" fill="#431407" />
+        <path d="M0,190 C80,175 160,198 300,180 L300,200 L0,200 Z" fill="#2A0B04" />
+      </svg>
+    );
+  }
+
+  // 'sunset' — lone silhouette on a hill, dusk gradient
+  return (
+    <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+      <defs>
+        <linearGradient id="skySunset" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1E1B4B" />
+          <stop offset="40%" stopColor="#7E22CE" />
+          <stop offset="70%" stopColor="#DB2777" />
+          <stop offset="100%" stopColor="#F59E0B" />
+        </linearGradient>
+        <radialGradient id="sunSunset" cx="72%" cy="62%" r="26%">
+          <stop offset="0%" stopColor="#FED7AA" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="#FED7AA" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="300" height="200" fill="url(#skySunset)" />
+      <circle cx="215" cy="125" r="60" fill="url(#sunSunset)" />
+      <circle cx="215" cy="125" r="26" fill="#FFEDD5" opacity="0.9" />
+      {/* Ground silhouette */}
+      <path d="M0,168 C70,150 120,172 180,158 C230,148 270,166 300,155 L300,200 L0,200 Z" fill="#0F0A2E" />
+      {/* Person sitting, knees up, looking out */}
+      <g fill="#0A0620">
+        <circle cx="95" cy="140" r="8" />
+        <path d="M85 148 Q95 143 105 148 L108 168 L100 168 L96 154 L92 168 L84 168 Z" />
+      </g>
+    </svg>
+  );
+}
 
 /* ─────────────────────────────────────────────────────────────────────────────
    PEOPLE WHO UNDERSTAND — Match cards for sidebar/dashboard
@@ -1349,73 +1439,96 @@ export default function Home() {
                 onClick={() => navigate('/stories')}
                 style={{
                   flex: 1, minWidth: 0,
-                  background: 'rgba(34,18,73,0.72)',
-                  backdropFilter: 'blur(24px)',
-                  WebkitBackdropFilter: 'blur(24px)',
+                  height: 260,
                   borderRadius: 22,
-                  padding: '16px',
-                  border: '1px solid rgba(255,255,255,0.08)',
                   cursor: 'pointer',
-                  boxShadow: '0 8px 28px rgba(0,0,0,0.35)',
+                  boxShadow: '0 8px 28px rgba(0,0,0,0.4)',
                   position: 'relative', overflow: 'hidden',
+                  border: '1px solid rgba(255,255,255,0.08)',
                 }}
               >
-                {/* Inner top highlight */}
+                {/* Cinematic backdrop */}
+                <SceneBackdrop scene={story.scene} />
+
+                {/* Dark gradient overlay — top for quote legibility, bottom for footer legibility */}
                 <div style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)',
+                  position: 'absolute', inset: 0,
+                  background: 'linear-gradient(180deg, rgba(8,6,22,0.55) 0%, rgba(8,6,22,0.05) 32%, rgba(8,6,22,0.15) 55%, rgba(8,6,22,0.88) 100%)',
                 }} />
 
-                {/* Top row */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                  <div style={{
-                    width: 34, height: 34, borderRadius: '50%',
-                    background: story.avatarColor,
+                {/* Bookmark, top-right */}
+                <button
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    position: 'absolute', top: 12, right: 12,
+                    width: 28, height: 28, borderRadius: '50%',
+                    background: 'rgba(8,6,22,0.45)', backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(255,255,255,0.15)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0,
-                    boxShadow: `0 0 10px ${story.avatarColor}55`,
+                    cursor: 'pointer',
+                  }}
+                  aria-label="Save story"
+                >
+                  <Bookmark size={13} color="#fff" strokeWidth={2} />
+                </button>
+
+                {/* Content, layered above backdrop */}
+                <div style={{
+                  position: 'relative', zIndex: 1, height: '100%',
+                  display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+                  padding: '16px',
+                }}>
+                  {/* Quote */}
+                  <p style={{
+                    fontSize: 14, fontWeight: 700, color: '#fff', lineHeight: 1.4,
+                    margin: 0, textShadow: '0 2px 10px rgba(0,0,0,0.5)',
+                    display: '-webkit-box', WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical', overflow: 'hidden',
                   }}>
-                    {story.avatar}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {story.name}
+                    {story.preview}
+                  </p>
+
+                  {/* Footer: tag + engagement + author */}
+                  <div>
+                    <span style={{
+                      display: 'inline-block',
+                      background: `${story.tagColor}33`,
+                      border: `1px solid ${story.tagColor}77`,
+                      color: '#fff',
+                      fontSize: 11, fontWeight: 600, borderRadius: 20,
+                      padding: '3px 10px', marginBottom: 10,
+                      backdropFilter: 'blur(4px)',
+                    }}>
+                      {story.tag}
+                    </span>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>
+                        <Heart size={12} /> {story.hearts}
+                      </span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>
+                        <MessageCircle size={12} /> {story.comments}
+                      </span>
                     </div>
-                    <div style={{ fontSize: 11, color: '#8A84B6' }}>{story.time}</div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{
+                        width: 26, height: 26, borderRadius: '50%',
+                        background: story.avatarColor,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 11, fontWeight: 700, color: '#fff', flexShrink: 0,
+                        border: '1.5px solid rgba(255,255,255,0.3)',
+                      }}>
+                        {story.avatar}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {story.name}
+                        </div>
+                      </div>
+                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', flexShrink: 0 }}>{story.time}</span>
+                    </div>
                   </div>
-                  <MoreHorizontal size={14} color="#8A84B6" />
-                </div>
-
-                {/* Preview */}
-                <p style={{
-                  fontSize: 13, color: '#B8B4D8', lineHeight: 1.6, margin: '0 0 10px',
-                  display: '-webkit-box', WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                }}>
-                  {story.preview}
-                </p>
-
-                {/* Tag */}
-                <span style={{
-                  display: 'inline-block',
-                  background: `${story.tagColor}1A`,
-                  border: `1px solid ${story.tagColor}44`,
-                  color: story.tagColor,
-                  fontSize: 11, fontWeight: 600, borderRadius: 20,
-                  padding: '3px 10px', marginBottom: 10,
-                }}>
-                  {story.tag}
-                </span>
-
-                {/* Actions */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#8A84B6' }}>
-                    <Heart size={12} /> {story.hearts}
-                  </span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#8A84B6' }}>
-                    <MessageCircle size={12} /> {story.comments}
-                  </span>
-                  <Bookmark size={13} color="#8A84B6" style={{ marginLeft: 'auto' }} />
                 </div>
               </motion.div>
             ))}
