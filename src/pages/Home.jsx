@@ -9,7 +9,7 @@ import ErrorToast from '../components/ErrorToast';
 import { DashboardSkeleton } from '../components/Skeletons';
 import {
   Search, Bell, Heart, MessageCircle, Bookmark, Clock,
-  CheckCircle, MoreHorizontal,
+  CheckCircle, MoreHorizontal, Video,
   Activity, Droplets, Wind, Brain, Flower2,
   Users, Zap, Star, Moon, Monitor, Leaf,
   Target, Briefcase, BookOpen, Palette, Sparkles, Gift,
@@ -49,7 +49,6 @@ const CATEGORY_ICONS = {
   'Kindness':          Gift,
 };
 import BreathingSession from '../components/BreathingSession';
-import TodaysFocusCard from '../components/TodaysFocusCard';
 import OnboardingModal from '../components/OnboardingModal';
 import { onboardingAPI } from '../services/api';
 
@@ -655,6 +654,69 @@ function PeopleWhoUnderstandCard({ match, index = 0, onConnect }) {
         </button>
       </div>
     </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TODAY'S FOCUS — compact sidebar checklist card
+───────────────────────────────────────────────────────────────────────────── */
+const FOCUS_CHECKLIST = [
+  'Write 3 things you\'re grateful for',
+  '5 minute breathing exercise',
+  'Go for a short walk',
+  'Be kind to yourself',
+];
+
+function TodaysFocusChecklistCard({ onStart }) {
+  return (
+    <div style={{
+      ...CARD_STYLE,
+      marginBottom: 0,
+      background: 'linear-gradient(145deg, rgba(139,92,246,0.1) 0%, rgba(34,18,73,0.72) 100%)',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+        <span style={{ fontSize: 16 }}>🌿</span>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: 0 }}>Today's Focus</h3>
+      </div>
+
+      <p style={{
+        fontSize: 20, fontWeight: 800, fontStyle: 'italic', color: '#fff',
+        lineHeight: 1.25, margin: '0 0 16px',
+      }}>
+        Small steps.<br />Big change.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 16 }}>
+        {FOCUS_CHECKLIST.map((item, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <CheckCircle size={14} color="#34D399" strokeWidth={2.2} style={{ flexShrink: 0 }} />
+            <span style={{ fontSize: 12, color: '#D8D4EE', lineHeight: 1.3 }}>{item}</span>
+          </div>
+        ))}
+      </div>
+
+      <motion.button
+        whileTap={{ scale: 0.97 }}
+        onClick={onStart}
+        style={{
+          width: '100%', padding: '11px', borderRadius: 13,
+          background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+          border: 'none', color: '#fff', fontSize: 13, fontWeight: 700,
+          cursor: 'pointer', fontFamily: 'inherit',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          boxShadow: '0 4px 16px rgba(124,58,237,0.4)',
+          marginBottom: 12,
+        }}
+      >
+        Start Today <span style={{ fontSize: 15 }}>→</span>
+      </motion.button>
+
+      <p style={{
+        fontSize: 11, fontStyle: 'italic', color: '#8A84B6', textAlign: 'center', margin: 0,
+      }}>
+        "Progress, not perfection."
+      </p>
+    </div>
   );
 }
 
@@ -1354,10 +1416,7 @@ export default function Home() {
 
         {/* ── Card 1: Today's Focus ── */}
         <div ref={todaysFocusRef} style={{ marginBottom: 12 }}>
-          <TodaysFocusCard
-            selectedMood={selectedWeather}
-            onSessionComplete={() => setBreathingDone(true)}
-          />
+          <TodaysFocusChecklistCard onStart={() => setShowBreathing(true)} />
         </div>
 
         {/* ── Card 2: Global Pulse ── */}
@@ -1367,31 +1426,48 @@ export default function Home() {
 
         {/* ── Card 3: Upcoming Session ── */}
         <div className="sidebar-card-inner" style={{ ...CARD_STYLE, marginBottom: 12, display: 'flex', flexDirection: 'column' }}>
-          <div style={SECTION_LABEL}>Upcoming Session</div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <span style={{ fontSize: 11, color: '#F4C542', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Upcoming Session
+            </span>
+            <button
+              onClick={() => navigate('/professionals')}
+              style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+            >
+              View All
+            </button>
+          </div>
 
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Online Therapy</div>
-              <div style={{ fontSize: 12, color: '#8A84B6', marginBottom: 2 }}>with Dr. Meera Sharma</div>
-              <div style={{ fontSize: 12, color: '#B8B4D8' }}>📅 Tomorrow, 11:00 AM</div>
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{
-              width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
+              width: 44, height: 44, borderRadius: '50%', flexShrink: 0, overflow: 'hidden',
               background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 18, fontWeight: 700, color: '#fff',
-              boxShadow: '0 0 16px rgba(124,58,237,0.4)',
+              fontSize: 17, fontWeight: 700, color: '#fff',
+              boxShadow: '0 0 14px rgba(124,58,237,0.4)',
             }}>
               M
             </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Dr. Meera Sharma</div>
+              <div style={{ fontSize: 11, color: '#8A84B6', marginBottom: 3 }}>Clinical Psychologist</div>
+              <div style={{ fontSize: 11, color: '#B8B4D8', display: 'flex', alignItems: 'center', gap: 4 }}>
+                📅 Tomorrow, 11:00 AM
+              </div>
+            </div>
+            <button
+              onClick={() => navigate('/professionals')}
+              style={{
+                width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
+                background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+                border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', boxShadow: '0 4px 12px rgba(124,58,237,0.35)',
+              }}
+              aria-label="Join video session"
+            >
+              <Video size={14} color="#fff" strokeWidth={2} fill="#fff" />
+            </button>
           </div>
-
-          <button
-            onClick={() => navigate('/professionals')}
-            style={{ ...GLASS_BTN, width: '100%', padding: '8px', textAlign: 'center', marginTop: 8, borderRadius: 11, fontSize: 11 }}
-          >
-            View Session
-          </button>
         </div>
 
         {/* ── Card 4: Inspiration ── */}
