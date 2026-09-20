@@ -24,7 +24,24 @@ const distIndex = resolve(__dirname, '../dist/index.html');
 
 const STATIC_HTML = `
 <div id="root">
-<div id="__static_shell__" style="font-family:system-ui,sans-serif;background:#09061a;color:#ede9fe;min-height:100vh;">
+<div id="app-shell" style="
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(155deg,#06011A 0%,#130530 40%,#1E0848 70%,#06011A 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Plus Jakarta Sans',Inter,sans-serif;
+">
+  <div style="text-align:center;">
+    <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect" style="height:48px;margin-bottom:24px;opacity:0.9;" />
+    <div style="width:36px;height:36px;margin:0 auto;border-radius:50%;border:3px solid rgba(167,139,250,0.2);border-top-color:#A78BFA;animation:spin .8s linear infinite;"></div>
+  </div>
+</div>
+<style>#app-shell{transition:opacity .2s ease}@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<!-- __static_shell__ below is for crawlers/no-JS only — real browsers never
+     see it, it's visually hidden and sits behind #app-shell (which React
+     replaces on mount, same as it does the whole #root subtree). Content
+     stays in the HTML source so search engines still index it. -->
+<div id="__static_shell__" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;font-family:system-ui,sans-serif;background:#09061a;color:#ede9fe;">
 
   <!-- STATIC_INJECTION_MARKER: SEO AUDIT FIX -->
   <!-- This marker indicates static shell was injected for SEO crawlability -->
