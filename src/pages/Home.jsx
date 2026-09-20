@@ -24,7 +24,9 @@ import SearchModal from '../components/SearchModal';
 import NotificationDropdown from '../components/NotificationDropdown';
 import EmotionWeatherModal from '../components/emotional-weather/EmotionWeatherModal';
 import SoulClimateWidget from '../components/SoulClimateWidget';
+import GlobalPulseCard from '../components/dashboard/GlobalPulseCard';
 import { useReflections } from '../hooks/useReflections';
+import { getSoulMatches, scoreToPercent } from '../components/soulmatch/soulmatchData';
 
 const CATEGORY_ICONS = {
   'Movement':          Activity,
@@ -563,6 +565,136 @@ const STORIES = [
 ];
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   PEOPLE WHO UNDERSTAND — Match cards for sidebar/dashboard
+───────────────────────────────────────────────────────────────────────────── */
+function PeopleWhoUnderstandCard({ match, onConnect }) {
+  if (!match) return null;
+  const matchPercent = scoreToPercent(match.match_score);
+  const tags = match.struggles?.slice(0, 2) || [];
+  const statement = match.statement || match.bio || '';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      style={{
+        flex: 1, minWidth: 0,
+        background: 'rgba(34,18,73,0.72)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 20,
+        padding: '18px',
+        display: 'flex', flexDirection: 'column',
+        position: 'relative',
+        boxShadow: '0 8px 28px rgba(0,0,0,0.35)',
+      }}
+    >
+      {/* Inner top highlight */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)',
+      }} />
+
+      {/* Avatar + Match % */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
+        <div style={{
+          width: 68, height: 68, borderRadius: '50%', flexShrink: 0,
+          background: `linear-gradient(135deg, ${match.avatar_color || '#7C3AED'}, ${match.avatar_color_2 || '#A855F7'})`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 26, fontWeight: 700, color: '#fff',
+          boxShadow: `0 0 20px ${match.avatar_color || '#7C3AED'}55`,
+        }}>
+          {match.name?.[0]?.toUpperCase() || '?'}
+        </div>
+        <div style={{ position: 'relative', flex: 1 }}>
+          <div style={{
+            width: 52, height: 52, borderRadius: '50%',
+            background: 'rgba(16,185,129,0.15)',
+            border: '2px solid rgba(16,185,129,0.4)',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            fontSize: 18, fontWeight: 800, color: '#10B981',
+          }}>
+            {matchPercent || '?'}%
+          </div>
+          <div style={{
+            fontSize: 10, color: '#8A84B6', textAlign: 'center', marginTop: 4,
+          }}>
+            Match
+          </div>
+        </div>
+      </div>
+
+      {/* Name + Location */}
+      <div style={{ marginBottom: 8 }}>
+        <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>
+          {match.name}, {match.age || '?'}
+        </div>
+        <div style={{ fontSize: 12, color: '#8A84B6', marginTop: 2 }}>
+          📍 {match.location || 'India'}
+        </div>
+      </div>
+
+      {/* Tags */}
+      {tags.length > 0 && (
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
+          {tags.map((tag, i) => (
+            <span key={i} style={{
+              fontSize: 11, fontWeight: 600,
+              background: 'rgba(139,92,246,0.12)',
+              border: '1px solid rgba(139,92,246,0.25)',
+              color: '#A78BFA',
+              borderRadius: 14, padding: '3px 10px',
+            }}>
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Statement */}
+      <p style={{
+        fontSize: 13, color: '#B8B4D8', lineHeight: 1.5, margin: '0 0 14px',
+        display: '-webkit-box', WebkitLineClamp: 2,
+        WebkitBoxOrient: 'vertical', overflow: 'hidden',
+      }}>
+        "{statement}"
+      </p>
+
+      {/* Actions */}
+      <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
+        <motion.button
+          whileTap={{ scale: 0.96 }}
+          onClick={() => onConnect?.(match)}
+          style={{
+            flex: 1,
+            padding: '9px 14px', borderRadius: 12,
+            background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+            border: '1px solid rgba(168,85,247,0.3)',
+            color: '#fff', fontSize: 12, fontWeight: 600,
+            cursor: 'pointer', fontFamily: 'inherit',
+            boxShadow: '0 4px 12px rgba(124,58,237,0.3)',
+          }}
+        >
+          Connect
+        </motion.button>
+        <button style={{
+          flex: 1,
+          padding: '9px 14px', borderRadius: 12,
+          background: 'rgba(255,255,255,0.06)',
+          border: '1px solid rgba(255,255,255,0.12)',
+          color: '#B8B4D8', fontSize: 12, fontWeight: 600,
+          cursor: 'pointer', fontFamily: 'inherit',
+        }}>
+          Not Now
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    MAIN COMPONENT
 ───────────────────────────────────────────────────────────────────────────── */
 export default function Home() {
@@ -585,6 +717,7 @@ export default function Home() {
   const [selectedWeather, setSelectedWeather] = useState(todayEntry?.weather || null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [matches, setMatches] = useState([]);
 
   // Today's Reflection modal
   const [reflectionModalOpen, setReflectionModalOpen] = useState(false);
@@ -653,6 +786,19 @@ export default function Home() {
     const weatherId = todayEntry?.weather || 'clear-sky';
     checkAndRefresh(weatherId);
   }, [todayEntry?.weather]);
+
+  // Load SoulMatches
+  useEffect(() => {
+    const loadMatches = async () => {
+      try {
+        const res = await getSoulMatches({});
+        setMatches(res.matches?.slice(0, 3) || []);
+      } catch (err) {
+        console.error('Error loading matches:', err);
+      }
+    };
+    loadMatches();
+  }, []);
 
   // Sync selectedWeather with todayEntry when it updates
   useEffect(() => {
@@ -755,7 +901,22 @@ export default function Home() {
           display: flex; flex-direction: column;
           padding: 24px 16px 20px;
           z-index: 50;
-          overflow: hidden;
+          overflow-y: auto;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(168,85,247,0.3) transparent;
+        }
+        .home-right-sidebar::-webkit-scrollbar {
+          width: 5px;
+        }
+        .home-right-sidebar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .home-right-sidebar::-webkit-scrollbar-thumb {
+          background: rgba(168,85,247,0.3);
+          border-radius: 3px;
+        }
+        .home-right-sidebar::-webkit-scrollbar-thumb:hover {
+          background: rgba(168,85,247,0.5);
         }
         @media (max-width: 1100px) {
           .home-right-sidebar { display: none; }
@@ -1007,7 +1168,44 @@ export default function Home() {
         </div>
 
         {/* ════════════════════════════════════════════════════════════
-            SECTION 2 — TINY WINS
+            SECTION 2 — PEOPLE WHO UNDERSTAND
+        ════════════════════════════════════════════════════════════ */}
+        <div className="home-section" style={{ margin: '0 32px 16px', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div>
+              <div style={{ ...SECTION_LABEL, marginBottom: 2 }}>💜 PEOPLE WHO UNDERSTAND</div>
+              <div style={{ fontSize: 12, color: 'rgba(184,180,216,0.55)' }}>You're not alone. Here are people going through similar experiences.</div>
+            </div>
+            <button
+              onClick={() => navigate('/matches')}
+              style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+            >
+              View All ›
+            </button>
+          </div>
+
+          {matches.length > 0 ? (
+            <div style={{ display: 'flex', gap: 12 }}>
+              {matches.map((match, i) => (
+                <PeopleWhoUnderstandCard
+                  key={match.id || i}
+                  match={match}
+                  onConnect={() => navigate('/matches')}
+                />
+              ))}
+            </div>
+          ) : (
+            <div style={{
+              ...CARD_STYLE, textAlign: 'center', padding: '28px',
+              color: '#8A84B6', fontSize: 13,
+            }}>
+              Loading your SoulMatches...
+            </div>
+          )}
+        </div>
+
+        {/* ════════════════════════════════════════════════════════════
+            SECTION 4 — TINY WINS
         ════════════════════════════════════════════════════════════ */}
         <div className="home-section" style={{ margin: '0 32px 16px', position: 'relative', zIndex: 1 }}>
 
@@ -1087,11 +1285,11 @@ export default function Home() {
         </div>
 
         {/* ════════════════════════════════════════════════════════════
-            SECTION 3 — LATEST SOUL STORIES
+            SECTION 5 — LATEST SOUL STORIES
         ════════════════════════════════════════════════════════════ */}
         <div className="home-section" style={{ margin: '0 32px 32px', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-            <span style={{ ...SECTION_LABEL, marginBottom: 0 }}>LATEST SOUL STORIES</span>
+            <span style={{ ...SECTION_LABEL, marginBottom: 0 }}>📖 LATEST SOUL STORIES</span>
             <button
               onClick={() => navigate('/stories')}
               style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
@@ -1189,29 +1387,34 @@ export default function Home() {
       {/* ════════════════════ RIGHT SIDEBAR ════════════════════ */}
       <div className="home-right-sidebar">
 
-        {/* ── Card 1: Today's Focus (Premium Interactive) ── */}
-        <div ref={todaysFocusRef} style={{ marginBottom: 14 }}>
+        {/* ── Card 1: Today's Focus ── */}
+        <div ref={todaysFocusRef} style={{ marginBottom: 12 }}>
           <TodaysFocusCard
             selectedMood={selectedWeather}
             onSessionComplete={() => setBreathingDone(true)}
           />
         </div>
 
+        {/* ── Card 2: Global Pulse ── */}
+        <div style={{ marginBottom: 12 }}>
+          <GlobalPulseCard />
+        </div>
+
         {/* ── Card 3: Upcoming Session ── */}
-        <div className="sidebar-card-inner" style={{ ...CARD_STYLE, flex: 1, minHeight: 0, marginBottom: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <div style={SECTION_LABEL}>UPCOMING SESSION</div>
+        <div className="sidebar-card-inner" style={{ ...CARD_STYLE, marginBottom: 12, display: 'flex', flexDirection: 'column' }}>
+          <div style={SECTION_LABEL}>Upcoming Session</div>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Online Therapy</div>
-              <div style={{ fontSize: 12, color: '#8A84B6', marginBottom: 6 }}>with Dr. Meera Sharma</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>Online Therapy</div>
+              <div style={{ fontSize: 12, color: '#8A84B6', marginBottom: 2 }}>with Dr. Meera Sharma</div>
               <div style={{ fontSize: 12, color: '#B8B4D8' }}>📅 Tomorrow, 11:00 AM</div>
             </div>
             <div style={{
-              width: 46, height: 46, borderRadius: '50%', flexShrink: 0,
+              width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
               background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 20, fontWeight: 700, color: '#fff',
+              fontSize: 18, fontWeight: 700, color: '#fff',
               boxShadow: '0 0 16px rgba(124,58,237,0.4)',
             }}>
               M
@@ -1220,12 +1423,44 @@ export default function Home() {
 
           <button
             onClick={() => navigate('/professionals')}
-            style={{ ...GLASS_BTN, width: '100%', padding: '9px', textAlign: 'center', marginTop: 10, borderRadius: 13 }}
+            style={{ ...GLASS_BTN, width: '100%', padding: '8px', textAlign: 'center', marginTop: 8, borderRadius: 11, fontSize: 11 }}
           >
             View Session
           </button>
         </div>
 
+        {/* ── Card 4: Inspiration ── */}
+        <div className="sidebar-card-inner" style={{
+          ...CARD_STYLE,
+          marginBottom: 0,
+          flex: 1,
+          background: 'linear-gradient(135deg, rgba(192, 132, 250, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%)',
+          border: '1px solid rgba(168, 85, 247, 0.2)',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          position: 'relative', overflow: 'hidden',
+        }}>
+          {/* Decorative gradient blobs */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'radial-gradient(circle at 80% 20%, rgba(168,85,247,0.2) 0%, transparent 50%)',
+            pointerEvents: 'none',
+          }} />
+
+          <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+            <p style={{
+              fontSize: 13, fontStyle: 'italic', color: '#E2DEFF', lineHeight: 1.6,
+              margin: '0 0 8px',
+              fontWeight: 500,
+            }}>
+              "Healing is not a<br/>destination,<br/>it's a journey."
+            </p>
+            <div style={{
+              fontSize: 40, marginTop: 6,
+            }}>
+              🌿
+            </div>
+          </div>
+        </div>
 
       </div>{/* end .home-right-sidebar */}
 
