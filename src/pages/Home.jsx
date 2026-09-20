@@ -236,20 +236,33 @@ function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
         background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
       }} />
 
-      {/* Icon bubble */}
-      <div style={{
-        width: 44, height: 44, borderRadius: '50%',
-        background: meta.bg || 'rgba(139,92,246,0.18)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        marginBottom: 14, flexShrink: 0,
-        boxShadow: `0 0 18px ${meta.bg || 'rgba(139,92,246,0.35)'}`,
-      }}>
-        {isCompleted
-          ? <CheckCircle size={20} color="#10B981" strokeWidth={2} />
-          : IconComp
+      {/* Icon bubble — always shows category color/icon; completion adds a badge */}
+      <div style={{ position: 'relative', marginBottom: 14 }}>
+        <div style={{
+          width: 44, height: 44, borderRadius: '50%',
+          background: `radial-gradient(circle at 32% 28%, ${meta.color || '#A78BFA'}55, ${meta.color || '#A78BFA'}22 70%)`,
+          border: `1px solid ${meta.color ? meta.color + '55' : 'rgba(139,92,246,0.35)'}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0,
+          boxShadow: `0 0 22px ${meta.color || '#A78BFA'}66, inset 0 1px 0 rgba(255,255,255,0.15)`,
+        }}>
+          {IconComp
             ? <IconComp size={20} color={meta.color || '#A78BFA'} strokeWidth={1.75} />
             : <span style={{ fontSize: 19 }}>{meta.icon || '✨'}</span>
-        }
+          }
+        </div>
+        {isCompleted && (
+          <div style={{
+            position: 'absolute', bottom: -3, right: -3,
+            width: 17, height: 17, borderRadius: '50%',
+            background: '#10B981',
+            border: '2px solid rgba(34,18,73,0.9)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 0 8px rgba(16,185,129,0.6)',
+          }}>
+            <CheckCircle size={11} color="#fff" strokeWidth={2.5} fill="#10B981" />
+          </div>
+        )}
       </div>
 
       {/* Title */}
