@@ -523,11 +523,18 @@ const STORIES = [
 /* ─────────────────────────────────────────────────────────────────────────────
    PEOPLE WHO UNDERSTAND — Match cards for sidebar/dashboard
 ───────────────────────────────────────────────────────────────────────────── */
-function PeopleWhoUnderstandCard({ match, onConnect }) {
+const AVATAR_PALETTE = [
+  ['#EC4899', '#F472B6'], ['#7C3AED', '#A855F7'], ['#0EA5E9', '#38BDF8'],
+  ['#F59E0B', '#FBBF24'], ['#10B981', '#34D399'], ['#6366F1', '#818CF8'],
+];
+
+function PeopleWhoUnderstandCard({ match, index = 0, onConnect }) {
   if (!match) return null;
   const matchPercent = scoreToPercent(match.match_score);
-  const tags = match.struggles?.slice(0, 2) || [];
-  const statement = match.statement || match.bio || '';
+  const tags = [match.problem, match.problem_context].filter(Boolean).slice(0, 2);
+  const statement = match.match_reason || match.bio || '';
+  const location = match.city || match.location || 'India';
+  const [c1, c2] = AVATAR_PALETTE[index % AVATAR_PALETTE.length];
 
   return (
     <motion.div
@@ -552,33 +559,33 @@ function PeopleWhoUnderstandCard({ match, onConnect }) {
         background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)',
       }} />
 
-      {/* Avatar + Match % */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
+      {/* Avatar with overlapping match badge */}
+      <div style={{ position: 'relative', width: 64, height: 64, marginBottom: 12 }}>
         <div style={{
-          width: 68, height: 68, borderRadius: '50%', flexShrink: 0,
-          background: `linear-gradient(135deg, ${match.avatar_color || '#7C3AED'}, ${match.avatar_color_2 || '#A855F7'})`,
+          width: 64, height: 64, borderRadius: '50%', overflow: 'hidden',
+          background: `linear-gradient(135deg, ${c1}, ${c2})`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 26, fontWeight: 700, color: '#fff',
-          boxShadow: `0 0 20px ${match.avatar_color || '#7C3AED'}55`,
+          fontSize: 24, fontWeight: 700, color: '#fff',
+          boxShadow: `0 0 20px ${c1}55`,
+          border: '2px solid rgba(255,255,255,0.12)',
         }}>
-          {match.name?.[0]?.toUpperCase() || '?'}
+          {match.avatar_url
+            ? <img src={match.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            : (match.name?.[0]?.toUpperCase() || '?')
+          }
         </div>
-        <div style={{ position: 'relative', flex: 1 }}>
-          <div style={{
-            width: 52, height: 52, borderRadius: '50%',
-            background: 'rgba(16,185,129,0.15)',
-            border: '2px solid rgba(16,185,129,0.4)',
-            display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center',
-            fontSize: 18, fontWeight: 800, color: '#10B981',
-          }}>
-            {matchPercent || '?'}%
-          </div>
-          <div style={{
-            fontSize: 10, color: '#8A84B6', textAlign: 'center', marginTop: 4,
-          }}>
-            Match
-          </div>
+        <div style={{
+          position: 'absolute', top: -8, right: -10,
+          width: 40, height: 40, borderRadius: '50%',
+          background: 'rgba(8,6,22,0.95)',
+          border: '2px solid rgba(16,185,129,0.5)',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.4)',
+        }}>
+          <span style={{ fontSize: 12, fontWeight: 800, color: '#10B981', lineHeight: 1 }}>
+            {matchPercent != null ? `${matchPercent}%` : '—'}
+          </span>
         </div>
       </div>
 
@@ -588,7 +595,7 @@ function PeopleWhoUnderstandCard({ match, onConnect }) {
           {match.name}, {match.age || '?'}
         </div>
         <div style={{ fontSize: 12, color: '#8A84B6', marginTop: 2 }}>
-          📍 {match.location || 'India'}
+          📍 {location}
         </div>
       </div>
 
@@ -610,13 +617,15 @@ function PeopleWhoUnderstandCard({ match, onConnect }) {
       )}
 
       {/* Statement */}
-      <p style={{
-        fontSize: 13, color: '#B8B4D8', lineHeight: 1.5, margin: '0 0 14px',
-        display: '-webkit-box', WebkitLineClamp: 2,
-        WebkitBoxOrient: 'vertical', overflow: 'hidden',
-      }}>
-        "{statement}"
-      </p>
+      {statement && (
+        <p style={{
+          fontSize: 13, color: '#B8B4D8', lineHeight: 1.5, margin: '0 0 14px',
+          display: '-webkit-box', WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>
+          "{statement}"
+        </p>
+      )}
 
       {/* Actions */}
       <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
@@ -1146,6 +1155,7 @@ export default function Home() {
                 <PeopleWhoUnderstandCard
                   key={match.id || i}
                   match={match}
+                  index={i}
                   onConnect={() => navigate('/matches')}
                 />
               ))}
