@@ -747,14 +747,11 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
           }}
         >
           <span style={{
-            width: 'clamp(17px, 4.5vw, 24px)', height: 'clamp(17px, 4.5vw, 24px)', borderRadius: '50%',
+            width: 'clamp(10px, 2.4vw, 13px)', height: 'clamp(10px, 2.4vw, 13px)', borderRadius: '50%',
             background: `linear-gradient(135deg, ${l.color}, ${l.color}CC)`,
             boxShadow: `0 0 10px ${l.color}99, 0 0 2px ${l.color}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 'clamp(9px, 2.2vw, 12px)', flexShrink: 0,
-          }}>
-            {l.icon}
-          </span>
+            flexShrink: 0,
+          }} />
           <span style={{ fontSize: 'clamp(10px, 2.6vw, 13px)', fontWeight: 600, color: lightTheme ? '#1F2937' : '#FFFFFF' }}>
             {l.label}
           </span>

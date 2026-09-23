@@ -1,7 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, BookOpen, TrendingUp, Leaf, UserRound, Globe as GlobeIcon } from 'lucide-react';
-import Globe3D from '../components/Pulse/Globe3D';
+import {
+  Users, BookOpen, TrendingUp, Leaf, UserRound, Globe as GlobeIcon,
+  // Drawn icons replacing the emoji this page used as UI iconography.
+  // Emoji render as a different artwork on every OS (and as full-colour
+  // cartoons next to a restrained type palette), which is the single
+  // loudest "assembled from a template" tell on the page. Lucide at
+  // stroke 1.5 is the house icon set per docs/DESIGN_SYSTEM.md.
+  Feather, MessagesSquare, Sprout, HeartCrack, CloudRain, Flame, Wind,
+  ShieldCheck, Lock, HandHeart, Handshake, Heart, Ear, MessageCircle,
+  Award, Mail, BellOff, LifeBuoy, ScrollText, Scale, Check, Compass, Moon,
+} from 'lucide-react';
+
+// Globe3D pulls in three.js (large) and isn't visible above the fold —
+// lazy-load it so it never blocks Landing's critical-path bundle.
+const Globe3D = lazy(() => import('../components/Pulse/Globe3D'));
+
+// Lightweight, dependency-free placeholder shown while Globe3D's chunk
+// (three.js) loads. Sized to fill the same container as the real globe so
+// there's no layout shift when it swaps in.
+const GlobePlaceholder = React.memo(function GlobePlaceholder() {
+  return (
+    <div style={{
+      position:'absolute', inset:0, borderRadius:'50%',
+      display:'flex', alignItems:'center', justifyContent:'center',
+      background:'radial-gradient(circle at 35% 30%, rgba(167,139,250,0.28), rgba(109,74,255,0.12) 55%, rgba(109,74,255,0.02) 78%)',
+      border:'1px solid rgba(167,139,250,0.22)',
+      animation:'globeFallbackPulse 2.2s ease-in-out infinite',
+    }}>
+      <GlobeIcon size={40} strokeWidth={1.5} color="rgba(167,139,250,0.55)" />
+    </div>
+  );
+});
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    DESIGN TOKENS
@@ -10,7 +40,7 @@ const P    = '#6D4AFF';
 const LAV  = '#A78BFA';
 const GLD  = '#F5B841';
 const PNK  = '#F472B6';
-const DARK = '#120B2E';
+const DARK = '#1A162C';
 const SQ3  = 1.7320508;
 
 const NAV_LINKS = [
@@ -621,6 +651,7 @@ export default function Landing() {
     @keyframes fadeUp    {from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
     @keyframes floatY    {0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
     @keyframes pulse     {0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.18)}}
+    @keyframes globeFallbackPulse{0%,100%{opacity:0.75;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
     @keyframes orbDrift  {0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-14px)}}
     @keyframes glowBreathe{
       0%,100%{box-shadow:0 0 0 0 rgba(109,74,255,0),0 6px 28px rgba(109,74,255,0.22);}
@@ -897,19 +928,19 @@ export default function Landing() {
   `;
 
   const STEPS = [
-    {n:'1', icon:'✍️', title:'Share Your Journey',   desc:'Express what you\'re going through in a safe, judgment-free space.'},
-    {n:'2', icon:'👥', title:'Find Similar People',   desc:'We match you with people who truly understand your experience.'},
-    {n:'3', icon:'🫂', title:'Join Support Circles',  desc:'Enter meaningful conversations and guided support groups.'},
-    {n:'4', icon:'🌱', title:'Grow Together',          desc:'Heal, learn, and transform alongside your community.'},
+    {n:'1', Icon:Feather, title:'Share Your Journey',   desc:'Express what you\'re going through in a safe, judgment-free space.'},
+    {n:'2', Icon:Users, title:'Find Similar People',   desc:'We match you with people who truly understand your experience.'},
+    {n:'3', Icon:MessagesSquare, title:'Join Support Circles',  desc:'Enter meaningful conversations and guided support groups.'},
+    {n:'4', Icon:Sprout, title:'Grow Together',          desc:'Heal, learn, and transform alongside your community.'},
   ];
 
   const CHALLENGES = [
-    {emoji:'🧠', label:'Anxiety &\nOverthinking', glow:'rgba(124,58,237,0.18)',  border:'rgba(124,58,237,0.28)',  shadow:'0 24px 56px rgba(124,58,237,0.22)'},
-    {emoji:'💔', label:'Heartbreak',               glow:'rgba(219,39,119,0.18)', border:'rgba(219,39,119,0.28)', shadow:'0 24px 56px rgba(219,39,119,0.22)'},
-    {emoji:'🌧', label:'Loneliness',                glow:'rgba(37,99,235,0.18)',  border:'rgba(37,99,235,0.28)',   shadow:'0 24px 56px rgba(37,99,235,0.22)'},
-    {emoji:'🕯', label:'Grief',                     glow:'rgba(217,119,6,0.2)',   border:'rgba(217,119,6,0.3)',    shadow:'0 24px 56px rgba(217,119,6,0.24)'},
-    {emoji:'🔥', label:'Burnout',                   glow:'rgba(234,88,12,0.18)', border:'rgba(234,88,12,0.28)',   shadow:'0 24px 56px rgba(234,88,12,0.22)'},
-    {emoji:'🌱', label:'Life\nTransitions',          glow:'rgba(5,150,105,0.18)', border:'rgba(5,150,105,0.28)',   shadow:'0 24px 56px rgba(5,150,105,0.22)'},
+    {Icon:Wind, label:'Anxiety &\nOverthinking', glow:'rgba(124,58,237,0.18)',  border:'rgba(124,58,237,0.28)',  shadow:'0 24px 56px rgba(124,58,237,0.22)'},
+    {Icon:HeartCrack, label:'Heartbreak',               glow:'rgba(219,39,119,0.18)', border:'rgba(219,39,119,0.28)', shadow:'0 24px 56px rgba(219,39,119,0.22)'},
+    {Icon:CloudRain, label:'Loneliness',                glow:'rgba(37,99,235,0.18)',  border:'rgba(37,99,235,0.28)',   shadow:'0 24px 56px rgba(37,99,235,0.22)'},
+    {Icon:Moon, label:'Grief',                     glow:'rgba(217,119,6,0.2)',   border:'rgba(217,119,6,0.3)',    shadow:'0 24px 56px rgba(217,119,6,0.24)'},
+    {Icon:Flame, label:'Burnout',                   glow:'rgba(234,88,12,0.18)', border:'rgba(234,88,12,0.28)',   shadow:'0 24px 56px rgba(234,88,12,0.22)'},
+    {Icon:Sprout, label:'Life\nTransitions',          glow:'rgba(5,150,105,0.18)', border:'rgba(5,150,105,0.28)',   shadow:'0 24px 56px rgba(5,150,105,0.22)'},
   ];
 
   const HELPS = [
@@ -922,7 +953,7 @@ export default function Landing() {
   ];
 
   return (
-    <div style={{fontFamily:F, background:'#F8F5FF', color:DARK, overflowX:'hidden'}}>
+    <div style={{fontFamily:F, background:'#F9F9FC', color:DARK, overflowX:'hidden'}}>
       <style>{css}</style>
 
       {/* ══════════════════════════════════════════════════════════════════════
@@ -942,11 +973,15 @@ export default function Landing() {
           {/* Logo */}
           <Link to="/" style={{display:'flex', alignItems:'center', gap:10,
             textDecoration:'none', flexShrink:0, marginRight:36}}>
-            <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect"
-              style={{height:44, width:'auto', display:'block',
-                filter:'drop-shadow(0 4px 14px rgba(109,74,255,0.5))'}}/>
+            <picture>
+              <source srcSet="/brand/logo/soulconnect-logo-primary-sm.webp" type="image/webp" />
+              <img src="/brand/logo/soulconnect-logo-primary-sm.png" alt="SoulConnect"
+                width="44" height="44"
+                style={{height:44, width:'auto', display:'block',
+                  filter:'drop-shadow(0 4px 14px rgba(109,74,255,0.5))'}}/>
+            </picture>
             <div>
-              <div style={{fontSize:18, fontWeight:800, color:'#fff',
+              <div style={{fontSize:18, fontWeight:600, color:'#fff',
                 letterSpacing:'-0.02em', lineHeight:1.1}}>
                 Soul<span style={{color:LAV}}>Connect</span>
               </div>
@@ -973,7 +1008,7 @@ export default function Landing() {
             <a href="#early" className="l-btn-p"
               style={{padding:'10px 24px', fontSize:14, borderRadius:11,
                 animation:'glowBreathe 5s ease-in-out infinite'}}>
-              Find My Circle 💜
+              Find My Circle
             </a>
           </div>
 
@@ -1013,7 +1048,7 @@ export default function Landing() {
                 borderRadius:13, fontSize:15, fontWeight:700, color:'#fff',
                 textDecoration:'none',
                 background:`linear-gradient(135deg,${P},#5B3CE8)`}}>
-              Find My Circle 💜
+              Find My Circle
             </a>
           </div>
         </div>
@@ -1024,7 +1059,7 @@ export default function Landing() {
       ══════════════════════════════════════════════════════════════════════ */}
       <section id="hero" style={{
         position:'relative',
-        background:`linear-gradient(155deg,#06011A 0%,#130530 30%,#261060 60%,#130530 100%)`,
+        background:`linear-gradient(155deg,#0F0B1B 0%,#1A132D 30%,#2A2046 60%,#1A132D 100%)`,
         minHeight:850, overflow:'hidden',
       }}>
         {/* Ambient orbs */}
@@ -1057,7 +1092,7 @@ export default function Landing() {
             {/* Trust badge */}
             <div className="l-trust-badge" style={{marginBottom:24}}>
               <span className="l-trust-badge-dot"/>
-              <span className="l-trust-badge-rocket">🚀</span>
+              <span className="l-trust-badge-rocket"><Compass size={12} strokeWidth={1.75} /></span>
               <span className="l-trust-badge-text">Early Access</span>
               <span className="l-trust-badge-sep"/>
               <span className="l-trust-badge-label">Building With Our First Community Members</span>
@@ -1089,16 +1124,16 @@ export default function Landing() {
             <div className="l-hero-pills" style={{display:'flex', flexWrap:'wrap',
               gap:10, marginBottom:42}}>
               {[
-                {icon:'♡', label:'Real Connections'},
-                {icon:'🛡', label:'Safe Community'},
-                {icon:'🧠', label:'Emotional Support'},
+                {Icon:Heart,       label:'Real Connections'},
+                {Icon:ShieldCheck, label:'Safe Community'},
+                {Icon:HandHeart,   label:'Emotional Support'},
               ].map((t,i)=>(
                 <div key={i} style={{display:'flex', alignItems:'center', gap:8,
                   background:'rgba(255,255,255,0.07)',
                   border:'1px solid rgba(255,255,255,0.15)',
                   borderRadius:99, padding:'9px 18px',
                   backdropFilter:'blur(8px)'}}>
-                  <span style={{fontSize:15}}>{t.icon}</span>
+                  <t.Icon size={15} strokeWidth={1.5} color="rgba(255,255,255,0.72)" />
                   <span style={{color:'rgba(255,255,255,0.85)',
                     fontSize:13, fontWeight:500}}>{t.label}</span>
                 </div>
@@ -1109,7 +1144,7 @@ export default function Landing() {
             <div className="l-hero-btns" style={{display:'flex', flexWrap:'wrap', gap:14}}>
               <a href="#early" className="l-btn-p"
                 style={{fontSize:16, padding:'16px 38px', borderRadius:15}}>
-                Find My Circle 💜
+                Find My Circle
               </a>
               <Link to="/pulse" className="l-btn-gp" aria-label="Global Pulse — how are you feeling?">
                 <span className="l-btn-gp-icon">
@@ -1264,10 +1299,12 @@ export default function Landing() {
                 height:'min(clamp(240px, 34vw, 560px), 100%)',
                 aspectRatio:'1/1',
               }}>
-                <Globe3D
-                  colors={GLOBAL_PULSE_DATA.colors}
-                  lightTheme={true}
-                />
+                <Suspense fallback={<GlobePlaceholder />}>
+                  <Globe3D
+                    colors={GLOBAL_PULSE_DATA.colors}
+                    lightTheme={true}
+                  />
+                </Suspense>
               </div>
             </div>
 
@@ -1335,7 +1372,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 3 — HEALING STARTS WITH CONNECTION  (true timeline)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section id="how" style={{background:'#F5F3FF', padding:'120px 32px'}}>
+      <section id="how" style={{background:'#F7F6FA', padding:'120px 32px'}}>
         <div style={{maxWidth:1180, margin:'0 auto'}}>
           <div style={{textAlign:'center', marginBottom:80}}>
             <p style={{fontSize:12, fontWeight:700, color:P,
@@ -1377,29 +1414,29 @@ export default function Landing() {
 
                   {/* Step circle */}
                   <div style={{
-                    width:100, height:100, borderRadius:'50%',
-                    background:`linear-gradient(145deg,${P},#4A28D6)`,
+                    width:88, height:88, borderRadius:'50%',
+                    background:'rgba(109,74,255,0.07)',
                     display:'flex', flexDirection:'column',
                     alignItems:'center', justifyContent:'center',
-                    boxShadow:`0 10px 40px rgba(109,74,255,0.48)`,
-                    border:'3px solid rgba(167,139,250,0.35)',
-                    marginBottom:28, position:'relative',
-                    animation:'glowBreathe 5s ease-in-out infinite',
+                    boxShadow:'none',
+                    border:'1px solid rgba(109,74,255,0.16)',
+                    marginBottom:26, position:'relative',
                   }}>
-                    <span style={{fontSize:36}}>{s.icon}</span>
-                    {/* Number badge */}
+                    <s.Icon size={30} strokeWidth={1.5} color={P} />
+                    {/* Step index — a small typographic marker rather than a
+                        glowing gold medal. Numbering should orient, not shout. */}
                     <div style={{
-                      position:'absolute', top:-8, right:-8,
-                      width:32, height:32, borderRadius:'50%',
-                      background:`linear-gradient(135deg,${GLD},#F59E0B)`,
+                      position:'absolute', top:-2, right:-2,
+                      width:24, height:24, borderRadius:'50%',
+                      background:'#FFFFFF',
+                      border:'1px solid rgba(109,74,255,0.18)',
                       display:'flex', alignItems:'center', justifyContent:'center',
-                      fontSize:15, fontWeight:900, color:'#1a0a00',
-                      boxShadow:'0 4px 14px rgba(245,184,65,0.55)',
-                      animation:'goldGlow 5s ease-in-out infinite',
+                      fontSize:11, fontWeight:600, color:P,
+                      letterSpacing:'0.02em',
                     }}>{s.n}</div>
                   </div>
 
-                  <h3 style={{fontSize:18, fontWeight:800, color:DARK,
+                  <h3 style={{fontSize:18, fontWeight:650, color:DARK,
                     marginBottom:12, lineHeight:1.25}}>{s.title}</h3>
                   <p style={{fontSize:14, color:'#6B7280', lineHeight:1.72,
                     maxWidth:180}}>{s.desc}</p>
@@ -1413,7 +1450,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 4 — OUR VISION  (dark luxury card with sacred geometry)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section id="vision" style={{background:'#F5F3FF', padding:'0 32px 120px'}}>
+      <section id="vision" style={{background:'#F7F6FA', padding:'0 32px 120px'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
           <div style={{
             background:`linear-gradient(145deg,#0E0428 0%,#1E0A4A 40%,#2E1060 70%,#0E0428 100%)`,
@@ -1492,7 +1529,7 @@ export default function Landing() {
                     background:`linear-gradient(135deg,rgba(245,184,65,0.2),rgba(245,184,65,0.08))`,
                     border:`1px solid rgba(245,184,65,0.25)`,
                     display:'flex', alignItems:'center', justifyContent:'center',
-                    fontSize:18}}>💜</div>
+                    color:'rgba(245,184,65,0.9)'}}><Heart size={17} strokeWidth={1.5} /></div>
                   <p style={{fontSize:13, color:'rgba(255,255,255,0.35)', lineHeight:1.6}}>
                     Community-first. Human-first. Always.
                   </p>
@@ -1512,10 +1549,10 @@ export default function Landing() {
               {/* RIGHT — 4 feature tiles */}
               <div className="l-vision-feats" style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16}}>
                 {[
-                  {icon:'🤝', label:'Real\nConnections',       sub:'Genuine peer-to-peer support'},
-                  {icon:'🛡', label:'Safe &\nModerated',        sub:'Community care always'},
-                  {icon:'🔒', label:'Your Privacy\nMatters',    sub:'Private and secure'},
-                  {icon:'🌿', label:'Healing &\nGrowth',        sub:'Grow through connection'},
+                  {Icon:Handshake, label:'Real\nConnections',       sub:'Genuine peer-to-peer support'},
+                  {Icon:ShieldCheck, label:'Safe &\nModerated',        sub:'Community care always'},
+                  {Icon:Lock, label:'Your Privacy\nMatters',    sub:'Private and secure'},
+                  {Icon:Leaf, label:'Healing &\nGrowth',        sub:'Grow through connection'},
                 ].map((f,i)=>(
                   <div key={i} className="l-vision-feat">
                     <div style={{width:44, height:44, borderRadius:13,
@@ -1523,7 +1560,7 @@ export default function Landing() {
                       border:'1px solid rgba(167,139,250,0.2)',
                       display:'flex', alignItems:'center', justifyContent:'center',
                       fontSize:22, margin:'0 auto 12px'}}>
-                      {f.icon}
+                      <f.Icon size={21} strokeWidth={1.5} color="rgba(255,255,255,0.88)" />
                     </div>
                     <div style={{fontSize:13, fontWeight:700, color:'#fff',
                       marginBottom:6, whiteSpace:'pre-line', lineHeight:1.3}}>
@@ -1542,7 +1579,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 5 — HOW SOULCONNECT HELPS YOU  (compact line-icon strip)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section style={{background:'#F5F3FF', padding:'56px 32px'}}>
+      <section style={{background:'#F7F6FA', padding:'56px 32px'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
           <div className="l-help-strip" style={{
             display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:16}}>
@@ -1560,7 +1597,7 @@ export default function Landing() {
                   textDecoration:'none', color:'inherit', cursor: isLive ? 'pointer' : 'default',
                 }}>
                   <Icon size={26} strokeWidth={2} color={isLive ? '#34C38F' : P} style={{marginBottom:8}}/>
-                  <h3 style={{fontSize:13.5, fontWeight:800, color:DARK,
+                  <h3 style={{fontSize:13.5, fontWeight:650, color:DARK,
                     margin:'0 0 4px 0', lineHeight:1.25}}>
                     {title}
                   </h3>
@@ -1592,7 +1629,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 5b — CURRENTLY BUILDING IN PUBLIC
       ══════════════════════════════════════════════════════════════════════ */}
-      <section style={{background:'#F5F3FF', padding:'100px 32px'}}>
+      <section style={{background:'#F7F6FA', padding:'100px 32px'}}>
         <div style={{maxWidth:960, margin:'0 auto', textAlign:'center'}}>
           <div style={{display:'inline-flex', alignItems:'center', gap:8,
             background:`rgba(109,74,255,0.1)`,
@@ -1621,11 +1658,11 @@ export default function Landing() {
           <div className="l-values-grid" style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)',
             gap:24, maxWidth:820, margin:'0 auto'}}>
             {[
-              {icon:'🧪', title:'We Listen First',
+              {Icon:Ear,           title:'We Listen First',
                desc:'Every feature is shaped by real conversations with real people going through real struggles.'},
-              {icon:'💬', title:'You Shape The Platform',
+              {Icon:MessageCircle, title:'You Shape The Platform',
                desc:"Your feedback, your stories, and your needs define what SoulConnect becomes."},
-              {icon:'💜', title:'No Fake Promises',
+              {Icon:Compass,       title:'No Fake Promises',
                desc:'We are honest about what we are building. Early access = real community, not a polished product.'},
             ].map((p,i)=>(
               <div key={i} className="l-values-card" style={{background:'#fff', borderRadius:22, padding:'32px 24px',
@@ -1635,8 +1672,8 @@ export default function Landing() {
                 onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-6px)';e.currentTarget.style.boxShadow='0 18px 48px rgba(109,74,255,0.14)';}}
                 onMouseLeave={e=>{e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.boxShadow='0 4px 24px rgba(109,74,255,0.07)';}}
               >
-                <div className="l-values-icon" style={{fontSize:34, marginBottom:16}}>{p.icon}</div>
-                <h3 className="l-values-h3" style={{fontSize:16, fontWeight:800, color:DARK, marginBottom:10, lineHeight:1.3}}>{p.title}</h3>
+                <div className="l-values-icon" style={{marginBottom:16, color:P}}><p.Icon size={30} strokeWidth={1.5} /></div>
+                <h3 className="l-values-h3" style={{fontSize:16, fontWeight:650, color:DARK, marginBottom:10, lineHeight:1.3}}>{p.title}</h3>
                 <p className="l-values-p" style={{fontSize:13, color:'#6B7280', lineHeight:1.68}}>{p.desc}</p>
               </div>
             ))}
@@ -1681,18 +1718,21 @@ export default function Landing() {
         }}>
           {/* LEFT */}
           <div>
-            <div style={{fontSize:11, fontWeight:700, color:GLD,
-              letterSpacing:'0.15em', textTransform:'uppercase', marginBottom:18,
-              display:'flex', alignItems:'center', gap:8}}>
-              <div style={{width:20, height:1, background:GLD}}/>
-              JOIN OUR EARLY COMMUNITY
+            {/* Eyebrow. This is the longest label on the page (23 chars), so
+                at 700 weight in full-strength gold it read as a solid bar
+                competing with the headline (9.5:1 against this ground — far
+                more contrast than an orienting label needs). Lighter weight,
+                softened gold and wider tracking let it read as a label. */}
+            <div style={{fontSize:11, fontWeight:600, color:'rgba(245,184,65,0.78)',
+              letterSpacing:'0.2em', textTransform:'uppercase', marginBottom:20}}>
+              Join Our Early Community
             </div>
             <h2 style={{fontFamily:SF,
               fontSize:'clamp(2.2rem,3.5vw,4rem)',
               fontWeight:800, color:'#fff', lineHeight:1.08,
               letterSpacing:'-0.03em', marginBottom:24}}>
               Find Your Circle.<br/>
-              <span style={{color:PNK}}>We'll walk with you.</span> ♡
+              <span style={{color:PNK}}>We'll walk with you.</span>
             </h2>
             <p style={{fontSize:17, color:'rgba(255,255,255,0.48)',
               lineHeight:1.88, maxWidth:420, marginBottom:36}}>
@@ -1707,7 +1747,7 @@ export default function Landing() {
                 <div style={{width:22, height:22, borderRadius:'50%', flexShrink:0, marginTop:1,
                   background:`linear-gradient(135deg,${P},${LAV})`,
                   display:'flex', alignItems:'center', justifyContent:'center',
-                  fontSize:11}}>✓</div>
+                  color:'#fff'}}><Check size={12} strokeWidth={2.5} /></div>
                 <p style={{fontSize:14, color:'rgba(255,255,255,0.52)', lineHeight:1.6}}>{t}</p>
               </div>
             ))}
@@ -1723,12 +1763,13 @@ export default function Landing() {
             {earlySubmitted ? (
               <div style={{textAlign:'center', padding:'32px 12px',
                 animation:'slideInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1)'}}>
-                <div style={{fontSize:64, marginBottom:24,
-                  filter:'drop-shadow(0 0 32px rgba(245,184,65,0.8))',
-                  animation:'popScale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'}}>🎉</div>
+                <div style={{marginBottom:24, color:'rgba(245,184,65,0.9)',
+                  display:'flex', justifyContent:'center'}}>
+                  <Sprout size={52} strokeWidth={1.25} />
+                </div>
                 <h3 style={{fontFamily:SF, fontSize:28, fontWeight:800,
                   color:'#fff', marginBottom:12, letterSpacing:'-0.02em'}}>
-                  You're officially part of the Early Community!
+                  You're on the list.
                 </h3>
                 <p style={{color:'rgba(255,255,255,0.65)', fontSize:15, lineHeight:1.8, marginBottom:24}}>
                   Thank you for believing in SoulConnect.<br/><br/>
@@ -1746,7 +1787,7 @@ export default function Landing() {
                     }}
                     onMouseEnter={e=>{e.target.style.background='rgba(245,184,65,0.15)'; e.target.style.borderColor='rgba(245,184,65,0.3)'}}
                     onMouseLeave={e=>{e.target.style.background='rgba(255,255,255,0.08)'; e.target.style.borderColor='rgba(255,255,255,0.15)'}}>
-                    📸 Follow Instagram
+                    Follow Instagram
                   </a>
                   <button onClick={()=>{setEarlySubmitted(false); setEarlyForm({challenge:'',name:'',email:''})}}
                     style={{
@@ -1778,10 +1819,10 @@ export default function Landing() {
                 {/* Benefit chips */}
                 <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:8}}>
                   {[
-                    {emoji:'✨', text:'Early Access'},
-                    {emoji:'❤️', text:'Help Shape SoulConnect'},
-                    {emoji:'🏅', text:'Founding Member'},
-                    {emoji:'🤝', text:'Exclusive Updates'},
+                    {Icon:Compass,   text:'Early Access'},
+                    {Icon:HandHeart, text:'Help Shape SoulConnect'},
+                    {Icon:Award,     text:'Founding Member'},
+                    {Icon:Handshake, text:'Exclusive Updates'},
                   ].map((b,i)=>(
                     <div key={i} style={{
                       padding:'10px 12px', borderRadius:12,
@@ -1789,7 +1830,7 @@ export default function Landing() {
                       display:'flex', alignItems:'center', gap:8,
                       fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.78)',
                     }}>
-                      <span style={{fontSize:14}}>{b.emoji}</span>
+                      <b.Icon size={14} strokeWidth={1.5} color="rgba(245,184,65,0.85)" />
                       <span>{b.text}</span>
                     </div>
                   ))}
@@ -1851,14 +1892,14 @@ export default function Landing() {
                 {/* Trust indicators */}
                 <div style={{display:'flex', flexDirection:'column', gap:8, marginTop:4}}>
                   {[
-                    {icon:'🔒', text:'Your email stays private'},
-                    {icon:'✉️', text:'No spam'},
-                    {icon:'❤️', text:'Only meaningful updates'},
-                    {icon:'🚫', text:'Unsubscribe anytime'},
+                    {Icon:Lock,    text:'Your email stays private'},
+                    {Icon:Mail,    text:'No spam'},
+                    {Icon:Heart,   text:'Only meaningful updates'},
+                    {Icon:BellOff, text:'Unsubscribe anytime'},
                   ].map((t,i)=>(
                     <div key={i} style={{display:'flex', alignItems:'center', gap:8,
                       fontSize:12, color:'rgba(255,255,255,0.55)'}}>
-                      <span>{t.icon}</span>
+                      <t.Icon size={13} strokeWidth={1.5} color="rgba(255,255,255,0.5)" />
                       <span>{t.text}</span>
                     </div>
                   ))}
@@ -1891,11 +1932,11 @@ export default function Landing() {
           gap:'clamp(16px,3.5vw,52px)', flexWrap:'wrap',
         }}>
           {[
-            {icon:'🛡', color:'rgba(109,74,255,0.15)',  border:'rgba(109,74,255,0.22)', title:'Safe Community',      sub:'Moderated with care.'},
-            {icon:'🔒', color:'rgba(16,185,129,0.12)',  border:'rgba(16,185,129,0.22)', title:'Privacy Protected',    sub:'Your data stays yours.'},
-            {icon:'🚨', color:'rgba(239,68,68,0.12)',   border:'rgba(239,68,68,0.2)',   title:'Crisis Resources',     sub:'Help is always available.'},
-            {icon:'📋', color:'rgba(245,158,11,0.12)',  border:'rgba(245,158,11,0.2)',  title:'Community Guidelines', sub:'Respect & inclusion always.'},
-            {icon:'⚖️', color:'rgba(59,130,246,0.12)',  border:'rgba(59,130,246,0.2)',  title:'Wellness Standards',   sub:'Evidence-based and trusted.'},
+            {Icon:ShieldCheck, color:'rgba(109,74,255,0.15)',  border:'rgba(109,74,255,0.22)', title:'Safe Community',      sub:'Moderated with care.'},
+            {Icon:Lock, color:'rgba(16,185,129,0.12)',  border:'rgba(16,185,129,0.22)', title:'Privacy Protected',    sub:'Your data stays yours.'},
+            {Icon:LifeBuoy, color:'rgba(239,68,68,0.12)',   border:'rgba(239,68,68,0.2)',   title:'Crisis Resources',     sub:'Help is always available.'},
+            {Icon:ScrollText, color:'rgba(245,158,11,0.12)',  border:'rgba(245,158,11,0.2)',  title:'Community Guidelines', sub:'Respect & inclusion always.'},
+            {Icon:Scale, color:'rgba(59,130,246,0.12)',  border:'rgba(59,130,246,0.2)',  title:'Wellness Standards',   sub:'Evidence-based and trusted.'},
           ].map((t,i,arr)=>(
             <React.Fragment key={i}>
               <div style={{display:'flex', alignItems:'center', gap:12, flexShrink:0}}>
@@ -1904,7 +1945,7 @@ export default function Landing() {
                   border:`1.5px solid ${t.border}`,
                   display:'flex', alignItems:'center', justifyContent:'center',
                   fontSize:19, flexShrink:0}}>
-                  {t.icon}
+                  <t.Icon size={19} strokeWidth={1.5} color={t.iconColor||DARK} />
                 </div>
                 <div>
                   <div style={{fontSize:13, fontWeight:700, color:DARK}}>{t.title}</div>
@@ -1923,7 +1964,7 @@ export default function Landing() {
           SECTION — FINAL CTA  (premium · single · emotional)
       ══════════════════════════════════════════════════════════════════════ */}
       <section style={{
-        background:`linear-gradient(155deg,#140028 0%,#24004A 55%,#3B0F72 100%)`,
+        background:`linear-gradient(155deg,#120E20 0%,#201838 55%,#332748 100%)`,
         padding:'clamp(64px,8vw,96px) 32px',
         position:'relative', overflow:'hidden',
         minHeight:280,
@@ -1970,7 +2011,11 @@ export default function Landing() {
             x:3+((i*97+i*i*13)%94),
             y:3+((i*67+i*i*17)%94),
             r:0.7+(i%5)*0.45,
-            col:[LAV,GLD,PNK,'#C4B5FD','#FDE68A'][i%5],
+            // Cool-only palette. Gold/yellow particles sat directly behind
+            // the glass form, and backdrop-blur smeared them into a peach
+            // wash across the inputs. Staying in the violet family keeps the
+            // glass reading as glass.
+            col:[LAV,'#C4B5FD','#9F8FE8','#B9A7F5','#8B7BD8'][i%5],
             dur:3.2+(i%5)*1.1, del:i*0.35,
           })).map((p,i)=>(
             <circle key={i} cx={`${p.x}%`} cy={`${p.y}%`} r={p.r}
@@ -1999,9 +2044,9 @@ export default function Landing() {
             borderRadius:99, padding:'8px 20px', marginBottom:30,
             backdropFilter:'blur(12px)',
           }}>
-            <span style={{fontSize:15, lineHeight:1}}>💜</span>
+            <span style={{display:'flex', color:LAV}}><Heart size={14} strokeWidth={1.5} /></span>
             <div style={{textAlign:'left'}}>
-              <div style={{fontSize:10, fontWeight:800, color:LAV,
+              <div style={{fontSize:10, fontWeight:650, color:LAV,
                 letterSpacing:'0.14em', textTransform:'uppercase', lineHeight:1.3}}>
                 Early Access
               </div>
@@ -2014,7 +2059,7 @@ export default function Landing() {
 
           {/* Headline */}
           <h2 style={{
-            fontFamily:`'Playfair Display', Georgia, 'Times New Roman', serif`,
+            fontFamily:SF,
             fontSize:'clamp(2.25rem,5.5vw,4rem)',
             fontWeight:800, color:'#fff', lineHeight:1.08,
             letterSpacing:'-0.02em', marginBottom:22,
@@ -2107,10 +2152,14 @@ export default function Landing() {
             {/* Logo */}
             <Link to="/" style={{display:'flex', alignItems:'center', gap:10,
               textDecoration:'none', flexShrink:0}}>
-              <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect"
-                style={{height:36, width:'auto', display:'block',
-                  filter:'drop-shadow(0 3px 10px rgba(109,74,255,0.45)) brightness(1.05)'}}/>
-              <div style={{fontSize:14, fontWeight:800, color:'rgba(255,255,255,0.7)',
+              <picture>
+                <source srcSet="/brand/logo/soulconnect-logo-primary-sm.webp" type="image/webp" />
+                <img src="/brand/logo/soulconnect-logo-primary-sm.png" alt="SoulConnect"
+                  width="36" height="36"
+                  style={{height:36, width:'auto', display:'block',
+                    filter:'drop-shadow(0 3px 10px rgba(109,74,255,0.45)) brightness(1.05)'}}/>
+              </picture>
+              <div style={{fontSize:14, fontWeight:600, color:'rgba(255,255,255,0.7)',
                 letterSpacing:'-0.01em'}}>
                 Soul<span style={{color:LAV}}>Connect</span>
               </div>
@@ -2193,7 +2242,7 @@ export default function Landing() {
           {/* Copyright */}
           <p style={{fontSize:11, color:'rgba(255,255,255,0.15)',
             textAlign:'center', paddingBottom:22}}>
-            © 2026 SoulConnect. All rights reserved. Made with 💜 for healing.
+            © 2026 SoulConnect. Built in India, for anyone who needs a place to land.
           </p>
 
         </div>
