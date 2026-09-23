@@ -36,11 +36,19 @@ const GlobePlaceholder = React.memo(function GlobePlaceholder() {
 /* ═══════════════════════════════════════════════════════════════════════════════
    DESIGN TOKENS
 ═══════════════════════════════════════════════════════════════════════════════ */
-const P    = '#6D4AFF';
-const LAV  = '#A78BFA';
+// P is the accent on the LIGHT sections (steps/vision/building-in-public
+// text, icons, eyebrows) — muted per the "muted violet" brief, not the
+// vivid brand purple. The dark hero/CTA panels use their own hardcoded
+// rgba(109,74,255,...) values in the .l-btn-p CSS class and gradient
+// stops below, which this does NOT touch, so those stay unaffected.
+const P    = '#6F4EBC';
+const LAV  = '#8F77C5';
 const GLD  = '#F5B841';
 const PNK  = '#F472B6';
-const DARK = '#1A162C';
+// DARK is the text colour on light sections — "dark navy" per the brief,
+// not the near-black used on the dark panels' own text (#fff/rgba white).
+const DARK = '#1F1B37';
+const NAVY_SOFT = '#4A4560'; // softer navy for body copy on light sections
 const SQ3  = 1.7320508;
 
 const NAV_LINKS = [
@@ -953,7 +961,7 @@ export default function Landing() {
   ];
 
   return (
-    <div style={{fontFamily:F, background:'#F9F9FC', color:DARK, overflowX:'hidden'}}>
+    <div style={{fontFamily:F, background:'#F4F1FB', color:DARK, overflowX:'hidden'}}>
       <style>{css}</style>
 
       {/* ══════════════════════════════════════════════════════════════════════
@@ -1214,16 +1222,16 @@ export default function Landing() {
                 matching the reference's single left-column composition) */}
             <div style={{display:'flex', flexDirection:'column', gap:20}}>
               <div>
-                <p style={{fontSize:12, fontWeight:700, color:'#A78BFA',
+                <p style={{fontSize:12, fontWeight:700, color:P,
                   letterSpacing:'0.18em', textTransform:'uppercase', marginBottom:14}}>
                   ◈ GLOBAL PULSE
                 </p>
                 <h2 className="l-gp-headline" style={{fontFamily:SF, fontSize:'clamp(1.6rem,2.6vw,2.6rem)',
-                  fontWeight:800, color:'#160B33', letterSpacing:'-0.02em', marginBottom:14,
+                  fontWeight:800, color:DARK, letterSpacing:'-0.02em', marginBottom:14,
                   lineHeight:1.18,
                 }}>
                   Maybe what you're feeling<br className="l-gp-headline-break"/>{' '}
-                  <span style={{color:'#8B3DF0'}}>isn't only yours.</span>
+                  <span style={{color:P}}>isn't only yours.</span>
                 </h2>
                 <p style={{fontSize:14.5, color:'#6B7280', lineHeight:1.75, margin:0, maxWidth:320}}>
                   See anonymized emotional patterns from people around the world. Discover that your feelings are part of a bigger human story.
@@ -1318,16 +1326,15 @@ export default function Landing() {
                 gap:16,
                 padding:'28px 30px',
                 borderRadius:24,
-                background:'rgba(250, 249, 255, 0.85)',
-                backdropFilter:'blur(12px)',
-                border:'1px solid rgba(147, 51, 234, 0.12)',
-                boxShadow:'0 16px 48px rgba(109,74,255,0.08)',
+                background:'#FFFFFF',
+                border:'1px solid rgba(31,27,55,0.08)',
+                boxShadow:'0 16px 48px rgba(111,78,188,0.10)',
                 maxWidth:340,
               }}>
-                <p style={{fontSize:11, fontWeight:700, color:'#9333EA', letterSpacing:'0.12em', textTransform:'uppercase', margin:0}}>
+                <p style={{fontSize:11, fontWeight:700, color:P, letterSpacing:'0.12em', textTransform:'uppercase', margin:0}}>
                   You are not alone
                 </p>
-                <h4 style={{fontSize:19, fontWeight:700, color:'#1F2937', margin:0, lineHeight:1.3}}>
+                <h4 style={{fontSize:19, fontWeight:700, color:DARK, margin:0, lineHeight:1.3}}>
                   Different places.<br/>Similar feelings.
                 </h4>
                 <p style={{fontSize:13.5, color:'#6B7280', lineHeight:1.7, margin:0}}>
@@ -1372,7 +1379,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 3 — HEALING STARTS WITH CONNECTION  (true timeline)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section id="how" style={{background:'#F7F6FA', padding:'120px 32px'}}>
+      <section id="how" style={{background:'#EDE9F9', padding:'120px 32px'}}>
         <div style={{maxWidth:1180, margin:'0 auto'}}>
           <div style={{textAlign:'center', marginBottom:80}}>
             <p style={{fontSize:12, fontWeight:700, color:P,
@@ -1397,9 +1404,12 @@ export default function Landing() {
               left:'calc(12.5% + 44px)',
               right:'calc(12.5% + 44px)',
               height:2,
+              // Static line, no shimmer. The brief calls for motion that's
+              // "almost invisible" — a line that visibly sweeps forever on a
+              // calm, editorial light section fights that, so it's removed
+              // here (kept on the dark hero/CTA where motion already reads
+              // as ambient rather than attention-grabbing).
               background:`linear-gradient(90deg,transparent 0%,${LAV} 20%,${P} 50%,${LAV} 80%,transparent 100%)`,
-              backgroundSize:'200% 100%',
-              animation:'timelineShimmer 4s linear infinite',
               zIndex:0,
             }}/>
 
@@ -1450,7 +1460,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 4 — OUR VISION  (dark luxury card with sacred geometry)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section id="vision" style={{background:'#F7F6FA', padding:'0 32px 120px'}}>
+      <section id="vision" style={{background:'#EDE9F9', padding:'0 32px 120px'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
           <div style={{
             background:`linear-gradient(145deg,#0E0428 0%,#1E0A4A 40%,#2E1060 70%,#0E0428 100%)`,
@@ -1579,7 +1589,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 5 — HOW SOULCONNECT HELPS YOU  (compact line-icon strip)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section style={{background:'#F7F6FA', padding:'56px 32px'}}>
+      <section style={{background:'#EDE9F9', padding:'56px 32px'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
           <div className="l-help-strip" style={{
             display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:16}}>
@@ -1629,7 +1639,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 5b — CURRENTLY BUILDING IN PUBLIC
       ══════════════════════════════════════════════════════════════════════ */}
-      <section style={{background:'#F7F6FA', padding:'100px 32px'}}>
+      <section style={{background:'#EDE9F9', padding:'100px 32px'}}>
         <div style={{maxWidth:960, margin:'0 auto', textAlign:'center'}}>
           <div style={{display:'inline-flex', alignItems:'center', gap:8,
             background:`rgba(109,74,255,0.1)`,
