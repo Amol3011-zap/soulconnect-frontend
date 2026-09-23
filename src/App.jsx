@@ -13,10 +13,12 @@ import { useVisitorTracking } from './hooks/useVisitorTracking';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import HealerDashboard from './pages/HealerDashboard';
-import Pulse from './pages/Pulse';
 import SafetyOnboarding, { useNeedsOnboarding } from './pages/SafetyOnboarding';
 
 // ── Lazy imports ──────────────────────────────────────────────────────────────
+// Pulse pulls in Globe3D -> three.js (large). Lazy-load so it isn't part of
+// the critical-path bundle shared with Landing.
+const Pulse          = lazy(() => import('./pages/Pulse'));
 const Signup        = lazy(() => import('./pages/Signup'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const TermsPrivacy  = lazy(() => import('./pages/TermsPrivacy'));
@@ -44,6 +46,7 @@ const TinyWins      = lazy(() => import('./pages/TinyWins'));     // /tiny-wins
 
 // Dashboard pages (inside DashboardLayout)
 const Home          = lazy(() => import('./pages/Home'));
+const SoulMatch     = lazy(() => import('./pages/SoulMatch'));
 const Stories       = lazy(() => import('./pages/Stories'));
 const Community     = lazy(() => import('./pages/Community'));
 const Messages      = lazy(() => import('./pages/Messages'));
@@ -85,7 +88,7 @@ const LAUNCH_READY = import.meta.env.VITE_LAUNCH_READY === 'true';
 
 // Routes that use DashboardLayout
 const DASHBOARD_PATHS = [
-  '/home', '/stories', '/community', '/messages', '/mood',
+  '/home', '/matches', '/stories', '/community', '/messages', '/mood',
   '/meditate', '/professionals', '/account', '/tiny-wins',
   '/story', '/saved',
   // user engagement (Phase 5)
@@ -94,7 +97,7 @@ const DASHBOARD_PATHS = [
   '/dashboard', '/healers', '/meetups', '/premium',
   '/onboarding', '/journey',
   // old routes now redirected
-  '/journal', '/matches', '/circles', '/meditations', '/challenges', '/resources',
+  '/journal', '/circles', '/meditations', '/challenges', '/resources',
 ];
 
 function PageLoader() {
@@ -182,7 +185,7 @@ function AppInner() {
 
           {/* Global Emotional Pulse — anonymous, no auth required, reachable
               from the landing page hero regardless of login state */}
-          <Route path="/pulse" element={<Pulse />} />
+          <Route path="/pulse" element={<Suspense fallback={<PageLoader />}><Pulse /></Suspense>} />
 
           {!token || !LAUNCH_READY ? (
             <>
@@ -210,6 +213,7 @@ function AppInner() {
               <Route element={<DashboardLayout />}>
                 {/* Primary nav */}
                 <Route path="/home"          element={<Suspense fallback={<PageLoader />}><Home /></Suspense>} />
+                <Route path="/matches"       element={<Suspense fallback={<PageLoader />}><SoulMatch /></Suspense>} />
                 <Route path="/stories"       element={<Suspense fallback={<PageLoader />}><Stories /></Suspense>} />
                 <Route path="/community"     element={<Suspense fallback={<PageLoader />}><Community /></Suspense>} />
                 <Route path="/mood"          element={<Suspense fallback={<PageLoader />}><MoodTracker /></Suspense>} />
@@ -217,6 +221,7 @@ function AppInner() {
                 <Route path="/meditate"      element={<Suspense fallback={<PageLoader />}><Meditate /></Suspense>} />
                 <Route path="/professionals" element={<Suspense fallback={<PageLoader />}><Professionals /></Suspense>} />
                 <Route path="/account"       element={<Suspense fallback={<PageLoader />}><Settings /></Suspense>} />
+                <Route path="/profile"       element={<Suspense fallback={<PageLoader />}><Profile /></Suspense>} />
                 <Route path="/tiny-wins"    element={<Suspense fallback={<PageLoader />}><TinyWins /></Suspense>} />
                 <Route path="/story/:id"   element={<Suspense fallback={<PageLoader />}><StoryDetail /></Suspense>} />
                 <Route path="/saved"         element={<Suspense fallback={<PageLoader />}><SavedStories /></Suspense>} />
