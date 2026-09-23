@@ -848,8 +848,17 @@ export default function Landing() {
     /* ── Responsive ── */
     @media(max-width:1100px){
       .l-hero-grid{grid-template-columns:1fr!important;min-height:auto!important;}
-      .l-hero-illus{height:460px!important;order:-1;margin-left:-32px!important;width:100vw!important;}
-      .l-hero-text{text-align:center;align-items:center!important;}
+      /* Was a flat 460px on every width from 320px phones to 1099px
+         tablets — identical size regardless of how much viewport height is
+         actually available. Scaling with clamp() means a small phone
+         doesn't lose more than a third of its screen to the illustration
+         before any headline text appears. */
+      .l-hero-illus{height:clamp(240px,52vw,460px)!important;order:-1;margin-left:-32px!important;width:100vw!important;}
+      /* Stacked layout centers the text, so padding needs to be symmetric
+         here too — the inline style's 0-left/48px-right pairing is a
+         two-column-desktop assumption (image bleeds to the grid edge on
+         the left) that doesn't apply once the columns stack. */
+      .l-hero-text{text-align:center;align-items:center!important;padding:clamp(32px,8vw,56px) clamp(20px,5vw,32px) clamp(48px,8vw,64px)!important;}
       .l-trust-badge{max-width:90vw;flex-wrap:wrap;justify-content:center;}
       .l-hero-pills{justify-content:center!important;}
       .l-hero-btns{justify-content:center!important;}
@@ -892,6 +901,14 @@ export default function Landing() {
       .l-help-strip{grid-template-columns:1fr!important;row-gap:14px!important;}
       .l-gp-headline-break{display:none;}
       .l-gp-headline{font-size:1.55rem!important;}
+      /* At 320-480px "Building With Our First Community Members" (33
+         chars) was forced onto one nowrap line and ran off the edge of the
+         screen. Let it wrap onto a second line instead of overflowing;
+         the vertical separator reads oddly before a wrapped line, so it's
+         hidden here and the badge switches to a column layout. */
+      .l-trust-badge{flex-direction:column;align-items:flex-start!important;gap:6px;padding:14px 18px;}
+      .l-trust-badge-sep{display:none;}
+      .l-trust-badge-label{white-space:normal!important;text-align:left;}
     }
 
     /* ── Values / "Building In Public" card grid ── */
@@ -932,6 +949,35 @@ export default function Landing() {
         margin-left:auto!important;
         margin-right:auto!important;
       }
+      /* The 4 steps were flex-direction:column from the shared <1100px
+         rule at line ~867, so a 768px-wide tablet stacked them in one tall
+         column instead of using the available width — a 2x2 grid reads
+         better and cuts the section's scroll length roughly in half. */
+      .l-timeline-row{
+        flex-direction:row!important;
+        flex-wrap:wrap!important;
+        justify-content:center!important;
+        gap:40px 24px!important;
+      }
+      .l-timeline-row>div{flex:0 0 calc(50% - 12px)!important;}
+      .l-timeline-line{display:none!important;}
+    }
+    /* iPad Pro (1024x1366) and similar 1024-1099px tablets fall between
+       the tablet block above (which stops at 1023px) and the shared
+       <1100px rule that collapses to a single column — at that width a
+       1-column stack leaves ~470px of dead space on each side. Extending
+       the same 2x2 grid up to 1099px keeps the row using the available
+       width right up to where the true desktop 2-column hero layout
+       takes over. */
+    @media(min-width:1024px) and (max-width:1099px){
+      .l-timeline-row{
+        flex-direction:row!important;
+        flex-wrap:wrap!important;
+        justify-content:center!important;
+        gap:40px 24px!important;
+      }
+      .l-timeline-row>div{flex:0 0 calc(50% - 12px)!important;}
+      .l-timeline-line{display:none!important;}
     }
   `;
 
@@ -967,13 +1013,23 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           NAVBAR
       ══════════════════════════════════════════════════════════════════════ */}
+      {/* viewport-fit=cover (index.html) lets the page extend under the
+          notch/Dynamic Island on iPhone, but nothing was reserving that
+          space — a fixed top-0 nav with no safe-area padding can render
+          partly behind the notch/status bar. env() falls back to 0 on
+          devices without an inset, so this is a no-op everywhere else. */}
       <nav style={{
-        position:'fixed', top:0, left:0, right:0, zIndex:400, height:72,
+        position:'fixed', top:0, left:0, right:0, zIndex:400,
+        height:'calc(72px + env(safe-area-inset-top, 0px))',
+        paddingTop:'env(safe-area-inset-top, 0px)',
+        paddingLeft:'env(safe-area-inset-left, 0px)',
+        paddingRight:'env(safe-area-inset-right, 0px)',
         background:scrolled?'rgba(8,2,28,0.97)':'transparent',
         backdropFilter:scrolled?'blur(28px)':'none',
         borderBottom:scrolled?'1px solid rgba(109,74,255,0.18)':'none',
         transition:'all .35s ease',
         display:'flex', alignItems:'center',
+        boxSizing:'border-box',
       }}>
         <div style={{maxWidth:1440, margin:'0 auto', width:'100%',
           padding:'0 32px', display:'flex', alignItems:'center'}}>
@@ -1021,8 +1077,11 @@ export default function Landing() {
           </div>
 
           {/* Mobile hamburger */}
+          {/* Primary mobile nav trigger — was 40x40, under the 48px minimum
+              touch target for the single most-used control on mobile. */}
           <button onClick={()=>setMenuOpen(v=>!v)} className="l-mob-ham"
-            style={{display:'none', marginLeft:'auto', width:40, height:40,
+            aria-label="Open menu"
+            style={{display:'none', marginLeft:'auto', width:48, height:48,
               borderRadius:10, background:'rgba(255,255,255,0.1)', border:'none',
               cursor:'pointer', flexDirection:'column', alignItems:'center',
               justifyContent:'center', gap:5}}>
@@ -1032,12 +1091,20 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — top:72 was hardcoded and is now stale against the
+          nav's dynamic safe-area height above; matched here so the menu
+          panel starts exactly below the nav instead of overlapping or
+          gapping on notched devices. Bottom/left/right insets cover the
+          home-indicator area and landscape notch on either side. */}
       {menuOpen&&(
         <div style={{position:'fixed', inset:0, zIndex:399,
-          background:'rgba(8,2,28,0.97)', backdropFilter:'blur(18px)'}}
+          background:'rgba(8,2,28,0.97)', backdropFilter:'blur(18px)',
+          paddingBottom:'env(safe-area-inset-bottom, 0px)',
+          paddingLeft:'env(safe-area-inset-left, 0px)',
+          paddingRight:'env(safe-area-inset-right, 0px)'}}
           onClick={()=>setMenuOpen(false)}>
-          <div style={{position:'absolute', top:72, left:0, right:0,
+          <div style={{position:'absolute',
+            top:'calc(72px + env(safe-area-inset-top, 0px))', left:0, right:0,
             padding:'24px 32px', borderBottom:`1px solid rgba(109,74,255,0.2)`}}
             onClick={e=>e.stopPropagation()}>
             {NAV_LINKS.map(l=>(
@@ -1094,7 +1161,13 @@ export default function Landing() {
           <div className="l-hero-text" style={{
             display:'flex', flexDirection:'column', alignItems:'flex-start',
             justifyContent:'center',
-            padding:'130px 48px 100px 0',
+            // Was a flat 130px/100px — correct only at desktop widths. Below
+            // 1100px the hero stacks (illustration above, text below via
+            // .l-hero-illus{order:-1}), so that fixed padding was adding on
+            // top of the 460px illustration and pushing the headline past
+            // the fold on mobile. clamp() keeps the desktop feel while
+            // shrinking padding as the viewport narrows.
+            padding:'clamp(32px,8vw,130px) clamp(20px,4vw,48px) clamp(48px,8vw,100px) 0',
             animation:'fadeUp .9s ease both',
           }}>
             {/* Trust badge */}
@@ -1108,7 +1181,11 @@ export default function Landing() {
 
             <h1 style={{
               fontFamily:SF,
-              fontSize:'clamp(3rem,5vw,72px)',
+              // Floor was a flat 3rem/48px regardless of width — at 320px
+              // that's tight against the edge with only ~20px of padding on
+              // each side. 2.15rem/34px still reads as a confident headline
+              // at 320-360px without crowding the line.
+              fontSize:'clamp(2.15rem,7vw,72px)',
               fontWeight:800, color:'#fff',
               lineHeight:1.06, letterSpacing:'-0.03em',
               marginBottom:26,
@@ -1192,7 +1269,7 @@ export default function Landing() {
       ══════════════════════════════════════════════════════════════════════ */}
       <section id="global-pulse" style={{
         background:'#FFFFFF',
-        padding:'88px 32px 64px',
+        padding:'clamp(56px,9vw,88px) 32px clamp(40px,7vw,64px)',
         position:'relative',
         overflow:'hidden',
       }}>
@@ -1379,7 +1456,10 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 3 — HEALING STARTS WITH CONNECTION  (true timeline)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section id="how" style={{background:'#EDE9F9', padding:'120px 32px'}}>
+      {/* Flat 120px top+bottom compounded with the adjacent sections' own
+          padding at each seam — same fixed-padding-stacking pattern as the
+          vision/help-strip boundary below. */}
+      <section id="how" style={{background:'#EDE9F9', padding:'clamp(64px,10vw,120px) 32px'}}>
         <div style={{maxWidth:1180, margin:'0 auto'}}>
           <div style={{textAlign:'center', marginBottom:80}}>
             <p style={{fontSize:12, fontWeight:700, color:P,
@@ -1460,7 +1540,12 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 4 — OUR VISION  (dark luxury card with sacred geometry)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section id="vision" style={{background:'#EDE9F9', padding:'0 32px 120px'}}>
+      {/* Bottom padding was a flat 120px, plus the next section's own 56px
+          top padding, stacking to 176px of dead space at the seam between
+          them at every viewport — proportionally much heavier on short
+          mobile screens than on desktop. clamp() keeps the intentional
+          breathing room on large screens without the mobile overrun. */}
+      <section id="vision" style={{background:'#EDE9F9', padding:'0 32px clamp(56px,8vw,120px)'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
           <div style={{
             background:`linear-gradient(145deg,#0E0428 0%,#1E0A4A 40%,#2E1060 70%,#0E0428 100%)`,
@@ -1589,7 +1674,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 5 — HOW SOULCONNECT HELPS YOU  (compact line-icon strip)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section style={{background:'#EDE9F9', padding:'56px 32px'}}>
+      <section style={{background:'#EDE9F9', padding:'clamp(32px,6vw,56px) 32px'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
           <div className="l-help-strip" style={{
             display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:16}}>
@@ -1639,7 +1724,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 5b — CURRENTLY BUILDING IN PUBLIC
       ══════════════════════════════════════════════════════════════════════ */}
-      <section style={{background:'#EDE9F9', padding:'100px 32px'}}>
+      <section style={{background:'#EDE9F9', padding:'clamp(56px,9vw,100px) 32px'}}>
         <div style={{maxWidth:960, margin:'0 auto', textAlign:'center'}}>
           <div style={{display:'inline-flex', alignItems:'center', gap:8,
             background:`rgba(109,74,255,0.1)`,
@@ -1696,7 +1781,7 @@ export default function Landing() {
       ══════════════════════════════════════════════════════════════════════ */}
       <section id="early" style={{
         background:`linear-gradient(145deg,#0E0228 0%,#200A4E 40%,#3C1675 70%,#0E0228 100%)`,
-        padding:'120px 32px', position:'relative', overflow:'hidden',
+        padding:'clamp(64px,10vw,120px) 32px', position:'relative', overflow:'hidden',
       }}>
         {/* Floating particles */}
         {Array.from({length:18},(_,i)=>(
@@ -1868,7 +1953,11 @@ export default function Landing() {
                   value={earlyForm.name}
                   onChange={e=>setEarlyForm(f=>({...f,name:e.target.value}))}
                   className="l-form-field" required/>
-                <input type="email" placeholder="Enter your email to become an Early Member"
+                {/* Was "Enter your email to become an Early Member" (43
+                    chars) — native <input> placeholders don't wrap, so on
+                    mobile-width fields it visibly clipped mid-word at the
+                    right edge. */}
+                <input type="email" placeholder="Your email address"
                   value={earlyForm.email}
                   onChange={e=>setEarlyForm(f=>({...f,email:e.target.value}))}
                   className="l-form-field" required/>
@@ -2098,11 +2187,17 @@ export default function Landing() {
                 animation:'glowBreathe 5s ease-in-out infinite'}}>
               Find My Circle →
             </a>
+            {/* Secondary text link next to the primary CTA — was a 26.5px
+                tap height from bare text + underline. Extra vertical
+                padding (offset by a matching negative margin so it doesn't
+                shift the visible layout) brings the real hit area closer to
+                the 48px minimum without changing how it looks. */}
             <Link to="/how-it-works"
               style={{fontSize:15, color:'rgba(255,255,255,0.45)',
                 textDecoration:'none', fontWeight:500,
                 borderBottom:'1px solid rgba(255,255,255,0.2)',
-                paddingBottom:3, transition:'color .2s'}}
+                padding:'12px 4px 3px', margin:'-12px -4px 0', display:'inline-block',
+                transition:'color .2s'}}
               onMouseEnter={e=>{e.currentTarget.style.color=LAV;}}
               onMouseLeave={e=>{e.currentTarget.style.color='rgba(255,255,255,0.45)';}}
             >
@@ -2190,16 +2285,23 @@ export default function Landing() {
                 {label:'Accessibility',      to:'/accessibility',  isRoute:true},
               ].map((l,i,arr)=>(
                 <React.Fragment key={l.label}>
+                  {/* padding was horizontal-only (0 11px), so the tap
+                      target was just the 12px line height -- well under the
+                      48px minimum. Vertical padding + display:inline-flex
+                      brings the real hit area close to 44px without
+                      changing how dense the row looks visually. */}
                   {l.isRoute
                     ? <Link to={l.to} style={{fontSize:12,
                         color:'rgba(255,255,255,0.3)', textDecoration:'none',
-                        padding:'0 11px', transition:'color .18s'}}
+                        padding:'13px 11px', margin:'-13px 0', display:'inline-flex', alignItems:'center',
+                        transition:'color .18s'}}
                         onMouseEnter={e=>e.currentTarget.style.color=LAV}
                         onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.3)'}
                       >{l.label}</Link>
                     : <a href={l.href} style={{fontSize:12,
                         color:'rgba(255,255,255,0.3)', textDecoration:'none',
-                        padding:'0 11px', transition:'color .18s'}}
+                        padding:'13px 11px', margin:'-13px 0', display:'inline-flex', alignItems:'center',
+                        transition:'color .18s'}}
                         onMouseEnter={e=>e.currentTarget.style.color=LAV}
                         onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.3)'}
                       >{l.label}</a>
@@ -2237,7 +2339,7 @@ export default function Landing() {
                 },
               ].map((s,i)=>(
                 <a key={i} href={s.href} aria-label={s.label}
-                  style={{width:36, height:36, borderRadius:10,
+                  style={{width:44, height:44, borderRadius:10,
                     background:'rgba(109,74,255,0.1)',
                     border:'1px solid rgba(109,74,255,0.2)',
                     display:'flex', alignItems:'center', justifyContent:'center',
