@@ -870,50 +870,45 @@ export default function Landing() {
          a "is it in the viewport" check but still reading as "too much
          scroll before real content." Tightened further: 200px floor and a
          lower vw ratio. */
-      /* Mobile/tablet: the illustration is a decorative layer BEHIND the
-         content, not a block in the flow. As an in-flow block it either ate
-         the first screen (460px) or, shrunk to fit, got hidden under the
-         72px fixed nav (only a petal tip showed). Absolutely positioned, it
-         can never push the headline/CTA down. --hg is the breathing room
-         between nav and badge where the lotus sits; it scales with the
-         small-viewport height so short phones keep the CTA above the fold.
-         --lw caps the art width so the lotus reads ~200-250px wide. */
+      /* Mobile/tablet hero art: the FULL scene (both meditating souls +
+         lotus) as its own band under the fixed nav. The SVG is 800x900
+         with the subject between y=150 and y=790, so the <svg> is sized
+         to 1.40625x the band height and shifted up by 0.2344x -- the band
+         shows exactly that 640-unit slice, uncropped. Band height tracks
+         the small-viewport height (svh) so "Find My Circle" still lands on
+         the first screen: CTA bottom ~= nav 72 + band + ~345 of content. */
       #hero{min-height:auto!important;}
-      .l-hero-grid{--hg:60px;--lw:min(128vw,560px);}
+      .l-hero-grid{--ih:240px;}
       @supports (height:100svh){
-        .l-hero-grid{--hg:clamp(28px,calc(100svh - 600px),190px);}
+        .l-hero-grid{--ih:clamp(170px,calc(100svh - 445px),340px);}
       }
       .l-hero-illus{
-        position:absolute!important;z-index:0;pointer-events:none;
-        left:calc(50% - var(--lw) / 2)!important;
-        width:var(--lw)!important;height:calc(var(--lw) * 1.125)!important;
-        margin:0!important;
-        /* lotus centre sits at 80% of the art's width down the SVG
-           (y=640 of 900 at 800 wide) -- place it just below the nav */
-        top:calc(72px + env(safe-area-inset-top,0px) + var(--hg) / 2 + 34px - var(--lw) * 0.8);
-        opacity:.7;
-        -webkit-mask-image:radial-gradient(ellipse 60% 42% at 50% 71%,#000 45%,transparent 100%);
-        mask-image:radial-gradient(ellipse 60% 42% at 50% 71%,#000 45%,transparent 100%);
+        position:relative!important;order:-1;pointer-events:none;
+        width:calc(100% + 32px)!important;height:var(--ih)!important;
+        margin:calc(72px + env(safe-area-inset-top,0px)) 0 0 -32px!important;
+        overflow:hidden;animation:none!important;
+        -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent);
+        mask-image:linear-gradient(to bottom,#000 78%,transparent);
+      }
+      .l-hero-illus svg{
+        position:absolute;left:50%;transform:translateX(-50%);
+        width:calc(var(--ih) * 1.25)!important;
+        height:calc(var(--ih) * 1.40625)!important;
+        top:calc(var(--ih) * -0.2344);
+        /* soften the art's own background edges into the hero */
+        -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+        mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
       }
       /* Stacked layout centers the text, so padding needs to be symmetric
          here too — the inline style's 0-left/48px-right pairing is a
          two-column-desktop assumption (image bleeds to the grid edge on
          the left) that doesn't apply once the columns stack. */
-      .l-hero-text{text-align:center;align-items:center!important;padding:clamp(12px,3vw,56px) clamp(20px,5vw,32px) clamp(32px,6vw,64px)!important;
-        position:relative;z-index:1;
-        padding-top:calc(72px + env(safe-area-inset-top,0px) + var(--hg))!important;}
-      /* Full compact rewrite of the mobile hero content, per direct request
-         after two rounds of incremental shrinking still left the CTA below
-         the fold on a real 393x852 device. Every fixed inline margin below
-         is overridden here rather than nudged further. */
+      .l-hero-text{text-align:center;align-items:center!important;padding:10px clamp(20px,5vw,32px) clamp(32px,6vw,64px)!important;}
+      /* Early Access: one compact pill, not a tall stacked box */
       .l-trust-badge{
-        max-width:90vw!important; justify-content:center!important;
-        padding:8px 16px!important; margin-bottom:14px!important;
-        gap:6px!important; border-radius:14px!important;
-        /* opaque on mobile: the lotus sits behind this badge on short
-           phones and petals showed through the glass, crossing the text */
-        background:rgba(30,22,58,0.94)!important;
-        position:relative; z-index:1;
+        max-width:92vw!important; justify-content:center!important;
+        padding:7px 14px!important; margin-bottom:12px!important;
+        gap:2px 8px!important; border-radius:999px!important;
       }
       .l-trust-badge-text{font-size:12px!important;}
       .l-trust-badge-label{font-size:11px!important;}
@@ -981,9 +976,9 @@ export default function Landing() {
          screen. Let it wrap onto a second line instead of overflowing;
          the vertical separator reads oddly before a wrapped line, so it's
          hidden here and the badge switches to a column layout. */
-      .l-trust-badge{flex-direction:column;align-items:flex-start!important;gap:6px;padding:14px 18px;}
-      .l-trust-badge-sep{display:none;}
-      .l-trust-badge-label{white-space:normal!important;text-align:left;}
+      .l-trust-badge{flex-wrap:wrap;border-radius:18px!important;text-align:center;}
+      .l-trust-badge-dot,.l-trust-badge-rocket,.l-trust-badge-sep{display:none!important;}
+      .l-trust-badge-label{white-space:normal!important;text-align:center;}
     }
 
     /* ── Values / "Building In Public" card grid ── */
