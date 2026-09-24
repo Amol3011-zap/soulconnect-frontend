@@ -615,6 +615,10 @@ export default function Landing() {
         document.head.appendChild(l);
       }
     });
+    // SMIL <animate> tags ignore CSS animation:none; pause them directly.
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('.l-hero-illus svg').forEach(el=>el.pauseAnimations && el.pauseAnimations());
+    }
     const s=()=>setScrolled(window.scrollY>50);
     window.addEventListener('scroll',s);
     return()=>window.removeEventListener('scroll',s);
@@ -866,12 +870,38 @@ export default function Landing() {
          a "is it in the viewport" check but still reading as "too much
          scroll before real content." Tightened further: 200px floor and a
          lower vw ratio. */
-      .l-hero-illus{height:clamp(90px,20vw,460px)!important;order:-1;margin-left:-32px!important;width:100vw!important;}
+      /* Mobile/tablet: the illustration is a decorative layer BEHIND the
+         content, not a block in the flow. As an in-flow block it either ate
+         the first screen (460px) or, shrunk to fit, got hidden under the
+         72px fixed nav (only a petal tip showed). Absolutely positioned, it
+         can never push the headline/CTA down. --hg is the breathing room
+         between nav and badge where the lotus sits; it scales with the
+         small-viewport height so short phones keep the CTA above the fold.
+         --lw caps the art width so the lotus reads ~200-250px wide. */
+      #hero{min-height:auto!important;}
+      .l-hero-grid{--hg:60px;--lw:min(128vw,560px);}
+      @supports (height:100svh){
+        .l-hero-grid{--hg:clamp(28px,calc(100svh - 600px),190px);}
+      }
+      .l-hero-illus{
+        position:absolute!important;z-index:0;pointer-events:none;
+        left:calc(50% - var(--lw) / 2)!important;
+        width:var(--lw)!important;height:calc(var(--lw) * 1.125)!important;
+        margin:0!important;
+        /* lotus centre sits at 80% of the art's width down the SVG
+           (y=640 of 900 at 800 wide) -- place it just below the nav */
+        top:calc(72px + env(safe-area-inset-top,0px) + var(--hg) / 2 + 34px - var(--lw) * 0.8);
+        opacity:.7;
+        -webkit-mask-image:radial-gradient(ellipse 60% 42% at 50% 71%,#000 45%,transparent 100%);
+        mask-image:radial-gradient(ellipse 60% 42% at 50% 71%,#000 45%,transparent 100%);
+      }
       /* Stacked layout centers the text, so padding needs to be symmetric
          here too — the inline style's 0-left/48px-right pairing is a
          two-column-desktop assumption (image bleeds to the grid edge on
          the left) that doesn't apply once the columns stack. */
-      .l-hero-text{text-align:center;align-items:center!important;padding:clamp(12px,3vw,56px) clamp(20px,5vw,32px) clamp(32px,6vw,64px)!important;}
+      .l-hero-text{text-align:center;align-items:center!important;padding:clamp(12px,3vw,56px) clamp(20px,5vw,32px) clamp(32px,6vw,64px)!important;
+        position:relative;z-index:1;
+        padding-top:calc(72px + env(safe-area-inset-top,0px) + var(--hg))!important;}
       /* Full compact rewrite of the mobile hero content, per direct request
          after two rounds of incremental shrinking still left the CTA below
          the fold on a real 393x852 device. Every fixed inline margin below
@@ -880,6 +910,10 @@ export default function Landing() {
         max-width:90vw!important; justify-content:center!important;
         padding:8px 16px!important; margin-bottom:14px!important;
         gap:6px!important; border-radius:14px!important;
+        /* opaque on mobile: the lotus sits behind this badge on short
+           phones and petals showed through the glass, crossing the text */
+        background:rgba(30,22,58,0.94)!important;
+        position:relative; z-index:1;
       }
       .l-trust-badge-text{font-size:12px!important;}
       .l-trust-badge-label{font-size:11px!important;}
@@ -1019,6 +1053,10 @@ export default function Landing() {
       }
       .l-timeline-row>div{flex:0 0 calc(50% - 12px)!important;}
       .l-timeline-line{display:none!important;}
+    }
+    /* Reduced motion: hero art holds still (CSS float + SMIL paused in JS) */
+    @media (prefers-reduced-motion: reduce){
+      .l-hero-illus,.l-hero-illus *{animation:none!important;}
     }
   `;
 
