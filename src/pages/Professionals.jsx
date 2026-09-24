@@ -5,13 +5,13 @@ import { Star, Clock, MapPin, Filter, Search } from 'lucide-react';
 import ErrorToast from '../components/ErrorToast';
 import { ListSkeleton } from '../components/Skeletons';
 
-const BG = '#0D0B1A';
-const CARD = '#211044';
-const BORDER = 'rgba(255,255,255,0.07)';
-const PURPLE = '#8B5CF6';
-const GOLD = '#F4C542';
-const TEXT2 = '#8A84B6';
-const TEXT3 = '#B8B4D8';
+const BG = '#F7F5FB';
+const CARD = '#FFFFFF';
+const BORDER = '#E7E3EF';
+const PURPLE = '#8066D5';
+const GOLD = '#A56A12';
+const TEXT2 = '#69677D';
+const TEXT3 = '#4A4760';
 
 const CATEGORIES = [
   { id: 'all', label: 'All', icon: '✦' },
@@ -95,7 +95,7 @@ export default function Professionals() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: 'inherit',
           }}
         >
           <p style={{ color: TEXT2, textAlign: 'center', fontSize: 16 }}>
@@ -113,10 +113,10 @@ export default function Professionals() {
           padding: 'clamp(16px, 4vw, 20px) clamp(16px, 4vw, 32px)',
           minHeight: '100vh',
           background: BG,
-          fontFamily: "'Inter', sans-serif",
+          fontFamily: 'inherit',
         }}
       >
-        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 20 }}>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#171642', marginBottom: 20 }}>
           Verified Professionals
         </h1>
         <ListSkeleton count={4} cardHeight={180} />
@@ -131,7 +131,7 @@ export default function Professionals() {
         minHeight: '100vh',
         background: BG,
         paddingBottom: 24,
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: 'inherit',
       }}
     >
       {/* Toast */}
@@ -146,7 +146,7 @@ export default function Professionals() {
               bottom: 90,
               left: '50%',
               transform: 'translateX(-50%)',
-              background: '#1A1035',
+              background: '#FFFFFF',
               border: `1px solid ${GOLD}`,
               color: GOLD,
               padding: '12px 24px',
@@ -169,7 +169,7 @@ export default function Professionals() {
         transition={{ duration: 0.4 }}
         style={{ marginBottom: 20 }}
       >
-        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', margin: 0 }}>Professionals</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#171642', margin: 0 }}>Professionals</h1>
         <p style={{ fontSize: 14, color: TEXT2, marginTop: 4, marginBottom: 0 }}>
           Connect with verified therapists, coaches, and healers.
         </p>
@@ -200,15 +200,15 @@ export default function Professionals() {
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            background: '#1A1035',
-            border: '1px solid rgba(255,255,255,0.08)',
+            background: '#FFFFFF',
+            border: '1px solid #E7E3EF',
             borderRadius: 12,
             padding: '10px 16px 10px 40px',
-            color: '#fff',
+            color: '#171642',
             fontSize: 14,
             outline: 'none',
             boxSizing: 'border-box',
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: 'inherit',
           }}
         />
       </motion.div>
@@ -302,7 +302,7 @@ export default function Professionals() {
 
               {/* Name + role */}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{pro.name}</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#171642', marginBottom: 2 }}>{pro.name}</div>
                 <div style={{ fontSize: 12, color: TEXT2, marginBottom: 6 }}>{pro.role}</div>
                 {/* Availability badge */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -339,8 +339,8 @@ export default function Professionals() {
                   style={{
                     padding: '3px 10px',
                     borderRadius: 20,
-                    background: 'rgba(139,92,246,0.12)',
-                    border: '1px solid rgba(139,92,246,0.25)',
+                    background: '#EFEAFB',
+                    border: '1px solid #DCD2F2',
                     color: PURPLE,
                     fontSize: 11,
                     fontWeight: 500,
@@ -364,10 +364,10 @@ export default function Professionals() {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 <Star size={13} color={GOLD} fill={GOLD} />
-                <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{pro.rating}</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#171642' }}>{pro.rating}</span>
               </div>
               <div style={{ fontSize: 12, color: TEXT2 }}>{pro.sessions.toLocaleString()} sessions</div>
-              <div style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 700, color: '#fff' }}>{pro.price}</div>
+              <div style={{ marginLeft: 'auto', fontSize: 15, fontWeight: 700, color: '#171642' }}>{pro.price}</div>
               <div style={{ fontSize: 11, color: TEXT2 }}>/ session</div>
             </div>
 
@@ -379,9 +379,9 @@ export default function Professionals() {
                   flex: 1,
                   padding: '11px 0',
                   borderRadius: 12,
-                  background: `linear-gradient(135deg, ${PURPLE}, #6D28D9)`,
+                  background: `#8066D5`,
                   border: 'none',
-                  color: '#fff',
+                  color: '#FFFFFF',
                   fontSize: 14,
                   fontWeight: 700,
                   cursor: 'pointer',
@@ -395,8 +395,8 @@ export default function Professionals() {
                 style={{
                   padding: '11px 18px',
                   borderRadius: 12,
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: '#F7F5FB',
+                  border: '1px solid #E7E3EF',
                   color: TEXT3,
                   fontSize: 13,
                   fontWeight: 500,

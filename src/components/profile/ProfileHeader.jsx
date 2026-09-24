@@ -45,15 +45,15 @@ export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       style={{
-        background: 'rgba(34, 18, 73, 0.72)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        background: '#FFFFFF',
+        border: '1px solid #E7E3EF',
         borderRadius: 24,
         padding: '20px 16px',
         marginBottom: 20,
         display: 'flex',
         alignItems: 'center',
         gap: 14,
-        backdropFilter: 'blur(24px)',
+        backdropFilter: 'none',
       }}
     >
       {/* Left: Avatar + Online */}
@@ -66,7 +66,7 @@ export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) 
               width: 64,
               height: 64,
               borderRadius: '50%',
-              border: '2px solid rgba(255, 255, 255, 0.12)',
+              border: '2px solid #E7E3EF',
               objectFit: 'cover',
             }}
           />
@@ -76,14 +76,14 @@ export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) 
               width: 64,
               height: 64,
               borderRadius: '50%',
-              background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+              background: '#8066D5',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: 24,
               fontWeight: 700,
-              color: '#fff',
-              border: '2px solid rgba(255, 255, 255, 0.12)',
+              color: '#171642',
+              border: '2px solid #E7E3EF',
             }}
           >
             {initials}
@@ -106,22 +106,22 @@ export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) 
 
       {/* Center: Name + Mood + Streak */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#171642', marginBottom: 4 }}>
           {user?.full_name || user?.name || 'Soul Traveler'}
         </div>
-        <div style={{ fontSize: 12, color: 'rgba(184, 180, 216, 0.6)', marginBottom: 8 }}>
+        <div style={{ fontSize: 12, color: '#69677D', marginBottom: 8 }}>
           {user?.bio || "You don't have to go through it alone."}
         </div>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(184, 180, 216, 0.8)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#69677D' }}>
             <span>{getMoodEmoji(todayMood)}</span>
             <span>{getMoodLabel(todayMood)}</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(184, 180, 216, 0.8)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#69677D' }}>
             <span>🔥</span>
             <span>{streak || 0}d Streak</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(184, 180, 216, 0.8)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#69677D' }}>
             <span>🌱</span>
             <span>Level {level}</span>
           </div>
@@ -136,9 +136,9 @@ export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) 
         style={{
           padding: '8px 12px',
           borderRadius: 10,
-          border: '1px solid rgba(139, 92, 246, 0.3)',
-          background: 'rgba(124, 58, 237, 0.1)',
-          color: '#A78BFA',
+          border: '1px solid #DCD2F2',
+          background: '#EFEAFB',
+          color: '#5E47B8',
           fontSize: 12,
           fontWeight: 600,
           cursor: 'pointer',

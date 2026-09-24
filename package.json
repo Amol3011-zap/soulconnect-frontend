@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/inject-static.js && node --experimental-strip-types scripts/generate-emotion-pages.js && node scripts/generate-blog-pages.js && node --experimental-strip-types scripts/generate-index-pages.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "engines": {
     "node": ">=22.6.0"
@@ -16,8 +17,14 @@
     "@capacitor/cli": "^8.4.0",
     "@capacitor/core": "^8.4.0",
     "@capacitor/ios": "^8.4.0",
+    "@radix-ui/react-avatar": "^1.2.6",
+    "@radix-ui/react-dialog": "^1.1.23",
+    "@radix-ui/react-progress": "^1.1.16",
+    "@radix-ui/react-slot": "^1.3.3",
     "@vercel/analytics": "^2.0.1",
     "axios": "^1.6.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "d3-geo": "^3.1.1",
     "lucide-react": "^1.22.0",
     "motion": "^12.40.0",
@@ -25,6 +32,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.1",
     "recharts": "^3.9.0",
+    "tailwind-merge": "^2.6.1",
+    "tailwindcss-animate": "^1.0.7",
     "three": "^0.185.1",
     "topojson-client": "^3.1.0",
     "world-atlas": "^2.0.2",
@@ -35,6 +44,7 @@
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.6",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vitest": "^2.1.9"
   }
 }

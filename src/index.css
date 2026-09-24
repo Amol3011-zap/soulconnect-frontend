@@ -486,3 +486,66 @@ html { scroll-behavior: smooth; }
   }
   .sc-float, .sc-glow-pulse { animation: none; }
 }
+
+/* ══════════════════════════════════════════════
+   LOGGED-IN APP — LIGHT THEME (SoulConnect)
+   Scoped to .sc-app (the DashboardLayout root) so nothing here reaches the
+   public / marketing pages. Holds both the shadcn/ui variables (HSL
+   triplets, consumed via hsl(var(--x)) in tailwind.config.js) and light
+   overrides of the older --sc-* / --bg / --text tokens.
+
+   Palette
+     bg #F7F5FB · section #EFEBF7 · card #FFFFFF · warm #FAF7F2
+     ink #171642 · ink-2 #69677D · purple #8066D5 · soft #E5DDF5
+     border #E7E3EF
+   Spacing scale: 8 / 12 / 16 / 20 / 24 / 32
+══════════════════════════════════════════════ */
+/* Variables are also exposed on .sc-portal: shadcn Dialog/Sheet render into
+   a portal on <body>, outside .sc-app, and would otherwise lose every token. */
+.sc-app, .sc-portal {
+  --background: 260 43% 97.6%;
+  --foreground: 241 50% 17%;
+  --card: 0 0% 100%;
+  --card-foreground: 241 50% 17%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 241 50% 17%;
+  --primary: 254 57% 62%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 260 55% 91%;
+  --secondary-foreground: 254 45% 44%;
+  --muted: 260 43% 95%;
+  --muted-foreground: 246 10% 45%;
+  --accent: 260 55% 91%;
+  --accent-foreground: 241 50% 17%;
+  --destructive: 0 64% 56%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 260 27% 91%;
+  --input: 260 27% 91%;
+  --ring: 254 57% 62%;
+  --radius: 1rem;
+
+  --sc-bg: #F7F5FB;
+  --sc-surface: #EFEBF7;
+  --sc-card: #FFFFFF;
+  --sc-warm: #FAF7F2;
+  --sc-border: #E7E3EF;
+  --sc-purple: #8066D5;
+  --sc-purple-soft: #E5DDF5;
+  --sc-text: #171642;
+  --sc-text-2: #69677D;
+  --sc-muted: #8A889C;
+  --bg: #F7F5FB;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #EFEBF7;
+  --text: #171642;
+  --text-secondary: #69677D;
+  --text-muted: #8A889C;
+}
+.sc-app {
+  background: var(--sc-bg);
+  color: var(--sc-text);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+.sc-app :focus-visible { outline: 2px solid #8066D5; outline-offset: 2px; }
+/* tactile press feedback for the shared UI kit */
+.sc-app .sc-press:active { transform: scale(0.98); }

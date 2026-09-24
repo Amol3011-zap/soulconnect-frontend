@@ -81,16 +81,16 @@ export default function Achievements({ onViewAll }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.35 }}
       style={{
-        background: 'rgba(34, 18, 73, 0.72)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        background: '#FFFFFF',
+        border: '1px solid #E7E3EF',
         borderRadius: 24,
         padding: 20,
         marginBottom: 20,
-        backdropFilter: 'blur(24px)',
+        backdropFilter: 'none',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: 0 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: '#171642', margin: 0 }}>
           Achievements
         </h3>
         <motion.button
@@ -99,7 +99,7 @@ export default function Achievements({ onViewAll }) {
           onClick={onViewAll}
           style={{
             fontSize: 12,
-            color: '#A78BFA',
+            color: '#5E47B8',
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
@@ -113,7 +113,7 @@ export default function Achievements({ onViewAll }) {
       </div>
 
       {displayBadges.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '20px', color: 'rgba(184, 180, 216, 0.6)', fontSize: 12 }}>
+        <div style={{ textAlign: 'center', padding: '20px', color: '#69677D', fontSize: 12 }}>
           Start logging your mood to unlock achievements! 🎉
         </div>
       ) : (
@@ -131,19 +131,19 @@ export default function Achievements({ onViewAll }) {
                 alignItems: 'center',
                 gap: 8,
                 padding: 14,
-                background: 'rgba(124, 58, 237, 0.08)',
+                background: '#EFEAFB',
                 borderRadius: 16,
-                border: '1px solid rgba(255, 255, 255, 0.04)',
+                border: '1px solid #E7E3EF',
                 cursor: 'pointer',
                 textAlign: 'center',
               }}
             >
               <div style={{ fontSize: 32 }}>{badge.emoji}</div>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#fff', lineHeight: 1.3 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#171642', lineHeight: 1.3 }}>
                   {badge.title}
                 </div>
-                <div style={{ fontSize: 10, color: 'rgba(184, 180, 216, 0.6)', marginTop: 2, lineHeight: 1.2 }}>
+                <div style={{ fontSize: 10, color: '#69677D', marginTop: 2, lineHeight: 1.2 }}>
                   {badge.description}
                 </div>
               </div>
@@ -164,15 +164,15 @@ export default function Achievements({ onViewAll }) {
                 justifyContent: 'center',
                 gap: 8,
                 padding: 14,
-                background: 'rgba(124, 58, 237, 0.08)',
+                background: '#EFEAFB',
                 borderRadius: 16,
-                border: '1px solid rgba(255, 255, 255, 0.04)',
+                border: '1px solid #E7E3EF',
                 cursor: 'pointer',
                 textAlign: 'center',
               }}
             >
-              <div style={{ fontSize: 20, fontWeight: 700, color: '#A78BFA' }}>+{moreCount}</div>
-              <div style={{ fontSize: 10, color: 'rgba(184, 180, 216, 0.6)' }}>More</div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: '#5E47B8' }}>+{moreCount}</div>
+              <div style={{ fontSize: 10, color: '#69677D' }}>More</div>
             </motion.div>
           )}
         </div>

@@ -7,9 +7,9 @@ import WeatherRecommendation from './WeatherRecommendation';
 
 export const WEATHERS = {
   'clear-sky': { id: 'clear-sky', label: 'Clear Sky', icon: '☀️', tagline: 'Peaceful & Calm', description: 'Feeling peaceful, balanced and calm.', color: '#F59E0B', gradient: 'linear-gradient(135deg, #78350F 0%, #D97706 50%, #F59E0B 100%)', glowColor: 'rgba(245,158,11,0.35)', quote: 'You are the sky. Everything else is just weather.', recommendation: { action: 'Help one stranger today.', description: "Your calm energy lights up someone else's day." } },
-  'hope': { id: 'hope', label: 'Hope', icon: '🌤', tagline: 'Optimistic & Positive', description: 'Feeling optimistic. Ready for a better day.', color: '#FBBF24', gradient: 'linear-gradient(135deg, #713F12 0%, #CA8A04 50%, #FBBF24 100%)', glowColor: 'rgba(251,191,36,0.35)', quote: 'Hope is being able to see light despite all the darkness.', recommendation: { action: 'Write one gratitude note.', description: 'Capture what you are hopeful about today.' } },
+  'hope': { id: 'hope', label: 'Hope', icon: '🌤', tagline: 'Optimistic & Positive', description: 'Feeling optimistic. Ready for a better day.', color: '#A56A12', gradient: 'linear-gradient(135deg, #713F12 0%, #CA8A04 50%, #FBBF24 100%)', glowColor: 'rgba(251,191,36,0.35)', quote: 'Hope is being able to see light despite all the darkness.', recommendation: { action: 'Write one gratitude note.', description: 'Capture what you are hopeful about today.' } },
   'blooming': { id: 'blooming', label: 'Blooming', icon: '🌸', tagline: 'Grateful & Growing', description: 'Feeling grateful and growing.', color: '#EC4899', gradient: 'linear-gradient(135deg, #500724 0%, #9D174D 40%, #7E22CE 100%)', glowColor: 'rgba(236,72,153,0.35)', quote: 'You are already blooming into exactly who you are meant to be.', recommendation: { action: 'Share kindness today.', description: 'Your growth creates ripples. Send someone a heartfelt message.' } },
-  'fog': { id: 'fog', label: 'Fog', icon: '🌫', tagline: 'Confused & Unfocused', description: 'Feeling confused. Unable to focus.', color: '#94A3B8', gradient: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4C1D95 100%)', glowColor: 'rgba(148,163,184,0.25)', quote: 'Clarity comes when you stop forcing and start allowing.', recommendation: { action: '5-minute breathing exercise.', description: 'Clear mental fog with slow, intentional breath.' } },
+  'fog': { id: 'fog', label: 'Fog', icon: '🌫', tagline: 'Confused & Unfocused', description: 'Feeling confused. Unable to focus.', color: '#69677D', gradient: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4C1D95 100%)', glowColor: 'rgba(148,163,184,0.25)', quote: 'Clarity comes when you stop forcing and start allowing.', recommendation: { action: '5-minute breathing exercise.', description: 'Clear mental fog with slow, intentional breath.' } },
   'heavy-rain': { id: 'heavy-rain', label: 'Heavy Rain', icon: '🌧', tagline: 'Overwhelmed & Sad', description: 'Feeling emotionally overwhelmed. Sad. Drained.', color: '#60A5FA', gradient: 'linear-gradient(135deg, #0C4A6E 0%, #1E40AF 50%, #4C1D95 100%)', glowColor: 'rgba(96,165,250,0.35)', quote: 'After every storm, there is always a rainbow waiting.', recommendation: { action: 'Join a supportive community.', description: "You don't have to carry this alone." } },
   'storm': { id: 'storm', label: 'Storm', icon: '⚡', tagline: 'Anxious & Overthinking', description: 'Feeling anxious. Panicking. Overthinking.', color: '#818CF8', gradient: 'linear-gradient(135deg, #1E1B4B 0%, #3730A3 50%, #6D28D9 100%)', glowColor: 'rgba(129,140,248,0.35)', quote: "You're stronger than today feels.", recommendation: { action: 'Try Box Breathing.', description: 'Inhale 4s, hold 4s, exhale 4s, hold 4s. Repeat.' } },
 };
@@ -147,13 +147,13 @@ export default function EmotionWeatherModal() {
           zIndex: 1,
           width: '100%',
           maxWidth: 680,
-          background: 'rgba(255,255,255,0.04)',
-          backdropFilter: 'blur(40px)',
-          WebkitBackdropFilter: 'blur(40px)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: '#F7F5FB',
+          backdropFilter: 'none',
+          WebkitBackdropFilter: 'none',
+          border: '1px solid #E7E3EF',
           borderRadius: 24,
           padding: 'clamp(28px, 5vw, 48px)',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)',
+          boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
         }}
       >
         {/* Skip button */}
@@ -166,7 +166,7 @@ export default function EmotionWeatherModal() {
             right: 16,
             background: 'none',
             border: 'none',
-            color: 'rgba(255,255,255,0.3)',
+            color: '#69677D',
             fontSize: 13,
             cursor: 'pointer',
             padding: '4px 8px',
@@ -200,7 +200,7 @@ export default function EmotionWeatherModal() {
             margin: '0 0 6px',
             fontSize: 'clamp(22px, 4vw, 28px)',
             fontWeight: 800,
-            color: '#fff',
+            color: '#171642',
             letterSpacing: '-0.02em',
             lineHeight: 1.2,
           }}>
@@ -210,7 +210,7 @@ export default function EmotionWeatherModal() {
           <p style={{
             margin: '0 0 16px',
             fontSize: 14,
-            color: 'rgba(255,255,255,0.45)',
+            color: '#69677D',
             fontWeight: 500,
           }}>
             Before we begin...
@@ -220,7 +220,7 @@ export default function EmotionWeatherModal() {
           <div style={{
             width: 48,
             height: 2,
-            background: 'linear-gradient(90deg, #7C3AED, #A855F7)',
+            background: '#8066D5',
             borderRadius: 2,
             margin: '0 auto 20px',
           }} />
@@ -288,7 +288,7 @@ export default function EmotionWeatherModal() {
               margin: '20px 0 0',
               textAlign: 'center',
               fontSize: 12,
-              color: 'rgba(255,255,255,0.25)',
+              color: '#69677D',
             }}
           >
             Your emotional check-in is private and sacred. No judgment here.

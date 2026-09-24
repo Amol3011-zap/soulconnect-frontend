@@ -33,7 +33,7 @@ function Row({ item, index }) {
       style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '9px 0',
-        borderTop: index === 0 ? 'none' : '1px solid rgba(255,255,255,0.05)',
+        borderTop: index === 0 ? 'none' : '1px solid #EFEBF7',
       }}
     >
       <span
@@ -42,19 +42,18 @@ function Row({ item, index }) {
           width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 13,
-          background: `linear-gradient(145deg, ${color}D9, ${color}73)`,
-          boxShadow: `0 0 10px ${color}59`,
+          background: `${color}24`,
         }}
       >
         {emoji}
       </span>
       <span style={{
-        flex: 1, minWidth: 0, fontSize: 13, color: 'rgba(232,229,255,0.88)',
+        flex: 1, minWidth: 0, fontSize: 13, color: '#171642',
         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
       }}>
         {shortLabel(item.label)}
       </span>
-      <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+      <span style={{ fontSize: 13, fontWeight: 600, color: '#171642', flexShrink: 0 }}>
         {item.percentage}%
       </span>
     </li>
@@ -145,7 +144,7 @@ function DottedMap() {
           cx={d.x * cell + cell / 2}
           cy={d.y * cell + cell / 2}
           r={0.95}
-          fill={i % 9 === 0 ? 'rgba(196,181,253,0.85)' : 'rgba(139,120,205,0.5)'}
+          fill={i % 9 === 0 ? 'rgba(128,102,213,0.55)' : 'rgba(128,102,213,0.28)'}
         />
       ))}
 
@@ -161,7 +160,7 @@ function DottedMap() {
             cx={f.x * cell + cell / 2}
             cy={f.y * cell + cell / 2}
             r={1.1}
-            fill="#fff"
+            fill={f.c}
             opacity="0.9"
           />
         </g>
@@ -191,14 +190,17 @@ export default function GlobalPulseCard() {
   }, []);
 
   return (
-    <section className="sc-panel" style={{ padding: '14px 14px 10px', marginBottom: 12 }}>
+    <section
+      className="rounded-[20px] border border-border bg-card shadow-[0_1px_2px_rgba(23,22,66,0.04),0_4px_16px_rgba(23,22,66,0.04)]"
+      style={{ padding: '14px 14px 10px' }}
+    >
       <header style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
-        <Globe2 size={17} strokeWidth={2} color="#A78BFA" aria-hidden="true" />
-        <h2 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#F5F3FF', letterSpacing: '-0.01em' }}>
+        <Globe2 size={17} strokeWidth={2} color="#8066D5" aria-hidden="true" />
+        <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: '#171642', letterSpacing: '-0.01em' }}>
           Global Pulse
         </h2>
       </header>
-      <p style={{ margin: '0 0 12px', fontSize: 12, color: 'rgba(196,181,253,0.6)' }}>
+      <p style={{ margin: '0 0 12px', fontSize: 13, color: '#69677D' }}>
         You&apos;re not alone today.
       </p>
 
@@ -208,8 +210,8 @@ export default function GlobalPulseCard() {
         <div aria-hidden="true">
           {[0, 1, 2, 3].map(i => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '5px 0' }}>
-              <span className="sc-shimmer" style={{ width: 22, height: 22, borderRadius: '50%' }} />
-              <span className="sc-shimmer" style={{ flex: 1, height: 10, borderRadius: 5 }} />
+              <span className="animate-pulse bg-muted" style={{ width: 22, height: 22, borderRadius: '50%' }} />
+              <span className="animate-pulse bg-muted" style={{ flex: 1, height: 10, borderRadius: 5 }} />
             </div>
           ))}
         </div>
@@ -218,7 +220,7 @@ export default function GlobalPulseCard() {
           {rows.map((r, i) => <Row key={r.id || i} item={r} index={i} />)}
         </ul>
       ) : (
-        <p style={{ margin: '2px 0 0', fontSize: 12, lineHeight: 1.6, color: 'rgba(196,181,253,0.55)' }}>
+        <p style={{ margin: '2px 0 0', fontSize: 13, lineHeight: 1.6, color: '#69677D' }}>
           {failed
             ? 'Global Pulse is unavailable right now.'
             : 'Not enough check-ins yet today. Share how you feel to help the picture grow.'}
@@ -228,8 +230,7 @@ export default function GlobalPulseCard() {
       <button
         type="button"
         onClick={() => navigate('/pulse')}
-        className="sc-link-btn"
-        style={{ marginTop: 6 }}
+        className="mt-1.5 flex min-h-[44px] items-center gap-1 text-sm font-semibold text-primary"
       >
         Explore Global Pulse <ArrowRight size={13} strokeWidth={2.2} aria-hidden="true" />
       </button>

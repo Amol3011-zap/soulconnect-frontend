@@ -52,39 +52,33 @@ export default function StatsGrid() {
 
   const stats = [
     { icon: '🌱', label: 'Tiny Wins', value: totalWins },
-    { icon: '📖', label: 'Journal Entries', value: journalEntries },
-    { icon: '🤝', label: 'People Helped', value: peopleHelped },
-    { icon: '💜', label: 'Meaningful Connections', value: connections },
+    { icon: '📖', label: 'Journal Entries', short: 'Journal', value: journalEntries },
+    { icon: '🤝', label: 'People Helped', short: 'Helped', value: peopleHelped },
+    { icon: '💜', label: 'Meaningful Connections', short: 'Connections', value: connections },
   ];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 20 }}>
+    <div style={{
+      display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+      background: '#FFFFFF', border: '1px solid #E7E3EF', borderRadius: 20,
+      padding: '14px 8px', marginBottom: 16,
+      boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
+    }}>
       {stats.map((stat, i) => (
-        <motion.div
+        <div
           key={stat.label}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
-          whileHover={{ y: -4, boxShadow: '0 12px 28px rgba(124, 58, 237, 0.2)' }}
           style={{
-            background: 'rgba(34, 18, 73, 0.72)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: 20,
-            padding: 16,
-            textAlign: 'center',
-            backdropFilter: 'blur(24px)',
-            cursor: 'pointer',
-            transition: 'all 0.3s',
+            textAlign: 'center', padding: '0 4px',
+            borderLeft: i === 0 ? 'none' : '1px solid #EFEBF7',
           }}
         >
-          <div style={{ fontSize: 28, marginBottom: 8 }}>{stat.icon}</div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 4 }}>
+          <div style={{ fontSize: 20, fontWeight: 700, color: '#171642', lineHeight: 1.2 }}>
             <AnimatedCounter value={stat.value} />
           </div>
-          <div style={{ fontSize: 11, color: 'rgba(184, 180, 216, 0.7)', lineHeight: 1.3 }}>
-            {stat.label}
+          <div style={{ fontSize: 12, color: '#69677D', lineHeight: 1.3, marginTop: 2 }}>
+            {stat.short || stat.label}
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   );

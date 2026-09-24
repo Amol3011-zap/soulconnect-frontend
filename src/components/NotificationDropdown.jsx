@@ -47,7 +47,7 @@ function NotifItem({ n }) {
           {n.title}
         </div>
         {n.sub && (
-          <div style={{ fontSize: 11, color: '#A855F7', marginTop: 2, fontWeight: 600 }}>
+          <div style={{ fontSize: 11, color: '#5E47B8', marginTop: 2, fontWeight: 600 }}>
             {n.sub}
           </div>
         )}
@@ -59,7 +59,7 @@ function NotifItem({ n }) {
           position: 'absolute', right: 14, top: 18,
           width: 8, height: 8, borderRadius: '50%',
           background: '#A855F7',
-          boxShadow: '0 0 7px rgba(168,85,247,0.9)',
+          boxShadow: 'none',
           flexShrink: 0,
         }} />
       )}
@@ -124,31 +124,31 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
             width: 320,
             zIndex: 99999,
             background: '#160A36',
-            border: '1px solid rgba(139,92,246,0.35)',
+            border: '1px solid #DCD2F2',
             borderRadius: 18,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.9), 0 0 0 1px rgba(168,85,247,0.12), 0 24px 64px rgba(0,0,0,0.7)',
+            boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
             overflow: 'hidden',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'inherit',
           }}
         >
           {/* Top accent */}
           <div style={{
             height: 2,
-            background: 'linear-gradient(90deg, #7C3AED, #A855F7, #F4C542, transparent)',
+            background: '#8066D5',
           }} />
 
           {/* Header */}
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: '14px 16px 10px',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            borderBottom: '1px solid #E7E3EF',
           }}>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#171642', letterSpacing: '-0.01em' }}>
                 Notifications
               </div>
               {unreadCount > 0 && (
-                <div style={{ fontSize: 11, color: '#A78BFA', marginTop: 1, fontWeight: 500 }}>
+                <div style={{ fontSize: 11, color: '#5E47B8', marginTop: 1, fontWeight: 500 }}>
                   {unreadCount} Unread
                 </div>
               )}
@@ -158,8 +158,8 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
                 onClick={markAllRead}
                 style={{
                   background: 'none', border: 'none',
-                  color: '#A855F7', fontSize: 11, fontWeight: 600,
-                  cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                  color: '#5E47B8', fontSize: 11, fontWeight: 600,
+                  cursor: 'pointer', fontFamily: 'inherit',
                   padding: '4px 8px', borderRadius: 6,
                 }}
               >
@@ -182,7 +182,7 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
 
           {/* Footer */}
           <div style={{
-            borderTop: '1px solid rgba(255,255,255,0.08)',
+            borderTop: '1px solid #E7E3EF',
             padding: '12px 16px',
             textAlign: 'center',
           }}>
@@ -190,8 +190,8 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
               onClick={() => { navigate('/notifications'); onClose(); }}
               style={{
                 background: 'none', border: 'none',
-                color: '#A855F7', fontSize: 13, fontWeight: 600,
-                cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                color: '#5E47B8', fontSize: 13, fontWeight: 600,
+                cursor: 'pointer', fontFamily: 'inherit',
                 display: 'inline-flex', alignItems: 'center', gap: 5,
               }}
             >

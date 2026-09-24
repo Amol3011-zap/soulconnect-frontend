@@ -254,7 +254,7 @@ export default function SoulMatch() {
               <CardSkeletons />
             ) : visible.length === 0 ? (
               <EmptyState
-                icon={<Heart size={26} strokeWidth={1.8} color="#C4B5FD" />}
+                icon={<Heart size={26} strokeWidth={1.8} color="#8066D5" />}
                 title="Your SoulMatch circle is still growing 💜"
                 body={failure === 'auth'
                   ? 'Sign in to find people who may understand your journey.'
@@ -304,7 +304,7 @@ export default function SoulMatch() {
               <CardSkeletons count={2} />
             ) : requests.length === 0 ? (
               <EmptyState
-                icon={<Inbox size={26} strokeWidth={1.8} color="#C4B5FD" />}
+                icon={<Inbox size={26} strokeWidth={1.8} color="#8066D5" />}
                 title="No connection requests yet."
                 body="When someone asks to connect, their request will appear here."
               />
@@ -351,7 +351,7 @@ export default function SoulMatch() {
               <CardSkeletons count={2} />
             ) : connections.length === 0 ? (
               <EmptyState
-                icon={<Users size={26} strokeWidth={1.8} color="#C4B5FD" />}
+                icon={<Users size={26} strokeWidth={1.8} color="#8066D5" />}
                 title="Your meaningful connections will appear here."
                 body="Once you and someone else both agree to connect, you'll find them here."
               />

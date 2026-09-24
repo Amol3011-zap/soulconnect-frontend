@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'motion/react';
      onSupport        — () => void
 ───────────────────────────────────────────────────────── */
 const MENU_ITEMS = [
-  { id: 'reflection',      icon: '✨', label: "Today's Reflection",  color: '#A78BFA' },
+  { id: 'reflection',      icon: '✨', label: "Today's Reflection",  color: '#5E47B8' },
   { id: 'breathing',       icon: '🌬', label: 'Breathing Exercise',   color: '#6EE7B7' },
   { id: 'weather',         icon: '🌤', label: 'Emotional Weather',    color: '#93C5FD' },
   { id: 'support',         icon: '💜', label: 'Need Support',         color: '#F9A8D4' },
@@ -70,10 +70,10 @@ export default function FloatingCompanion({
             transition={{ type: 'spring', stiffness: 340, damping: 26 }}
             style={{
               background: '#16093A',
-              border: '1px solid rgba(168,85,247,0.28)',
+              border: '1px solid #DCD2F2',
               borderRadius: 22,
               padding: '14px 14px',
-              boxShadow: '0 16px 56px rgba(0,0,0,0.55), 0 0 40px rgba(124,58,237,0.25)',
+              boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
               minWidth: 230,
               display: 'flex',
               flexDirection: 'column',
@@ -85,12 +85,12 @@ export default function FloatingCompanion({
             {/* Top accent */}
             <div style={{
               position: 'absolute', top: 0, left: 0, right: 0, height: 1.5,
-              background: 'linear-gradient(90deg, #7C3AED, #A855F7, #F4C542, transparent)',
+              background: '#8066D5',
               borderRadius: '22px 22px 0 0',
             }} />
 
             {/* Title */}
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#F4C542', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4, paddingLeft: 2 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#A56A12', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4, paddingLeft: 2 }}>
               How can I help?
             </div>
 
@@ -100,16 +100,16 @@ export default function FloatingCompanion({
                 initial={{ opacity: 0, x: 12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.06, duration: 0.25 }}
-                whileHover={{ background: 'rgba(139,92,246,0.2)', x: 3 }}
+                whileHover={{ background: '#EFEAFB', x: 3 }}
                 onClick={() => handleItem(item.id)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 12px',
                   borderRadius: 14,
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.07)',
+                  background: '#F7F5FB',
+                  border: '1px solid #E7E3EF',
                   cursor: 'pointer',
-                  fontFamily: 'Inter, sans-serif',
+                  fontFamily: 'inherit',
                   width: '100%',
                   textAlign: 'left',
                   transition: 'background 0.18s ease, transform 0.18s ease',
@@ -124,7 +124,7 @@ export default function FloatingCompanion({
                 }}>
                   {item.icon}
                 </div>
-                <span style={{ fontSize: 13, fontWeight: 600, color: '#E2DEFF' }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: '#171642' }}>
                   {item.label}
                 </span>
               </motion.button>
@@ -139,13 +139,13 @@ export default function FloatingCompanion({
         <div
           style={{
             position: 'absolute', inset: -8, borderRadius: '50%',
-            border: '1.5px solid rgba(168,85,247,0.3)',
+            border: '1.5px solid #DCD2F2',
             pointerEvents: 'none',
           }}
         />
 
         <motion.button
-          whileHover={{ scale: 1.1, boxShadow: '0 8px 40px rgba(124,58,237,0.65)' }}
+          whileHover={{ scale: 1.1, boxShadow: 'none' }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setOpen(v => !v)}
           style={{
@@ -154,8 +154,8 @@ export default function FloatingCompanion({
             background: open
               ? 'linear-gradient(135deg, #A855F7, #7C3AED)'
               : 'linear-gradient(135deg, #7C3AED, #5B21B6)',
-            border: '1.5px solid rgba(168,85,247,0.45)',
-            boxShadow: '0 6px 32px rgba(124,58,237,0.55), 0 0 0 1px rgba(255,255,255,0.08)',
+            border: '1.5px solid #DCD2F2',
+            boxShadow: 'none',
             cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.25s ease, box-shadow 0.25s ease',
@@ -180,9 +180,9 @@ export default function FloatingCompanion({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4 }}
             style={{
-              fontSize: 10, fontWeight: 700, color: 'rgba(196,181,253,0.7)',
+              fontSize: 10, fontWeight: 700, color: '#69677D',
               textAlign: 'center', letterSpacing: '0.03em',
-              textShadow: '0 1px 6px rgba(0,0,0,0.6)',
+              textShadow: 'none',
             }}
           >
             Need Support?

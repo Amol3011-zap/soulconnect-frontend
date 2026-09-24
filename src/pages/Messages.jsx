@@ -75,14 +75,14 @@ export default function Messages() {
           style={{
             padding: '0',
             minHeight: '100vh',
-            background: '#0D0B1A',
-            fontFamily: 'Inter, sans-serif',
+            background: '#F7F5FB',
+            fontFamily: 'inherit',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <p style={{ color: '#8A84B6', textAlign: 'center' }}>
+          <p style={{ color: '#69677D', textAlign: 'center' }}>
             Unable to load messages. Please try again.
           </p>
         </div>
@@ -96,23 +96,23 @@ export default function Messages() {
         style={{
           padding: '0',
           minHeight: '100vh',
-          background: '#0D0B1A',
-          fontFamily: 'Inter, sans-serif',
+          background: '#F7F5FB',
+          fontFamily: 'inherit',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
         <div
           style={{
-            background: '#0D0B1A',
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            background: '#F7F5FB',
+            borderBottom: '1px solid #E7E3EF',
             padding: '20px 24px 16px',
             position: 'sticky',
             top: 0,
             zIndex: 10,
           }}
         >
-          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#fff' }}>Messages</h2>
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#171642' }}>Messages</h2>
         </div>
         <div style={{ padding: '20px 24px', flex: 1 }}>
           <MessagesSkeleton count={5} />
@@ -126,8 +126,8 @@ export default function Messages() {
       style={{
         padding: '0',
         minHeight: '100vh',
-        background: '#0D0B1A',
-        fontFamily: 'Inter, sans-serif',
+        background: '#F7F5FB',
+        fontFamily: 'inherit',
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -135,8 +135,8 @@ export default function Messages() {
       {/* Sticky Header */}
       <div
         style={{
-          background: '#0D0B1A',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          background: '#F7F5FB',
+          borderBottom: '1px solid #E7E3EF',
           padding: '20px 24px 16px',
           position: 'sticky',
           top: 0,
@@ -145,7 +145,7 @@ export default function Messages() {
       >
         {/* Title row */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#fff' }}>Messages</h2>
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#171642' }}>Messages</h2>
           <div style={{ display: 'flex', gap: 10 }}>
             {[Edit, RefreshCw].map((Icon, idx) => (
               <button
@@ -154,16 +154,16 @@ export default function Messages() {
                   width: 36,
                   height: 36,
                   borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: '#F7F5FB',
+                  border: '1px solid #E7E3EF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  backdropFilter: 'blur(10px)',
+                  backdropFilter: 'none',
                 }}
               >
-                <Icon size={16} color="#B8B4D8" />
+                <Icon size={16} color="#69677D" />
               </button>
             ))}
           </div>
@@ -173,8 +173,8 @@ export default function Messages() {
         <div
           style={{
             marginBottom: 14,
-            background: 'linear-gradient(135deg, #1A0A3E, #2D1260)',
-            border: '1px solid rgba(139,92,246,0.3)',
+            background: '#FFFFFF',
+            border: '1px solid #DCD2F2',
             borderRadius: 16,
             padding: '14px 18px',
             display: 'flex',
@@ -184,7 +184,7 @@ export default function Messages() {
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <MessageCircle size={20} color="#8B5CF6" />
-            <span style={{ fontSize: 13, color: '#B8B4D8' }}>Open full chat experience</span>
+            <span style={{ fontSize: 13, color: '#69677D' }}>Open full chat experience</span>
           </div>
           <button
             onClick={() => navigate('/chat')}
@@ -197,7 +197,7 @@ export default function Messages() {
               fontSize: 12,
               fontWeight: 700,
               cursor: 'pointer',
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: 'inherit',
             }}
           >
             Open →
@@ -208,7 +208,7 @@ export default function Messages() {
         <div style={{ position: 'relative' }}>
           <Search
             size={16}
-            color="#8A84B6"
+            color="#69677D"
             style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}
           />
           <input
@@ -217,13 +217,13 @@ export default function Messages() {
             placeholder="Search conversations..."
             style={{
               width: '100%',
-              background: '#1A1035',
-              border: '1px solid rgba(255,255,255,0.08)',
+              background: '#FFFFFF',
+              border: '1px solid #E7E3EF',
               borderRadius: 12,
               padding: '10px 16px 10px 40px',
-              color: '#fff',
+              color: '#171642',
               fontSize: 14,
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: 'inherit',
               outline: 'none',
               boxSizing: 'border-box',
             }}
@@ -245,7 +245,7 @@ export default function Messages() {
               alignItems: 'center',
               gap: 14,
               padding: '14px 24px',
-              borderBottom: '1px solid rgba(255,255,255,0.04)',
+              borderBottom: '1px solid #E7E3EF',
               cursor: 'pointer',
             }}
           >
@@ -262,7 +262,7 @@ export default function Messages() {
                   justifyContent: 'center',
                   fontSize: conv.avatar.length > 1 ? 22 : 18,
                   fontWeight: 700,
-                  color: '#fff',
+                  color: '#171642',
                   flexShrink: 0,
                 }}
               >
@@ -287,7 +287,7 @@ export default function Messages() {
             {/* Content */}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                <span style={{ fontSize: 14, fontWeight: 600, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: '#171642', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {conv.name}
                 </span>
                 {conv.isGroup && (
@@ -295,8 +295,8 @@ export default function Messages() {
                     style={{
                       fontSize: 10,
                       fontWeight: 600,
-                      color: '#8A84B6',
-                      background: 'rgba(255,255,255,0.07)',
+                      color: '#69677D',
+                      background: '#F7F5FB',
                       borderRadius: 6,
                       padding: '1px 6px',
                       flexShrink: 0,
@@ -306,9 +306,9 @@ export default function Messages() {
                   </span>
                 )}
               </div>
-              <div style={{ fontSize: 13, color: '#8A84B6', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: 13, color: '#69677D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {conv.isTyping ? (
-                  <span style={{ fontStyle: 'italic', color: '#A78BFA', display: 'inline-flex', alignItems: 'center' }}>
+                  <span style={{ fontStyle: 'italic', color: '#5E47B8', display: 'inline-flex', alignItems: 'center' }}>
                     Typing<TypingDots />
                   </span>
                 ) : (
@@ -319,7 +319,7 @@ export default function Messages() {
 
             {/* Right side */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, flexShrink: 0 }}>
-              <span style={{ fontSize: 11, color: '#8A84B6' }}>{conv.time}</span>
+              <span style={{ fontSize: 11, color: '#69677D' }}>{conv.time}</span>
               {conv.unread > 0 && (
                 <div
                   style={{

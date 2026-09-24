@@ -30,20 +30,20 @@ function getPrevMilestone(totalWins) {
    SHARED STYLES
 ───────────────────────────────────────────────────────────────────────────── */
 const CARD = {
-  background: 'rgba(34,18,73,0.72)',
-  backdropFilter: 'blur(24px)',
-  WebkitBackdropFilter: 'blur(24px)',
-  border: '1px solid rgba(255,255,255,0.08)',
+  background: '#FFFFFF',
+  backdropFilter: 'none',
+  WebkitBackdropFilter: 'none',
+  border: '1px solid #E7E3EF',
   borderRadius: 24,
   padding: '20px',
   marginBottom: 14,
-  boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03)',
+  boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
   position: 'relative',
   overflow: 'hidden',
 };
 
 const LABEL = {
-  fontSize: 11, color: '#F4C542', fontWeight: 700,
+  fontSize: 11, color: '#A56A12', fontWeight: 700,
   textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 10,
 };
 
@@ -58,38 +58,38 @@ function HealingTreeProgress({ totalWins }) {
 
   return (
     <div style={{ ...CARD }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)' }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'transparent' }} />
       <div style={LABEL}>🌳 HEALING TREE</div>
 
       {/* Milestone row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
         <div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1 }}>{totalWins}</div>
-          <div style={{ fontSize: 11, color: '#8A84B6' }}>Total Wins</div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: '#171642', lineHeight: 1 }}>{totalWins}</div>
+          <div style={{ fontSize: 11, color: '#69677D' }}>Total Wins</div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: 24, lineHeight: 1, marginBottom: 2 }}>{next.icon}</div>
           <div style={{ fontSize: 11, color: next.color, fontWeight: 600 }}>{next.label}</div>
-          <div style={{ fontSize: 10, color: '#8A84B6' }}>{next.wins - totalWins} more</div>
+          <div style={{ fontSize: 10, color: '#69677D' }}>{next.wins - totalWins} more</div>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 6, borderRadius: 6, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+      <div style={{ height: 6, borderRadius: 6, background: '#F7F5FB', overflow: 'hidden' }}>
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 1, ease: [0.23, 1, 0.32, 1], delay: 0.3 }}
           style={{
             height: '100%', borderRadius: 6,
-            background: 'linear-gradient(90deg, #7C3AED, #A855F7)',
-            boxShadow: '0 0 8px rgba(139,92,246,0.5)',
+            background: '#8066D5',
+            boxShadow: 'none',
           }}
         />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
-        <span style={{ fontSize: 10, color: '#8A84B6' }}>{prevWins} wins</span>
-        <span style={{ fontSize: 10, color: '#8A84B6' }}>{next.wins} wins</span>
+        <span style={{ fontSize: 10, color: '#69677D' }}>{prevWins} wins</span>
+        <span style={{ fontSize: 10, color: '#69677D' }}>{next.wins} wins</span>
       </div>
 
       {/* Milestone badges */}
@@ -105,7 +105,7 @@ function HealingTreeProgress({ totalWins }) {
               opacity: reached ? 1 : 0.5,
             }}>
               <span style={{ fontSize: 13 }}>{m.icon}</span>
-              <span style={{ fontSize: 10, fontWeight: 600, color: reached ? m.color : '#8A84B6' }}>{m.label}</span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: reached ? m.color : '#69677D' }}>{m.label}</span>
             </div>
           );
         })}
@@ -125,10 +125,10 @@ function WeeklyStats({ getWeeklyStats }) {
 
   return (
     <div style={{ ...CARD }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)' }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'transparent' }} />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <div style={LABEL}>📊 THIS WEEK</div>
-        <div style={{ fontSize: 18, fontWeight: 800, color: '#fff' }}>{total} <span style={{ fontSize: 11, fontWeight: 400, color: '#8A84B6' }}>wins</span></div>
+        <div style={{ fontSize: 18, fontWeight: 800, color: '#171642' }}>{total} <span style={{ fontSize: 11, fontWeight: 400, color: '#69677D' }}>wins</span></div>
       </div>
 
       {/* Bar chart */}
@@ -141,12 +141,12 @@ function WeeklyStats({ getWeeklyStats }) {
               <div style={{
                 width: '100%', height: h, borderRadius: 4,
                 background: count > 0
-                  ? 'linear-gradient(180deg,#A855F7,#7C3AED)'
-                  : 'rgba(255,255,255,0.07)',
+                  ? '#8066D5'
+                  : '#EFEBF7',
                 transition: 'height 0.6s ease',
-                boxShadow: count > 0 ? '0 0 6px rgba(168,85,247,0.4)' : 'none',
+                boxShadow: 'none',
               }} />
-              <span style={{ fontSize: 9, color: '#8A84B6' }}>{day.slice(0,1)}</span>
+              <span style={{ fontSize: 9, color: '#69677D' }}>{day.slice(0,1)}</span>
             </div>
           );
         })}
@@ -160,15 +160,15 @@ function WeeklyStats({ getWeeklyStats }) {
             background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)',
           }}>
             <div style={{ fontSize: 9, color: '#10B981', fontWeight: 700, textTransform: 'uppercase', marginBottom: 2 }}>Most</div>
-            <div style={{ fontSize: 11, color: '#fff', fontWeight: 600 }}>{mostCompleted}</div>
+            <div style={{ fontSize: 11, color: '#171642', fontWeight: 600 }}>{mostCompleted}</div>
           </div>
           {leastCompleted && leastCompleted !== mostCompleted && (
             <div style={{
               flex: 1, padding: '8px 10px', borderRadius: 12,
-              background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)',
+              background: '#EFEAFB', border: '1px solid #DCD2F2',
             }}>
-              <div style={{ fontSize: 9, color: '#A78BFA', fontWeight: 700, textTransform: 'uppercase', marginBottom: 2 }}>Try More</div>
-              <div style={{ fontSize: 11, color: '#fff', fontWeight: 600 }}>{leastCompleted}</div>
+              <div style={{ fontSize: 9, color: '#5E47B8', fontWeight: 700, textTransform: 'uppercase', marginBottom: 2 }}>Try More</div>
+              <div style={{ fontSize: 11, color: '#171642', fontWeight: 600 }}>{leastCompleted}</div>
             </div>
           )}
         </div>
@@ -187,14 +187,14 @@ function HistoryList({ history }) {
     return (
       <div style={{ ...CARD, textAlign: 'center', padding: '28px' }}>
         <div style={{ fontSize: 28, marginBottom: 10 }}>🌱</div>
-        <div style={{ fontSize: 14, color: '#8A84B6' }}>Your history will appear here as you complete Tiny Wins.</div>
+        <div style={{ fontSize: 14, color: '#69677D' }}>Your history will appear here as you complete Tiny Wins.</div>
       </div>
     );
   }
 
   return (
     <div style={{ ...CARD }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)' }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'transparent' }} />
       <div style={{ ...LABEL, display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
         <Calendar size={12} /> RECENT HISTORY
       </div>
@@ -213,8 +213,8 @@ function HistoryList({ history }) {
               style={{
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '10px 12px', borderRadius: 14,
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.06)',
+                background: '#F7F5FB',
+                border: '1px solid #E7E3EF',
               }}
             >
               <div style={{
@@ -228,13 +228,13 @@ function HistoryList({ history }) {
               </div>
 
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#171642', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {entry.title}
                 </div>
-                <div style={{ fontSize: 11, color: '#8A84B6' }}>{entry.category}</div>
+                <div style={{ fontSize: 11, color: '#69677D' }}>{entry.category}</div>
               </div>
 
-              <div style={{ fontSize: 11, color: '#8A84B6', flexShrink: 0 }}>{label}</div>
+              <div style={{ fontSize: 11, color: '#69677D', flexShrink: 0 }}>{label}</div>
             </motion.div>
           );
         })}
@@ -266,10 +266,10 @@ function WorkModeSelector({ current, onChange }) {
         onClick={() => setOpen(v => !v)}
         style={{
           display: 'flex', alignItems: 'center', gap: 6,
-          background: 'rgba(139,92,246,0.15)',
-          border: '1px solid rgba(139,92,246,0.3)',
+          background: '#EFEAFB',
+          border: '1px solid #DCD2F2',
           borderRadius: 20, padding: '5px 12px',
-          color: '#C4B5FD', fontSize: 12, fontWeight: 600,
+          color: '#5E47B8', fontSize: 12, fontWeight: 600,
           cursor: 'pointer', fontFamily: 'inherit',
         }}
       >
@@ -288,12 +288,12 @@ function WorkModeSelector({ current, onChange }) {
             style={{
               position: 'absolute', top: '110%', left: 0, zIndex: 100,
               background: 'rgba(20,10,50,0.96)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(139,92,246,0.25)',
+              backdropFilter: 'none',
+              WebkitBackdropFilter: 'none',
+              border: '1px solid #DCD2F2',
               borderRadius: 16,
               padding: '8px',
-              boxShadow: '0 16px 40px rgba(0,0,0,0.5)',
+              boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
               minWidth: 140,
             }}
           >
@@ -342,13 +342,13 @@ function ReflectionToast({ text, onDismiss }) {
       style={{
         position: 'fixed', bottom: 32, left: '50%', transform: 'translateX(-50%)',
         zIndex: 9999,
-        background: 'rgba(34,18,73,0.95)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(168,85,247,0.3)',
+        background: '#FFFFFF',
+        backdropFilter: 'none',
+        WebkitBackdropFilter: 'none',
+        border: '1px solid #DCD2F2',
         borderRadius: 20, padding: '14px 22px',
         display: 'flex', alignItems: 'center', gap: 12,
-        boxShadow: '0 0 40px rgba(124,58,237,0.35), 0 16px 40px rgba(0,0,0,0.4)',
+        boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
         maxWidth: 360, minWidth: 260,
       }}
     >
@@ -358,12 +358,12 @@ function ReflectionToast({ text, onDismiss }) {
         transition={{ type: 'spring', stiffness: 420, damping: 18, delay: 0.1 }}
         style={{
           width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
-          background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
+          background: '#8066D5',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 16, boxShadow: '0 0 12px rgba(124,58,237,0.5)',
+          fontSize: 16, boxShadow: 'none',
         }}
       >💜</motion.div>
-      <p style={{ margin: 0, fontSize: 13, color: '#E2DEFF', lineHeight: 1.5, fontStyle: 'italic' }}>
+      <p style={{ margin: 0, fontSize: 13, color: '#171642', lineHeight: 1.5, fontStyle: 'italic' }}>
         {text}
       </p>
     </motion.div>
@@ -388,12 +388,12 @@ function MilestoneToast({ data, onDismiss }) {
       style={{
         position: 'fixed', bottom: 100, left: '50%', transform: 'translateX(-50%)',
         zIndex: 10000,
-        background: 'linear-gradient(135deg, rgba(26,10,62,0.97), rgba(45,18,96,0.95))',
-        backdropFilter: 'blur(24px)',
-        border: '1px solid rgba(168,85,247,0.4)',
+        background: '#FFFFFF',
+        backdropFilter: 'none',
+        border: '1px solid #DCD2F2',
         borderRadius: 24, padding: '20px 28px',
         textAlign: 'center',
-        boxShadow: '0 0 60px rgba(124,58,237,0.4), 0 24px 60px rgba(0,0,0,0.5)',
+        boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
         minWidth: 240,
       }}
     >
@@ -404,9 +404,9 @@ function MilestoneToast({ data, onDismiss }) {
       >
         {data.icon}
       </motion.div>
-      <div style={{ fontSize: 16, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Milestone Unlocked!</div>
-      <div style={{ fontSize: 14, color: '#C4B5FD' }}>{data.label}</div>
-      <div style={{ fontSize: 12, color: '#8A84B6', marginTop: 4 }}>{data.total} wins total</div>
+      <div style={{ fontSize: 16, fontWeight: 800, color: '#171642', marginBottom: 4 }}>Milestone Unlocked!</div>
+      <div style={{ fontSize: 14, color: '#5E47B8' }}>{data.label}</div>
+      <div style={{ fontSize: 12, color: '#69677D', marginTop: 4 }}>{data.total} wins total</div>
     </motion.div>
   );
 }
@@ -451,22 +451,19 @@ export default function TinyWins() {
           50%      { transform: translate(5px,-8px); opacity: 0.28; }
         }
         .tw-tab {
-          padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600;
-          cursor: pointer; border: none; font-family: inherit;
-          transition: all 0.2s ease;
+          min-height: 44px; padding: 0 16px; border-radius: 999px; font-size: 14px; font-weight: 600;
+          cursor: pointer; border: 1px solid transparent; font-family: inherit;
+          transition: background-color 0.15s ease, color 0.15s ease;
         }
         .tw-tab.active {
-          background: linear-gradient(135deg, rgba(124,58,237,0.7), rgba(168,85,247,0.5));
-          color: #fff;
-          box-shadow: 0 0 16px rgba(124,58,237,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
-          border: 1px solid rgba(168,85,247,0.3);
+          background: #E5DDF5;
+          color: #4B3699;
         }
         .tw-tab.inactive {
-          background: rgba(255,255,255,0.05);
-          color: rgba(184,180,216,0.7);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: transparent;
+          color: #69677D;
         }
-        .tw-tab.inactive:hover { background: rgba(255,255,255,0.08); color: #E2DEFF; }
+        .tw-tab.inactive:hover { background: #EFEBF7; color: #171642; }
       `}</style>
 
       {/* Toasts */}
@@ -486,7 +483,7 @@ export default function TinyWins() {
           radial-gradient(ellipse 40% 60% at 85% 100%, rgba(168,85,247,0.08) 0%, transparent 55%),
           transparent
         `,
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: 'inherit',
         padding: '0 0 40px',
       }}>
 
@@ -500,19 +497,19 @@ export default function TinyWins() {
               onClick={() => navigate('/home')}
               style={{
                 width: 38, height: 38, borderRadius: 12,
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: '#F7F5FB',
+                border: '1px solid #E7E3EF',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer',
               }}
             >
-              <ChevronLeft size={18} color="#B8B4D8" />
+              <ChevronLeft size={18} color="#69677D" />
             </button>
             <div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.02em' }}>
+              <h1 style={{ fontSize: 22, fontWeight: 800, color: '#171642', margin: 0, letterSpacing: '-0.02em' }}>
                 Tiny Wins
               </h1>
-              <p style={{ fontSize: 12, color: '#8A84B6', margin: 0 }}>Small steps. Big change.</p>
+              <p style={{ fontSize: 12, color: '#69677D', margin: 0 }}>Small steps. Big change.</p>
             </div>
           </div>
 
@@ -520,12 +517,12 @@ export default function TinyWins() {
             <WorkModeSelector current={workMode} onChange={handleWorkModeChange} />
             <button style={{
               width: 36, height: 36, borderRadius: 10,
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.09)',
+              background: '#F7F5FB',
+              border: '1px solid #E7E3EF',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer',
             }}>
-              <Settings size={16} color="#B8B4D8" />
+              <Settings size={16} color="#69677D" />
             </button>
           </div>
         </div>
@@ -533,29 +530,25 @@ export default function TinyWins() {
         {/* ── PROGRESS BAR ── */}
         <div style={{ padding: '18px 24px 0' }}>
           <div style={{ ...CARD, padding: '16px 20px', marginBottom: 0 }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)' }} />
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'transparent' }} />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#171642' }}>
                 Today's Progress
               </span>
-              <span style={{ fontSize: 12, color: '#8A84B6' }}>
+              <span style={{ fontSize: 12, color: '#69677D' }}>
                 {completedCount} / {dailyWins.length || 3} completed
               </span>
             </div>
             {/* Bar */}
-            <div style={{ height: 6, borderRadius: 6, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+            <div style={{ height: 6, borderRadius: 6, background: '#F7F5FB', overflow: 'hidden' }}>
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${dailyWins.length > 0 ? (completedCount / dailyWins.length) * 100 : 0}%` }}
                 transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
                 style={{
                   height: '100%', borderRadius: 6,
-                  background: allDone
-                    ? 'linear-gradient(90deg,#10B981,#34D399)'
-                    : 'linear-gradient(90deg,#7C3AED,#A855F7)',
-                  boxShadow: allDone
-                    ? '0 0 8px rgba(16,185,129,0.5)'
-                    : '0 0 8px rgba(139,92,246,0.5)',
+                  background: allDone ? '#2E9E6E' : '#8066D5',
+                  boxShadow: 'none',
                 }}
               />
             </div>
@@ -617,10 +610,10 @@ export default function TinyWins() {
                 ) : (
                   <div style={{ ...CARD, textAlign: 'center', padding: '36px 24px' }}>
                     <div style={{ fontSize: 36, marginBottom: 12 }}>🌱</div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: '#171642', marginBottom: 6 }}>
                       Your Tiny Wins are being prepared
                     </div>
-                    <p style={{ fontSize: 13, color: '#8A84B6', margin: 0 }}>
+                    <p style={{ fontSize: 13, color: '#69677D', margin: 0 }}>
                       Complete a Soul Climate check-in on the Home page to personalize your wins.
                     </p>
                   </div>
@@ -678,7 +671,7 @@ export default function TinyWins() {
 
                 {/* Lifetime stats */}
                 <div style={{ ...CARD }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)' }} />
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'transparent' }} />
                   <div style={LABEL}>🏆 LIFETIME</div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {[
@@ -689,12 +682,12 @@ export default function TinyWins() {
                     ].map(stat => (
                       <div key={stat.label} style={{
                         padding: '12px 14px', borderRadius: 16,
-                        background: 'rgba(255,255,255,0.04)',
-                        border: '1px solid rgba(255,255,255,0.06)',
+                        background: '#F7F5FB',
+                        border: '1px solid #E7E3EF',
                       }}>
                         <div style={{ fontSize: 20, marginBottom: 4 }}>{stat.icon}</div>
-                        <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', lineHeight: 1 }}>{stat.value}</div>
-                        <div style={{ fontSize: 11, color: '#8A84B6', marginTop: 2 }}>{stat.label}</div>
+                        <div style={{ fontSize: 20, fontWeight: 800, color: '#171642', lineHeight: 1 }}>{stat.value}</div>
+                        <div style={{ fontSize: 11, color: '#69677D', marginTop: 2 }}>{stat.label}</div>
                       </div>
                     ))}
                   </div>

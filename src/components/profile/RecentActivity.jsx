@@ -16,16 +16,16 @@ export default function RecentActivity({ activities = DEFAULT_ACTIVITIES, onView
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3 }}
       style={{
-        background: 'rgba(34, 18, 73, 0.72)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        background: '#FFFFFF',
+        border: '1px solid #E7E3EF',
         borderRadius: 24,
         padding: 20,
         marginBottom: 20,
-        backdropFilter: 'blur(24px)',
+        backdropFilter: 'none',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: 0 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: '#171642', margin: 0 }}>
           Recent Activity
         </h3>
         <motion.button
@@ -34,7 +34,7 @@ export default function RecentActivity({ activities = DEFAULT_ACTIVITIES, onView
           onClick={onViewAll}
           style={{
             fontSize: 12,
-            color: '#A78BFA',
+            color: '#5E47B8',
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
@@ -59,24 +59,24 @@ export default function RecentActivity({ activities = DEFAULT_ACTIVITIES, onView
               alignItems: 'center',
               gap: 12,
               padding: '12px 14px',
-              background: 'rgba(124, 58, 237, 0.08)',
+              background: 'transparent',
               borderRadius: 14,
-              border: '1px solid rgba(255, 255, 255, 0.04)',
+              border: '1px solid #E7E3EF',
               cursor: 'pointer',
               transition: 'all 0.2s',
             }}
-            whileHover={{ background: 'rgba(124, 58, 237, 0.12)' }}
+            whileHover={{ background: '#F7F5FB' }}
           >
             <div style={{ fontSize: 18, flexShrink: 0 }}>{activity.emoji}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#171642' }}>
                 {activity.title}
               </div>
-              <div style={{ fontSize: 11, color: 'rgba(184, 180, 216, 0.6)', marginTop: 2 }}>
+              <div style={{ fontSize: 11, color: '#69677D', marginTop: 2 }}>
                 {activity.time}
               </div>
             </div>
-            <ChevronRight size={14} color="rgba(184, 180, 216, 0.5)" />
+            <ChevronRight size={14} color="#69677D" />
           </motion.div>
         ))}
       </div>

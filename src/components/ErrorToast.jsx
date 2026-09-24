@@ -56,8 +56,8 @@ export default function ErrorToast({
         >
           <div
             style={{
-              background: 'rgba(34, 18, 73, 0.95)',
-              backdropFilter: 'blur(24px)',
+              background: '#FFFFFF',
+              backdropFilter: 'none',
               border: '1px solid rgba(248, 113, 113, 0.3)',
               borderRadius: 16,
               padding: '16px 20px',
@@ -83,7 +83,7 @@ export default function ErrorToast({
               {/* Error Message */}
               <p
                 style={{
-                  color: '#E2DEFF',
+                  color: '#171642',
                   fontSize: 14,
                   fontWeight: 500,
                   lineHeight: '1.5',
@@ -141,7 +141,7 @@ export default function ErrorToast({
                 flexShrink: 0,
                 background: 'none',
                 border: 'none',
-                color: 'rgba(255, 255, 255, 0.5)',
+                color: '#69677D',
                 cursor: 'pointer',
                 padding: '4px',
                 display: 'flex',

@@ -45,6 +45,24 @@ const GroupChat     = lazy(() => import('./pages/GroupChat'));     // /groups
 const TinyWins      = lazy(() => import('./pages/TinyWins'));     // /tiny-wins
 
 // Dashboard pages (inside DashboardLayout)
+// Primary tab pages. The import thunks are kept so the app shell can
+// fetch these chunks in the background right after it mounts (see
+// preloadPrimaryTabs) -- otherwise the first tap on each tab waits on a
+// network round-trip and shows a loading state instead of the page.
+const PRIMARY_TAB_IMPORTS = [
+  () => import('./pages/Home'),
+  () => import('./pages/Stories'),
+  () => import('./pages/Community'),
+  () => import('./pages/Messages'),
+  () => import('./pages/Profile'),
+  () => import('./pages/MoodTracker'),
+  () => import('./pages/SoulMatch'),
+  () => import('./pages/Professionals'),
+  () => import('./pages/TinyWins'),
+];
+function preloadPrimaryTabs() {
+  PRIMARY_TAB_IMPORTS.forEach(load => { load().catch(() => {}); });
+}
 const Home          = lazy(() => import('./pages/Home'));
 const SoulMatch     = lazy(() => import('./pages/SoulMatch'));
 const Stories       = lazy(() => import('./pages/Stories'));
@@ -96,7 +114,7 @@ const closed = <Navigate to="/" replace />;
 
 // Routes that use DashboardLayout
 const DASHBOARD_PATHS = [
-  '/home', '/matches', '/stories', '/community', '/messages', '/mood',
+  '/home', '/matches', '/stories', '/community', '/messages', '/mood', '/profile', '/notifications',
   '/meditate', '/professionals', '/account', '/tiny-wins',
   '/story', '/saved',
   // user engagement (Phase 5)
@@ -143,6 +161,16 @@ function AppInner() {
   }, [token, userId]);
 
   const isDashboard = DASHBOARD_PATHS.some(p => location.pathname === p || location.pathname.startsWith(p + '/'));
+
+  // Warm the primary tab chunks once the logged-in shell is on screen, when
+  // the browser is idle, so tab taps render immediately.
+  const inApp = Boolean(token && LAUNCH_READY);
+  useEffect(() => {
+    if (!inApp) return;
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1200));
+    const id = idle(() => preloadPrimaryTabs());
+    return () => (window.cancelIdleCallback ? window.cancelIdleCallback(id) : clearTimeout(id));
+  }, [inApp]);
   const isFullScreen = location.pathname === '/chat' || location.pathname.startsWith('/chat/') || location.pathname === '/groups';
 
   const hideNav = location.pathname === '/' || isDashboard || isFullScreen || isHealer;
@@ -220,31 +248,31 @@ function AppInner() {
               {/* Dashboard routes — all inside persistent sidebar layout */}
               <Route element={<DashboardLayout />}>
                 {/* Primary nav */}
-                <Route path="/home"          element={<Suspense fallback={<PageLoader />}><Home /></Suspense>} />
-                <Route path="/matches"       element={<Suspense fallback={<PageLoader />}><SoulMatch /></Suspense>} />
-                <Route path="/stories"       element={<Suspense fallback={<PageLoader />}><Stories /></Suspense>} />
-                <Route path="/community"     element={<Suspense fallback={<PageLoader />}><Community /></Suspense>} />
-                <Route path="/mood"          element={<Suspense fallback={<PageLoader />}><MoodTracker /></Suspense>} />
-                <Route path="/messages"      element={<Suspense fallback={<PageLoader />}><Messages /></Suspense>} />
-                <Route path="/meditate"      element={<Suspense fallback={<PageLoader />}><Meditate /></Suspense>} />
-                <Route path="/professionals" element={<Suspense fallback={<PageLoader />}><Professionals /></Suspense>} />
-                <Route path="/account"       element={<Suspense fallback={<PageLoader />}><Settings /></Suspense>} />
-                <Route path="/profile"       element={<Suspense fallback={<PageLoader />}><Profile /></Suspense>} />
-                <Route path="/tiny-wins"    element={<Suspense fallback={<PageLoader />}><TinyWins /></Suspense>} />
-                <Route path="/story/:id"   element={<Suspense fallback={<PageLoader />}><StoryDetail /></Suspense>} />
-                <Route path="/saved"         element={<Suspense fallback={<PageLoader />}><SavedStories /></Suspense>} />
-                <Route path="/notifications" element={<Suspense fallback={<PageLoader />}><NotificationPage /></Suspense>} />
+                <Route path="/home"          element={<Home />} />
+                <Route path="/matches"       element={<SoulMatch />} />
+                <Route path="/stories"       element={<Stories />} />
+                <Route path="/community"     element={<Community />} />
+                <Route path="/mood"          element={<MoodTracker />} />
+                <Route path="/messages"      element={<Messages />} />
+                <Route path="/meditate"      element={<Meditate />} />
+                <Route path="/professionals" element={<Professionals />} />
+                <Route path="/account"       element={<Settings />} />
+                <Route path="/profile"       element={<Profile />} />
+                <Route path="/tiny-wins"    element={<TinyWins />} />
+                <Route path="/story/:id"   element={<StoryDetail />} />
+                <Route path="/saved"         element={<SavedStories />} />
+                <Route path="/notifications" element={<NotificationPage />} />
 
                 {/* User Engagement (Phase 5) */}
-                <Route path="/journeys"              element={<Suspense fallback={<PageLoader />}><GuidedJourneysPage /></Suspense>} />
-                <Route path="/circles"               element={<Suspense fallback={<PageLoader />}><SupportCirclesPage /></Suspense>} />
+                <Route path="/journeys"              element={<GuidedJourneysPage />} />
+                <Route path="/circles"               element={<SupportCirclesPage />} />
 
                 {/* Legacy pages inside layout */}
-                <Route path="/healers"       element={<Suspense fallback={<PageLoader />}><Healers /></Suspense>} />
-                <Route path="/meetups"       element={<Suspense fallback={<PageLoader />}><Meetups /></Suspense>} />
-                <Route path="/premium"       element={<Suspense fallback={<PageLoader />}><Premium /></Suspense>} />
-                <Route path="/journey"       element={<Suspense fallback={<PageLoader />}><SoulJourney /></Suspense>} />
-                <Route path="/dashboard"     element={<Suspense fallback={<PageLoader />}><Matches /></Suspense>} />
+                <Route path="/healers"       element={<Healers />} />
+                <Route path="/meetups"       element={<Meetups />} />
+                <Route path="/premium"       element={<Premium />} />
+                <Route path="/journey"       element={<SoulJourney />} />
+                <Route path="/dashboard"     element={<Matches />} />
 
                 {/* Redirects from old / removed routes */}
                 <Route path="/journal"       element={<Navigate to="/home"          replace />} />
@@ -284,7 +312,7 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true }}>
       <AppInner />
     </BrowserRouter>
   );

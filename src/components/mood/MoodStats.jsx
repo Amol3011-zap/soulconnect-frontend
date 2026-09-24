@@ -1,46 +1,40 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 
-export default function MoodStats({ streak, longestStreak, wellnessScore, totalEntries }) {
+/* Soul Climate stats — one compact card (was four tall emoji tiles).
+   Same four numbers from useMoodData; wellness gets a progress bar. */
+function MoodStats({ streak, longestStreak, wellnessScore, totalEntries }) {
   const stats = [
-    { icon: '💜', label: 'Wellness Score', value: `${wellnessScore}/100`, sub: wellnessScore >= 70 ? '✨ Great!' : wellnessScore >= 50 ? '📈 Improving' : '💪 Keep going' },
-    { icon: '🔥', label: 'Current Streak', value: `${streak}`, sub: streak > 1 ? '🎯 Amazing!' : '🚀 Start today' },
-    { icon: '🏆', label: 'Longest Streak', value: `${longestStreak}`, sub: 'Your best! 🌟' },
-    { icon: '📝', label: 'Total Entries', value: totalEntries, sub: 'Well tracked!' },
+    { label: 'Current streak', value: streak, unit: streak === 1 ? 'day' : 'days' },
+    { label: 'Longest streak', value: longestStreak, unit: longestStreak === 1 ? 'day' : 'days' },
+    { label: 'Total entries', value: totalEntries },
   ];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
-      {stats.map((stat, i) => (
-        <motion.div
-          key={stat.label}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.08 }}
-          whileHover={{ y: -4, boxShadow: '0 16px 40px rgba(124, 58, 237, 0.25)' }}
-          style={{
-            background: 'rgba(34,18,73,0.72)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 16,
-            padding: 20,
-            backdropFilter: 'blur(24px)',
-            textAlign: 'center',
-            cursor: 'pointer',
-            transition: 'all 0.3s',
-          }}
-        >
-          <div style={{ fontSize: 28, marginBottom: 10 }}>{stat.icon}</div>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 4 }}>
-            {stat.value}
+    <Card className="p-4 sm:p-5">
+      <div className="mb-3">
+        <div className="flex items-baseline justify-between gap-2">
+          <span className="text-[13px] font-medium text-muted-foreground">Wellness score</span>
+          <span className="text-[20px] font-bold leading-none text-foreground">
+            {wellnessScore}<span className="text-[13px] font-medium text-muted-foreground">/100</span>
+          </span>
+        </div>
+        <Progress value={wellnessScore} className="mt-2" aria-label="Wellness score" />
+      </div>
+      <div className="grid grid-cols-3 border-t border-border pt-3">
+        {stats.map((s, i) => (
+          <div key={s.label} className={i === 0 ? 'pr-2' : 'border-l border-border px-2'}>
+            <div className="text-[20px] font-bold leading-tight text-foreground">
+              {s.value}
+              {s.unit && <span className="ml-1 text-[12px] font-medium text-muted-foreground">{s.unit}</span>}
+            </div>
+            <div className="text-[12px] leading-snug text-muted-foreground">{s.label}</div>
           </div>
-          <div style={{ fontSize: 11, color: 'rgba(184, 180, 216, 0.7)', marginBottom: 8 }}>
-            {stat.label}
-          </div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#A78BFA' }}>
-            {stat.sub}
-          </div>
-        </motion.div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </Card>
   );
 }
+
+export default React.memo(MoodStats);

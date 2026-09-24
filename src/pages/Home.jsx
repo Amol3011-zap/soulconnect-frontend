@@ -4,16 +4,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useAuthStore } from '../store/auth';
 import { useWeatherStore } from '../store/weather';
 import { useTinyWinsStore } from '../store/tinyWins';
-import { CATEGORY_META } from '../data/tinyWinsChallenges';
 import ErrorToast from '../components/ErrorToast';
-import { DashboardSkeleton } from '../components/Skeletons';
-import {
-  Search, Bell, Heart, MessageCircle, Bookmark, Clock,
-  CheckCircle, MoreHorizontal, Video,
-  Activity, Droplets, Wind, Brain, Flower2,
-  Users, Zap, Star, Moon, Monitor, Leaf,
-  Target, Briefcase, BookOpen, Palette, Sparkles, Gift,
-} from 'lucide-react';
+import { Search, Bell, Heart, MessageCircle, Video, ChevronRight, ArrowRight, Check } from 'lucide-react';
 import AICompanionCard from '../components/AICompanionCard';
 import AIInsightCard from '../components/AIInsightCard';
 import FloatingCompanion from '../components/FloatingCompanion';
@@ -23,805 +15,27 @@ import WeeklyInsightsModal from '../components/WeeklyInsightsModal';
 import SearchModal from '../components/SearchModal';
 import NotificationDropdown from '../components/NotificationDropdown';
 import EmotionWeatherModal from '../components/emotional-weather/EmotionWeatherModal';
-import SoulClimateWidget from '../components/SoulClimateWidget';
 import GlobalPulseCard from '../components/dashboard/GlobalPulseCard';
 import { useReflections } from '../hooks/useReflections';
-import { getSoulMatches, scoreToPercent } from '../components/soulmatch/soulmatchData';
-
-const CATEGORY_ICONS = {
-  'Movement':          Activity,
-  'Body':              Droplets,
-  'Breathing':         Wind,
-  'Mind':              Brain,
-  'Meditation':        Flower2,
-  'Connection':        Users,
-  'Confidence':        Zap,
-  'Gratitude':         Star,
-  'Sleep':             Moon,
-  'Digital Wellbeing': Monitor,
-  'Nature':            Leaf,
-  'Focus':             Target,
-  'Relationships':     Heart,
-  'Work':              Briefcase,
-  'Learning':          BookOpen,
-  'Creativity':        Palette,
-  'Self Care':         Sparkles,
-  'Kindness':          Gift,
-};
+import { getSoulMatches } from '../components/soulmatch/soulmatchData';
 import BreathingSession from '../components/BreathingSession';
 import OnboardingModal from '../components/OnboardingModal';
 import { onboardingAPI } from '../services/api';
 
-/* ─────────────────────────────────────────────────────────────────────────────
-   PARTICLES
-───────────────────────────────────────────────────────────────────────────── */
-function FloatingParticles({ count = 14 }) {
-  // Skip all particles on mobile — 14 simultaneous CSS animations cause repaints
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-  if (isMobile) return null;
-
-  const particles = Array.from({ length: count }, (_, i) => ({
-    id: i,
-    size: 1.5 + (i % 3) * 0.8,
-    left: `${(i * 7.3 + 8) % 92}%`,
-    top:  `${(i * 11.7 + 4) % 88}%`,
-    duration: 8 + (i % 6) * 1.8,
-    delay: i * 0.55,
-    opacity: 0.12 + (i % 4) * 0.05,
-    color: i % 3 === 0 ? '#A78BFA' : i % 3 === 1 ? '#F4C542' : '#C4B5FD',
-  }));
-  return (
-    <>
-      {particles.map(p => (
-        <div
-          key={p.id}
-          style={{
-            position: 'absolute',
-            width: p.size, height: p.size, borderRadius: '50%',
-            background: p.color,
-            opacity: p.opacity,
-            left: p.left, top: p.top,
-            animation: `particleDrift ${p.duration}s ease-in-out ${p.delay}s infinite`,
-            pointerEvents: 'none',
-            zIndex: 0,
-          }}
-        />
-      ))}
-    </>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   SOUL CLIMATE ORB  (premium 3-D glass sphere)
-───────────────────────────────────────────────────────────────────────────── */
-function SoulClimateOrb() {
-  return (
-    <div className="orb-float" style={{ position: 'relative', width: 220, height: 220, flexShrink: 0 }}>
-      {/* Ambient halo */}
-      <div style={{
-        position: 'absolute', inset: -28,
-        borderRadius: '50%',
-        background: 'radial-gradient(ellipse, rgba(139,92,246,0.28) 0%, transparent 68%)',
-        filter: 'blur(12px)',
-      }} />
-      {/* Ground reflection */}
-      <div style={{
-        position: 'absolute', bottom: -18, left: '50%', transform: 'translateX(-50%)',
-        width: 120, height: 18,
-        borderRadius: '50%',
-        background: 'radial-gradient(ellipse, rgba(168,85,247,0.45) 0%, transparent 70%)',
-        filter: 'blur(6px)',
-      }} />
-
-      <svg viewBox="0 0 220 220" width="220" height="220" style={{ filter: 'drop-shadow(0 0 36px rgba(139,92,246,0.65))' }}>
-        <defs>
-          <radialGradient id="orbBase" cx="36%" cy="28%" r="68%">
-            <stop offset="0%"   stopColor="#DDD6FE" stopOpacity="0.96" />
-            <stop offset="30%"  stopColor="#8B5CF6" stopOpacity="0.88" />
-            <stop offset="70%"  stopColor="#4C1D95" stopOpacity="0.92" />
-            <stop offset="100%" stopColor="#1A0A3E" stopOpacity="0.97" />
-          </radialGradient>
-          <radialGradient id="cloudFill" cx="50%" cy="38%" r="62%">
-            <stop offset="0%"   stopColor="#EDE9FE" />
-            <stop offset="100%" stopColor="#A78BFA" />
-          </radialGradient>
-          <radialGradient id="orbFloor" cx="50%" cy="100%" r="50%">
-            <stop offset="0%"   stopColor="rgba(168,85,247,0.5)" />
-            <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
-          <filter id="softGlow">
-            <feGaussianBlur stdDeviation="2.5" result="blur" />
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="cloudBlur">
-            <feGaussianBlur stdDeviation="1.5" result="blur" />
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <clipPath id="orbClip">
-            <circle cx="110" cy="110" r="94" />
-          </clipPath>
-        </defs>
-
-        {/* Main sphere */}
-        <circle cx="110" cy="110" r="96" fill="url(#orbBase)" />
-
-        {/* Inner rim glow */}
-        <circle cx="110" cy="110" r="96" fill="none" stroke="rgba(196,181,253,0.25)" strokeWidth="1.5" />
-
-        {/* Specular highlight (top-left) */}
-        <ellipse cx="82" cy="72" rx="30" ry="20" fill="rgba(255,255,255,0.22)" transform="rotate(-15,82,72)" />
-        <ellipse cx="75" cy="65" rx="12" ry="7" fill="rgba(255,255,255,0.35)" transform="rotate(-15,75,65)" />
-
-        {/* Floor gradient inside */}
-        <ellipse cx="110" cy="196" rx="70" ry="20" fill="url(#orbFloor)" clipPath="url(#orbClip)" />
-
-        {/* Cloud body */}
-        <g filter="url(#cloudBlur)" clipPath="url(#orbClip)">
-          <circle cx="95"  cy="128" r="20" fill="url(#cloudFill)" opacity="0.95" />
-          <circle cx="113" cy="118" r="25" fill="#D8B4FE" opacity="0.9" />
-          <circle cx="133" cy="125" r="18" fill="url(#cloudFill)" opacity="0.9" />
-          <rect x="76" y="126" width="76" height="22" rx="11" fill="#D8B4FE" opacity="0.95" />
-        </g>
-
-        {/* Cloud face */}
-        <circle cx="108" cy="119" r="3.5" fill="#5B21B6" />
-        <circle cx="120" cy="119" r="3.5" fill="#5B21B6" />
-        <path d="M107 128 Q114 135 122 128" stroke="#5B21B6" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-
-        {/* Stars/sparkles */}
-        <g filter="url(#softGlow)" fill="#F4C542">
-          <circle cx="52"  cy="52"  r="3" opacity="0.9" />
-          <circle cx="168" cy="40"  r="2" opacity="0.7" />
-          <circle cx="172" cy="82"  r="2.5" opacity="0.6" />
-          <circle cx="44"  cy="150" r="2" opacity="0.5" />
-          <circle cx="178" cy="155" r="1.8" opacity="0.5" />
-        </g>
-        {/* Star cross at top-left */}
-        <g fill="#F4C542" opacity="0.85" filter="url(#softGlow)">
-          <rect x="47"  y="42" width="1.5" height="8" rx="1" transform="rotate(0,47,46)" />
-          <rect x="47"  y="42" width="1.5" height="8" rx="1" transform="rotate(90,47,46)" />
-        </g>
-
-        {/* Platform glow */}
-        <ellipse cx="110" cy="200" rx="58" ry="10" fill="rgba(139,92,246,0.45)" />
-        <ellipse cx="110" cy="200" rx="36" ry="6"  fill="rgba(168,85,247,0.65)" />
-      </svg>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   TINY WIN HOME CARD  (horizontal, 3-column layout)
-───────────────────────────────────────────────────────────────────────────── */
-function HomeTinyWinCard({ win, index, isCompleted, onComplete }) {
-  if (!win) return null;
-  const meta = CATEGORY_META[win.category] || {};
-  const IconComp = CATEGORY_ICONS[win.category];
-
-  return (
-    <motion.button
-      type="button"
-      onClick={() => !isCompleted && onComplete(win.id)}
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileTap={!isCompleted ? { scale: 0.96 } : undefined}
-      transition={{ duration: 0.35, delay: index * 0.06, ease: [0.23, 1, 0.32, 1] }}
-      style={{
-        flex: '1 1 0', minWidth: 0,
-        display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
-        textAlign: 'left',
-        background: isCompleted
-          ? 'linear-gradient(145deg, rgba(16,185,129,0.1), rgba(34,18,73,0.7))'
-          : 'rgba(34,18,73,0.72)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        border: isCompleted
-          ? '1px solid rgba(16,185,129,0.3)'
-          : '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 18,
-        padding: '16px 14px',
-        position: 'relative',
-        overflow: 'hidden',
-        cursor: isCompleted ? 'default' : 'pointer',
-        fontFamily: 'inherit',
-        boxShadow: isCompleted
-          ? '0 0 20px rgba(16,185,129,0.08), 0 6px 16px rgba(0,0,0,0.3)'
-          : '0 6px 16px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.03)',
-        transition: 'box-shadow 0.25s, border 0.25s, transform 0.15s',
-      }}
-    >
-      {/* Inner top highlight */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-      }} />
-
-      {/* Icon bubble — always shows category color/icon; completion adds a badge */}
-      <div style={{ position: 'relative', marginBottom: 14 }}>
-        <div style={{
-          width: 44, height: 44, borderRadius: '50%',
-          background: `radial-gradient(circle at 32% 28%, ${meta.color || '#A78BFA'}55, ${meta.color || '#A78BFA'}22 70%)`,
-          border: `1px solid ${meta.color ? meta.color + '55' : 'rgba(139,92,246,0.35)'}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          flexShrink: 0,
-          boxShadow: `0 0 22px ${meta.color || '#A78BFA'}66, inset 0 1px 0 rgba(255,255,255,0.15)`,
-        }}>
-          {IconComp
-            ? <IconComp size={20} color={meta.color || '#A78BFA'} strokeWidth={1.75} />
-            : <span style={{ fontSize: 19 }}>{meta.icon || '✨'}</span>
-          }
-        </div>
-        {isCompleted && (
-          <div style={{
-            position: 'absolute', bottom: -3, right: -3,
-            width: 17, height: 17, borderRadius: '50%',
-            background: '#10B981',
-            border: '2px solid rgba(34,18,73,0.9)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 8px rgba(16,185,129,0.6)',
-          }}>
-            <CheckCircle size={11} color="#fff" strokeWidth={2.5} fill="#10B981" />
-          </div>
-        )}
-      </div>
-
-      {/* Title */}
-      <div style={{
-        fontSize: 13, fontWeight: 700,
-        color: isCompleted ? '#86EFAC' : '#fff',
-        marginBottom: 10, lineHeight: 1.3,
-        display: '-webkit-box', WebkitLineClamp: 2,
-        WebkitBoxOrient: 'vertical', overflow: 'hidden',
-      }}>
-        {win.title}
-      </div>
-
-      {/* Progress indicator */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 6,
-        fontSize: 11, fontWeight: 600,
-        color: isCompleted ? '#10B981' : '#8A84B6',
-      }}>
-        {isCompleted
-          ? <><CheckCircle size={13} /> 1/1</>
-          : <><span style={{
-              width: 13, height: 13, borderRadius: '50%',
-              border: '1.5px solid rgba(184,180,216,0.4)', display: 'inline-block', flexShrink: 0,
-            }} /> 0/1</>
-        }
-      </div>
-    </motion.button>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   AI INSIGHT BRAIN SVG  (premium)
-───────────────────────────────────────────────────────────────────────────── */
-function BrainIllustration() {
-  return (
-    <div style={{ position: 'relative', flexShrink: 0 }}>
-      <div style={{
-        position: 'absolute', inset: -16,
-        borderRadius: '50%',
-        background: 'radial-gradient(ellipse, rgba(139,92,246,0.3) 0%, transparent 65%)',
-        filter: 'blur(8px)',
-      }} />
-      <svg viewBox="0 0 120 120" width="100" height="100" style={{ position: 'relative', filter: 'drop-shadow(0 0 18px rgba(139,92,246,0.6))' }}>
-        <defs>
-          <radialGradient id="brainG2" cx="50%" cy="40%" r="55%">
-            <stop offset="0%"   stopColor="#C4B5FD" />
-            <stop offset="60%"  stopColor="#7C3AED" />
-            <stop offset="100%" stopColor="#3C096C" />
-          </radialGradient>
-        </defs>
-        <ellipse cx="60" cy="52" rx="38" ry="32" fill="url(#brainG2)" opacity="0.95" />
-        <ellipse cx="44" cy="52" rx="22" ry="28" fill="#A78BFA" opacity="0.65" />
-        <ellipse cx="76" cy="52" rx="22" ry="28" fill="#8B5CF6" opacity="0.65" />
-        <path d="M60 24 Q60 38 60 52" stroke="rgba(196,181,253,0.4)" strokeWidth="1.5" fill="none" />
-        <path d="M38 38 Q50 48 38 62" stroke="rgba(196,181,253,0.3)" strokeWidth="1.2" fill="none" />
-        <path d="M82 38 Q70 48 82 62" stroke="rgba(196,181,253,0.3)" strokeWidth="1.2" fill="none" />
-        <path d="M42 52 Q60 46 78 52" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" fill="none" />
-        <line x1="60" y1="84" x2="60" y2="100" stroke="#8B5CF6" strokeWidth="3" strokeLinecap="round" />
-        <ellipse cx="60" cy="104" rx="20" ry="5" fill="rgba(139,92,246,0.3)" />
-        {[0, 60, 120, 180, 240, 300].map((angle, i) => {
-          const rad = (angle * Math.PI) / 180;
-          return <circle key={i} cx={60 + 50 * Math.cos(rad)} cy={60 + 50 * Math.sin(rad)} r="2.5" fill="#F4C542" opacity="0.65" />;
-        })}
-      </svg>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   WEEKLY STATS (donut + bars)
-───────────────────────────────────────────────────────────────────────────── */
-function WeeklyStatsCard({ weeklyStats }) {
-  const { total, daily = [], byCategory = {} } = weeklyStats || {};
-  const maxPossible = 21; // 7 days × 3 wins
-  const pct = Math.round(((total || 0) / maxPossible) * 100);
-
-  // Donut
-  const r = 28, circ = 2 * Math.PI * r;
-  const offset = circ * (1 - (pct / 100));
-
-  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const barMax = Math.max(...(daily.map(d => d.count || 0)), 1);
-
-  return (
-    <div style={{ ...CARD_STYLE }}>
-      <div style={SECTION_LABEL}>🔥 THIS WEEK</div>
-
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        {/* Left: text + bars */}
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1 }}>
-            {total || 0}
-          </div>
-          <div style={{ fontSize: 11, color: '#8A84B6', marginBottom: 12 }}>Tiny Wins Completed</div>
-
-          {/* Bar chart */}
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 36 }}>
-            {days.map((day, i) => {
-              const count = daily[i]?.count || 0;
-              const h = Math.max(4, Math.round((count / barMax) * 32));
-              return (
-                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                  <div style={{
-                    width: 12, height: h, borderRadius: 3,
-                    background: count > 0
-                      ? 'linear-gradient(180deg, #A855F7, #7C3AED)'
-                      : 'rgba(255,255,255,0.08)',
-                    transition: 'height 0.6s ease',
-                    boxShadow: count > 0 ? '0 0 6px rgba(168,85,247,0.4)' : 'none',
-                  }} />
-                  <span style={{ fontSize: 9, color: '#8A84B6' }}>{day}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Right: Donut */}
-        <div style={{ position: 'relative', width: 70, height: 70, flexShrink: 0 }}>
-          <svg width="70" height="70" style={{ transform: 'rotate(-90deg)' }}>
-            <circle cx="35" cy="35" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
-            <circle
-              cx="35" cy="35" r={r} fill="none"
-              stroke="url(#donutGrad)"
-              strokeWidth="6"
-              strokeDasharray={circ}
-              strokeDashoffset={offset}
-              strokeLinecap="round"
-              style={{ transition: 'stroke-dashoffset 0.8s ease' }}
-            />
-            <defs>
-              <linearGradient id="donutGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%"   stopColor="#F4C542" />
-                <stop offset="100%" stopColor="#F59E0B" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <div style={{
-            position: 'absolute', inset: 0,
-            display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center',
-          }}>
-            <div style={{ fontSize: 14, fontWeight: 800, color: '#F4C542', lineHeight: 1 }}>{pct}%</div>
-            <div style={{ fontSize: 8, color: '#8A84B6', lineHeight: 1.3, textAlign: 'center' }}>Com-<br/>pletion</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   REFLECTION TOAST
-───────────────────────────────────────────────────────────────────────────── */
-function ReflectionToast({ text, onDismiss }) {
-  useEffect(() => {
-    const t = setTimeout(onDismiss, 4000);
-    return () => clearTimeout(t);
-  }, [onDismiss]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 60, scale: 0.94 }}
-      animate={{ opacity: 1, y: 0,  scale: 1 }}
-      exit={{  opacity: 0, y: 40, scale: 0.96 }}
-      transition={{ type: 'spring', stiffness: 280, damping: 26 }}
-      style={{
-        position: 'fixed', bottom: 32, left: '50%', transform: 'translateX(-50%)',
-        zIndex: 9999,
-        background: 'rgba(34,18,73,0.9)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(168,85,247,0.3)',
-        borderRadius: 20,
-        padding: '14px 22px',
-        display: 'flex', alignItems: 'center', gap: 12,
-        boxShadow: '0 0 40px rgba(124,58,237,0.35), 0 16px 40px rgba(0,0,0,0.4)',
-        maxWidth: 360, minWidth: 260,
-      }}
-    >
-      <div style={{
-        width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
-        background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 16,
-        boxShadow: '0 0 12px rgba(124,58,237,0.5)',
-      }}>
-        💜
-      </div>
-      <p style={{
-        margin: 0, fontSize: 13, color: '#E2DEFF',
-        lineHeight: 1.5, fontStyle: 'italic', fontWeight: 400,
-      }}>
-        {text}
-      </p>
-    </motion.div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   SHARED STYLE OBJECTS
-───────────────────────────────────────────────────────────────────────────── */
-const CARD_STYLE = {
-  background: 'rgba(34,18,73,0.72)',
-  backdropFilter: 'blur(24px)',
-  WebkitBackdropFilter: 'blur(24px)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 24,
-  padding: '20px 20px',
-  marginBottom: 14,
-  boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03)',
-  position: 'relative',
-  overflow: 'hidden',
-};
-
-const SECTION_LABEL = {
-  fontSize: 11, color: '#F4C542', fontWeight: 700,
-  textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 10,
-};
-
-const GLASS_BTN = {
-  background: 'rgba(255,255,255,0.07)',
-  border: '1px solid rgba(255,255,255,0.12)',
-  borderRadius: 12, color: '#E2DEFF',
-  cursor: 'pointer', padding: '8px 16px',
-  fontSize: 12, fontWeight: 600, fontFamily: 'Inter, sans-serif',
-};
-
-const PURPLE_BTN = {
-  background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-  border: 'none', borderRadius: 14, color: '#fff',
-  cursor: 'pointer', fontWeight: 700, fontSize: 14,
-  padding: '11px 24px',
-  boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
-  fontFamily: 'Inter, sans-serif',
-};
-
-const WEATHER_OPTIONS = [
-  { id: 'clear-sky',  emoji: '☀️', label: 'Clear'      },
-  { id: 'hope',       emoji: '🌤', label: 'Hope'       },
-  { id: 'blooming',   emoji: '🌸', label: 'Blooming'   },
-  { id: 'fog',        emoji: '🌫', label: 'Fog'        },
-  { id: 'heavy-rain', emoji: '🌧', label: 'Heavy Rain' },
-  { id: 'storm',      emoji: '⚡', label: 'Storm'      },
-];
-
-const STORIES = [
-  {
-    name: 'Anonymous', avatar: '?', avatarColor: '#374151',
-    time: '2h ago', tag: 'Growth', tagColor: '#10B981',
-    preview: '"Today I finally said no without feeling guilty."',
-    hearts: 128, comments: 32, scene: 'sunset',
-  },
-  {
-    name: 'Riya', avatar: 'R', avatarColor: '#7C3AED',
-    time: '5h ago', tag: 'Overthinking', tagColor: '#8B5CF6',
-    preview: '"After weeks of overthinking, I chose to let it go."',
-    hearts: 96, comments: 18, scene: 'mountains',
-  },
-  {
-    name: 'Arjun', avatar: 'A', avatarColor: '#D97706',
-    time: '8h ago', tag: 'Motivation', tagColor: '#F59E0B',
-    preview: '"Small steps every day really do change everything."',
-    hearts: 112, comments: 24, scene: 'sunrise',
-  },
-];
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   CINEMATIC SCENE BACKDROPS — CSS/SVG only, no external image assets.
-   Three distinct moods (dusk silhouette / misty peaks / golden sunrise) so
-   Soul Story cards read as photographic rather than flat UI panels.
-───────────────────────────────────────────────────────────────────────────── */
-function SceneBackdrop({ scene }) {
-  if (scene === 'mountains') {
-    return (
-      <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-        <defs>
-          <linearGradient id="skyMountains" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#312E81" />
-            <stop offset="55%" stopColor="#4C1D95" />
-            <stop offset="100%" stopColor="#1E1B4B" />
-          </linearGradient>
-          <linearGradient id="peakFar" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#6D28D9" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#4C1D95" stopOpacity="0.55" />
-          </linearGradient>
-        </defs>
-        <rect width="300" height="200" fill="url(#skyMountains)" />
-        {/* Fog band */}
-        <rect x="0" y="95" width="300" height="30" fill="rgba(199,210,254,0.12)" />
-        {/* Far peaks */}
-        <polygon points="0,140 45,80 90,140" fill="url(#peakFar)" />
-        <polygon points="70,140 130,60 190,140" fill="url(#peakFar)" />
-        <polygon points="160,140 220,85 300,140" fill="url(#peakFar)" />
-        {/* Near peaks, darker */}
-        <polygon points="-10,200 60,110 140,200" fill="#2E1065" />
-        <polygon points="100,200 190,95 300,200" fill="#251057" />
-        {/* Moon */}
-        <circle cx="235" cy="45" r="16" fill="#EDE9FE" opacity="0.85" />
-      </svg>
-    );
-  }
-
-  if (scene === 'sunrise') {
-    return (
-      <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-        <defs>
-          <linearGradient id="skySunrise" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#7C2D12" />
-            <stop offset="45%" stopColor="#C2410C" />
-            <stop offset="75%" stopColor="#F59E0B" />
-            <stop offset="100%" stopColor="#FDE68A" />
-          </linearGradient>
-          <radialGradient id="sunGlow" cx="50%" cy="100%" r="70%">
-            <stop offset="0%" stopColor="#FEF3C7" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#FEF3C7" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <rect width="300" height="200" fill="url(#skySunrise)" />
-        <circle cx="150" cy="150" r="90" fill="url(#sunGlow)" />
-        <circle cx="150" cy="150" r="34" fill="#FFFBEB" opacity="0.9" />
-        {/* Rolling hills, dark silhouette */}
-        <path d="M0,175 C60,150 100,185 160,165 C220,148 260,178 300,160 L300,200 L0,200 Z" fill="#431407" />
-        <path d="M0,190 C80,175 160,198 300,180 L300,200 L0,200 Z" fill="#2A0B04" />
-      </svg>
-    );
-  }
-
-  // 'sunset' — lone silhouette on a hill, dusk gradient
-  return (
-    <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-      <defs>
-        <linearGradient id="skySunset" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1E1B4B" />
-          <stop offset="40%" stopColor="#7E22CE" />
-          <stop offset="70%" stopColor="#DB2777" />
-          <stop offset="100%" stopColor="#F59E0B" />
-        </linearGradient>
-        <radialGradient id="sunSunset" cx="72%" cy="62%" r="26%">
-          <stop offset="0%" stopColor="#FED7AA" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="#FED7AA" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <rect width="300" height="200" fill="url(#skySunset)" />
-      <circle cx="215" cy="125" r="60" fill="url(#sunSunset)" />
-      <circle cx="215" cy="125" r="26" fill="#FFEDD5" opacity="0.9" />
-      {/* Ground silhouette */}
-      <path d="M0,168 C70,150 120,172 180,158 C230,148 270,166 300,155 L300,200 L0,200 Z" fill="#0F0A2E" />
-      {/* Person sitting, knees up, looking out */}
-      <g fill="#0A0620">
-        <circle cx="95" cy="140" r="8" />
-        <path d="M85 148 Q95 143 105 148 L108 168 L100 168 L96 154 L92 168 L84 168 Z" />
-      </g>
-    </svg>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   PEOPLE WHO UNDERSTAND — Match cards for sidebar/dashboard
-───────────────────────────────────────────────────────────────────────────── */
-const AVATAR_PALETTE = [
-  ['#EC4899', '#F472B6'], ['#7C3AED', '#A855F7'], ['#0EA5E9', '#38BDF8'],
-  ['#F59E0B', '#FBBF24'], ['#10B981', '#34D399'], ['#6366F1', '#818CF8'],
-];
-
-function PeopleWhoUnderstandCard({ match, index = 0, onConnect }) {
-  if (!match) return null;
-  const matchPercent = scoreToPercent(match.match_score);
-  const tags = [match.problem, match.problem_context].filter(Boolean).slice(0, 2);
-  const statement = match.match_reason || match.bio || '';
-  const location = match.city || match.location || 'India';
-  const [c1, c2] = AVATAR_PALETTE[index % AVATAR_PALETTE.length];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      style={{
-        flex: 1, minWidth: 0,
-        background: 'rgba(34,18,73,0.72)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 20,
-        padding: '18px',
-        display: 'flex', flexDirection: 'column',
-        position: 'relative',
-        boxShadow: '0 8px 28px rgba(0,0,0,0.35)',
-      }}
-    >
-      {/* Inner top highlight */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 1,
-        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)',
-      }} />
-
-      {/* Avatar with overlapping match badge */}
-      <div style={{ position: 'relative', width: 64, height: 64, marginBottom: 12 }}>
-        <div style={{
-          width: 64, height: 64, borderRadius: '50%', overflow: 'hidden',
-          background: `linear-gradient(135deg, ${c1}, ${c2})`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 24, fontWeight: 700, color: '#fff',
-          boxShadow: `0 0 20px ${c1}55`,
-          border: '2px solid rgba(255,255,255,0.12)',
-        }}>
-          {match.avatar_url
-            ? <img src={match.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : (match.name?.[0]?.toUpperCase() || '?')
-          }
-        </div>
-        <div style={{
-          position: 'absolute', top: -8, right: -10,
-          width: 40, height: 40, borderRadius: '50%',
-          background: 'rgba(8,6,22,0.95)',
-          border: '2px solid rgba(16,185,129,0.5)',
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.4)',
-        }}>
-          <span style={{ fontSize: 12, fontWeight: 800, color: '#10B981', lineHeight: 1 }}>
-            {matchPercent != null ? `${matchPercent}%` : '—'}
-          </span>
-        </div>
-      </div>
-
-      {/* Name + Location */}
-      <div style={{ marginBottom: 8 }}>
-        <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>
-          {match.name}, {match.age || '?'}
-        </div>
-        <div style={{ fontSize: 12, color: '#8A84B6', marginTop: 2 }}>
-          📍 {location}
-        </div>
-      </div>
-
-      {/* Tags */}
-      {tags.length > 0 && (
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
-          {tags.map((tag, i) => (
-            <span key={i} style={{
-              fontSize: 11, fontWeight: 600,
-              background: 'rgba(139,92,246,0.12)',
-              border: '1px solid rgba(139,92,246,0.25)',
-              color: '#A78BFA',
-              borderRadius: 14, padding: '3px 10px',
-            }}>
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Statement */}
-      {statement && (
-        <p style={{
-          fontSize: 13, color: '#B8B4D8', lineHeight: 1.5, margin: '0 0 14px',
-          display: '-webkit-box', WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical', overflow: 'hidden',
-        }}>
-          "{statement}"
-        </p>
-      )}
-
-      {/* Actions */}
-      <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
-        <motion.button
-          whileTap={{ scale: 0.96 }}
-          onClick={() => onConnect?.(match)}
-          style={{
-            flex: 1,
-            padding: '9px 14px', borderRadius: 12,
-            background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-            border: '1px solid rgba(168,85,247,0.3)',
-            color: '#fff', fontSize: 12, fontWeight: 600,
-            cursor: 'pointer', fontFamily: 'inherit',
-            boxShadow: '0 4px 12px rgba(124,58,237,0.3)',
-          }}
-        >
-          Connect
-        </motion.button>
-        <button style={{
-          flex: 1,
-          padding: '9px 14px', borderRadius: 12,
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(255,255,255,0.12)',
-          color: '#B8B4D8', fontSize: 12, fontWeight: 600,
-          cursor: 'pointer', fontFamily: 'inherit',
-        }}>
-          Not Now
-        </button>
-      </div>
-    </motion.div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   TODAY'S FOCUS — compact sidebar checklist card
-───────────────────────────────────────────────────────────────────────────── */
-const FOCUS_CHECKLIST = [
-  'Write 3 things you\'re grateful for',
-  '5 minute breathing exercise',
-  'Go for a short walk',
-  'Be kind to yourself',
-];
-
-function TodaysFocusChecklistCard({ onStart }) {
-  return (
-    <div style={{
-      ...CARD_STYLE,
-      marginBottom: 0,
-      background: 'linear-gradient(145deg, rgba(139,92,246,0.1) 0%, rgba(34,18,73,0.72) 100%)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        <span style={{ fontSize: 16 }}>🌿</span>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: 0 }}>Today's Focus</h3>
-      </div>
-
-      <p style={{
-        fontSize: 20, fontWeight: 800, fontStyle: 'italic', color: '#fff',
-        lineHeight: 1.25, margin: '0 0 16px',
-      }}>
-        Small steps.<br />Big change.
-      </p>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 16 }}>
-        {FOCUS_CHECKLIST.map((item, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <CheckCircle size={14} color="#34D399" strokeWidth={2.2} style={{ flexShrink: 0 }} />
-            <span style={{ fontSize: 12, color: '#D8D4EE', lineHeight: 1.3 }}>{item}</span>
-          </div>
-        ))}
-      </div>
-
-      <motion.button
-        whileTap={{ scale: 0.97 }}
-        onClick={onStart}
-        style={{
-          width: '100%', padding: '11px', borderRadius: 13,
-          background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-          border: 'none', color: '#fff', fontSize: 13, fontWeight: 700,
-          cursor: 'pointer', fontFamily: 'inherit',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-          boxShadow: '0 4px 16px rgba(124,58,237,0.4)',
-          marginBottom: 12,
-        }}
-      >
-        Start Today <span style={{ fontSize: 15 }}>→</span>
-      </motion.button>
-
-      <p style={{
-        fontSize: 11, fontStyle: 'italic', color: '#8A84B6', textAlign: 'center', margin: 0,
-      }}>
-        "Progress, not perfection."
-      </p>
-    </div>
-  );
-}
+import HomeTinyWinCard from '../components/home/HomeTinyWinCard';
+import ReflectionToast from '../components/home/ReflectionToast';
+import PeopleWhoUnderstandCard from '../components/home/PeopleWhoUnderstandCard';
+import TodaysFocusChecklistCard from '../components/home/TodaysFocusChecklistCard';
+import { WEATHER_OPTIONS } from '../components/home/homeStyles';
+import LotusMark from '../components/LotusMark';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+import { STORIES } from '../components/home/storiesData';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    MAIN COMPONENT
@@ -839,7 +53,7 @@ export default function Home() {
   const userId    = user?.id || user?.user_id || 1;
   const firstName = user?.name?.split(' ')[0] || 'Friend';
   const hour      = new Date().getHours();
-  const greeting  = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+  const greeting  = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
   const [showBreathing, setShowBreathing] = useState(false);
   const [breathingDone, setBreathingDone] = useState(false);
@@ -949,7 +163,29 @@ export default function Home() {
   const completedCount = completedToday.length;
   const allDone = completedCount >= 3 && dailyWins.length > 0;
 
-  // Handle error state
+
+  // Section header used by every Home block: 18px title + optional "See all".
+  // A plain render helper, not a nested component, so React never remounts it.
+  const sectionHeader = ({ title, sub, to, right }) => (
+    <div className="mb-3 flex items-end justify-between gap-3">
+      <div className="min-w-0">
+        <h2 className="text-[18px] font-semibold leading-tight text-foreground">{title}</h2>
+        {sub && <p className="mt-0.5 text-[13px] text-muted-foreground">{sub}</p>}
+      </div>
+      {right}
+      {to && (
+        <button
+          type="button"
+          onClick={() => navigate(to)}
+          className="-mr-2 flex min-h-[44px] shrink-0 items-center gap-0.5 rounded-full px-2 text-sm font-semibold text-primary hover:bg-secondary"
+        >
+          See all <ChevronRight className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  );
+
+  // Handle error state (light, in-flow; the shell stays mounted around it)
   if (error) {
     return (
       <>
@@ -958,172 +194,78 @@ export default function Home() {
           onRetry={() => window.location.reload()}
           onDismiss={() => setError('')}
         />
-        <div
-          style={{
-            minHeight: '100vh',
-            background: '#0D0B1A',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: 'Inter, sans-serif',
-            padding: '20px',
-          }}
-        >
-          <p style={{ color: '#8A84B6', textAlign: 'center', fontSize: 16 }}>
-            Unable to load dashboard. Please try again.
-          </p>
+        <div className="flex min-h-[60vh] items-center justify-center p-6">
+          <p className="text-center text-base text-muted-foreground">Unable to load your home. Please try again.</p>
         </div>
       </>
     );
   }
 
-  // Handle loading state
+  // Loading: page-shaped skeleton, no full-screen spinner
   if (loading) {
     return (
-      <div
-        style={{
-          minHeight: '100vh',
-          background: '#0D0B1A',
-          padding: '24px 32px',
-          fontFamily: 'Inter, sans-serif',
-        }}
-      >
-        <DashboardSkeleton />
+      <div className="mx-auto max-w-3xl space-y-4 px-4 py-5 sm:px-8">
+        <Skeleton className="h-7 w-56" />
+        <Skeleton className="h-4 w-44" />
+        <Skeleton className="h-44 w-full rounded-[20px]" />
+        <Skeleton className="h-40 w-full rounded-[20px]" />
       </div>
     );
   }
 
+  // Check-in card tint per weather — soft versions of the original Soul
+  // Climate gradients (sun = warm yellow, hope = lavender→peach, etc.),
+  // kept light so text stays readable on the light theme.
+  const WEATHER_TINT = {
+    'clear-sky':  { bg: 'linear-gradient(160deg, #FFF7D6 0%, #FDE68A 55%, #FBBF24 100%)', accent: '#F59E0B', ink: '#92400E' },
+    'hope':       { bg: 'linear-gradient(160deg, #EDE4FF 0%, #F3D9FF 45%, #FFD3B0 100%)', accent: '#C084FC', ink: '#6B21A8' },
+    'blooming':   { bg: 'linear-gradient(160deg, #FFE4F1 0%, #FBCFE8 55%, #F4A5CF 100%)', accent: '#EC4899', ink: '#9D174D' },
+    'fog':        { bg: 'linear-gradient(160deg, #F3F4F6 0%, #E5E7EB 55%, #C9CDD4 100%)', accent: '#9CA3AF', ink: '#374151' },
+    'heavy-rain': { bg: 'linear-gradient(160deg, #E0EDFF 0%, #BFDBFE 55%, #93C5FD 100%)', accent: '#3B82F6', ink: '#1E40AF' },
+    'storm':      { bg: 'linear-gradient(160deg, #EDE7FF 0%, #D6CAFB 55%, #B9A4F5 100%)', accent: '#7C3AED', ink: '#4C1D95' },
+  };
+  // Gloss: a white sheen over the top of the card (extra background layer,
+  // no extra DOM), a bright top edge and a soft shadow in the weather colour.
+  const glossy = (t) => ({
+    background: `linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.18) 38%, rgba(255,255,255,0) 60%), ${t.bg}`,
+    borderColor: 'rgba(255,255,255,0.9)',
+    boxShadow: `inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 ${t.accent}33, 0 10px 28px ${t.accent}40, 0 2px 6px ${t.accent}26`,
+  });
+  const tint = selectedWeather ? WEATHER_TINT[selectedWeather] : null;
+
+  // Featured professional for the Home "Support when you need it" card.
+  // PLACEHOLDER content specified by the design brief — not a real record.
+  // Replace with the first result of healerAPI.listHealers() before launch
+  // (frontend/AGENTS.md: no fake therapists in production).
+  const FEATURED_PROFESSIONAL = {
+    name: 'Dr. Ananya Sharma',
+    role: 'Therapist',
+    experience: '6+ years',
+    tags: ['Anxiety', 'Self-Doubt'],
+    photo: null,
+    initials: 'AS',
+  };
+
   return (
     <>
-      {/* ── Global keyframes ── */}
       <style>{`
-        @keyframes particleDrift {
-          0%,100% { transform: translate(0,0); }
-          33%      { transform: translate(6px,-10px); }
-          66%      { transform: translate(-4px,6px); }
-        }
-        @keyframes companionParticleDrift {
-          0%,100% { transform: translate(0,0); }
-          33%      { transform: translate(4px,-8px); }
-          66%      { transform: translate(-3px,5px); }
-        }
-        @keyframes orbFloat {
-          0%,100% { transform: translateY(0px); }
-          50%      { transform: translateY(-14px); }
-        }
-        @keyframes auroraShift {
-          0%,100% { opacity: 0.5; transform: scale(1); }
-          50%      { opacity: 0.8; transform: scale(1.06); }
-        }
-        .orb-float { animation: orbFloat 9s ease-in-out infinite; }
-        .home-main {
-          margin-right: 290px;
-          min-height: 100vh;
-          position: relative;
-        }
+        .home-main { margin-right: 300px; }
         .home-right-sidebar {
-          position: fixed; right: 0; top: 0; bottom: 0; width: 290px;
-          background: rgba(8,6,22,0.85);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          border-left: 1px solid rgba(255,255,255,0.06);
-          display: flex; flex-direction: column;
+          position: fixed; right: 0; top: 0; bottom: 0; width: 300px;
+          background: #FFFFFF;
+          border-left: 1px solid #E7E3EF;
+          display: flex; flex-direction: column; gap: 12px;
           padding: 24px 16px 20px;
           z-index: 50;
           overflow-y: auto;
           scrollbar-width: thin;
-          scrollbar-color: rgba(168,85,247,0.3) transparent;
-        }
-        .home-right-sidebar::-webkit-scrollbar {
-          width: 5px;
-        }
-        .home-right-sidebar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .home-right-sidebar::-webkit-scrollbar-thumb {
-          background: rgba(168,85,247,0.3);
-          border-radius: 3px;
-        }
-        .home-right-sidebar::-webkit-scrollbar-thumb:hover {
-          background: rgba(168,85,247,0.5);
         }
         @media (max-width: 1100px) {
           .home-right-sidebar { display: none; }
-          .home-main { margin-right: 0 !important; padding-bottom: 100px; }
+          .home-main { margin-right: 0; }
         }
-
-        /* ── Mobile ≤ 768px ── */
         @media (max-width: 768px) {
-          .home-main {
-            margin-right: 0 !important;
-            padding-bottom: 0 !important;
-          }
-          /* Kill aurora animations on mobile — they cause constant repaints */
-          .aurora-layer { animation: none !important; opacity: 0.5 !important; }
-          /* Kill particle drift on mobile */
-          .home-particle { animation: none !important; }
-          /* Kill orb float on mobile */
-          .orb-float { animation: none !important; }
-          /* Header */
-          .home-header {
-            padding: 20px 16px 0 !important;
-          }
-          .home-header h1 {
-            font-size: 22px !important;
-          }
-          /* All sections full-width with 16px side padding */
-          .home-section {
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-          }
-          /* Soul climate card horizontal → vertical on mobile */
-          .soul-climate-body {
-            flex-direction: column !important;
-            gap: 16px !important;
-          }
-          .soul-climate-body > * { width: 100% !important; }
-          /* Challenges: show 1.2 cards at a time */
-          .challenges-scroll { padding-left: 16px !important; padding-right: 16px !important; }
-          .challenge-card { min-width: 200px !important; }
-          /* Stories: show 1.2 at a time */
-          .stories-scroll { padding-left: 16px !important; }
-          .story-card { min-width: 240px !important; width: 240px !important; }
-          /* Soul climate card padding */
-          .soul-climate-card { padding: 16px !important; }
-          /* Hide vertical divider when stacked */
-          .climate-divider { display: none !important; }
-          /* Section headers */
-          .section-header { padding: 0 16px !important; }
-          /* Tiny wins: horizontally scrollable on mobile */
-          .wins-scroll {
-            overflow-x: auto !important;
-            scroll-snap-type: x mandatory !important;
-            -webkit-overflow-scrolling: touch !important;
-            scrollbar-width: none !important;
-            padding-bottom: 8px !important;
-          }
-          .wins-scroll::-webkit-scrollbar { display: none; }
-          .wins-scroll > * {
-            flex-shrink: 0 !important;
-            min-width: 220px !important;
-            max-width: 260px !important;
-            scroll-snap-align: start !important;
-          }
-        }
-        .weather-pill { transition: all 0.2s ease; }
-        .weather-pill:hover { background: rgba(139,92,246,0.25) !important; }
-        .icon-btn { transition: background 0.2s ease; }
-        .icon-btn:hover { background: rgba(255,255,255,0.14) !important; }
-        .story-card { transition: transform 0.22s ease, box-shadow 0.22s ease; }
-        .story-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 30px rgba(124,58,237,0.15) !important;
-        }
-        .sidebar-card-inner { transition: box-shadow 0.25s ease; }
-        .sidebar-card-inner:hover {
-          box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 40px rgba(124,58,237,0.2) !important;
+          .home-desktop-only { display: none !important; }
         }
       `}</style>
 
@@ -1149,21 +291,18 @@ export default function Home() {
         {reflectionSavedToast && (
           <ReflectionToast
             key="refl-saved"
-            text="Reflection saved successfully. Keep showing up for yourself. 💜"
+            text="Reflection saved. Keep showing up for yourself."
             onDismiss={() => setReflectionSavedToast(false)}
           />
         )}
       </AnimatePresence>
 
-      {/* ── Global Search modal ── */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      {/* ── Emotion Weather Check-in Modal ── */}
       <AnimatePresence>
         {showModal && <EmotionWeatherModal />}
       </AnimatePresence>
 
-      {/* ── Today's Reflection modal ── */}
       <TodaysReflectionModal
         isOpen={reflectionModalOpen}
         onClose={() => setReflectionModalOpen(false)}
@@ -1176,7 +315,6 @@ export default function Home() {
         hasCheckedIn={Boolean(todayEntry)}
       />
 
-      {/* ── Progress modal ── */}
       <ProgressModal
         isOpen={progressModalOpen}
         onClose={() => setProgressModalOpen(false)}
@@ -1188,7 +326,6 @@ export default function Home() {
         currentWeather={selectedWeather}
       />
 
-      {/* ── Weekly Insights modal ── */}
       <WeeklyInsightsModal
         isOpen={weeklyInsightsOpen}
         onClose={() => setWeeklyInsightsOpen(false)}
@@ -1199,439 +336,210 @@ export default function Home() {
 
       {/* ════════════════════ MAIN CONTENT ════════════════════ */}
       <div className="home-main">
+        <div className="mx-auto max-w-3xl px-4 pb-[120px] pt-5 sm:px-8 sm:pt-8 min-[769px]:pb-8">
 
-        {/* Aurora background layers */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 0 }}>
-          <div className="aurora-layer" style={{
-            position: 'absolute', top: -100, left: '10%',
-            width: 500, height: 500, borderRadius: '50%',
-            background: 'radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, transparent 65%)',
-            animation: 'auroraShift 14s ease-in-out infinite',
-          }} />
-          <div className="aurora-layer" style={{
-            position: 'absolute', top: 200, right: -100,
-            width: 400, height: 400, borderRadius: '50%',
-            background: 'radial-gradient(ellipse, rgba(168,85,247,0.08) 0%, transparent 65%)',
-            animation: 'auroraShift 18s ease-in-out 3s infinite',
-          }} />
-        </div>
-
-        {/* ── HEADER ── */}
-        <div className="home-header" style={{
-          padding: '24px 32px 0',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-          position: 'relative', zIndex: 1,
-        }}>
-          <div>
-            <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', margin: 0, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
-              {greeting}, {firstName} 👋
-            </h1>
-            <p style={{ fontSize: 14, color: 'rgba(184,180,216,0.65)', margin: '5px 0 0' }}>
-              Take a deep breath. You've got this.
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 4 }}>
-            <button className="icon-btn" onClick={() => setSearchOpen(true)} style={{
-              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)',
-              borderRadius: 12, width: 40, height: 40,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-            }}>
-              <Search size={16} color="#B8B4D8" />
-            </button>
-
-            <div ref={bellRef} style={{ position: 'relative' }}>
-              <button
-                className="icon-btn"
-                onClick={() => setNotifOpen(prev => !prev)}
-                style={{
-                  background: notifOpen ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.06)',
-                  border: notifOpen ? '1px solid rgba(168,85,247,0.4)' : '1px solid rgba(255,255,255,0.09)',
-                  borderRadius: 12, width: 40, height: 40,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <Bell size={16} color={notifOpen ? '#A78BFA' : '#B8B4D8'} />
-              </button>
-              <span style={{
-                position: 'absolute', top: -5, right: -5,
-                background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
-                color: '#fff', fontSize: 9, fontWeight: 700,
-                borderRadius: '50%', width: 18, height: 18,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                border: '2px solid #080812',
-              }}>3</span>
-              <NotificationDropdown
-                isOpen={notifOpen}
-                onClose={() => setNotifOpen(false)}
-                anchorRef={bellRef}
-              />
+          {/* 1 · Greeting (the brand + bell live in the shared top bar on mobile) */}
+          <header className="relative mb-5 flex items-start justify-between gap-3">
+            <LotusMark size={132} className="absolute -right-3 -top-7 opacity-60 sm:hidden" />
+            <div className="relative min-w-0">
+              <h1 className="text-[24px] font-bold leading-tight tracking-[-0.01em] text-foreground sm:text-[28px]">
+                {greeting}, {firstName}
+              </h1>
+              <p className="mt-1 text-[15px] text-muted-foreground">Take a deep breath. You've got this.</p>
             </div>
-
-            <div onClick={() => navigate('/profile')} style={{
-              width: 38, height: 38, borderRadius: '50%',
-              background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 15, fontWeight: 700, color: '#fff', cursor: 'pointer',
-              boxShadow: '0 0 14px rgba(124,58,237,0.5)',
-            }}>
-              {firstName[0]?.toUpperCase()}
+            <div className="home-desktop-only relative flex shrink-0 items-center gap-1">
+              <Button variant="ghost" size="icon" onClick={() => setSearchOpen(true)} aria-label="Search">
+                <Search className="!h-5 !w-5" />
+              </Button>
+              <div ref={bellRef} className="relative">
+                <Button variant="ghost" size="icon" onClick={() => setNotifOpen(prev => !prev)} aria-label="Notifications" aria-expanded={notifOpen}>
+                  <Bell className="!h-5 !w-5" />
+                </Button>
+                <NotificationDropdown isOpen={notifOpen} onClose={() => setNotifOpen(false)} anchorRef={bellRef} />
+              </div>
             </div>
-          </div>
-        </div>
+          </header>
 
-        {/* ════════════════════════════════════════════════════════════
-            SECTION 1 — SOUL CLIMATE (full width)
-        ════════════════════════════════════════════════════════════ */}
-        <div className="home-section" style={{
-          margin: '20px 32px 16px',
-          position: 'relative', zIndex: 1,
-        }}>
-          <SoulClimateWidget
-            selectedMood={selectedWeather}
-            onMoodSelect={handleWeatherSelect}
-            onCheckIn={handleCheckIn}
-            isCheckedIn={selectedWeather !== null}
-          />
-        </div>
-
-        {/* ════════════════════════════════════════════════════════════
-            SECTION 2 — PEOPLE WHO UNDERSTAND
-        ════════════════════════════════════════════════════════════ */}
-        <div className="home-section" style={{ margin: '0 32px 16px', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div>
-              <div style={{ ...SECTION_LABEL, marginBottom: 2 }}>💜 PEOPLE WHO UNDERSTAND</div>
-              <div style={{ fontSize: 12, color: 'rgba(184,180,216,0.55)' }}>You're not alone. Here are people going through similar experiences.</div>
+          {/* 2 · Check-in — compact, immediately actionable */}
+          <Card
+            className="relative mb-6 p-4 transition-[background,box-shadow] duration-300 sm:p-5"
+            style={tint ? glossy(tint) : undefined}
+          >
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="text-[18px] font-semibold leading-tight text-foreground">How are you feeling today?</h2>
+              {selectedWeather && (
+                <Badge className="shrink-0 whitespace-nowrap" style={tint ? { background: 'rgba(255,255,255,0.75)', color: tint.ink } : undefined}>Checked in</Badge>
+              )}
             </div>
-            <button
-              onClick={() => navigate('/matches')}
-              style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
-            >
-              View All ›
-            </button>
-          </div>
-
-          {matches.length > 0 ? (
-            <div style={{ display: 'flex', gap: 12 }}>
-              {matches.map((match, i) => (
-                <PeopleWhoUnderstandCard
-                  key={match.id || i}
-                  match={match}
-                  index={i}
-                  onConnect={() => navigate('/matches')}
-                />
-              ))}
+            <p className="mt-1 text-[13px] text-muted-foreground">Pick what's closest — it shapes today's small steps.</p>
+            <div className="mt-3 grid grid-cols-3 gap-2" role="radiogroup" aria-label="Today's mood">
+              {WEATHER_OPTIONS.map((o) => {
+                const on = selectedWeather === o.id;
+                const t = WEATHER_TINT[o.id];
+                return (
+                  <button
+                    key={o.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={on}
+                    onClick={() => handleWeatherSelect(o.id)}
+                    className={cn(
+                      'flex min-h-[56px] flex-col items-center justify-center gap-0.5 rounded-2xl border px-1 text-[13px] font-medium leading-tight transition-colors duration-150 active:scale-[0.98]',
+                      on ? 'border-2' : 'border-border bg-card/80 text-foreground hover:bg-muted'
+                    )}
+                    style={on && t
+                      ? { borderColor: t.accent, background: 'linear-gradient(180deg, #FFFFFF 0%, rgba(255,255,255,0.8) 100%)', color: t.ink, boxShadow: `0 4px 12px ${t.accent}40, inset 0 1px 0 #FFFFFF` }
+                      : tint ? { background: 'rgba(255,255,255,0.55)', borderColor: 'rgba(255,255,255,0.8)' } : undefined}
+                  >
+                    <span aria-hidden="true" className="text-base leading-none">{o.emoji}</span>
+                    <span>{o.label}</span>
+                  </button>
+                );
+              })}
             </div>
-          ) : (
-            <div style={{
-              ...CARD_STYLE, textAlign: 'center', padding: '28px',
-              color: '#8A84B6', fontSize: 13,
-            }}>
-              Loading your SoulMatches...
-            </div>
-          )}
-        </div>
+            <Button className="mt-3 w-full" onClick={handleCheckIn}>
+              {selectedWeather ? 'Add to your check-in' : 'Check in'}
+            </Button>
+          </Card>
 
-        {/* ════════════════════════════════════════════════════════════
-            SECTION 4 — TINY WINS
-        ════════════════════════════════════════════════════════════ */}
-        <div className="home-section" style={{ margin: '0 32px 16px', position: 'relative', zIndex: 1 }}>
-
-          {/* Section header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <div>
-              <div style={{ ...SECTION_LABEL, marginBottom: 2 }}>🌿 TINY WINS</div>
-              <div style={{ fontSize: 12, color: 'rgba(184,180,216,0.55)' }}>Small steps. Big change.</div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              {/* Progress dots */}
-              <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                <span style={{ fontSize: 11, color: '#8A84B6', marginRight: 4 }}>
-                  {completedCount} of {dailyWins.length} Completed
-                </span>
-                {dailyWins.map((_, i) => (
-                  <div key={i} style={{
-                    width: 8, height: 8, borderRadius: '50%',
-                    background: i < completedCount
-                      ? 'linear-gradient(135deg,#F4C542,#F59E0B)'
-                      : 'rgba(255,255,255,0.15)',
-                    boxShadow: i < completedCount ? '0 0 6px rgba(244,197,66,0.5)' : 'none',
-                  }} />
+          {/* 3 · People who understand */}
+          <section className="mb-6">
+            {sectionHeader({ title: 'People who understand', sub: 'Going through something similar', to: '/matches' })}
+            {matches.length > 0 ? (
+              <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:overflow-visible sm:px-0 [&>*]:snap-start">
+                {matches.map((match, i) => (
+                  <PeopleWhoUnderstandCard key={match.id || i} match={match} index={i} onConnect={() => navigate('/matches')} />
                 ))}
               </div>
-              <button
-                onClick={() => navigate('/tiny-wins')}
-                style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
-              >
-                View All ›
-              </button>
-            </div>
-          </div>
-
-          {/* 3 win cards */}
-          {dailyWins.length > 0 ? (
-            <div className="wins-scroll" style={{ display: 'flex', gap: 12 }}>
-              {dailyWins.map((win, i) => (
-                <HomeTinyWinCard
-                  key={win.id}
-                  win={win}
-                  index={i}
-                  isCompleted={completedToday.includes(win.id)}
-                  onComplete={completeWin}
-                />
-              ))}
-            </div>
-          ) : (
-            <div style={{
-              ...CARD_STYLE, textAlign: 'center', padding: '28px',
-              color: '#8A84B6', fontSize: 13,
-            }}>
-              Loading your personalized Tiny Wins...
-            </div>
-          )}
-
-          {/* All done message */}
-          <AnimatePresence>
-            {allDone && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                style={{
-                  marginTop: 12, padding: '10px 16px', borderRadius: 14,
-                  background: 'rgba(139,92,246,0.1)',
-                  border: '1px solid rgba(139,92,246,0.2)',
-                  textAlign: 'center', fontSize: 13, color: '#C4B5FD',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                }}
-              >
-                <span>💜</span>
-                <span>Great job! You've completed all your Tiny Wins for today.</span>
-              </motion.div>
+            ) : (
+              <Card className="flex items-center gap-3 p-4">
+                <Skeleton className="h-11 w-11 rounded-full" />
+                <div className="flex-1 space-y-2"><Skeleton className="h-4 w-1/2" /><Skeleton className="h-3 w-2/3" /></div>
+              </Card>
             )}
-          </AnimatePresence>
-        </div>
+          </section>
 
-        {/* ════════════════════════════════════════════════════════════
-            SECTION 5 — LATEST SOUL STORIES
-        ════════════════════════════════════════════════════════════ */}
-        <div className="home-section" style={{ margin: '0 32px 32px', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-            <span style={{ ...SECTION_LABEL, marginBottom: 0 }}>📖 LATEST SOUL STORIES</span>
-            <button
-              onClick={() => navigate('/stories')}
-              style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}
-            >
-              View All ›
-            </button>
-          </div>
-
-          <div style={{ display: 'flex', gap: 12 }}>
-            {STORIES.map((story, i) => (
-              <motion.div
-                key={i}
-                className="story-card"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                onClick={() => navigate('/stories')}
-                style={{
-                  flex: 1, minWidth: 0,
-                  height: 260,
-                  borderRadius: 22,
-                  cursor: 'pointer',
-                  boxShadow: '0 8px 28px rgba(0,0,0,0.4)',
-                  position: 'relative', overflow: 'hidden',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                }}
-              >
-                {/* Cinematic backdrop */}
-                <SceneBackdrop scene={story.scene} />
-
-                {/* Dark gradient overlay — top for quote legibility, bottom for footer legibility */}
-                <div style={{
-                  position: 'absolute', inset: 0,
-                  background: 'linear-gradient(180deg, rgba(8,6,22,0.55) 0%, rgba(8,6,22,0.05) 32%, rgba(8,6,22,0.15) 55%, rgba(8,6,22,0.88) 100%)',
-                }} />
-
-                {/* Bookmark, top-right */}
-                <button
-                  onClick={(e) => e.stopPropagation()}
-                  style={{
-                    position: 'absolute', top: 12, right: 12,
-                    width: 28, height: 28, borderRadius: '50%',
-                    background: 'rgba(8,6,22,0.45)', backdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255,255,255,0.15)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    cursor: 'pointer',
-                  }}
-                  aria-label="Save story"
-                >
-                  <Bookmark size={13} color="#fff" strokeWidth={2} />
-                </button>
-
-                {/* Content, layered above backdrop */}
-                <div style={{
-                  position: 'relative', zIndex: 1, height: '100%',
-                  display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                  padding: '16px',
-                }}>
-                  {/* Quote */}
-                  <p style={{
-                    fontSize: 14, fontWeight: 700, color: '#fff', lineHeight: 1.4,
-                    margin: 0, textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-                    display: '-webkit-box', WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                  }}>
-                    {story.preview}
-                  </p>
-
-                  {/* Footer: tag + engagement + author */}
-                  <div>
-                    <span style={{
-                      display: 'inline-block',
-                      background: `${story.tagColor}33`,
-                      border: `1px solid ${story.tagColor}77`,
-                      color: '#fff',
-                      fontSize: 11, fontWeight: 600, borderRadius: 20,
-                      padding: '3px 10px', marginBottom: 10,
-                      backdropFilter: 'blur(4px)',
-                    }}>
-                      {story.tag}
-                    </span>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>
-                        <Heart size={12} /> {story.hearts}
-                      </span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>
-                        <MessageCircle size={12} /> {story.comments}
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <div style={{
-                        width: 26, height: 26, borderRadius: '50%',
-                        background: story.avatarColor,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 11, fontWeight: 700, color: '#fff', flexShrink: 0,
-                        border: '1.5px solid rgba(255,255,255,0.3)',
-                      }}>
-                        {story.avatar}
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {story.name}
-                        </div>
-                      </div>
-                      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', flexShrink: 0 }}>{story.time}</span>
-                    </div>
+          {/* 4 · Today's small step (Tiny Wins) */}
+          <section className="mb-6">
+            {sectionHeader({ title: "Today's small step", to: '/tiny-wins' })}
+            <Card className="p-2">
+              {dailyWins.length > 0 ? (
+                <>
+                  <div className="flex items-center gap-3 px-3 pb-1 pt-2">
+                    <Progress value={(completedCount / Math.max(dailyWins.length, 1)) * 100} className="flex-1" aria-label="Tiny wins completed today" />
+                    <span className="shrink-0 text-[13px] font-medium text-muted-foreground">{completedCount} / {dailyWins.length} today</span>
                   </div>
+                  {dailyWins.map((win) => (
+                    <HomeTinyWinCard key={win.id} win={win} isCompleted={completedToday.includes(win.id)} onComplete={completeWin} />
+                  ))}
+                  {allDone && (
+                    <p className="px-3 pb-2 pt-1 text-[13px] text-[#1F7A55]">All done for today — that's real progress.</p>
+                  )}
+                </>
+              ) : (
+                <div className="space-y-2 p-2"><Skeleton className="h-12 w-full" /><Skeleton className="h-12 w-full" /></div>
+              )}
+            </Card>
+          </section>
+
+          {/* 5 · From the community */}
+          <section className="mb-6">
+            {sectionHeader({ title: 'From the community', to: '/stories' })}
+            <Card className="divide-y divide-border overflow-hidden">
+              {STORIES.map((story, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => navigate('/stories')}
+                  className="block w-full px-4 py-3.5 text-left transition-colors hover:bg-muted active:bg-muted"
+                >
+                  <div className="mb-1.5 flex items-center justify-between gap-2">
+                    <Badge variant="outline" style={{ color: story.tagColor, borderColor: `${story.tagColor}55` }}>{story.tag}</Badge>
+                    <span className="text-xs text-muted-foreground">{story.time}</span>
+                  </div>
+                  <p className="line-clamp-2 text-[15px] leading-snug text-foreground">{story.preview}</p>
+                  <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+                    <span>{story.name}</span>
+                    <span className="flex items-center gap-1"><Heart className="h-3.5 w-3.5" /> {story.hearts}</span>
+                    <span className="flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5" /> {story.comments}</span>
+                  </div>
+                </button>
+              ))}
+            </Card>
+          </section>
+
+          {/* 6 · Support when you need it (professionals) */}
+          <section>
+            {sectionHeader({
+              title: 'Support when you need it',
+              sub: "Connect with verified professionals who understand what you're going through.",
+              to: '/professionals',
+            })}
+            <Card className="flex items-center gap-2.5 p-3 sm:gap-4 sm:p-4">
+              <div className="relative shrink-0">
+                <Avatar className="h-14 w-14 sm:h-16 sm:w-16">
+                  {FEATURED_PROFESSIONAL.photo && <AvatarImage src={FEATURED_PROFESSIONAL.photo} alt="" />}
+                  <AvatarFallback className="bg-[#EFEAFB] text-[17px] text-[#5E47B8]">{FEATURED_PROFESSIONAL.initials}</AvatarFallback>
+                </Avatar>
+                <span
+                  className="absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#2E9E6E] text-white"
+                  aria-label="Verified professional"
+                  role="img"
+                >
+                  <Check className="h-3 w-3" strokeWidth={3} />
+                </span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-[15px] font-semibold leading-snug text-foreground sm:text-[16px]">{FEATURED_PROFESSIONAL.name}</div>
+                <div className="truncate text-[13px] text-muted-foreground">{FEATURED_PROFESSIONAL.role} · {FEATURED_PROFESSIONAL.experience}</div>
+                <div className="mt-1.5 flex flex-wrap gap-1">
+                  {FEATURED_PROFESSIONAL.tags.map(t => <Badge key={t} className="px-2 py-0.5 text-[11px] sm:text-[11.5px]">{t}</Badge>)}
                 </div>
-              </motion.div>
-            ))}
-          </div>
+              </div>
+              <Button
+                variant="soft"
+                className="h-12 shrink-0 gap-0.5 px-3 text-[13px] sm:gap-1 sm:px-5 sm:text-[14px] [&_svg]:!size-3.5 sm:[&_svg]:!size-4"
+                onClick={() => navigate('/professionals')}
+              >
+                View profile <ArrowRight />
+              </Button>
+            </Card>
+          </section>
         </div>
+      </div>
 
-      </div>{/* end .home-main */}
-
-      {/* ════════════════════ RIGHT SIDEBAR ════════════════════ */}
-      <div className="home-right-sidebar">
-
-        {/* ── Card 1: Today's Focus ── */}
-        <div ref={todaysFocusRef} style={{ marginBottom: 12 }}>
+      {/* ════════════════════ RIGHT SIDEBAR (desktop ≥1100px) ════════════════════ */}
+      <aside className="home-right-sidebar" aria-label="Today">
+        <div ref={todaysFocusRef}>
           <TodaysFocusChecklistCard onStart={() => setShowBreathing(true)} />
         </div>
 
-        {/* ── Card 2: Global Pulse ── */}
-        <div style={{ marginBottom: 12 }}>
-          <GlobalPulseCard />
-        </div>
+        <GlobalPulseCard />
 
-        {/* ── Card 3: Upcoming Session ── */}
-        <div className="sidebar-card-inner" style={{ ...CARD_STYLE, marginBottom: 12, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <span style={{ fontSize: 11, color: '#F4C542', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Upcoming Session
-            </span>
-            <button
-              onClick={() => navigate('/professionals')}
-              style={{ background: 'none', border: 'none', color: '#A78BFA', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
-            >
-              View All
-            </button>
+        <Card className="p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="text-sm font-semibold text-foreground">Upcoming session</span>
+            <button type="button" onClick={() => navigate('/professionals')} className="text-sm font-semibold text-primary">View all</button>
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: '50%', flexShrink: 0, overflow: 'hidden',
-              background: 'linear-gradient(135deg,#7C3AED,#A855F7)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 17, fontWeight: 700, color: '#fff',
-              boxShadow: '0 0 14px rgba(124,58,237,0.4)',
-            }}>
-              M
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-secondary text-base font-semibold text-[#4B3699]">M</span>
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-semibold text-foreground">Dr. Meera Sharma</div>
+              <div className="text-xs text-muted-foreground">Clinical Psychologist</div>
+              <div className="text-xs text-muted-foreground">Tomorrow, 11:00 AM</div>
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 1 }}>Dr. Meera Sharma</div>
-              <div style={{ fontSize: 11, color: '#8A84B6', marginBottom: 3 }}>Clinical Psychologist</div>
-              <div style={{ fontSize: 11, color: '#B8B4D8', display: 'flex', alignItems: 'center', gap: 4 }}>
-                📅 Tomorrow, 11:00 AM
-              </div>
-            </div>
-            <button
-              onClick={() => navigate('/professionals')}
-              style={{
-                width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
-                background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-                border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', boxShadow: '0 4px 12px rgba(124,58,237,0.35)',
-              }}
-              aria-label="Join video session"
-            >
-              <Video size={14} color="#fff" strokeWidth={2} fill="#fff" />
-            </button>
+            <Button size="icon" className="h-10 w-10" onClick={() => navigate('/professionals')} aria-label="Join video session">
+              <Video />
+            </Button>
           </div>
-        </div>
+        </Card>
 
-        {/* ── Card 4: Inspiration ── */}
-        <div className="sidebar-card-inner" style={{
-          ...CARD_STYLE,
-          marginBottom: 0,
-          flex: 1,
-          background: 'linear-gradient(135deg, rgba(192, 132, 250, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%)',
-          border: '1px solid rgba(168, 85, 247, 0.2)',
-          display: 'flex', flexDirection: 'column', justifyContent: 'center',
-          position: 'relative', overflow: 'hidden',
-        }}>
-          {/* Decorative gradient blobs */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'radial-gradient(circle at 80% 20%, rgba(168,85,247,0.2) 0%, transparent 50%)',
-            pointerEvents: 'none',
-          }} />
+        <Card className="relative overflow-hidden bg-[#FAF7F2] p-5 text-center">
+          <LotusMark size={72} className="mx-auto mb-1" />
+          <p className="text-sm italic leading-relaxed text-foreground">"Healing is not a destination, it's a journey."</p>
+        </Card>
+      </aside>
 
-          <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-            <p style={{
-              fontSize: 13, fontStyle: 'italic', color: '#E2DEFF', lineHeight: 1.6,
-              margin: '0 0 8px',
-              fontWeight: 500,
-            }}>
-              "Healing is not a<br/>destination,<br/>it's a journey."
-            </p>
-            <div style={{
-              fontSize: 40, marginTop: 6,
-            }}>
-              🌿
-            </div>
-          </div>
-        </div>
-
-      </div>{/* end .home-right-sidebar */}
-
-      {/* ════════════════════ FLOATING COMPANION ════════════════════ */}
       <FloatingCompanion
         onReflection={() => setReflectionModalOpen(true)}
         onBreathing={() => setShowBreathing(true)}
@@ -1639,7 +547,6 @@ export default function Home() {
         onSupport={() => navigate('/professionals')}
       />
 
-      {/* ════════════════════ ONBOARDING MODAL ════════════════════ */}
       <AnimatePresence>
         {showOnboarding && (
           <OnboardingModal onComplete={() => setShowOnboarding(false)} />

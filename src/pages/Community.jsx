@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Plus, Users, ChevronRight } from 'lucide-react';
 
-const BG = '#0D0B1A';
-const CARD = '#211044';
-const BORDER = 'rgba(255,255,255,0.07)';
-const PURPLE = '#8B5CF6';
-const GOLD = '#F4C542';
-const TEXT2 = '#8A84B6';
-const TEXT3 = '#B8B4D8';
+const BG = '#F7F5FB';
+const CARD = '#FFFFFF';
+const BORDER = '#E7E3EF';
+const PURPLE = '#8066D5';
+const GOLD = '#A56A12';
+const TEXT2 = '#69677D';
+const TEXT3 = '#4A4760';
 
 const MY_COMMUNITIES = [
   { id: 1, name: 'Anxiety Support', icon: '🌊', members: '12.4K', color: '#7C3AED', unread: 3, desc: 'A safe space to share and support each other through anxiety.' },
@@ -45,7 +45,7 @@ export default function Community() {
         padding: 'clamp(16px, 4vw, 32px)',
         minHeight: '100vh',
         background: BG,
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: 'inherit',
         paddingBottom: 24,
       }}
     >
@@ -61,7 +61,7 @@ export default function Community() {
               bottom: 90,
               left: '50%',
               transform: 'translateX(-50%)',
-              background: '#1A1035',
+              background: '#FFFFFF',
               border: `1px solid ${GOLD}`,
               color: GOLD,
               padding: '12px 24px',
@@ -84,7 +84,7 @@ export default function Community() {
         transition={{ duration: 0.4 }}
         style={{ marginBottom: 20 }}
       >
-        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', margin: 0 }}>Community</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#171642', margin: 0 }}>Community</h1>
         <p style={{ fontSize: 14, color: TEXT2, marginTop: 4, marginBottom: 0 }}>
           Support circles built around shared healing.
         </p>
@@ -109,15 +109,15 @@ export default function Community() {
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            background: '#1A1035',
-            border: '1px solid rgba(255,255,255,0.08)',
+            background: '#FFFFFF',
+            border: '1px solid #E7E3EF',
             borderRadius: 12,
             padding: '10px 16px 10px 40px',
-            color: '#fff',
+            color: '#171642',
             fontSize: 14,
             outline: 'none',
             boxSizing: 'border-box',
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: 'inherit',
           }}
         />
       </motion.div>
@@ -130,7 +130,7 @@ export default function Community() {
         style={{ marginBottom: 28 }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>My Communities</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#171642' }}>My Communities</span>
           <span
             onClick={triggerToast}
             style={{ fontSize: 12, color: PURPLE, cursor: 'pointer', fontWeight: 500 }}
@@ -178,7 +178,7 @@ export default function Community() {
 
             {/* Name & members */}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>{community.name}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#171642' }}>{community.name}</div>
               <div style={{ fontSize: 12, color: TEXT2, marginTop: 2 }}>{community.members} members</div>
             </div>
 
@@ -196,7 +196,7 @@ export default function Community() {
                     justifyContent: 'center',
                     fontSize: 11,
                     fontWeight: 700,
-                    color: '#fff',
+                    color: '#FFFFFF',
                   }}
                 >
                   {community.unread}
@@ -216,7 +216,7 @@ export default function Community() {
         style={{ marginBottom: 28 }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>Trending Communities</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#171642' }}>Trending Communities</span>
           <button
             onClick={triggerToast}
             style={{
@@ -292,7 +292,7 @@ export default function Community() {
                 )}
               </div>
 
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{community.name}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#171642', marginBottom: 4 }}>{community.name}</div>
               <div style={{ fontSize: 11, color: TEXT2, marginBottom: 12 }}>{community.members} members</div>
 
               <button
@@ -300,8 +300,8 @@ export default function Community() {
                   width: '100%',
                   padding: '6px 0',
                   borderRadius: 8,
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: '#F7F5FB',
+                  border: '1px solid #E7E3EF',
                   color: TEXT3,
                   fontSize: 12,
                   fontWeight: 600,
@@ -322,7 +322,7 @@ export default function Community() {
         transition={{ delay: 0.5, duration: 0.4 }}
         style={{ marginBottom: 20 }}
       >
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Browse by Topic</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#171642', marginBottom: 12 }}>Browse by Topic</div>
         <div
           style={{
             display: 'flex',
@@ -369,13 +369,13 @@ export default function Community() {
           width: 52,
           height: 52,
           borderRadius: '50%',
-          background: `linear-gradient(135deg, ${PURPLE}, #6D28D9)`,
+          background: `#8066D5`,
           border: 'none',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 4px 20px rgba(139,92,246,0.4)',
+          boxShadow: 'none',
           zIndex: 50,
         }}
       >

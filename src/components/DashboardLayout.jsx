@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { motion, AnimatePresence } from 'motion/react';
-import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound, BarChart3 } from 'lucide-react';
+import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound, BarChart3, Heart, Bell } from 'lucide-react';
 
 /* ── Desktop sidebar nav ── */
 const NAV_ITEMS = [
   { icon: Home,          label: 'Home',          to: '/home'          },
+  { icon: Heart,         label: 'SoulMatch',     to: '/matches'       },
   { icon: BookHeart,     label: 'Stories',        to: '/stories'       },
   { icon: Users,         label: 'Circles',        to: '/community'     },
   { icon: BarChart3,     label: 'Mood Tracker',   to: '/mood'          },
@@ -24,6 +25,20 @@ const MOBILE_NAV = [
   { icon: UserRound,     label: 'Profile',   to: '/profile'   },
 ];
 
+/* ── Shared mobile top bar title, by route (Home shows the brand) ── */
+const TITLES = [
+  ['/home', 'SoulConnect'], ['/matches', 'SoulMatch'], ['/stories', 'Stories'],
+  ['/story', 'Story'], ['/saved', 'Saved stories'], ['/community', 'Community'],
+  ['/messages', 'Messages'], ['/profile', 'Profile'], ['/mood', 'Soul Climate'],
+  ['/tiny-wins', 'Tiny Wins'], ['/professionals', 'Professionals'],
+  ['/notifications', 'Notifications'], ['/meditate', 'Meditate'],
+  ['/journeys', 'Journeys'], ['/circles', 'Circles'], ['/healers', 'Healers'],
+];
+const titleFor = (path) => {
+  const hit = TITLES.find(([p]) => path === p || path.startsWith(p + '/'));
+  return hit ? hit[1] : 'SoulConnect';
+};
+
 /* ── Routes that hide the mobile bottom nav (full-screen layouts) ── */
 const HIDE_MOBILE_NAV_ON = ['/chat'];
 
@@ -35,17 +50,9 @@ export default function DashboardLayout() {
   const showMobileNav = !HIDE_MOBILE_NAV_ON.some(p => location.pathname.startsWith(p));
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: `
-        radial-gradient(ellipse 70% 50% at 15% 0%, rgba(124,58,237,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 50% 60% at 85% 100%, rgba(168,85,247,0.09) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 70% at 90% 25%, rgba(76,29,149,0.11) 0%, transparent 50%),
-        #080812
-      `,
-      color: '#fff',
-      fontFamily: "'Inter', -apple-system, sans-serif",
-    }}>
+    // .sc-app scopes the light SoulConnect tokens (src/index.css) and the
+    // shadcn/ui variables to the logged-in app only.
+    <div className="sc-app" style={{ minHeight: '100vh' }}>
 
       <style>{`
         /* ─── Desktop Sidebar ─── */
@@ -54,8 +61,8 @@ export default function DashboardLayout() {
           left: 0; top: 0; bottom: 0;
           width: 210px;
           z-index: 90;
-          background: #08061A;
-          border-right: 1px solid rgba(255,255,255,0.06);
+          background: #FFFFFF;
+          border-right: 1px solid #E7E3EF;
           overflow-y: auto;
           display: flex;
           flex-direction: column;
@@ -74,8 +81,8 @@ export default function DashboardLayout() {
         }
         .dash-logo-text {
           font-size: 16px;
-          font-weight: 800;
-          color: #fff;
+          font-weight: 700;
+          color: #171642;
           letter-spacing: -0.02em;
         }
 
@@ -87,7 +94,7 @@ export default function DashboardLayout() {
           border-radius: 16px;
           margin: 2px 10px;
           width: calc(100% - 20px);
-          color: rgba(184,180,216,0.7);
+          color: #69677D;
           text-decoration: none;
           font-size: 14px;
           font-weight: 500;
@@ -98,37 +105,39 @@ export default function DashboardLayout() {
           position: relative;
         }
         .dash-nav-link:hover {
-          background: rgba(139,92,246,0.12);
-          color: #E2DEFF;
+          background: #F7F5FB;
+          color: #171642;
         }
         .dash-nav-link.active {
-          background: linear-gradient(135deg, rgba(124,58,237,0.75) 0%, rgba(168,85,247,0.55) 100%);
-          color: #fff;
+          background: #E5DDF5;
+          color: #5E47B8;
           font-weight: 600;
-          box-shadow:
-            0 0 20px rgba(124,58,237,0.3),
-            inset 0 1px 0 rgba(255,255,255,0.12),
-            0 4px 16px rgba(0,0,0,0.2);
-          border: 1px solid rgba(168,85,247,0.3);
         }
-        .dash-nav-link.active svg {
-          filter: drop-shadow(0 0 6px rgba(196,181,253,0.6));
-        }
+        .dash-nav-link.active svg { color: #8066D5; }
 
         /* ─── Content ─── */
         .dash-content-wrapper {
           margin-left: 210px;
           min-height: 100vh;
-          background: #080812;
         }
 
+        /* ─── Shared mobile top bar (hidden on desktop: sidebar has the brand) ─── */
+        .app-topbar { display: none; }
+
         /* ─── Page route transition (masks flash on tab switch) ─── */
+        /* Barely-there page transition. It used to fade from opacity 0,
+           which read as a black blink on every tab tap (~70-100ms under
+           50% opacity). Starting near-visible keeps the "new screen" cue
+           without ever going dark. */
         @keyframes routeFadeIn {
-          from { opacity: 0; }
-          to   { opacity: 1; }
+          from { opacity: 0.88; transform: translateY(3px); }
+          to   { opacity: 1;    transform: none; }
         }
         .route-fade {
-          animation: routeFadeIn 0.18s ease-out both;
+          animation: routeFadeIn 0.16s ease-out both;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .route-fade { animation: none; }
         }
 
         /* ─── Mobile bottom nav — hidden on desktop ─── */
@@ -138,10 +147,10 @@ export default function DashboardLayout() {
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb {
-          background: rgba(139,92,246,0.35);
+          background: #D8CFEC;
           border-radius: 10px;
         }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(139,92,246,0.55); }
+        ::-webkit-scrollbar-thumb:hover { background: #C4B7E6; }
 
         @keyframes sidebarFloat {
           0%, 100% { transform: translateY(0px); }
@@ -159,12 +168,34 @@ export default function DashboardLayout() {
           /* Content: no left margin, pad bottom so content clears the nav bar */
           .dash-content-wrapper {
             margin-left: 0 !important;
-            padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+            padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
             /* Kill horizontal overflow — prevents pages from "sliding" */
             overflow-x: hidden;
-            /* Match page background to hide aurora gradient during tab transitions */
-            background: #0D0B1A;
           }
+
+          /* Shared top bar: 60px + safe area, stays put while pages change */
+          .app-topbar {
+            display: flex;
+            position: sticky; top: 0; z-index: 50;
+            align-items: center; justify-content: space-between;
+            height: calc(60px + env(safe-area-inset-top, 0px));
+            padding: env(safe-area-inset-top, 0px) 8px 0 16px;
+            background: rgba(247,245,251,0.97);
+            border-bottom: 1px solid #E7E3EF;
+            box-sizing: border-box;
+          }
+          .app-topbar-brand {
+            display: flex; align-items: center; gap: 10px;
+            min-height: 48px; text-decoration: none; color: #171642;
+          }
+          .app-topbar-brand img { width: 28px; height: 28px; border-radius: 8px; display: block; }
+          .app-topbar-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+          .app-topbar-action {
+            width: 48px; height: 48px; border-radius: 999px;
+            display: flex; align-items: center; justify-content: center;
+            color: #171642; -webkit-tap-highlight-color: transparent;
+          }
+          .app-topbar-action:active { background: #EFEBF7; }
 
           /* Show mobile bottom nav */
           .mobile-bottom-nav {
@@ -172,89 +203,52 @@ export default function DashboardLayout() {
             position: fixed;
             bottom: 0; left: 0; right: 0;
             z-index: 999;
-            /* Solid background — no blur to avoid GPU repaint on every scroll */
-            background: #06030F;
-            border-top: 1px solid rgba(139,92,246,0.15);
-            box-shadow: 0 -1px 0 rgba(255,255,255,0.04), 0 -8px 24px rgba(0,0,0,0.5);
-            padding-bottom: env(safe-area-inset-bottom, 8px);
-            padding-top: 8px;
+            background: rgba(255,255,255,0.96);
+            border-top: 1px solid #E7E3EF;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            padding-top: 6px;
             align-items: flex-start;
             justify-content: space-around;
           }
 
-          /* Each nav tab */
+          /* Each nav tab — 48px+ touch target */
           .mob-tab {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            min-height: 54px;
+            gap: 2px;
+            min-height: 56px;
             min-width: 48px;
             padding: 0 4px 6px;
             text-decoration: none;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
-            position: relative;
           }
 
-          /* Active top pill indicator */
-          .mob-tab::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%) scaleX(0);
-            width: 24px;
-            height: 3px;
-            border-radius: 2px;
-            background: linear-gradient(90deg, #7C3AED, #A78BFA);
-            transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
-          }
-          .mob-tab.active::before {
-            transform: translateX(-50%) scaleX(1);
-          }
-
+          /* Active: small soft-lavender pill behind the icon, no glow */
           .mob-tab-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 14px;
+            width: 52px;
+            height: 30px;
+            border-radius: 999px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
+            transition: background-color 0.15s ease, transform 0.12s ease;
           }
-
-          .mob-tab.active .mob-tab-icon {
-            background: linear-gradient(145deg, rgba(124,58,237,0.85) 0%, rgba(139,92,246,0.7) 100%);
-            box-shadow:
-              0 0 20px rgba(124,58,237,0.5),
-              0 4px 12px rgba(0,0,0,0.3),
-              inset 0 1px 0 rgba(255,255,255,0.2);
-          }
-
-          .mob-tab:active .mob-tab-icon {
-            transform: scale(0.86);
-          }
+          .mob-tab.active .mob-tab-icon { background: #E5DDF5; }
+          .mob-tab:active .mob-tab-icon { transform: scale(0.94); }
 
           .mob-tab-label {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 500;
-            font-family: 'Inter', -apple-system, sans-serif;
-            color: rgba(255,255,255,0.32);
-            letter-spacing: 0.02em;
-            transition: color 0.2s ease, font-weight 0.2s ease;
+            color: #69677D;
+            letter-spacing: 0.01em;
           }
-
-          .mob-tab.active .mob-tab-label {
-            color: #C4B5FD;
-            font-weight: 700;
-          }
-
-          /* Touch-target safety */
-          .mob-tab { min-width: 48px; min-height: 54px; }
+          .mob-tab.active .mob-tab-label { color: #5E47B8; font-weight: 600; }
+          .mob-tab:focus-visible { outline: 2px solid #8066D5; outline-offset: -2px; border-radius: 12px; }
         }
       `}</style>
 
@@ -285,9 +279,25 @@ export default function DashboardLayout() {
 
       {/* ══ Page Content ══ */}
       <div className="dash-content-wrapper">
-        <div key={location.pathname} className="route-fade">
-          <Outlet />
-        </div>
+        <header className="app-topbar">
+          <NavLink to="/home" className="app-topbar-brand" aria-label="SoulConnect home">
+            <img src="/logo-icon.png" alt="" />
+            <span className="app-topbar-title">{titleFor(location.pathname)}</span>
+          </NavLink>
+          <NavLink to="/notifications" className="app-topbar-action" aria-label="Notifications">
+            <Bell size={21} strokeWidth={2} />
+          </NavLink>
+        </header>
+        {/* ONE loading boundary for every tab, mounted once with the shell.
+            With router transitions enabled, switching tabs keeps the current
+            page visible until the next is ready instead of blanking to a
+            full-screen spinner. The fallback only appears on a cold first
+            load, and it's an empty area the page's height, not a spinner. */}
+        <Suspense fallback={<div style={{ minHeight: '70vh' }} aria-busy="true" />}>
+          <div key={location.pathname} className="route-fade">
+            <Outlet />
+          </div>
+        </Suspense>
       </div>
 
       {/* ══ Mobile Bottom Navigation ══ */}
@@ -303,12 +313,13 @@ export default function DashboardLayout() {
                 to={item.to}
                 className={`mob-tab${isActive ? ' active' : ''}`}
                 style={{ textDecoration: 'none' }}
+                aria-current={isActive ? 'page' : undefined}
               >
                 <div className="mob-tab-icon">
                   <item.icon
-                    size={20}
-                    strokeWidth={isActive ? 2.2 : 1.8}
-                    color={isActive ? '#E2DEFF' : 'rgba(255,255,255,0.38)'}
+                    size={21}
+                    strokeWidth={2}
+                    color={isActive ? '#8066D5' : '#8A889C'}
                   />
                 </div>
                 <span className="mob-tab-label">{item.label}</span>

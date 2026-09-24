@@ -19,28 +19,28 @@ export default function ReflectionToast({ text, onDismiss }) {
       style={{
         position: 'fixed', bottom: 32, left: '50%', transform: 'translateX(-50%)',
         zIndex: 9999,
-        background: 'rgba(34,18,73,0.9)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(168,85,247,0.3)',
+        background: '#FFFFFF',
+        backdropFilter: 'none',
+        WebkitBackdropFilter: 'none',
+        border: '1px solid #DCD2F2',
         borderRadius: 20,
         padding: '14px 22px',
         display: 'flex', alignItems: 'center', gap: 12,
-        boxShadow: '0 0 40px rgba(124,58,237,0.35), 0 16px 40px rgba(0,0,0,0.4)',
+        boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
         maxWidth: 360, minWidth: 260,
       }}
     >
       <div style={{
         width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
-        background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+        background: '#8066D5',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 16,
-        boxShadow: '0 0 12px rgba(124,58,237,0.5)',
+        boxShadow: 'none',
       }}>
         💜
       </div>
       <p style={{
-        margin: 0, fontSize: 13, color: '#E2DEFF',
+        margin: 0, fontSize: 13, color: '#171642',
         lineHeight: 1.5, fontStyle: 'italic', fontWeight: 400,
       }}>
         {text}

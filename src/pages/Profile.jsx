@@ -73,15 +73,15 @@ export default function Profile() {
         <div
           style={{
             minHeight: '100vh',
-            background: '#0B0618',
+            background: '#F7F5FB',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'inherit',
             padding: '20px',
           }}
         >
-          <p style={{ color: '#8A84B6', textAlign: 'center', fontSize: 16 }}>
+          <p style={{ color: '#69677D', textAlign: 'center', fontSize: 16 }}>
             Unable to load profile. Please try again.
           </p>
         </div>
@@ -95,9 +95,9 @@ export default function Profile() {
       <div
         style={{
           minHeight: '100vh',
-          background: '#0B0618',
+          background: '#F7F5FB',
           padding: '24px 16px',
-          fontFamily: 'Inter, sans-serif',
+          fontFamily: 'inherit',
         }}
       >
         <ProfileSkeleton />
@@ -107,7 +107,7 @@ export default function Profile() {
 
   if (!user) {
     return (
-      <div style={{ padding: '40px 20px', textAlign: 'center', color: '#fff' }}>
+      <div style={{ padding: '40px 20px', textAlign: 'center', color: '#171642' }}>
         <div>Loading profile...</div>
       </div>
     );
@@ -118,8 +118,8 @@ export default function Profile() {
       style={{
         padding: '16px 16px',
         minHeight: '100vh',
-        background: '#0B0618',
-        fontFamily: "'Inter', -apple-system, sans-serif",
+        background: '#F7F5FB',
+        fontFamily: 'inherit',
         paddingBottom: 32,
       }}
     >

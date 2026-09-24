@@ -3,24 +3,24 @@ import { motion } from 'motion/react';
 import { DIFFICULTY_COLORS } from '../data/tinyWinsDatabase';
 
 const CARD_STYLE = {
-  background: 'linear-gradient(145deg, rgba(26,10,62,0.95) 0%, rgba(45,18,96,0.9) 50%, rgba(20,8,52,0.95) 100%)',
-  border: '1px solid rgba(139,92,246,0.2)',
+  background: '#FFFFFF',
+  border: '1px solid #DCD2F2',
   borderRadius: 20,
   padding: 18,
-  boxShadow: '0 8px 32px rgba(0,0,0,0.3), 0 0 60px rgba(124,58,237,0.1)',
+  boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
 };
 
 const PURPLE_BTN = {
-  background: 'linear-gradient(135deg, #6D4AFF, #8B5CF6)',
+  background: '#8066D5',
   border: 'none',
   borderRadius: 12,
-  color: '#fff',
+  color: '#FFFFFF',
   fontWeight: 600,
   cursor: 'pointer',
   padding: '10px 20px',
   fontSize: 13,
   transition: 'all 0.3s ease',
-  boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
+  boxShadow: 'none',
 };
 
 export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
@@ -51,7 +51,7 @@ export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
             fontWeight: 700,
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            color: 'rgba(196,181,253,0.5)',
+            color: '#69677D',
             marginBottom: 4,
           }}>
             {challenge.category}
@@ -59,7 +59,7 @@ export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
           <h3 style={{
             fontSize: 15,
             fontWeight: 700,
-            color: '#fff',
+            color: '#171642',
             margin: 0,
             letterSpacing: '-0.01em',
           }}>
@@ -71,7 +71,7 @@ export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
 
       <p style={{
         fontSize: 12,
-        color: 'rgba(184,180,216,0.75)',
+        color: '#69677D',
         margin: '0 0 12px',
         lineHeight: 1.5,
       }}>
@@ -83,12 +83,12 @@ export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
           display: 'inline-flex',
           alignItems: 'center',
           gap: 4,
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(255,255,255,0.09)',
+          background: '#F7F5FB',
+          border: '1px solid #E7E3EF',
           borderRadius: 16,
           padding: '4px 10px',
           fontSize: 11,
-          color: '#B8B4D8',
+          color: '#69677D',
         }}>
           ⏱ {challenge.time < 1 ? Math.round(challenge.time * 60) + 's' : challenge.time + ' min'}
         </span>
@@ -96,12 +96,12 @@ export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
           display: 'inline-flex',
           alignItems: 'center',
           gap: 4,
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(255,255,255,0.09)',
+          background: '#F7F5FB',
+          border: '1px solid #E7E3EF',
           borderRadius: 16,
           padding: '4px 10px',
           fontSize: 11,
-          color: '#B8B4D8',
+          color: '#69677D',
         }}>
           <span style={{ color: difficultyColor }}>●</span> {challenge.difficulty}
         </span>
@@ -117,8 +117,8 @@ export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
           animate={{ opacity: expandedWhy ? 1 : 0 }}
           transition={{ delay: 0.2 }}
           style={{
-            background: 'rgba(139,92,246,0.1)',
-            border: '1px solid rgba(168,85,247,0.2)',
+            background: '#EFEAFB',
+            border: '1px solid #DCD2F2',
             borderRadius: 12,
             padding: 12,
             marginBottom: 12,
@@ -126,7 +126,7 @@ export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
         >
           <p style={{
             fontSize: 12,
-            color: 'rgba(184,180,216,0.85)',
+            color: '#69677D',
             margin: 0,
             lineHeight: 1.6,
           }}>
@@ -142,10 +142,10 @@ export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
           onClick={() => setExpandedWhy(!expandedWhy)}
           style={{
             flex: 1,
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: '#F7F5FB',
+            border: '1px solid #E7E3EF',
             borderRadius: 10,
-            color: '#A78BFA',
+            color: '#5E47B8',
             fontSize: 12,
             fontWeight: 600,
             padding: '10px 12px',

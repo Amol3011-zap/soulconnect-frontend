@@ -23,20 +23,20 @@ export default function SettingsList({ items, onLogout }) {
               alignItems: 'center',
               gap: 12,
               padding: '14px 16px',
-              background: 'rgba(34, 18, 73, 0.72)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: '#FFFFFF',
+              border: '1px solid #E7E3EF',
               borderRadius: 16,
               cursor: item.action ? 'pointer' : 'default',
               transition: 'all 0.2s',
             }}
-            whileHover={item.action ? { background: 'rgba(34, 18, 73, 0.85)' } : {}}
+            whileHover={item.action ? { background: '#FFFFFF' } : {}}
           >
             <div
               style={{
                 width: 36,
                 height: 36,
                 borderRadius: '50%',
-                background: 'rgba(139, 92, 246, 0.15)',
+                background: '#EFEAFB',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -48,17 +48,17 @@ export default function SettingsList({ items, onLogout }) {
             </div>
 
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#171642' }}>
                 {item.label}
               </div>
               {item.sub && (
-                <div style={{ fontSize: 12, color: 'rgba(184, 180, 216, 0.6)', marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: '#69677D', marginTop: 2 }}>
                   {item.sub}
                 </div>
               )}
             </div>
 
-            {item.action && <ChevronRight size={16} color="rgba(184, 180, 216, 0.5)" />}
+            {item.action && <ChevronRight size={16} color="#69677D" />}
           </motion.div>
         ))}
       </div>

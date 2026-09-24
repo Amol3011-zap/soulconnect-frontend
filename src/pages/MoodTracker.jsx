@@ -1,32 +1,27 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'motion/react';
-import { useAuthStore } from '../store/auth';
-import { useMoodData, MOODS_5, TRIGGERS, EMOTION_TAGS, WINS, JOURNEY_STAGES, GUIDED_PROMPTS } from '../hooks/useMoodData';
+import React, { useState, useCallback } from 'react';
+import { Plus } from 'lucide-react';
+import { useMoodData, MOODS_5, EMOTION_TAGS } from '../hooks/useMoodData';
 import MoodSelector from '../components/mood/MoodSelector';
 import MoodStats from '../components/mood/MoodStats';
 import MoodBreakdown from '../components/mood/MoodBreakdown';
 import RecentEntries from '../components/mood/RecentEntries';
 import ErrorToast from '../components/ErrorToast';
-import { DashboardSkeleton } from '../components/Skeletons';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
-// ── Lotus Icon ─────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────────────────────
+   SOUL CLIMATE (/mood) — migrated to the shadcn foundation (2026-09-24).
+   Data and behaviour are unchanged: everything still comes from useMoodData
+   (local, per-device store). Only the visual layer moved to @/components/ui.
+   Mobile (single column): check-in → stats → 7-day chart → insights →
+   breakdown → recent entries. Desktop ≥1024px: two columns via grid areas.
+───────────────────────────────────────────────────────────────────────────── */
 
-function LotusIcon({ size = 28, color = '#7C3AED' }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
-      <ellipse cx="20" cy="26" rx="6" ry="9" fill={color} opacity="0.85"/>
-      <ellipse cx="20" cy="26" rx="6" ry="9" fill={color} opacity="0.85" transform="rotate(-40 20 26)"/>
-      <ellipse cx="20" cy="26" rx="6" ry="9" fill={color} opacity="0.85" transform="rotate(40 20 26)"/>
-      <ellipse cx="20" cy="24" rx="4" ry="7" fill={color}/>
-      <ellipse cx="20" cy="24" rx="4" ry="7" fill={color} transform="rotate(-35 20 24)"/>
-      <ellipse cx="20" cy="24" rx="4" ry="7" fill={color} transform="rotate(35 20 24)"/>
-    </svg>
-  );
-}
-
-// ── Enhanced Mood Chart ────────────────────────────────────────────────────
-
+// ── 7-day mood chart (same maths as before, light colours) ─────────────────
 function MoodChart({ last7Days }) {
   const days = 7;
   const today = new Date();
@@ -35,188 +30,75 @@ function MoodChart({ last7Days }) {
     d.setDate(d.getDate() - (days - 1 - i));
     return d.toISOString().slice(0, 10);
   });
-
-  const labels = dates.map(d =>
-    new Date(d).toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 3)
-  );
-
-  const values = dates.map(d => {
-    const entry = last7Days.find(e => e.date === d);
-    return entry?.mood || null;
-  });
+  const labels = dates.map(d => new Date(d).toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 3));
+  const values = dates.map(d => last7Days.find(e => e.date === d)?.mood || null);
 
   const emojis = { 1: '😭', 3: '😔', 5: '😐', 7: '🙂', 9: '😁' };
   const W = 460, H = 110, px = 24, py = 14;
   const xS = (W - 2 * px) / (days - 1);
   const yR = H - 2 * py;
-  const coords = values.map((v, i) =>
-    v != null ? { x: px + i * xS, y: py + yR - ((v - 1) / 9) * yR, v } : null
-  );
+  const coords = values.map((v, i) => (v != null ? { x: px + i * xS, y: py + yR - ((v - 1) / 9) * yR, v } : null));
   const valid = coords.filter(Boolean);
-
   const pathD = valid.length >= 2
-    ? valid
-        .map((p, i) => {
-          if (i === 0) return `M${p.x},${p.y}`;
-          const prev = valid[i - 1];
-          const cx = (prev.x + p.x) / 2;
-          return `C${cx},${prev.y} ${cx},${p.y} ${p.x},${p.y}`;
-        })
-        .join(' ')
+    ? valid.map((p, i) => {
+        if (i === 0) return `M${p.x},${p.y}`;
+        const prev = valid[i - 1];
+        const cx = (prev.x + p.x) / 2;
+        return `C${cx},${prev.y} ${cx},${p.y} ${p.x},${p.y}`;
+      }).join(' ')
     : '';
-
   const areaD = valid.length >= 2
     ? `${pathD} L${valid[valid.length - 1].x},${H - py} L${valid[0].x},${H - py} Z`
     : '';
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.15 }}
-      style={{
-        background: 'rgba(34,18,73,0.72)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: 24,
-        padding: 28,
-        backdropFilter: 'blur(24px)',
-        marginBottom: 24,
-      }}
-    >
-      <div>
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 8px' }}>
-          Your Mood Journey
-        </h2>
-        <p style={{ fontSize: 12, color: 'rgba(184, 180, 216, 0.7)', margin: '0 0 20px' }}>
-          Track how you've been feeling over time
-        </p>
-      </div>
-
-      <svg width="100%" viewBox={`0 0 ${W} ${H + 28}`} style={{ display: 'block', overflow: 'visible' }}>
+    <Card className="p-4 sm:p-5">
+      <h2 className="text-[18px] font-semibold text-foreground">Your last 7 days</h2>
+      <p className="mb-3 mt-1 text-[13px] text-muted-foreground">
+        {valid.length ? 'How your check-ins have moved this week.' : 'Check in on a few days to see your pattern.'}
+      </p>
+      <svg width="100%" viewBox={`0 0 ${W} ${H + 28}`} className="block overflow-visible" role="img" aria-label="Mood over the last 7 days">
         <defs>
-          <linearGradient id="mlG" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#7C3AED" />
-            <stop offset="100%" stopColor="#A78BFA" />
-          </linearGradient>
-          <linearGradient id="maG" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.14" />
-            <stop offset="100%" stopColor="#7C3AED" stopOpacity="0" />
+          <linearGradient id="scMoodArea" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#8066D5" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="#8066D5" stopOpacity="0" />
           </linearGradient>
         </defs>
         {[3, 5, 7, 9].map(v => {
           const y = py + yR - ((v - 1) / 9) * yR;
-          return (
-            <line
-              key={v}
-              x1={px}
-              y1={y}
-              x2={W - px}
-              y2={y}
-              stroke="rgba(140, 82, 255, 0.07)"
-              strokeWidth="1"
-            />
-          );
+          return <line key={v} x1={px} y1={y} x2={W - px} y2={y} stroke="#EFEBF7" strokeWidth="1" />;
         })}
-        {areaD && <path d={areaD} fill="url(#maG)" />}
-        {pathD && <path d={pathD} fill="none" stroke="url(#mlG)" strokeWidth="2.5" strokeLinecap="round" />}
+        {areaD && <path d={areaD} fill="url(#scMoodArea)" />}
+        {pathD && <path d={pathD} fill="none" stroke="#8066D5" strokeWidth="2.5" strokeLinecap="round" />}
         {coords.map((p, i) =>
           p ? (
             <g key={i}>
-              <motion.circle
-                cx={p.x}
-                cy={p.y}
-                r="8"
-                fill="#7C3AED"
-                opacity="0.12"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: i * 0.1 + 0.2 }}
-              />
-              <motion.circle
-                cx={p.x}
-                cy={p.y}
-                r="4.5"
-                fill="#A78BFA"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: i * 0.1 + 0.25 }}
-              />
-              <circle cx={p.x} cy={p.y} r="2" fill="#fff" />
-              <text x={p.x} y={p.y - 13} textAnchor="middle" fontSize="11" fill="#fff" fontWeight="600">
-                {emojis[p.v] || ''}
-              </text>
+              <circle cx={p.x} cy={p.y} r="5" fill="#FFFFFF" stroke="#8066D5" strokeWidth="2.5" />
+              <text x={p.x} y={p.y - 13} textAnchor="middle" fontSize="12">{emojis[p.v] || ''}</text>
             </g>
           ) : (
-            <circle
-              key={i}
-              cx={px + i * xS}
-              cy={H / 2}
-              r="3"
-              fill="rgba(140, 82, 255, 0.12)"
-            />
+            <circle key={i} cx={px + i * xS} cy={H / 2} r="3" fill="#E7E3EF" />
           )
         )}
         {labels.map((l, i) => (
-          <text
-            key={i}
-            x={px + i * xS}
-            y={H + 16}
-            textAnchor="middle"
-            fontSize="10"
-            fontWeight="600"
-            fill="rgba(184, 180, 216, 0.6)"
-          >
-            {l}
-          </text>
+          <text key={i} x={px + i * xS} y={H + 18} textAnchor="middle" fontSize="12" fontWeight="500" fill="#69677D">{l}</text>
         ))}
       </svg>
-    </motion.div>
+    </Card>
   );
 }
 
-// ── Main Component ─────────────────────────────────────────────────────────
-
-const NAV = [
-  { icon: '🏠', label: 'Home', path: '/home' },
-  { icon: '📊', label: 'Mood Tracker', path: '/mood' },
-  { icon: '📔', label: 'Journal', path: '/journal' },
-  { icon: '⚡', label: 'Challenges', path: '/challenges' },
-  { icon: '👥', label: 'Community', path: '/community' },
-  { icon: '💬', label: 'Messages', path: '/chat' },
-  { icon: '📚', label: 'Resources', path: '/resources' },
-  { icon: '👤', label: 'Profile', path: '/profile' },
-  { icon: '⚙️', label: 'Settings', path: '/settings' },
-  { icon: '🚪', label: 'Logout', path: '/logout' },
-];
-
+// ── Page ───────────────────────────────────────────────────────────────────
 export default function MoodTracker() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { user } = useAuthStore();
   const moodData = useMoodData();
   const [showModal, setShowModal] = useState(false);
   const [modalStep, setModalStep] = useState(1);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [loading, setLoading] = useState(true);
+  // Mood data is local (useMoodData reads the on-device store synchronously),
+  // so there is nothing to wait for. The previous version faked a 400ms
+  // "loading" delay, which flashed a skeleton on every visit to this tab.
+  const [loading] = useState(false);
   const [error, setError] = useState('');
-
-  // Initialize mood tracker on mount
-  useEffect(() => {
-    const initializeMoodTracker = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        // Simulate loading mood data
-        await new Promise(resolve => setTimeout(resolve, 400));
-        setLoading(false);
-      } catch (err) {
-        console.error('Error loading mood tracker:', err);
-        setError('Failed to load mood tracker. Please try again.');
-        setLoading(false);
-      }
-    };
-    initializeMoodTracker();
-  }, []);
 
   const handleSaveAndRefresh = useCallback(async () => {
     try {
@@ -228,664 +110,200 @@ export default function MoodTracker() {
     }
   }, [moodData]);
 
-  const firstName = user?.full_name?.split(' ')[0] || 'Friend';
-  const userInitials = user?.full_name
-    ? user.full_name
-        .split(' ')
-        .map(w => w[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-    : 'ME';
+  const openLog = useCallback(() => { setModalStep(1); setShowModal(true); }, []);
 
   const totalEntries = Object.keys(moodData.store).filter(k => moodData.store[k]?.mood).length;
 
-  // Handle error state
+  // Error state (light, in-flow — the app shell stays mounted around it)
   if (error) {
     return (
       <>
-        <ErrorToast
-          message={error}
-          onRetry={() => window.location.reload()}
-          onDismiss={() => setError('')}
-        />
-        <div
-          style={{
-            minHeight: '100vh',
-            background: '#0D0B1A',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: 'Inter, sans-serif',
-            padding: '20px',
-          }}
-        >
-          <p style={{ color: '#8A84B6', textAlign: 'center', fontSize: 16 }}>
-            Unable to load mood tracker. Please try again.
-          </p>
+        <ErrorToast message={error} onRetry={() => window.location.reload()} onDismiss={() => setError('')} />
+        <div className="flex min-h-[60vh] items-center justify-center p-6">
+          <p className="text-center text-base text-muted-foreground">Unable to load Soul Climate. Please try again.</p>
         </div>
       </>
     );
   }
 
-  // Handle loading state
+  // Loading: page-shaped skeleton, no full-screen spinner
   if (loading) {
     return (
-      <div
-        style={{
-          minHeight: '100vh',
-          background: '#0D0B1A',
-          padding: '24px 32px',
-          fontFamily: 'Inter, sans-serif',
-        }}
-      >
-        <DashboardSkeleton />
+      <div className="mx-auto max-w-5xl space-y-4 px-4 py-5 sm:px-8">
+        <Skeleton className="h-48 w-full rounded-[20px]" />
+        <Skeleton className="h-28 w-full rounded-[20px]" />
+        <Skeleton className="h-44 w-full rounded-[20px]" />
       </div>
     );
   }
 
+  // Back / Next row shared by dialog steps 2–7 (render helper, not a component)
+  const stepNav = (back, onNext, nextLabel = 'Next') => (
+    <div className="mt-2 flex gap-3">
+      <Button variant="secondary" className="flex-1" onClick={() => setModalStep(back)}>Back</Button>
+      <Button className="flex-1" onClick={onNext}>{nextLabel}</Button>
+    </div>
+  );
+
+  // Range step (energy / stress / sleep / water) — same state setters as before
+  const rangeStep = ({ title, value, min, max, onChange, back, next }) => (
+    <>
+      <DialogTitle>{title}</DialogTitle>
+      <input
+        type="range" min={min} max={max} value={value}
+        onChange={e => onChange(parseInt(e.target.value))}
+        className="my-4 h-12 w-full cursor-pointer accent-[#8066D5]"
+        aria-label={title}
+      />
+      {stepNav(back, () => setModalStep(next))}
+    </>
+  );
+
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: 'transparent',
-        fontFamily: "'Inter', system-ui, sans-serif",
-      }}
-    >
-      {/* ═══ MAIN CONTENT ═══════════════════════════════════════════════════ */}
-      <div
-        style={{
-          overflowY: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div style={{ padding: '32px 40px', maxWidth: 1200, width: '100%', margin: '0 auto' }}>
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'space-between',
-              marginBottom: 32,
-            }}
-          >
-            <div>
-              <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', margin: 0, marginBottom: 4 }}>
-                Welcome back, {firstName} 👋
-              </h1>
-              <p style={{ fontSize: 14, color: 'rgba(184, 180, 216, 0.7)', margin: 0 }}>
-                How are you feeling today?
-              </p>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => { setShowModal(true); setModalStep(1); }}
-              style={{
-                padding: '12px 28px',
-                borderRadius: 12,
-                border: 'none',
-                background: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
-                color: '#fff',
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: 'pointer',
-                boxShadow: '0 8px 24px rgba(124, 58, 237, 0.4)',
-                fontFamily: 'inherit',
-              }}
-            >
-              + Log Mood
-            </motion.button>
-          </motion.div>
+    <div className="mx-auto max-w-5xl px-4 pb-8 pt-5 sm:px-8 sm:pt-8">
+      <style>{`
+        .sc-climate { display: grid; gap: 16px;
+          grid-template-areas: "checkin" "stats" "chart" "insights" "breakdown" "recent"; }
+        .sc-climate > [data-area] { min-width: 0; }
+        @media (min-width: 1024px) {
+          .sc-climate { gap: 20px; align-items: start;
+            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+            grid-template-areas: "checkin stats" "chart insights" "recent breakdown"; }
+        }
+      `}</style>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
-            style={{ marginBottom: 32 }}
-          >
-            <MoodStats
-              streak={moodData.streak}
-              longestStreak={moodData.longestStreak}
-              wellnessScore={moodData.wellnessScore}
-              totalEntries={totalEntries}
-            />
-          </motion.div>
+      {/* Desktop page header (on mobile the shared top bar already says "Soul Climate") */}
+      <div className="mb-5 hidden items-end justify-between gap-4 min-[769px]:flex">
+        <div>
+          <h1 className="text-[28px] font-bold leading-tight tracking-[-0.01em] text-foreground">Soul Climate</h1>
+          <p className="mt-1 text-[15px] text-muted-foreground">Notice how you feel, day by day.</p>
+        </div>
+        <Button onClick={openLog}><Plus /> Log mood</Button>
+      </div>
 
-          {/* Mood Selector */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ marginBottom: 32 }}>
-            <MoodSelector
-              mood={moodData.mood}
-              onMoodSelect={moodData.handleMoodSelect}
-              todayMoodMeta={moodData.todayMoodMeta}
-            />
-          </motion.div>
+      <div className="sc-climate">
+        <div data-area style={{ gridArea: 'checkin' }}>
+          <MoodSelector
+            mood={moodData.mood}
+            onMoodSelect={moodData.handleMoodSelect}
+            todayMoodMeta={moodData.todayMoodMeta}
+            onAddDetails={openLog}
+          />
+        </div>
 
-          {/* Chart */}
+        <div data-area style={{ gridArea: 'stats' }}>
+          <MoodStats
+            streak={moodData.streak}
+            longestStreak={moodData.longestStreak}
+            wellnessScore={moodData.wellnessScore}
+            totalEntries={totalEntries}
+          />
+        </div>
+
+        <div data-area style={{ gridArea: 'chart' }}>
           <MoodChart last7Days={moodData.last7Days} />
+        </div>
 
-          {/* Insights */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            style={{
-              background: 'rgba(34,18,73,0.72)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 24,
-              padding: 28,
-              backdropFilter: 'blur(24px)',
-              marginBottom: 24,
-            }}
-          >
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 20px' }}>
-              ✨ Your Insights
-            </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+        <div data-area style={{ gridArea: 'insights' }}>
+          <Card className="p-4 sm:p-5">
+            <h2 className="mb-2 text-[18px] font-semibold text-foreground">Your insights</h2>
+            <ul className="divide-y divide-border">
               {moodData.insights.slice(0, 3).map((insight, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  style={{
-                    background: 'rgba(124, 58, 237, 0.1)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: 16,
-                    padding: 20,
-                    display: 'flex',
-                    gap: 16,
-                    alignItems: 'flex-start',
-                  }}
-                >
-                  <div style={{ fontSize: 28 }}>{insight.emoji}</div>
-                  <p style={{ fontSize: 13, color: 'rgba(184, 180, 216, 0.8)', margin: 0, lineHeight: 1.6 }}>
-                    {insight.text}
-                  </p>
-                </motion.div>
+                <li key={i} className="flex items-start gap-3 py-2.5">
+                  <span className="text-[20px] leading-none" aria-hidden="true">{insight.emoji}</span>
+                  <p className="text-[14px] leading-relaxed text-foreground">{insight.text}</p>
+                </li>
               ))}
-            </div>
-          </motion.div>
+            </ul>
+          </Card>
+        </div>
 
-          {/* Mood Breakdown */}
-          <motion.div key={refreshTrigger}>
-            <MoodBreakdown moodBreakdown={moodData.moodBreakdown} />
-          </motion.div>
+        <div data-area style={{ gridArea: 'breakdown' }} key={refreshTrigger}>
+          <MoodBreakdown moodBreakdown={moodData.moodBreakdown} />
+        </div>
 
-          {/* Recent Entries */}
-          <motion.div style={{ marginBottom: 32 }}>
-            <RecentEntries
-              allEntries={moodData.allEntries}
-              onDelete={moodData.handleDeleteEntry}
-            />
-          </motion.div>
+        <div data-area style={{ gridArea: 'recent' }}>
+          <RecentEntries allEntries={moodData.allEntries} onDelete={moodData.handleDeleteEntry} />
         </div>
       </div>
 
-      {/* ═══ LOG MOOD MODAL ════════════════════════════════════════════════ */}
-      <AnimatePresence>
-        {showModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowModal(false)}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0, 0, 0, 0.6)',
-              backdropFilter: 'blur(8px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000,
-            }}
-          >
-            <motion.div
-              onClick={e => e.stopPropagation()}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              style={{
-                width: '90%',
-                maxWidth: 500,
-                background: 'rgba(34,18,73,0.95)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                borderRadius: 24,
-                padding: 32,
-                backdropFilter: 'blur(32px)',
-              }}
-            >
-              <div style={{ marginBottom: 28 }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#A78BFA', letterSpacing: '0.1em', marginBottom: 12 }}>
-                  STEP {modalStep} OF 7
-                </div>
-                <div
-                  style={{
-                    width: '100%',
-                    height: 4,
-                    background: 'rgba(124, 58, 237, 0.2)',
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <motion.div
-                    animate={{ width: `${(modalStep / 7) * 100}%` }}
-                    style={{
-                      height: '100%',
-                      background: 'linear-gradient(90deg, #7C3AED, #A78BFA)',
-                    }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </div>
+      {/* ═══ LOG MOOD — 7 steps, same flow and state as before ═══ */}
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogDescription className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#5E47B8]">
+              Step {modalStep} of 7
+            </DialogDescription>
+            <Progress value={(modalStep / 7) * 100} aria-label="Log mood progress" />
+          </DialogHeader>
+
+          {modalStep === 1 && (
+            <>
+              <DialogTitle>How are you feeling?</DialogTitle>
+              <div className="grid grid-cols-2 gap-2">
+                {MOODS_5.map(m => (
+                  <button
+                    key={m.score}
+                    type="button"
+                    onClick={() => { moodData.handleMoodSelect(m.score); setModalStep(2); }}
+                    className={cn(
+                      'flex min-h-[72px] flex-col items-center justify-center gap-1 rounded-2xl border px-2 py-3 transition-colors active:scale-[0.98]',
+                      moodData.mood === m.score ? 'border-primary bg-secondary' : 'border-border bg-card hover:bg-muted'
+                    )}
+                  >
+                    <span className="text-[28px] leading-none" aria-hidden="true">{m.emoji}</span>
+                    <span className="text-[14px] font-medium text-foreground">{m.label}</span>
+                  </button>
+                ))}
               </div>
+            </>
+          )}
 
-              {/* Modal Content based on step */}
-              <AnimatePresence mode="wait">
-                {modalStep === 1 && (
-                  <motion.div
-                    key="step1"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 20px' }}>
-                      How are you feeling?
-                    </h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-                      {MOODS_5.map(m => (
-                        <motion.button
-                          key={m.score}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => {
-                            moodData.handleMoodSelect(m.score);
-                            setModalStep(2);
-                          }}
-                          style={{
-                            padding: 20,
-                            borderRadius: 12,
-                            border: '1px solid rgba(255,255,255,0.12)',
-                            background: 'rgba(124, 58, 237, 0.1)',
-                            color: '#fff',
-                            cursor: 'pointer',
-                            fontFamily: 'inherit',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            gap: 8,
-                            transition: 'all 0.2s',
-                          }}
-                        >
-                          <span style={{ fontSize: 32 }}>{m.emoji}</span>
-                          <span style={{ fontSize: 13, fontWeight: 600 }}>{m.label}</span>
-                        </motion.button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
+          {modalStep === 2 && (
+            <>
+              <DialogTitle>What emotions are there?</DialogTitle>
+              <div className="flex flex-wrap gap-2">
+                {EMOTION_TAGS.map(tag => {
+                  const on = moodData.emotions.includes(tag.id);
+                  return (
+                    <button
+                      key={tag.id}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => moodData.handleEmotion(tag.id)}
+                      className={cn(
+                        'flex min-h-[44px] items-center gap-1.5 rounded-full border px-3.5 text-[14px] font-medium transition-colors',
+                        on ? 'border-primary bg-secondary text-[#4B3699]' : 'border-border bg-card text-foreground hover:bg-muted'
+                      )}
+                    >
+                      <span aria-hidden="true">{tag.emoji}</span>{tag.label}
+                    </button>
+                  );
+                })}
+              </div>
+              {stepNav(1, () => setModalStep(3))}
+            </>
+          )}
 
-                {modalStep === 2 && (
-                  <motion.div
-                    key="step2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 20px' }}>
-                      Emotion tags
-                    </h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 20 }}>
-                      {EMOTION_TAGS.map(tag => (
-                        <motion.button
-                          key={tag.id}
-                          whileHover={{ scale: 1.02 }}
-                          onClick={() => moodData.handleEmotion(tag.id)}
-                          style={{
-                            padding: '12px 16px',
-                            borderRadius: 10,
-                            border: moodData.emotions.includes(tag.id)
-                              ? '2px solid #A78BFA'
-                              : '1px solid rgba(255,255,255,0.12)',
-                            background: moodData.emotions.includes(tag.id)
-                              ? 'rgba(124, 58, 237, 0.2)'
-                              : 'rgba(124, 58, 237, 0.08)',
-                            color: '#fff',
-                            cursor: 'pointer',
-                            fontFamily: 'inherit',
-                            fontSize: 12,
-                            fontWeight: 600,
-                            transition: 'all 0.2s',
-                          }}
-                        >
-                          <span style={{ fontSize: 16, marginRight: 6 }}>{tag.emoji}</span>
-                          {tag.label}
-                        </motion.button>
-                      ))}
-                    </div>
-                    <div style={{ display: 'flex', gap: 12 }}>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        onClick={() => setModalStep(1)}
-                        style={{
-                          flex: 1,
-                          padding: '12px 20px',
-                          borderRadius: 10,
-                          border: '1px solid rgba(255,255,255,0.12)',
-                          background: 'transparent',
-                          color: '#A78BFA',
-                          cursor: 'pointer',
-                          fontFamily: 'inherit',
-                          fontWeight: 600,
-                        }}
-                      >
-                        Back
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        onClick={() => setModalStep(3)}
-                        style={{
-                          flex: 1,
-                          padding: '12px 20px',
-                          borderRadius: 10,
-                          border: 'none',
-                          background: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
-                          color: '#fff',
-                          cursor: 'pointer',
-                          fontFamily: 'inherit',
-                          fontWeight: 600,
-                        }}
-                      >
-                        Next →
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                )}
+          {modalStep === 3 && rangeStep({ title: `Energy level: ${moodData.energy}/10`, value: moodData.energy, min: 1, max: 10, onChange: moodData.setEnergy, back: 2, next: 4 })}
+          {modalStep === 4 && rangeStep({ title: `Stress level: ${moodData.stress}/10`, value: moodData.stress, min: 1, max: 10, onChange: moodData.setStress, back: 3, next: 5 })}
+          {modalStep === 5 && rangeStep({ title: `Sleep: ${moodData.sleepHours} hours`, value: moodData.sleepHours, min: 0, max: 12, onChange: moodData.setSleepHours, back: 4, next: 6 })}
+          {modalStep === 6 && rangeStep({ title: `Water: ${moodData.waterIntake} glasses`, value: moodData.waterIntake, min: 0, max: 8, onChange: moodData.setWaterIntake, back: 5, next: 7 })}
 
-                {modalStep >= 3 && (
-                  <motion.div
-                    key="step-rest"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    {modalStep === 3 && (
-                      <>
-                        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 20px' }}>
-                          Energy Level: {moodData.energy}/10
-                        </h2>
-                        <input
-                          type="range"
-                          min="1"
-                          max="10"
-                          value={moodData.energy}
-                          onChange={e => moodData.setEnergy(parseInt(e.target.value))}
-                          style={{ width: '100%', marginBottom: 20, cursor: 'pointer' }}
-                        />
-                        <div style={{ display: 'flex', gap: 12 }}>
-                          <button
-                            onClick={() => setModalStep(2)}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: '1px solid rgba(255,255,255,0.12)',
-                              background: 'transparent',
-                              color: '#A78BFA',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            Back
-                          </button>
-                          <button
-                            onClick={() => setModalStep(4)}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: 'none',
-                              background: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
-                              color: '#fff',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            Next →
-                          </button>
-                        </div>
-                      </>
-                    )}
-
-                    {modalStep === 4 && (
-                      <>
-                        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 20px' }}>
-                          Stress Level: {moodData.stress}/10
-                        </h2>
-                        <input
-                          type="range"
-                          min="1"
-                          max="10"
-                          value={moodData.stress}
-                          onChange={e => moodData.setStress(parseInt(e.target.value))}
-                          style={{ width: '100%', marginBottom: 20, cursor: 'pointer' }}
-                        />
-                        <div style={{ display: 'flex', gap: 12 }}>
-                          <button
-                            onClick={() => setModalStep(3)}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: '1px solid rgba(255,255,255,0.12)',
-                              background: 'transparent',
-                              color: '#A78BFA',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            Back
-                          </button>
-                          <button
-                            onClick={() => setModalStep(5)}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: 'none',
-                              background: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
-                              color: '#fff',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            Next →
-                          </button>
-                        </div>
-                      </>
-                    )}
-
-                    {modalStep === 5 && (
-                      <>
-                        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 20px' }}>
-                          Sleep Hours: {moodData.sleepHours}
-                        </h2>
-                        <input
-                          type="range"
-                          min="0"
-                          max="12"
-                          value={moodData.sleepHours}
-                          onChange={e => moodData.setSleepHours(parseInt(e.target.value))}
-                          style={{ width: '100%', marginBottom: 20, cursor: 'pointer' }}
-                        />
-                        <div style={{ display: 'flex', gap: 12 }}>
-                          <button
-                            onClick={() => setModalStep(4)}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: '1px solid rgba(255,255,255,0.12)',
-                              background: 'transparent',
-                              color: '#A78BFA',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            Back
-                          </button>
-                          <button
-                            onClick={() => setModalStep(6)}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: 'none',
-                              background: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
-                              color: '#fff',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            Next →
-                          </button>
-                        </div>
-                      </>
-                    )}
-
-                    {modalStep === 6 && (
-                      <>
-                        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 20px' }}>
-                          Water Intake: {moodData.waterIntake} glasses
-                        </h2>
-                        <input
-                          type="range"
-                          min="0"
-                          max="8"
-                          value={moodData.waterIntake}
-                          onChange={e => moodData.setWaterIntake(parseInt(e.target.value))}
-                          style={{ width: '100%', marginBottom: 20, cursor: 'pointer' }}
-                        />
-                        <div style={{ display: 'flex', gap: 12 }}>
-                          <button
-                            onClick={() => setModalStep(5)}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: '1px solid rgba(255,255,255,0.12)',
-                              background: 'transparent',
-                              color: '#A78BFA',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            Back
-                          </button>
-                          <button
-                            onClick={() => setModalStep(7)}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: 'none',
-                              background: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
-                              color: '#fff',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            Next →
-                          </button>
-                        </div>
-                      </>
-                    )}
-
-                    {modalStep === 7 && (
-                      <>
-                        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '0 0 20px' }}>
-                          Journal Entry
-                        </h2>
-                        <textarea
-                          value={moodData.reflection}
-                          onChange={e => moodData.setReflection(e.target.value)}
-                          placeholder="What's on your mind today? Share your thoughts..."
-                          style={{
-                            width: '100%',
-                            padding: 14,
-                            borderRadius: 10,
-                            border: '1px solid rgba(255,255,255,0.12)',
-                            background: 'rgba(124, 58, 237, 0.08)',
-                            color: '#fff',
-                            fontSize: 13,
-                            fontFamily: 'inherit',
-                            minHeight: 120,
-                            resize: 'none',
-                            marginBottom: 20,
-                            outline: 'none',
-                            boxSizing: 'border-box',
-                          }}
-                        />
-                        <div style={{ display: 'flex', gap: 12 }}>
-                          <button
-                            onClick={() => setModalStep(6)}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: '1px solid rgba(255,255,255,0.12)',
-                              background: 'transparent',
-                              color: '#A78BFA',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            Back
-                          </button>
-                          <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={async () => {
-                              await handleSaveAndRefresh();
-                              setShowModal(false);
-                            }}
-                            style={{
-                              flex: 1,
-                              padding: '12px',
-                              borderRadius: 10,
-                              border: 'none',
-                              background: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
-                              color: '#fff',
-                              cursor: 'pointer',
-                              fontFamily: 'inherit',
-                              fontWeight: 600,
-                            }}
-                          >
-                            {moodData.saved ? '✓ Saved!' : 'Save Entry'}
-                          </motion.button>
-                        </div>
-                      </>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          {modalStep === 7 && (
+            <>
+              <DialogTitle>Anything on your mind?</DialogTitle>
+              <textarea
+                value={moodData.reflection}
+                onChange={e => moodData.setReflection(e.target.value)}
+                placeholder="What's on your mind today? Share your thoughts..."
+                className="min-h-[120px] w-full resize-none rounded-2xl border border-input bg-card p-3.5 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              {stepNav(6, async () => { await handleSaveAndRefresh(); setShowModal(false); }, moodData.saved ? 'Saved' : 'Save entry')}
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

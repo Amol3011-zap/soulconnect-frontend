@@ -15,8 +15,8 @@ export function CardSkeleton({ height = 160 }) {
       animate={{ opacity: [0.5, 0.8, 0.5] }}
       transition={{ duration: 2, repeat: Infinity }}
       style={{
-        background: 'rgba(139, 92, 246, 0.08)',
-        border: '1px solid rgba(139, 92, 246, 0.15)',
+        background: '#EFEAFB',
+        border: '1px solid #DCD2F2',
         borderRadius: 20,
         height,
         marginBottom: 16,
@@ -47,7 +47,7 @@ export function TextLineSkeleton({ width = '100%', height = 12 }) {
       animate={{ opacity: [0.5, 0.8, 0.5] }}
       transition={{ duration: 2, repeat: Infinity }}
       style={{
-        background: 'rgba(167, 139, 250, 0.1)',
+        background: '#EFEAFB',
         borderRadius: 4,
         height,
         width,
@@ -69,8 +69,8 @@ export function StoriesSkeleton({ count = 3 }) {
           animate={{ opacity: [0.5, 0.8, 0.5] }}
           transition={{ duration: 2, repeat: Infinity }}
           style={{
-            background: 'rgba(34, 18, 73, 0.72)',
-            border: '1px solid rgba(139, 92, 246, 0.15)',
+            background: '#FFFFFF',
+            border: '1px solid #DCD2F2',
             borderRadius: 20,
             padding: 20,
             marginBottom: 16,
@@ -83,7 +83,7 @@ export function StoriesSkeleton({ count = 3 }) {
                 width: 40,
                 height: 40,
                 borderRadius: '50%',
-                background: 'rgba(139, 92, 246, 0.2)',
+                background: '#EFEAFB',
                 flexShrink: 0,
               }}
             />
@@ -91,7 +91,7 @@ export function StoriesSkeleton({ count = 3 }) {
               <div
                 style={{
                   height: 12,
-                  background: 'rgba(167, 139, 250, 0.15)',
+                  background: '#EFEAFB',
                   borderRadius: 4,
                   marginBottom: 6,
                   width: '60%',
@@ -100,7 +100,7 @@ export function StoriesSkeleton({ count = 3 }) {
               <div
                 style={{
                   height: 10,
-                  background: 'rgba(167, 139, 250, 0.08)',
+                  background: '#EFEAFB',
                   borderRadius: 4,
                   width: '40%',
                 }}
@@ -112,7 +112,7 @@ export function StoriesSkeleton({ count = 3 }) {
           <div
             style={{
               height: 12,
-              background: 'rgba(167, 139, 250, 0.1)',
+              background: '#EFEAFB',
               borderRadius: 4,
               marginBottom: 8,
             }}
@@ -120,7 +120,7 @@ export function StoriesSkeleton({ count = 3 }) {
           <div
             style={{
               height: 12,
-              background: 'rgba(167, 139, 250, 0.1)',
+              background: '#EFEAFB',
               borderRadius: 4,
               marginBottom: 8,
               width: '90%',
@@ -129,7 +129,7 @@ export function StoriesSkeleton({ count = 3 }) {
           <div
             style={{
               height: 12,
-              background: 'rgba(167, 139, 250, 0.1)',
+              background: '#EFEAFB',
               borderRadius: 4,
               width: '70%',
             }}
@@ -156,7 +156,7 @@ export function MessagesSkeleton({ count = 5 }) {
             gap: 12,
             alignItems: 'center',
             padding: '12px 0',
-            borderBottom: '1px solid rgba(139, 92, 246, 0.1)',
+            borderBottom: '1px solid #DCD2F2',
           }}
         >
           {/* Avatar */}
@@ -165,7 +165,7 @@ export function MessagesSkeleton({ count = 5 }) {
               width: 48,
               height: 48,
               borderRadius: '50%',
-              background: 'rgba(139, 92, 246, 0.2)',
+              background: '#EFEAFB',
               flexShrink: 0,
             }}
           />
@@ -175,7 +175,7 @@ export function MessagesSkeleton({ count = 5 }) {
             <div
               style={{
                 height: 12,
-                background: 'rgba(167, 139, 250, 0.15)',
+                background: '#EFEAFB',
                 borderRadius: 4,
                 marginBottom: 6,
                 width: '30%',
@@ -184,7 +184,7 @@ export function MessagesSkeleton({ count = 5 }) {
             <div
               style={{
                 height: 10,
-                background: 'rgba(167, 139, 250, 0.1)',
+                background: '#EFEAFB',
                 borderRadius: 4,
                 width: '70%',
               }}
@@ -216,7 +216,7 @@ export function ChatSkeleton({ count = 10 }) {
           >
             <div
               style={{
-                background: 'rgba(139, 92, 246, 0.15)',
+                background: '#EFEAFB',
                 borderRadius: 16,
                 height: 40,
                 width: `${30 + Math.random() * 40}%`,
@@ -242,7 +242,7 @@ export function ProfileSkeleton() {
         transition={{ duration: 2, repeat: Infinity }}
         style={{
           height: 200,
-          background: 'rgba(139, 92, 246, 0.1)',
+          background: '#EFEAFB',
           borderRadius: 20,
           marginBottom: 20,
           position: 'relative',
@@ -256,8 +256,8 @@ export function ProfileSkeleton() {
             width: 60,
             height: 60,
             borderRadius: '50%',
-            background: 'rgba(139, 92, 246, 0.2)',
-            border: '4px solid rgba(34, 18, 73, 0.72)',
+            background: '#EFEAFB',
+            border: '4px solid #FFFFFF',
           }}
         />
       </motion.div>
@@ -292,9 +292,9 @@ export function DashboardSkeleton() {
           width: 220,
           height: 220,
           borderRadius: '50%',
-          background: 'rgba(139, 92, 246, 0.15)',
+          background: '#EFEAFB',
           margin: '0 auto 32px',
-          border: '1px solid rgba(139, 92, 246, 0.2)',
+          border: '1px solid #DCD2F2',
         }}
       />
 

@@ -46,20 +46,20 @@ export default function WeeklyMood({ onViewFull, moods = [5, 5, 5, 5, 5, 5, 5] }
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.25 }}
       style={{
-        background: 'rgba(34, 18, 73, 0.72)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        background: '#FFFFFF',
+        border: '1px solid #E7E3EF',
         borderRadius: 24,
         padding: 20,
         marginBottom: 20,
-        backdropFilter: 'blur(24px)',
+        backdropFilter: 'none',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: '#171642', margin: '0 0 4px' }}>
             Your Mood This Week
           </h3>
-          <p style={{ fontSize: 12, color: 'rgba(184, 180, 216, 0.6)', margin: 0 }}>
+          <p style={{ fontSize: 12, color: '#69677D', margin: 0 }}>
             {sentiment}
           </p>
         </div>
@@ -73,9 +73,9 @@ export default function WeeklyMood({ onViewFull, moods = [5, 5, 5, 5, 5, 5, 5] }
             gap: 4,
             padding: '6px 10px',
             borderRadius: 8,
-            border: '1px solid rgba(139, 92, 246, 0.3)',
+            border: '1px solid #DCD2F2',
             background: 'transparent',
-            color: '#A78BFA',
+            color: '#5E47B8',
             fontSize: 11,
             fontWeight: 600,
             cursor: 'pointer',
@@ -102,7 +102,7 @@ export default function WeeklyMood({ onViewFull, moods = [5, 5, 5, 5, 5, 5, 5] }
             }}
           >
             <div style={{ fontSize: 20 }}>{getMoodEmoji(mood)}</div>
-            <div style={{ fontSize: 9, color: 'rgba(184, 180, 216, 0.6)' }}>{days[i]}</div>
+            <div style={{ fontSize: 9, color: '#69677D' }}>{days[i]}</div>
           </motion.div>
         ))}
       </div>
