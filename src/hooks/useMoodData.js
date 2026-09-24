@@ -76,6 +76,23 @@ function getTodayKey() {
   return new Date().toISOString().slice(0, 10);
 }
 
+// Soul Climate (Home) check-in → Mood Tracker. Fills today's mood only when
+// the user hasn't logged one themselves; never overwrites their own entry.
+const SOUL_CLIMATE_SCORES = { 'clear-sky': 9, hope: 7, blooming: 9, fog: 5, 'heavy-rain': 3, storm: 3 };
+export function recordSoulClimateMood(weatherId) {
+  const score = SOUL_CLIMATE_SCORES[weatherId];
+  if (!score) return;
+  try {
+    const all = loadStore();
+    const key = getTodayKey();
+    if (all[key]?.mood) return;
+    all[key] = { ...(all[key] || {}), mood: score, soulClimate: weatherId, savedAt: Date.now() };
+    saveStore(all);
+  } catch {
+    /* storage unavailable — the check-in itself still succeeded */
+  }
+}
+
 export function moodColor(score) {
   if (score >= 8) return '#6D4AFF';
   if (score >= 6) return '#10B981';

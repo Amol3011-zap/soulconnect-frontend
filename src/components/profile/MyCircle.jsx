@@ -16,8 +16,8 @@ export default function MyCircle({ connectionCount = 8 }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.4 }}
       style={{
-        background: '#FFFFFF',
-        border: '1px solid #E7E3EF',
+        background: 'var(--sc-card)',
+        border: '1px solid var(--sc-border)',
         borderRadius: 24,
         padding: 20,
         marginBottom: 20,
@@ -26,10 +26,10 @@ export default function MyCircle({ connectionCount = 8 }) {
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: '#171642', margin: '0 0 4px' }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--sc-text)', margin: '0 0 4px' }}>
             Your Circle
           </h3>
-          <p style={{ fontSize: 12, color: '#69677D', margin: 0 }}>
+          <p style={{ fontSize: 12, color: 'var(--sc-text-2)', margin: 0 }}>
             {connectionCount} People Who Understand You
           </p>
         </div>
@@ -42,9 +42,9 @@ export default function MyCircle({ connectionCount = 8 }) {
             gap: 2,
             padding: '6px 10px',
             borderRadius: 8,
-            border: '1px solid #DCD2F2',
+            border: '1px solid var(--sc-line)',
             background: 'transparent',
-            color: '#5E47B8',
+            color: 'var(--sc-purple-text)',
             fontSize: 11,
             fontWeight: 600,
             cursor: 'pointer',
@@ -72,7 +72,7 @@ export default function MyCircle({ connectionCount = 8 }) {
               justifyContent: 'center',
               fontSize: 13,
               fontWeight: 700,
-              color: '#171642',
+              color: 'var(--sc-text)',
               border: '2px solid #FFFFFF',
               marginLeft: i > 0 ? -12 : 0,
               position: 'relative',

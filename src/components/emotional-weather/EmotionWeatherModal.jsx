@@ -65,6 +65,7 @@ export default function EmotionWeatherModal() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
+      className="sc-portal"
       role="dialog"
       aria-modal="true"
       aria-label="Daily emotional weather check-in"
@@ -147,10 +148,10 @@ export default function EmotionWeatherModal() {
           zIndex: 1,
           width: '100%',
           maxWidth: 680,
-          background: '#F7F5FB',
+          background: 'var(--sc-bg)',
           backdropFilter: 'none',
           WebkitBackdropFilter: 'none',
-          border: '1px solid #E7E3EF',
+          border: '1px solid var(--sc-border)',
           borderRadius: 24,
           padding: 'clamp(28px, 5vw, 48px)',
           boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
@@ -166,7 +167,7 @@ export default function EmotionWeatherModal() {
             right: 16,
             background: 'none',
             border: 'none',
-            color: '#69677D',
+            color: 'var(--sc-text-2)',
             fontSize: 13,
             cursor: 'pointer',
             padding: '4px 8px',
@@ -200,7 +201,7 @@ export default function EmotionWeatherModal() {
             margin: '0 0 6px',
             fontSize: 'clamp(22px, 4vw, 28px)',
             fontWeight: 800,
-            color: '#171642',
+            color: 'var(--sc-text)',
             letterSpacing: '-0.02em',
             lineHeight: 1.2,
           }}>
@@ -210,7 +211,7 @@ export default function EmotionWeatherModal() {
           <p style={{
             margin: '0 0 16px',
             fontSize: 14,
-            color: '#69677D',
+            color: 'var(--sc-text-2)',
             fontWeight: 500,
           }}>
             Before we begin...
@@ -288,7 +289,7 @@ export default function EmotionWeatherModal() {
               margin: '20px 0 0',
               textAlign: 'center',
               fontSize: 12,
-              color: '#69677D',
+              color: 'var(--sc-text-2)',
             }}
           >
             Your emotional check-in is private and sacred. No judgment here.

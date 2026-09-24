@@ -10,7 +10,7 @@ const GC_STYLES = `
   @keyframes gcShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
   .gc-msg { animation: gcFadeUp 0.3s ease both; }
   .gc-hover:hover { opacity: 0.8; transform: translateY(-1px); transition: all 0.2s; }
-  .gc-group-item:hover { background: rgba(255,255,255,0.04) !important; }
+  .gc-group-item:hover { background: var(--sc-surface) !important; }
   .gc-reaction:hover { background: rgba(109,74,255,0.2) !important; border-color: rgba(109,74,255,0.4) !important; cursor: pointer; }
   .gc-icon-btn:hover { background: rgba(255,255,255,0.1) !important; }
   @media (max-width: 768px) {
@@ -25,7 +25,7 @@ const PARTICLES = Array.from({ length: 12 }, (_, i) => ({
   x: (5 + (i * 47 + i * i * 11) % 88),
   y: (10 + (i * 31 + i * i * 7) % 80),
   size: 4 + (i % 4) * 1.5,
-  color: i % 3 === 0 ? '#F5B841' : i % 3 === 1 ? '#6D4AFF' : '#A78BFA',
+  color: i % 3 === 0 ? 'var(--sc-gold-text)' : i % 3 === 1 ? '#6D4AFF' : '#A78BFA',
   opacity: 0.15 + (i % 4) * 0.05,
   duration: 3 + (i % 5),
   delay: i * 0.4,
@@ -277,33 +277,33 @@ function CreateGroupModal({ onClose, onCreate }) {
       style={{
         position: 'fixed', inset: 0, zIndex: 200,
         display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
-        background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
+        background: 'var(--sc-scrim)', backdropFilter: 'blur(8px)',
       }}
     >
       <div style={{
         width: '100%', maxWidth: 480,
-        background: '#140A38',
+        background: 'var(--sc-card)',
         border: '1px solid rgba(109,74,255,0.3)',
         borderRadius: 24, padding: 28,
-        boxShadow: '0 24px 80px rgba(0,0,0,0.6)',
+        boxShadow: '0 24px 80px var(--sc-shadow)',
         fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
       }}>
         {/* Modal header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <div>
-            <h2 style={{ color: '#fff', fontWeight: 800, fontSize: 20, margin: 0 }}>Create a Healing Circle</h2>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, margin: '4px 0 0' }}>Start a safe space for others</p>
+            <h2 style={{ color: 'var(--sc-text)', fontWeight: 800, fontSize: 20, margin: 0 }}>Create a Healing Circle</h2>
+            <p style={{ color: 'var(--sc-muted)', fontSize: 13, margin: '4px 0 0' }}>Start a safe space for others</p>
           </div>
           <button onClick={onClose} className="gc-icon-btn" style={{
             width: 32, height: 32, borderRadius: 10,
-            background: 'rgba(255,255,255,0.06)', border: 'none', color: 'rgba(255,255,255,0.5)',
+            background: 'var(--sc-surface)', border: 'none', color: 'var(--sc-muted)',
             cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>✕</button>
         </div>
 
         {/* Group name */}
         <div style={{ marginBottom: 16 }}>
-          <label style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 8, letterSpacing: '0.05em' }}>
+          <label style={{ color: 'var(--sc-text-2)', fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 8, letterSpacing: '0.05em' }}>
             GROUP NAME
           </label>
           <input
@@ -311,8 +311,8 @@ function CreateGroupModal({ onClose, onCreate }) {
             placeholder="e.g. Mumbai Anxiety Circle"
             style={{
               width: '100%', padding: '12px 16px', borderRadius: 14,
-              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(109,74,255,0.25)',
-              color: '#fff', fontSize: 14, outline: 'none', boxSizing: 'border-box',
+              background: 'var(--sc-surface)', border: '1px solid rgba(109,74,255,0.25)',
+              color: 'var(--sc-text)', fontSize: 14, outline: 'none', boxSizing: 'border-box',
               fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
             }}
           />
@@ -320,7 +320,7 @@ function CreateGroupModal({ onClose, onCreate }) {
 
         {/* Topic */}
         <div style={{ marginBottom: 16 }}>
-          <label style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 8, letterSpacing: '0.05em' }}>
+          <label style={{ color: 'var(--sc-text-2)', fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 8, letterSpacing: '0.05em' }}>
             TOPIC / PROBLEM AREA
           </label>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -329,9 +329,9 @@ function CreateGroupModal({ onClose, onCreate }) {
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '10px 12px', borderRadius: 12, textAlign: 'left', cursor: 'pointer',
                 fontSize: 12, fontWeight: 600, transition: 'all 0.2s',
-                background: problem === opt.value ? 'rgba(109,74,255,0.2)' : 'rgba(255,255,255,0.04)',
-                border: problem === opt.value ? '1px solid #6D4AFF' : '1px solid rgba(255,255,255,0.08)',
-                color: problem === opt.value ? '#A78BFA' : 'rgba(255,255,255,0.5)',
+                background: problem === opt.value ? 'rgba(109,74,255,0.2)' : 'var(--sc-surface)',
+                border: problem === opt.value ? '1px solid #6D4AFF' : '1px solid var(--sc-border)',
+                color: problem === opt.value ? '#A78BFA' : 'var(--sc-muted)',
                 fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
               }}>
                 <span style={{ fontSize: 14 }}>{opt.emoji}</span>
@@ -343,8 +343,8 @@ function CreateGroupModal({ onClose, onCreate }) {
 
         {/* Description */}
         <div style={{ marginBottom: 16 }}>
-          <label style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 8, letterSpacing: '0.05em' }}>
-            DESCRIPTION <span style={{ color: 'rgba(255,255,255,0.3)', fontWeight: 400, fontSize: 11 }}>(optional)</span>
+          <label style={{ color: 'var(--sc-text-2)', fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 8, letterSpacing: '0.05em' }}>
+            DESCRIPTION <span style={{ color: 'var(--sc-muted)', fontWeight: 400, fontSize: 11 }}>(optional)</span>
           </label>
           <textarea
             value={description} onChange={e => setDescription(e.target.value)}
@@ -352,8 +352,8 @@ function CreateGroupModal({ onClose, onCreate }) {
             rows={2}
             style={{
               width: '100%', padding: '12px 16px', borderRadius: 14,
-              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(109,74,255,0.25)',
-              color: '#fff', fontSize: 14, outline: 'none', resize: 'none', boxSizing: 'border-box',
+              background: 'var(--sc-surface)', border: '1px solid rgba(109,74,255,0.25)',
+              color: 'var(--sc-text)', fontSize: 14, outline: 'none', resize: 'none', boxSizing: 'border-box',
               fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
             }}
           />
@@ -365,8 +365,8 @@ function CreateGroupModal({ onClose, onCreate }) {
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={onClose} style={{
             flex: 1, padding: '12px', borderRadius: 14, fontSize: 14, fontWeight: 600, cursor: 'pointer',
-            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-            color: 'rgba(255,255,255,0.6)',
+            background: 'var(--sc-surface)', border: '1px solid var(--sc-border)',
+            color: 'var(--sc-text-2)',
             fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
           }}>Cancel</button>
           <button onClick={submit} style={{
@@ -390,8 +390,8 @@ function LotusIcon({ size = 44 }) {
       <ellipse cx="30" cy="24" rx="5" ry="7" fill="rgba(109,74,255,0.35)" transform="rotate(25 30 24)" />
       <ellipse cx="9" cy="27" rx="4" ry="6" fill="rgba(167,139,250,0.25)" transform="rotate(-45 9 27)" />
       <ellipse cx="35" cy="27" rx="4" ry="6" fill="rgba(167,139,250,0.25)" transform="rotate(45 35 27)" />
-      <ellipse cx="22" cy="22" rx="3" ry="3" fill="#F5B841" />
-      <ellipse cx="22" cy="19" rx="1.5" ry="2" fill="#F5B841" opacity="0.7" />
+      <ellipse cx="22" cy="22" rx="3" ry="3" fill="var(--sc-gold-text)" />
+      <ellipse cx="22" cy="19" rx="1.5" ry="2" fill="var(--sc-gold-text)" opacity="0.7" />
     </svg>
   );
 }
@@ -424,7 +424,7 @@ function TypingIndicator({ name, color }) {
       }}>{name[0]}</div>
       <div>
         <div style={{
-          background: 'rgba(27,13,78,0.7)',
+          background: 'var(--sc-card)',
           border: '1px solid rgba(109,74,255,0.15)',
           borderRadius: '4px 18px 18px 18px',
           padding: '12px 16px',
@@ -438,7 +438,7 @@ function TypingIndicator({ name, color }) {
             }} />
           ))}
         </div>
-        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11, margin: '4px 0 0 4px' }}>{name} is typing...</p>
+        <p style={{ color: 'var(--sc-muted)', fontSize: 11, margin: '4px 0 0 4px' }}>{name} is typing...</p>
       </div>
     </div>
   );
@@ -481,7 +481,7 @@ export default function GroupChat() {
   const COMMUNITY_ENERGY = [
     { emoji: '😌', label: 'Calm', pct: 42, color: '#34C38F' },
     { emoji: '🌟', label: 'Hopeful', pct: 31, color: '#00D4AA' },
-    { emoji: '😰', label: 'Anxious', pct: 18, color: '#F5B841' },
+    { emoji: '😰', label: 'Anxious', pct: 18, color: 'var(--sc-gold-text)' },
     { emoji: '💔', label: 'Overwhelmed', pct: 9, color: '#F472B6' },
   ];
 
@@ -489,7 +489,7 @@ export default function GroupChat() {
     { initials: 'KA', color: '#6D4AFF' },
     { initials: 'PR', color: '#F472B6' },
     { initials: 'SO', color: '#34C38F' },
-    { initials: 'MV', color: '#F5B841' },
+    { initials: 'MV', color: 'var(--sc-gold-text)' },
   ];
 
   // Seed initial messages
@@ -599,22 +599,22 @@ export default function GroupChat() {
       {/* Root layout */}
       <div style={{
         display: 'flex', height: 'calc(100vh - 64px)', marginTop: 64,
-        background: '#0B0420', overflow: 'hidden', position: 'relative', zIndex: 1,
+        background: 'var(--sc-bg)', overflow: 'hidden', position: 'relative', zIndex: 1,
         fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
       }}>
 
         {/* ══ LEFT SIDEBAR ═══════════════════════════════════════════════════════ */}
         <div className="gc-left-sidebar" style={{
           width: 260, flexShrink: 0, display: 'flex', flexDirection: 'column',
-          background: '#0D0525', borderRight: '1px solid rgba(109,74,255,0.15)',
+          background: 'var(--sc-bg)', borderRight: '1px solid rgba(109,74,255,0.15)',
           height: '100%', overflowY: 'auto',
         }}>
           {/* Sidebar header */}
           <div style={{ padding: '20px 16px 12px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
               <div>
-                <h2 style={{ color: '#fff', fontWeight: 700, fontSize: 16, margin: 0 }}>Your Healing Circles</h2>
-                <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '3px 0 0' }}>Find your people</p>
+                <h2 style={{ color: 'var(--sc-text)', fontWeight: 700, fontSize: 16, margin: 0 }}>Your Healing Circles</h2>
+                <p style={{ color: 'var(--sc-muted)', fontSize: 12, margin: '3px 0 0' }}>Find your people</p>
               </div>
               <button onClick={() => setShowCreate(true)} className="gc-hover" style={{
                 background: 'linear-gradient(135deg, #6D4AFF, #5B21B6)',
@@ -628,15 +628,15 @@ export default function GroupChat() {
             <div style={{ position: 'relative' }}>
               <span style={{
                 position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
-                fontSize: 13, color: 'rgba(255,255,255,0.3)',
+                fontSize: 13, color: 'var(--sc-muted)',
               }}>🔍</span>
               <input
                 value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Search circles..."
                 style={{
                   width: '100%', padding: '10px 12px 10px 34px', borderRadius: 12, boxSizing: 'border-box',
-                  background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(109,74,255,0.2)',
-                  color: '#fff', fontSize: 13, outline: 'none',
+                  background: 'var(--sc-surface)', border: '1px solid rgba(109,74,255,0.2)',
+                  color: 'var(--sc-text)', fontSize: 13, outline: 'none',
                   fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
                 }}
               />
@@ -672,7 +672,7 @@ export default function GroupChat() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
                       <span style={{
-                        color: '#fff', fontWeight: 700, fontSize: 13,
+                        color: 'var(--sc-text)', fontWeight: 700, fontSize: 13,
                         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         maxWidth: 120,
                       }}>{g.name}</span>
@@ -684,7 +684,7 @@ export default function GroupChat() {
                       )}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11 }}>{g.members} members</span>
+                      <span style={{ color: 'var(--sc-muted)', fontSize: 11 }}>{g.members} members</span>
                       <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 9 }}>•</span>
                       <span style={{ color: '#34C38F', fontSize: 11 }}>{g.online} online</span>
                     </div>
@@ -697,7 +697,7 @@ export default function GroupChat() {
           {/* Healing Streak card */}
           <div style={{
             margin: '0 12px 16px',
-            background: 'linear-gradient(135deg, #1B0D4E, #2A1060)',
+            background: 'linear-gradient(135deg, var(--sc-card), var(--sc-surface))',
             border: '1px solid rgba(245,184,65,0.25)',
             borderRadius: 20, padding: 16,
             display: 'flex', flexDirection: 'column', gap: 6,
@@ -706,10 +706,10 @@ export default function GroupChat() {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                   <span style={{ fontSize: 16 }}>🔥</span>
-                  <span style={{ color: '#F5B841', fontWeight: 700, fontSize: 13 }}>Healing Streak</span>
+                  <span style={{ color: 'var(--sc-gold-text)', fontWeight: 700, fontSize: 13 }}>Healing Streak</span>
                 </div>
-                <div style={{ color: '#F5B841', fontSize: 28, fontWeight: 800, lineHeight: 1 }}>14 days</div>
-                <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, margin: '6px 0 0' }}>
+                <div style={{ color: 'var(--sc-gold-text)', fontSize: 28, fontWeight: 800, lineHeight: 1 }}>14 days</div>
+                <p style={{ color: 'var(--sc-muted)', fontSize: 11, margin: '6px 0 0' }}>
                   Keep showing up for yourself
                 </p>
               </div>
@@ -720,7 +720,7 @@ export default function GroupChat() {
               {[0,1,2,3,4,5,6].map(dot => (
                 <div key={dot} style={{
                   width: 10, height: 10, borderRadius: '50%',
-                  background: dot < 6 ? '#F5B841' : 'rgba(245,184,65,0.2)',
+                  background: dot < 6 ? 'var(--sc-gold-text)' : 'rgba(245,184,65,0.2)',
                   border: dot >= 6 ? '1px solid rgba(245,184,65,0.4)' : 'none',
                 }} />
               ))}
@@ -731,13 +731,13 @@ export default function GroupChat() {
         {/* ══ CENTER CHAT ════════════════════════════════════════════════════════ */}
         <div style={{
           flex: 1, display: 'flex', flexDirection: 'column',
-          background: '#0B0420', minWidth: 0, height: '100%', overflow: 'hidden',
+          background: 'var(--sc-bg)', minWidth: 0, height: '100%', overflow: 'hidden',
         }}>
           {/* Circle header — sticky */}
           <div style={{
             flexShrink: 0, display: 'flex', alignItems: 'center', gap: 12,
             padding: '14px 20px',
-            background: 'rgba(11,4,32,0.95)', backdropFilter: 'blur(20px)',
+            background: 'var(--sc-topbar-bg)', backdropFilter: 'blur(20px)',
             borderBottom: '1px solid rgba(109,74,255,0.15)',
             zIndex: 10,
           }}>
@@ -750,10 +750,10 @@ export default function GroupChat() {
 
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ color: '#fff', fontWeight: 700, fontSize: 16 }}>{activeGroup?.name}</span>
+                <span style={{ color: 'var(--sc-text)', fontWeight: 700, fontSize: 16 }}>{activeGroup?.name}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12 }}>
+                <span style={{ color: 'var(--sc-muted)', fontSize: 12 }}>
                   {activeGroup?.members} members •
                 </span>
                 <div style={{
@@ -769,8 +769,8 @@ export default function GroupChat() {
               {['ℹ️', '👥', '⋯'].map(icon => (
                 <button key={icon} className="gc-icon-btn" style={{
                   width: 28, height: 28, borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.06)', border: 'none',
-                  color: 'rgba(255,255,255,0.6)', fontSize: icon === '⋯' ? 16 : 13,
+                  background: 'var(--sc-surface)', border: 'none',
+                  color: 'var(--sc-text-2)', fontSize: icon === '⋯' ? 16 : 13,
                   cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   transition: 'all 0.15s',
                 }}>{icon}</button>
@@ -784,7 +784,7 @@ export default function GroupChat() {
             {/* Emotional Check-in card */}
             <div style={{ margin: 16, marginBottom: 0 }}>
               <div style={{
-                background: 'linear-gradient(135deg, rgba(27,13,78,0.85), rgba(20,10,56,0.9))',
+                background: 'linear-gradient(135deg, var(--sc-card), var(--sc-card))',
                 border: '1px solid rgba(109,74,255,0.3)', borderRadius: 20, padding: 20,
               }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -792,13 +792,13 @@ export default function GroupChat() {
                     <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 16, margin: 0 }}>
                       How are you feeling right now?
                     </h3>
-                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, margin: '4px 0 0' }}>
+                    <p style={{ color: 'var(--sc-muted)', fontSize: 13, margin: '4px 0 0' }}>
                       Your feelings matter. Share anonymously.
                     </p>
                   </div>
                   <button onClick={() => setShowCheckin(v => !v)} style={{
-                    background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: 8,
-                    color: 'rgba(255,255,255,0.4)', fontSize: 12, cursor: 'pointer',
+                    background: 'var(--sc-surface)', border: 'none', borderRadius: 8,
+                    color: 'var(--sc-muted)', fontSize: 12, cursor: 'pointer',
                     padding: '4px 8px',
                   }}>{showCheckin ? '▲' : '▼'}</button>
                 </div>
@@ -813,18 +813,18 @@ export default function GroupChat() {
                             style={{
                               padding: '10px 16px', borderRadius: 12, cursor: 'pointer',
                               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
-                              background: isSelected ? 'rgba(109,74,255,0.2)' : 'rgba(255,255,255,0.05)',
-                              border: isSelected ? '1px solid #6D4AFF' : '1px solid rgba(255,255,255,0.1)',
+                              background: isSelected ? 'rgba(109,74,255,0.2)' : 'var(--sc-surface)',
+                              border: isSelected ? '1px solid #6D4AFF' : '1px solid var(--sc-border)',
                               transform: isSelected ? 'scale(1.05)' : 'scale(1)',
                               transition: 'all 0.2s',
                               boxShadow: isSelected ? '0 0 12px rgba(109,74,255,0.3)' : 'none',
                               fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
                             }}>
                             <span style={{ fontSize: 18 }}>{mood.emoji}</span>
-                            <span style={{ color: isSelected ? '#A78BFA' : 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 600 }}>
+                            <span style={{ color: isSelected ? '#A78BFA' : 'var(--sc-text-2)', fontSize: 11, fontWeight: 600 }}>
                               {mood.label}
                             </span>
-                            <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10 }}>{mood.count}</span>
+                            <span style={{ color: 'var(--sc-muted)', fontSize: 10 }}>{mood.count}</span>
                           </button>
                         );
                       })}
@@ -868,7 +868,7 @@ export default function GroupChat() {
             {/* Daily Reflection card */}
             <div style={{ margin: '12px 16px' }}>
               <div style={{
-                background: 'linear-gradient(135deg, rgba(20,10,56,0.8), rgba(27,13,78,0.7))',
+                background: 'linear-gradient(135deg, var(--sc-card), var(--sc-card))',
                 border: '1px solid rgba(109,74,255,0.25)', borderRadius: 14, padding: '14px 18px',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
               }}>
@@ -877,20 +877,20 @@ export default function GroupChat() {
                     <span style={{ fontSize: 15 }}>🌱</span>
                     <span style={{ fontWeight: 700, fontSize: 14, color: '#A78BFA' }}>Daily Reflection</span>
                   </div>
-                  <p style={{ color: '#fff', fontSize: 14, margin: 0, lineHeight: 1.5 }}>
+                  <p style={{ color: 'var(--sc-text)', fontSize: 14, margin: 0, lineHeight: 1.5 }}>
                     "What's one small thing you're proud of yourself for today?"
                   </p>
-                  <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '4px 0 0' }}>
+                  <p style={{ color: 'var(--sc-muted)', fontSize: 12, margin: '4px 0 0' }}>
                     Share openly or anonymously
                   </p>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, flexShrink: 0 }}>
-                  <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>128 shared today</span>
+                  <span style={{ color: 'var(--sc-muted)', fontSize: 11 }}>128 shared today</span>
                   <div style={{ display: 'flex' }}>
-                    {[{ c: '#6D4AFF', i: 'KA' }, { c: '#F472B6', i: 'PR' }, { c: '#34C38F', i: 'SO' }, { c: '#F5B841', i: 'MV' }].map((av, idx) => (
+                    {[{ c: '#6D4AFF', i: 'KA' }, { c: '#F472B6', i: 'PR' }, { c: '#34C38F', i: 'SO' }, { c: 'var(--sc-gold-text)', i: 'MV' }].map((av, idx) => (
                       <div key={idx} style={{
                         width: 22, height: 22, borderRadius: '50%', background: av.c,
-                        border: '1.5px solid #0B0420',
+                        border: '1.5px solid var(--sc-bg)',
                         marginLeft: idx === 0 ? 0 : -7,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: 8, fontWeight: 700, color: '#fff',
@@ -929,12 +929,12 @@ export default function GroupChat() {
                       {showSender && !isMe && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                           <span style={{ color: msg.senderColor, fontWeight: 700, fontSize: 12 }}>{msg.senderName}</span>
-                          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>{fmt(msg.time)}</span>
+                          <span style={{ color: 'var(--sc-muted)', fontSize: 11 }}>{fmt(msg.time)}</span>
                         </div>
                       )}
                       {isMe && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>{fmt(msg.time)}</span>
+                          <span style={{ color: 'var(--sc-muted)', fontSize: 11 }}>{fmt(msg.time)}</span>
                         </div>
                       )}
 
@@ -944,9 +944,9 @@ export default function GroupChat() {
                         borderRadius: isMe ? '18px 4px 18px 18px' : '4px 18px 18px 18px',
                         background: isMe
                           ? 'linear-gradient(135deg, rgba(109,74,255,0.35), rgba(91,33,182,0.25))'
-                          : 'rgba(27,13,78,0.7)',
+                          : 'var(--sc-card)',
                         border: '1px solid rgba(109,74,255,0.15)',
-                        color: 'rgba(255,255,255,0.9)', fontSize: 14, lineHeight: 1.6,
+                        color: 'var(--sc-text-2)', fontSize: 14, lineHeight: 1.6,
                       }}>{msg.text}</div>
 
                       {/* Reaction pill */}
@@ -955,13 +955,13 @@ export default function GroupChat() {
                           display: 'inline-flex', alignItems: 'center', gap: 4,
                           marginTop: 6,
                           padding: '3px 8px', borderRadius: 20,
-                          background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                          fontSize: 11, color: 'rgba(255,255,255,0.5)',
+                          background: 'var(--sc-surface)', border: '1px solid var(--sc-border)',
+                          fontSize: 11, color: 'var(--sc-muted)',
                           cursor: 'pointer', transition: 'all 0.15s',
                         }}>
                           <span>{msg.reaction.emoji}</span>
                           <span>{msg.reaction.label}</span>
-                          <span style={{ color: 'rgba(255,255,255,0.35)', marginLeft: 2 }}>{msg.reaction.count}</span>
+                          <span style={{ color: 'var(--sc-muted)', marginLeft: 2 }}>{msg.reaction.count}</span>
                         </div>
                       )}
                     </div>
@@ -987,13 +987,13 @@ export default function GroupChat() {
                 <div style={{ textAlign: 'center', padding: '16px 0' }}>
                   <div style={{
                     display: 'inline-block',
-                    background: 'rgba(27,13,78,0.6)', backdropFilter: 'blur(16px)',
+                    background: 'var(--sc-card)', backdropFilter: 'blur(16px)',
                     border: '1px solid rgba(109,74,255,0.2)', borderRadius: 20,
                     padding: '20px 28px',
                   }}>
                     <div style={{ fontSize: 28, marginBottom: 8 }}>{activeGroup?.emoji}</div>
-                    <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: '0 0 4px' }}>{activeGroup?.name}</p>
-                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, margin: '0 0 14px', maxWidth: 260 }}>
+                    <p style={{ color: 'var(--sc-text)', fontWeight: 700, fontSize: 14, margin: '0 0 4px' }}>{activeGroup?.name}</p>
+                    <p style={{ color: 'var(--sc-muted)', fontSize: 12, margin: '0 0 14px', maxWidth: 260 }}>
                       {activeGroup?.description}
                     </p>
                     <button onClick={() => joinGroup(activeGroup?.id)} style={{
@@ -1013,7 +1013,7 @@ export default function GroupChat() {
           {/* Chat input bar */}
           <div style={{
             flexShrink: 0,
-            background: 'rgba(11,4,32,0.97)', backdropFilter: 'blur(20px)',
+            background: 'var(--sc-nav-bg)', backdropFilter: 'blur(20px)',
             borderTop: '1px solid rgba(109,74,255,0.15)', padding: '12px 16px',
           }}>
             {isJoined ? (
@@ -1022,8 +1022,8 @@ export default function GroupChat() {
                   {/* Anonymous toggle */}
                   <button onClick={() => setIsAnonymous(v => !v)} style={{
                     padding: '6px 12px', borderRadius: 20, border: 'none', cursor: 'pointer',
-                    background: isAnonymous ? 'rgba(109,74,255,0.25)' : 'rgba(255,255,255,0.06)',
-                    color: isAnonymous ? '#A78BFA' : 'rgba(255,255,255,0.4)',
+                    background: isAnonymous ? 'rgba(109,74,255,0.25)' : 'var(--sc-surface)',
+                    color: isAnonymous ? '#A78BFA' : 'var(--sc-muted)',
                     fontSize: 12, fontWeight: 600, flexShrink: 0, transition: 'all 0.2s',
                     fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
                   }}>👤 Anonymous</button>
@@ -1037,8 +1037,8 @@ export default function GroupChat() {
                       placeholder="Share your thoughts... (You're in a safe space)"
                       style={{
                         flex: 1, padding: '12px 80px 12px 16px', borderRadius: 20, border: '1px solid rgba(109,74,255,0.2)', outline: 'none',
-                        background: 'rgba(255,255,255,0.05)',
-                        color: '#fff', fontSize: 14,
+                        background: 'var(--sc-surface)',
+                        color: 'var(--sc-text)', fontSize: 14,
                         fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
                         width: '100%', boxSizing: 'border-box',
                       }}
@@ -1068,13 +1068,13 @@ export default function GroupChat() {
                   </button>
                 </div>
 
-                <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.25)', fontSize: 11, margin: '8px 0 0' }}>
+                <p style={{ textAlign: 'center', color: 'var(--sc-muted)', fontSize: 11, margin: '8px 0 0' }}>
                   🔒 Anonymous &amp; safe • Be kind, be real
                 </p>
               </>
             ) : (
               <div style={{ textAlign: 'center' }}>
-                <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, margin: '0 0 10px' }}>
+                <p style={{ color: 'var(--sc-muted)', fontSize: 13, margin: '0 0 10px' }}>
                   Join this circle to participate in the conversation
                 </p>
                 <button onClick={() => joinGroup(activeGroup?.id)} style={{
@@ -1091,19 +1091,19 @@ export default function GroupChat() {
         {/* ══ RIGHT SIDEBAR ══════════════════════════════════════════════════════ */}
         <div className="gc-right-sidebar" style={{
           width: 300, flexShrink: 0,
-          background: '#0D0525', borderLeft: '1px solid rgba(109,74,255,0.15)',
+          background: 'var(--sc-bg)', borderLeft: '1px solid rgba(109,74,255,0.15)',
           overflowY: 'auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 14,
         }}>
 
           {/* Card 1 — Community Energy */}
           <div style={{
-            background: 'rgba(27,13,78,0.6)', backdropFilter: 'blur(16px)',
+            background: 'var(--sc-card)', backdropFilter: 'blur(16px)',
             border: '1px solid rgba(109,74,255,0.2)', borderRadius: 22, padding: 18,
           }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
               <div>
-                <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>Community Energy</h3>
-                <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '3px 0 0' }}>Live mood of the circle</p>
+                <h3 style={{ color: 'var(--sc-text)', fontWeight: 700, fontSize: 14, margin: 0 }}>Community Energy</h3>
+                <p style={{ color: 'var(--sc-muted)', fontSize: 12, margin: '3px 0 0' }}>Live mood of the circle</p>
               </div>
               <LotusIcon size={32} />
             </div>
@@ -1113,11 +1113,11 @@ export default function GroupChat() {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <span style={{ fontSize: 13 }}>{item.emoji}</span>
-                      <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>{item.label}</span>
+                      <span style={{ color: 'var(--sc-text-2)', fontSize: 12 }}>{item.label}</span>
                     </div>
-                    <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, fontWeight: 600 }}>{item.pct}%</span>
+                    <span style={{ color: 'var(--sc-muted)', fontSize: 12, fontWeight: 600 }}>{item.pct}%</span>
                   </div>
-                  <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.08)' }}>
+                  <div style={{ height: 6, borderRadius: 3, background: 'var(--sc-surface)' }}>
                     <div style={{
                       height: '100%', borderRadius: 3, background: item.color,
                       width: `${item.pct}%`, transition: 'width 0.5s ease',
@@ -1131,29 +1131,29 @@ export default function GroupChat() {
           {/* Card 2 — Upcoming Circle */}
           {showUpcomingCircle && (
             <div style={{
-              background: 'rgba(27,13,78,0.6)', backdropFilter: 'blur(16px)',
+              background: 'var(--sc-card)', backdropFilter: 'blur(16px)',
               border: '1px solid rgba(109,74,255,0.2)', borderRadius: 22, padding: 18,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>Upcoming Circle</h3>
+                <h3 style={{ color: 'var(--sc-text)', fontWeight: 700, fontSize: 14, margin: 0 }}>Upcoming Circle</h3>
                 <button onClick={() => setShowUpcomingCircle(false)} className="gc-icon-btn" style={{
-                  background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%',
-                  width: 24, height: 24, cursor: 'pointer', color: 'rgba(255,255,255,0.4)', fontSize: 12,
+                  background: 'var(--sc-surface)', border: 'none', borderRadius: '50%',
+                  width: 24, height: 24, cursor: 'pointer', color: 'var(--sc-muted)', fontSize: 12,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>✕</button>
               </div>
               <div style={{
-                background: 'linear-gradient(135deg, rgba(109,74,255,0.15), rgba(20,10,56,0.8))',
+                background: 'linear-gradient(135deg, rgba(109,74,255,0.15), var(--sc-card))',
                 borderRadius: 14, padding: 14,
               }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                       <span style={{ fontSize: 16 }}>🌙</span>
-                      <span style={{ color: '#fff', fontWeight: 700, fontSize: 14 }}>Breathwork Session</span>
+                      <span style={{ color: 'var(--sc-text)', fontWeight: 700, fontSize: 14 }}>Breathwork Session</span>
                     </div>
-                    <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12, margin: 0 }}>Tonight • 8:00 PM</p>
-                    <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '2px 0 0' }}>with Maya</p>
+                    <p style={{ color: 'var(--sc-muted)', fontSize: 12, margin: 0 }}>Tonight • 8:00 PM</p>
+                    <p style={{ color: 'var(--sc-muted)', fontSize: 12, margin: '2px 0 0' }}>with Maya</p>
                   </div>
                   <MeditationFigure size={50} />
                 </div>
@@ -1164,13 +1164,13 @@ export default function GroupChat() {
                     {[{ c: '#6D4AFF', i: 'A' }, { c: '#F472B6', i: 'B' }, { c: '#34C38F', i: 'C' }].map((av, idx) => (
                       <div key={idx} style={{
                         width: 22, height: 22, borderRadius: '50%', background: av.c,
-                        border: '1.5px solid #1B0D4E', marginLeft: idx === 0 ? 0 : -7,
+                        border: '1.5px solid var(--sc-card)', marginLeft: idx === 0 ? 0 : -7,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: 9, fontWeight: 700, color: '#fff',
                       }}>{av.i}</div>
                     ))}
                   </div>
-                  <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12 }}>12 going</span>
+                  <span style={{ color: 'var(--sc-muted)', fontSize: 12 }}>12 going</span>
                 </div>
 
                 <button style={{
@@ -1186,18 +1186,18 @@ export default function GroupChat() {
           {/* Card 3 — People Similar To You */}
           {showPeopleSimilar && (
             <div style={{
-              background: 'rgba(27,13,78,0.6)', backdropFilter: 'blur(16px)',
+              background: 'var(--sc-card)', backdropFilter: 'blur(16px)',
               border: '1px solid rgba(109,74,255,0.2)', borderRadius: 22, padding: 18,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>People Similar To You</h3>
+                <h3 style={{ color: 'var(--sc-text)', fontWeight: 700, fontSize: 14, margin: 0 }}>People Similar To You</h3>
                 <button onClick={() => setShowPeopleSimilar(false)} className="gc-icon-btn" style={{
-                  background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: '50%',
-                  width: 24, height: 24, cursor: 'pointer', color: 'rgba(255,255,255,0.4)', fontSize: 12,
+                  background: 'var(--sc-surface)', border: 'none', borderRadius: '50%',
+                  width: 24, height: 24, cursor: 'pointer', color: 'var(--sc-muted)', fontSize: 12,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>✕</button>
               </div>
-              <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, margin: '0 0 14px' }}>
+              <p style={{ color: 'var(--sc-muted)', fontSize: 12, margin: '0 0 14px' }}>
                 Connect with others on a similar journey
               </p>
 
@@ -1206,7 +1206,7 @@ export default function GroupChat() {
                   {SIMILAR_PEOPLE.map((av, idx) => (
                     <div key={idx} style={{
                       width: 40, height: 40, borderRadius: '50%', background: av.c,
-                      border: '2px solid #0D0525', marginLeft: idx === 0 ? 0 : -10,
+                      border: '2px solid var(--sc-bg)', marginLeft: idx === 0 ? 0 : -10,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 13, fontWeight: 700, color: '#fff',
                     }}>{av.initials[0]}</div>
@@ -1214,10 +1214,10 @@ export default function GroupChat() {
                 </div>
                 <div style={{
                   width: 40, height: 40, borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.08)', border: '2px solid #0D0525',
+                  background: 'var(--sc-surface)', border: '2px solid var(--sc-bg)',
                   marginLeft: -10,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.5)',
+                  fontSize: 12, fontWeight: 700, color: 'var(--sc-muted)',
                 }}>+6</div>
               </div>
 
@@ -1238,13 +1238,13 @@ export default function GroupChat() {
             <h3 style={{ color: '#fff', fontWeight: 700, fontSize: 13, margin: '0 0 6px' }}>
               Need Support Right Now?
             </h3>
-            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, margin: '0 0 14px' }}>
+            <p style={{ color: 'var(--sc-muted)', fontSize: 12, margin: '0 0 14px' }}>
               You're not alone. Help is always here.
             </p>
             <button style={{
               width: '100%', padding: '10px', borderRadius: 12, cursor: 'pointer',
               background: 'rgba(109,74,255,0.2)', border: '1px solid rgba(109,74,255,0.4)',
-              color: '#fff', fontSize: 13, fontWeight: 600,
+              color: 'var(--sc-text)', fontSize: 13, fontWeight: 600,
               fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
             }}>🎧 Crisis Resources</button>
           </div>

@@ -24,13 +24,13 @@ function CrisisPopup({ onClose, onNavigate }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 9999,
-      background: 'rgba(0,0,0,0.5)',
+      background: 'var(--sc-scrim)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
     }}>
       <div style={{
         background: '#fff', borderRadius: 20, padding: '32px 28px',
         maxWidth: 420, width: '100%',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+        boxShadow: '0 20px 60px var(--sc-shadow)',
         animation: 'fadeUp 0.3s ease both',
         textAlign: 'center',
       }}>
@@ -133,10 +133,10 @@ export default function Chat() {
           onDismiss={() => setError('')}
         />
         <div style={{
-          minHeight: '100vh', background: '#0D0B1A',
+          minHeight: '100vh', background: 'var(--sc-bg)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
         }}>
-          <p style={{ color: '#8A84B6', textAlign: 'center', fontSize: 16 }}>
+          <p style={{ color: 'var(--sc-muted)', textAlign: 'center', fontSize: 16 }}>
             Unable to load conversation. Please try again.
           </p>
         </div>
@@ -147,7 +147,7 @@ export default function Chat() {
   if (loading) {
     return (
       <div style={{
-        minHeight: '100vh', background: '#0D0B1A',
+        minHeight: '100vh', background: 'var(--sc-bg)',
         padding: '20px', fontFamily: 'Inter, sans-serif',
       }}>
         <ChatSkeleton count={8} />

@@ -13,6 +13,7 @@ import RecentActivity from '../components/profile/RecentActivity';
 import Achievements from '../components/profile/Achievements';
 import MyCircle from '../components/profile/MyCircle';
 import SettingsList from '../components/profile/SettingsList';
+import AppearanceSetting from '../components/profile/AppearanceSetting';
 import ErrorToast from '../components/ErrorToast';
 import { ProfileSkeleton } from '../components/Skeletons';
 
@@ -73,7 +74,7 @@ export default function Profile() {
         <div
           style={{
             minHeight: '100vh',
-            background: '#F7F5FB',
+            background: 'var(--sc-bg)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -81,7 +82,7 @@ export default function Profile() {
             padding: '20px',
           }}
         >
-          <p style={{ color: '#69677D', textAlign: 'center', fontSize: 16 }}>
+          <p style={{ color: 'var(--sc-text-2)', textAlign: 'center', fontSize: 16 }}>
             Unable to load profile. Please try again.
           </p>
         </div>
@@ -95,7 +96,7 @@ export default function Profile() {
       <div
         style={{
           minHeight: '100vh',
-          background: '#F7F5FB',
+          background: 'var(--sc-bg)',
           padding: '24px 16px',
           fontFamily: 'inherit',
         }}
@@ -107,7 +108,7 @@ export default function Profile() {
 
   if (!user) {
     return (
-      <div style={{ padding: '40px 20px', textAlign: 'center', color: '#171642' }}>
+      <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--sc-text)' }}>
         <div>Loading profile...</div>
       </div>
     );
@@ -118,7 +119,7 @@ export default function Profile() {
       style={{
         padding: '16px 16px',
         minHeight: '100vh',
-        background: '#F7F5FB',
+        background: 'var(--sc-bg)',
         fontFamily: 'inherit',
         paddingBottom: 32,
       }}
@@ -151,6 +152,9 @@ export default function Profile() {
 
       {/* My Circle - Real connections */}
       <MyCircle connectionCount={8} />
+
+      {/* Appearance - Light / Dark / System */}
+      <AppearanceSetting />
 
       {/* Settings - All working links */}
       <SettingsList items={MENU_ITEMS} onLogout={handleLogout} />

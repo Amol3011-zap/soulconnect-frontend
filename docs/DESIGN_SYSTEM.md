@@ -48,6 +48,50 @@ illustrated brand design and are not part of this migration.
 
 Purple is an **accent**, not a surface. No screen should be mostly purple.
 
+### Dark theme (added 2026-09-24)
+
+An additional theme for the logged-in app only — light stays the default and
+is pixel-identical to before. Users pick **Light / Dark / System** in
+Profile › Appearance (`components/profile/AppearanceSetting.jsx`).
+
+| Token | Light | Dark |
+|---|---|---|
+| Background | `#F7F5FB` | `#0B1026` |
+| Section / muted | `#EFEBF7` | `#111735` |
+| Card | `#FFFFFF` | `#151B3D` |
+| Elevated (popover, warm) | `#FFFFFF` / `#FAF7F2` | `#1A2148` |
+| Text | `#171642` | `#FFFFFF` |
+| Text 2 | `#69677D` | `#B8B8D6` |
+| Muted | `#8A889C` | `#8586A8` |
+| Primary fill | `#8066D5` | `#7F56F2` (brief's `#8B5CF6`, nudged for AA white text) |
+| Purple text / active | `#5E47B8` | `#C4B5FD` · links `#A78BFA` |
+| Soft purple | `#E5DDF5` | `#292052` |
+| Border | `#E7E3EF` | `rgba(167,139,250,.18)` |
+| Success | `#2E9E6E` | `#22C55E` |
+
+How it works:
+- `src/store/theme.js` stores `mode` (`theme-store`), resolves it and sets
+  `<html data-sc-theme="light|dark">`; `System` follows the OS live.
+- An inline script at the top of `index.html` does the same before first
+  paint, so a dark user never sees a light frame on load. Keep the two in sync.
+- Dark values live in `src/index.css` under
+  `html[data-sc-theme="dark"] .sc-app, … .sc-portal` — the **same token
+  names** as light (`--card`, `--sc-card`, `--sc-text`, …). Components never
+  branch on the theme for neutral colours.
+- Inline-styled screens use `var(--sc-*)` tokens instead of raw neutrals
+  (`--sc-text`, `--sc-text-2`, `--sc-text-3`, `--sc-muted`, `--sc-border`,
+  `--sc-line`, `--sc-bg`, `--sc-surface`, `--sc-card`, `--sc-tint`,
+  `--sc-purple-soft`, `--sc-purple-text`, `--sc-purple-ink`, `--sc-success*`, …).
+  **Never write a raw neutral hex in app code** — it won't flip in dark.
+- Tailwind `dark:` is wired to the same attribute (`tailwind.config.js`
+  `darkMode`); use it only for one-offs in the UI kit or data-tinted
+  components. For JS-driven colours (category tints, SVG art) use
+  `useIsDark()` from `store/theme`.
+- Anything rendered outside `.sc-app` (portals, App-level modals) needs the
+  `sc-portal` class to receive the tokens.
+- Data colours (weather, categories, avatars) stay hex — they're often
+  concatenated with an alpha suffix (`${color}33`), which breaks with `var()`.
+
 These live in `src/index.css` under `.sc-app` (the `DashboardLayout` root),
 both as shadcn HSL variables (`--primary`, `--border`, …) and as named
 `--sc-*` tokens, and in `tailwind.config.js` as `bg-primary`, `text-foreground`,

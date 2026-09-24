@@ -33,7 +33,7 @@ function Row({ item, index }) {
       style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '9px 0',
-        borderTop: index === 0 ? 'none' : '1px solid #EFEBF7',
+        borderTop: index === 0 ? 'none' : '1px solid var(--sc-surface)',
       }}
     >
       <span
@@ -48,12 +48,12 @@ function Row({ item, index }) {
         {emoji}
       </span>
       <span style={{
-        flex: 1, minWidth: 0, fontSize: 13, color: '#171642',
+        flex: 1, minWidth: 0, fontSize: 13, color: 'var(--sc-text)',
         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
       }}>
         {shortLabel(item.label)}
       </span>
-      <span style={{ fontSize: 13, fontWeight: 600, color: '#171642', flexShrink: 0 }}>
+      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--sc-text)', flexShrink: 0 }}>
         {item.percentage}%
       </span>
     </li>
@@ -196,11 +196,11 @@ export default function GlobalPulseCard() {
     >
       <header style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
         <Globe2 size={17} strokeWidth={2} color="#8066D5" aria-hidden="true" />
-        <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: '#171642', letterSpacing: '-0.01em' }}>
+        <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: 'var(--sc-text)', letterSpacing: '-0.01em' }}>
           Global Pulse
         </h2>
       </header>
-      <p style={{ margin: '0 0 12px', fontSize: 13, color: '#69677D' }}>
+      <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--sc-text-2)' }}>
         You&apos;re not alone today.
       </p>
 
@@ -220,7 +220,7 @@ export default function GlobalPulseCard() {
           {rows.map((r, i) => <Row key={r.id || i} item={r} index={i} />)}
         </ul>
       ) : (
-        <p style={{ margin: '2px 0 0', fontSize: 13, lineHeight: 1.6, color: '#69677D' }}>
+        <p style={{ margin: '2px 0 0', fontSize: 13, lineHeight: 1.6, color: 'var(--sc-text-2)' }}>
           {failed
             ? 'Global Pulse is unavailable right now.'
             : 'Not enough check-ins yet today. Share how you feel to help the picture grow.'}

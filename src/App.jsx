@@ -145,6 +145,17 @@ function PageLoader() {
 
 const S = (C) => <Suspense fallback={<PageLoader />}><C /></Suspense>;
 
+// Full-screen chat pages sit outside DashboardLayout; this gives them the app
+// theme tokens (light by default, dark when the user picks it), the matching
+// page background, and a blank fallback instead of the dark spinner.
+function ChatTheme({ children }) {
+  return (
+    <div className="sc-app" style={{ minHeight: '100vh', display: 'flow-root' }}>
+      <Suspense fallback={<div style={{ minHeight: '100vh', background: 'var(--sc-bg)' }} aria-busy="true" />}>{children}</Suspense>
+    </div>
+  );
+}
+
 function AppInner() {
   const { token, user, role } = useAuthStore();
   const location = useLocation();
@@ -239,9 +250,9 @@ function AppInner() {
           ) : (
             <>
               {/* Full-screen (no sidebar) */}
-              <Route path="/chat"          element={<Suspense fallback={<PageLoader />}><Dashboard /></Suspense>} />
-              <Route path="/chat/:matchId" element={<Suspense fallback={<PageLoader />}><Chat /></Suspense>} />
-              <Route path="/groups"        element={<Suspense fallback={<PageLoader />}><GroupChat /></Suspense>} />
+              <Route path="/chat"          element={<ChatTheme><Dashboard /></ChatTheme>} />
+              <Route path="/chat/:matchId" element={<ChatTheme><Chat /></ChatTheme>} />
+              <Route path="/groups"        element={<ChatTheme><GroupChat /></ChatTheme>} />
               <Route path="/terms"         element={<Suspense fallback={<PageLoader />}><TermsPrivacy /></Suspense>} />
               <Route path="/onboarding"    element={<Suspense fallback={<PageLoader />}><Onboarding /></Suspense>} />
 

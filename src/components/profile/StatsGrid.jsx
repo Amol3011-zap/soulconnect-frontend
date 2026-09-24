@@ -60,7 +60,7 @@ export default function StatsGrid() {
   return (
     <div style={{
       display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
-      background: '#FFFFFF', border: '1px solid #E7E3EF', borderRadius: 20,
+      background: 'var(--sc-card)', border: '1px solid var(--sc-border)', borderRadius: 20,
       padding: '14px 8px', marginBottom: 16,
       boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
     }}>
@@ -69,13 +69,13 @@ export default function StatsGrid() {
           key={stat.label}
           style={{
             textAlign: 'center', padding: '0 4px',
-            borderLeft: i === 0 ? 'none' : '1px solid #EFEBF7',
+            borderLeft: i === 0 ? 'none' : '1px solid var(--sc-surface)',
           }}
         >
-          <div style={{ fontSize: 20, fontWeight: 700, color: '#171642', lineHeight: 1.2 }}>
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--sc-text)', lineHeight: 1.2 }}>
             <AnimatedCounter value={stat.value} />
           </div>
-          <div style={{ fontSize: 12, color: '#69677D', lineHeight: 1.3, marginTop: 2 }}>
+          <div style={{ fontSize: 12, color: 'var(--sc-text-2)', lineHeight: 1.3, marginTop: 2 }}>
             {stat.short || stat.label}
           </div>
         </div>

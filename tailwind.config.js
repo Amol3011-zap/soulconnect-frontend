@@ -6,7 +6,9 @@ export default {
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
-  darkMode: 'class',
+  // Dark variants follow the logged-in app theme (<html data-sc-theme="dark">,
+  // see src/store/theme.js). Only the app's UI kit uses dark: utilities.
+  darkMode: ['variant', '&:is([data-sc-theme="dark"] *)'],
   theme: {
     extend: {
       // shadcn/ui tokens. The CSS variables are defined ONLY inside the

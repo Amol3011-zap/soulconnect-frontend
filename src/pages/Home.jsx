@@ -2,10 +2,10 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuthStore } from '../store/auth';
-import { useWeatherStore } from '../store/weather';
+import { useWeatherStore, isCheckedInToday } from '../store/weather';
 import { useTinyWinsStore } from '../store/tinyWins';
 import ErrorToast from '../components/ErrorToast';
-import { Search, Bell, Heart, MessageCircle, Video, ChevronRight, ArrowRight, Check } from 'lucide-react';
+import { Search, Bell, Video, ChevronRight, ArrowRight, Check, Moon, Sun } from 'lucide-react';
 import AICompanionCard from '../components/AICompanionCard';
 import AIInsightCard from '../components/AIInsightCard';
 import FloatingCompanion from '../components/FloatingCompanion';
@@ -25,8 +25,9 @@ import { onboardingAPI } from '../services/api';
 import HomeTinyWinCard from '../components/home/HomeTinyWinCard';
 import ReflectionToast from '../components/home/ReflectionToast';
 import PeopleWhoUnderstandCard from '../components/home/PeopleWhoUnderstandCard';
+import CommunitySection from '../components/home/CommunitySection';
 import TodaysFocusChecklistCard from '../components/home/TodaysFocusChecklistCard';
-import { WEATHER_OPTIONS } from '../components/home/homeStyles';
+import SoulClimateCard from '../components/home/SoulClimateCard';
 import LotusMark from '../components/LotusMark';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,6 +36,7 @@ import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { useIsDark, useThemeStore } from '../store/theme';
 import { STORIES } from '../components/home/storiesData';
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -43,7 +45,9 @@ import { STORIES } from '../components/home/storiesData';
 export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { todayEntry, submitWeather, showModal } = useWeatherStore();
+  const isDark = useIsDark();
+  const toggleTheme = useThemeStore((s) => s.toggle);
+  const { todayEntry, showModal, checkIn, syncToday } = useWeatherStore();
   const {
     dailyWins, completedToday, checkAndRefresh, completeWin,
     totalWins, showReflection, reflectionText, dismissReflection,
@@ -57,7 +61,6 @@ export default function Home() {
 
   const [showBreathing, setShowBreathing] = useState(false);
   const [breathingDone, setBreathingDone] = useState(false);
-  const [selectedWeather, setSelectedWeather] = useState(todayEntry?.weather || null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [matches, setMatches] = useState([]);
@@ -143,21 +146,34 @@ export default function Home() {
     loadMatches();
   }, []);
 
-  // Sync selectedWeather with todayEntry when it updates
+  // Soul Climate: one check-in per LOCAL calendar day. dayKey re-renders the
+  // card at local midnight (and when the app returns to the foreground) so
+  // yesterday's check-in never carries over; syncToday asks the server when
+  // that's enabled (other devices, logout/login).
+  const [dayKey, setDayKey] = useState(() => new Date().toDateString());
   useEffect(() => {
-    if (todayEntry?.weather) {
-      setSelectedWeather(todayEntry.weather);
-    }
-  }, [todayEntry?.weather]);
+    const refresh = () => { setDayKey(new Date().toDateString()); syncToday(userId); };
+    const now = new Date();
+    const msToMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 5) - now;
+    const t = setTimeout(refresh, msToMidnight);
+    const onVisible = () => { if (document.visibilityState === 'visible') refresh(); };
+    document.addEventListener('visibilitychange', onVisible);
+    syncToday(userId);
+    return () => { clearTimeout(t); document.removeEventListener('visibilitychange', onVisible); };
+  }, [dayKey, userId, syncToday]);
+  const todayMood = isCheckedInToday(todayEntry, userId) ? todayEntry.weather : null;
+  const selectedWeather = todayMood;
 
-  const handleWeatherSelect = useCallback((id) => {
-    setSelectedWeather(id);
-    submitWeather(id, userId);
-  }, [userId, submitWeather]);
+  const handleSoulClimateCheckIn = useCallback((id) => checkIn(id, userId), [checkIn, userId]);
 
+  // Companion "emotional weather" shortcut: bring the Soul Climate card into view.
+  const soulClimateRef = useRef(null);
   const handleCheckIn = useCallback(() => {
-    useWeatherStore.setState({ showModal: true });
+    soulClimateRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, []);
+
+  // Community section: every tap still leads to Stories, as before
+  const goToStories = useCallback(() => navigate('/stories'), [navigate]);
 
   const weeklyStats = getWeeklyStats();
   const completedCount = completedToday.length;
@@ -213,25 +229,6 @@ export default function Home() {
     );
   }
 
-  // Check-in card tint per weather — soft versions of the original Soul
-  // Climate gradients (sun = warm yellow, hope = lavender→peach, etc.),
-  // kept light so text stays readable on the light theme.
-  const WEATHER_TINT = {
-    'clear-sky':  { bg: 'linear-gradient(160deg, #FFF7D6 0%, #FDE68A 55%, #FBBF24 100%)', accent: '#F59E0B', ink: '#92400E' },
-    'hope':       { bg: 'linear-gradient(160deg, #EDE4FF 0%, #F3D9FF 45%, #FFD3B0 100%)', accent: '#C084FC', ink: '#6B21A8' },
-    'blooming':   { bg: 'linear-gradient(160deg, #FFE4F1 0%, #FBCFE8 55%, #F4A5CF 100%)', accent: '#EC4899', ink: '#9D174D' },
-    'fog':        { bg: 'linear-gradient(160deg, #F3F4F6 0%, #E5E7EB 55%, #C9CDD4 100%)', accent: '#9CA3AF', ink: '#374151' },
-    'heavy-rain': { bg: 'linear-gradient(160deg, #E0EDFF 0%, #BFDBFE 55%, #93C5FD 100%)', accent: '#3B82F6', ink: '#1E40AF' },
-    'storm':      { bg: 'linear-gradient(160deg, #EDE7FF 0%, #D6CAFB 55%, #B9A4F5 100%)', accent: '#7C3AED', ink: '#4C1D95' },
-  };
-  // Gloss: a white sheen over the top of the card (extra background layer,
-  // no extra DOM), a bright top edge and a soft shadow in the weather colour.
-  const glossy = (t) => ({
-    background: `linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.18) 38%, rgba(255,255,255,0) 60%), ${t.bg}`,
-    borderColor: 'rgba(255,255,255,0.9)',
-    boxShadow: `inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 ${t.accent}33, 0 10px 28px ${t.accent}40, 0 2px 6px ${t.accent}26`,
-  });
-  const tint = selectedWeather ? WEATHER_TINT[selectedWeather] : null;
 
   // Featured professional for the Home "Support when you need it" card.
   // PLACEHOLDER content specified by the design brief — not a real record.
@@ -252,8 +249,8 @@ export default function Home() {
         .home-main { margin-right: 300px; }
         .home-right-sidebar {
           position: fixed; right: 0; top: 0; bottom: 0; width: 300px;
-          background: #FFFFFF;
-          border-left: 1px solid #E7E3EF;
+          background: var(--sc-card);
+          border-left: 1px solid var(--sc-border);
           display: flex; flex-direction: column; gap: 12px;
           padding: 24px 16px 20px;
           z-index: 50;
@@ -348,6 +345,9 @@ export default function Home() {
               <p className="mt-1 text-[15px] text-muted-foreground">Take a deep breath. You've got this.</p>
             </div>
             <div className="home-desktop-only relative flex shrink-0 items-center gap-1">
+              <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'} title={isDark ? 'Light mode' : 'Dark mode'}>
+                {isDark ? <Sun className="!h-5 !w-5" /> : <Moon className="!h-5 !w-5" />}
+              </Button>
               <Button variant="ghost" size="icon" onClick={() => setSearchOpen(true)} aria-label="Search">
                 <Search className="!h-5 !w-5" />
               </Button>
@@ -360,47 +360,17 @@ export default function Home() {
             </div>
           </header>
 
-          {/* 2 · Check-in — compact, immediately actionable */}
-          <Card
-            className="relative mb-6 p-4 transition-[background,box-shadow] duration-300 sm:p-5"
-            style={tint ? glossy(tint) : undefined}
-          >
-            <div className="flex items-center justify-between gap-2">
-              <h2 className="text-[18px] font-semibold leading-tight text-foreground">How are you feeling today?</h2>
-              {selectedWeather && (
-                <Badge className="shrink-0 whitespace-nowrap" style={tint ? { background: 'rgba(255,255,255,0.75)', color: tint.ink } : undefined}>Checked in</Badge>
-              )}
-            </div>
-            <p className="mt-1 text-[13px] text-muted-foreground">Pick what's closest — it shapes today's small steps.</p>
-            <div className="mt-3 grid grid-cols-3 gap-2" role="radiogroup" aria-label="Today's mood">
-              {WEATHER_OPTIONS.map((o) => {
-                const on = selectedWeather === o.id;
-                const t = WEATHER_TINT[o.id];
-                return (
-                  <button
-                    key={o.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={on}
-                    onClick={() => handleWeatherSelect(o.id)}
-                    className={cn(
-                      'flex min-h-[56px] flex-col items-center justify-center gap-0.5 rounded-2xl border px-1 text-[13px] font-medium leading-tight transition-colors duration-150 active:scale-[0.98]',
-                      on ? 'border-2' : 'border-border bg-card/80 text-foreground hover:bg-muted'
-                    )}
-                    style={on && t
-                      ? { borderColor: t.accent, background: 'linear-gradient(180deg, #FFFFFF 0%, rgba(255,255,255,0.8) 100%)', color: t.ink, boxShadow: `0 4px 12px ${t.accent}40, inset 0 1px 0 #FFFFFF` }
-                      : tint ? { background: 'rgba(255,255,255,0.55)', borderColor: 'rgba(255,255,255,0.8)' } : undefined}
-                  >
-                    <span aria-hidden="true" className="text-base leading-none">{o.emoji}</span>
-                    <span>{o.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <Button className="mt-3 w-full" onClick={handleCheckIn}>
-              {selectedWeather ? 'Add to your check-in' : 'Check in'}
-            </Button>
-          </Card>
+          {/* 2 · Soul Climate — compact daily check-in card */}
+          <div ref={soulClimateRef}>
+            <SoulClimateCard
+              key={dayKey}
+              todayMood={todayMood}
+              tinyStep={(dailyWins.find(w => !completedToday.includes(w.id)) || dailyWins[0])?.title || 'Take 5 minutes for something you enjoy.'}
+              onCheckIn={handleSoulClimateCheckIn}
+              onOpenTinyStep={() => navigate('/tiny-wins')}
+              dark={isDark}
+            />
+          </div>
 
           {/* 3 · People who understand */}
           <section className="mb-6">
@@ -433,7 +403,7 @@ export default function Home() {
                     <HomeTinyWinCard key={win.id} win={win} isCompleted={completedToday.includes(win.id)} onComplete={completeWin} />
                   ))}
                   {allDone && (
-                    <p className="px-3 pb-2 pt-1 text-[13px] text-[#1F7A55]">All done for today — that's real progress.</p>
+                    <p className="px-3 pb-2 pt-1 text-[13px] text-[color:var(--sc-success-text)]">All done for today — that's real progress.</p>
                   )}
                 </>
               ) : (
@@ -443,30 +413,12 @@ export default function Home() {
           </section>
 
           {/* 5 · From the community */}
-          <section className="mb-6">
-            {sectionHeader({ title: 'From the community', to: '/stories' })}
-            <Card className="divide-y divide-border overflow-hidden">
-              {STORIES.map((story, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => navigate('/stories')}
-                  className="block w-full px-4 py-3.5 text-left transition-colors hover:bg-muted active:bg-muted"
-                >
-                  <div className="mb-1.5 flex items-center justify-between gap-2">
-                    <Badge variant="outline" style={{ color: story.tagColor, borderColor: `${story.tagColor}55` }}>{story.tag}</Badge>
-                    <span className="text-xs text-muted-foreground">{story.time}</span>
-                  </div>
-                  <p className="line-clamp-2 text-[15px] leading-snug text-foreground">{story.preview}</p>
-                  <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
-                    <span>{story.name}</span>
-                    <span className="flex items-center gap-1"><Heart className="h-3.5 w-3.5" /> {story.hearts}</span>
-                    <span className="flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5" /> {story.comments}</span>
-                  </div>
-                </button>
-              ))}
-            </Card>
-          </section>
+          <CommunitySection
+            stories={STORIES}
+            onOpenStory={goToStories}
+            onSeeAll={goToStories}
+            onShare={goToStories}
+          />
 
           {/* 6 · Support when you need it (professionals) */}
           <section>
@@ -479,10 +431,10 @@ export default function Home() {
               <div className="relative shrink-0">
                 <Avatar className="h-14 w-14 sm:h-16 sm:w-16">
                   {FEATURED_PROFESSIONAL.photo && <AvatarImage src={FEATURED_PROFESSIONAL.photo} alt="" />}
-                  <AvatarFallback className="bg-[#EFEAFB] text-[17px] text-[#5E47B8]">{FEATURED_PROFESSIONAL.initials}</AvatarFallback>
+                  <AvatarFallback className="bg-[color:var(--sc-tint)] text-[17px] text-[color:var(--sc-purple-text)]">{FEATURED_PROFESSIONAL.initials}</AvatarFallback>
                 </Avatar>
                 <span
-                  className="absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#2E9E6E] text-white"
+                  className="absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-card bg-[color:var(--sc-success)] text-white"
                   aria-label="Verified professional"
                   role="img"
                 >
@@ -522,7 +474,7 @@ export default function Home() {
             <button type="button" onClick={() => navigate('/professionals')} className="text-sm font-semibold text-primary">View all</button>
           </div>
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-secondary text-base font-semibold text-[#4B3699]">M</span>
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-secondary text-base font-semibold text-[color:var(--sc-purple-deep)]">M</span>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-semibold text-foreground">Dr. Meera Sharma</div>
               <div className="text-xs text-muted-foreground">Clinical Psychologist</div>
@@ -534,7 +486,7 @@ export default function Home() {
           </div>
         </Card>
 
-        <Card className="relative overflow-hidden bg-[#FAF7F2] p-5 text-center">
+        <Card className="relative overflow-hidden bg-[color:var(--sc-warm)] p-5 text-center">
           <LotusMark size={72} className="mx-auto mb-1" />
           <p className="text-sm italic leading-relaxed text-foreground">"Healing is not a destination, it's a journey."</p>
         </Card>

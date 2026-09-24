@@ -21,7 +21,7 @@ export default function TodaysFocusChecklistCard({ onStart }) {
       <ul className="mb-4 space-y-2">
         {FOCUS_CHECKLIST.map((item) => (
           <li key={item} className="flex items-center gap-2 text-[13px] text-foreground">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-[#2E9E6E]" strokeWidth={2} aria-hidden="true" />
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-[color:var(--sc-success)]" strokeWidth={2} aria-hidden="true" />
             {item}
           </li>
         ))}

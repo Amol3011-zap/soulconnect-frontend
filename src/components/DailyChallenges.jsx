@@ -15,7 +15,7 @@ const DEMO_DATA = {
   current_streak: 0, longest_streak: 0, total_points: 0,
 };
 
-function Spinner({ size = 18, color = 'var(--primary)' }) {
+function Spinner({ size = 18, color = 'var(--sc-purple)' }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%',
@@ -41,8 +41,8 @@ function ChallengeCard({ challenge, onComplete, completing }) {
         border: challenge.completed
           ? '1.5px solid rgba(16,185,129,0.4)'
           : isCompleting
-          ? '1.5px solid var(--primary)'
-          : '1.5px solid var(--border)',
+          ? '1.5px solid var(--sc-purple)'
+          : '1.5px solid var(--sc-border)',
         background: challenge.completed
           ? 'rgba(16,185,129,0.06)'
           : isCompleting
@@ -53,8 +53,8 @@ function ChallengeCard({ challenge, onComplete, completing }) {
         opacity: (completing && !isCompleting) ? 0.5 : 1,
         overflow: 'hidden',
       }}
-      onMouseEnter={e => { if (!challenge.completed && !completing) e.currentTarget.style.borderColor = 'var(--primary)'; }}
-      onMouseLeave={e => { if (!challenge.completed && !isCompleting) e.currentTarget.style.borderColor = 'var(--border)'; }}
+      onMouseEnter={e => { if (!challenge.completed && !completing) e.currentTarget.style.borderColor = 'var(--sc-purple)'; }}
+      onMouseLeave={e => { if (!challenge.completed && !isCompleting) e.currentTarget.style.borderColor = 'var(--sc-border)'; }}
     >
       {/* Loading overlay shimmer */}
       {isCompleting && (
@@ -71,7 +71,7 @@ function ChallengeCard({ challenge, onComplete, completing }) {
       <div style={{
         width: 42, height: 42, borderRadius: '50%', flexShrink: 0,
         background: challenge.completed ? '#10B981' : isCompleting ? 'rgba(109,74,255,0.1)' : 'var(--bg-subtle)',
-        border: challenge.completed ? 'none' : isCompleting ? '2px solid var(--primary)' : '2px solid var(--border)',
+        border: challenge.completed ? 'none' : isCompleting ? '2px solid var(--sc-purple)' : '2px solid var(--sc-border)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: challenge.completed ? 18 : 20,
         transition: 'all 0.3s',
@@ -91,7 +91,7 @@ function ChallengeCard({ challenge, onComplete, completing }) {
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>
           {challenge.name}
-          {isCompleting && <span style={{ fontSize: 11, color: 'var(--primary)', marginLeft: 8 }}>saving…</span>}
+          {isCompleting && <span style={{ fontSize: 11, color: 'var(--sc-purple)', marginLeft: 8 }}>saving…</span>}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 10, fontWeight: 700, color: DIFFICULTY_COLOR[challenge.difficulty], textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -107,7 +107,7 @@ function ChallengeCard({ challenge, onComplete, completing }) {
       <div style={{
         padding: '4px 10px', borderRadius: 99, fontSize: 12, fontWeight: 700,
         background: challenge.completed ? '#10B981' : isCompleting ? 'rgba(109,74,255,0.15)' : 'rgba(109,74,255,0.1)',
-        color: challenge.completed ? '#fff' : 'var(--primary)',
+        color: challenge.completed ? '#fff' : 'var(--sc-purple)',
         whiteSpace: 'nowrap', transition: 'all 0.2s',
       }}>
         {isCompleting ? <Spinner size={12} /> : `+${totalPts} pts`}
@@ -205,9 +205,9 @@ export default function DailyChallenges({ compact = false }) {
       {toast && (
         <div style={{
           position: 'fixed', top: 80, left: '50%', transform: 'translateX(-50%)',
-          background: '#1A1333', color: '#fff', borderRadius: 12,
+          background: 'var(--sc-card)', color: 'var(--sc-text)', borderRadius: 12,
           padding: '10px 20px', fontSize: 13, fontWeight: 600, zIndex: 9999,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.3)', animation: 'slideDown 0.2s ease',
+          boxShadow: '0 8px 32px var(--sc-shadow)', animation: 'slideDown 0.2s ease',
           whiteSpace: 'nowrap',
         }}>
           {toast}
@@ -231,14 +231,14 @@ export default function DailyChallenges({ compact = false }) {
       <div style={{ marginBottom: 14 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
           <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{completed}/{total} completed</span>
-          <span style={{ fontSize: 11, fontWeight: 700, color: allDone ? '#10B981' : 'var(--primary)' }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: allDone ? '#10B981' : 'var(--sc-purple)' }}>
             {allDone ? '✓ All done!' : `${points_remaining} pts left`}
           </span>
         </div>
-        <div style={{ height: 5, borderRadius: 99, background: 'var(--border)', overflow: 'hidden' }}>
+        <div style={{ height: 5, borderRadius: 99, background: 'var(--sc-border)', overflow: 'hidden' }}>
           <div style={{
             height: '100%', borderRadius: 99, width: `${pct}%`,
-            background: allDone ? '#10B981' : 'linear-gradient(90deg, var(--primary), var(--secondary))',
+            background: allDone ? '#10B981' : 'linear-gradient(90deg, var(--sc-purple), #A855F7)',
             transition: 'width 0.5s ease',
           }} />
         </div>
@@ -266,12 +266,12 @@ export default function DailyChallenges({ compact = false }) {
       {!compact && (
         <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
           {[
-            { label: 'Total Points', value: total_points, color: 'var(--primary)' },
+            { label: 'Total Points', value: total_points, color: 'var(--sc-purple)' },
             { label: 'Best Streak',  value: `${longest_streak}d`, color: '#F97316' },
           ].map(s => (
             <div key={s.label} style={{
               flex: 1, borderRadius: 12, padding: '10px 12px', textAlign: 'center',
-              background: 'var(--bg-subtle)', border: '1px solid var(--border)',
+              background: 'var(--bg-subtle)', border: '1px solid var(--sc-border)',
             }}>
               <div style={{ fontSize: 16, fontWeight: 800, color: s.color }}>{s.value}</div>
               <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>{s.label}</div>

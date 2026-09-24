@@ -30,10 +30,10 @@ function getPrevMilestone(totalWins) {
    SHARED STYLES
 ───────────────────────────────────────────────────────────────────────────── */
 const CARD = {
-  background: '#FFFFFF',
+  background: 'var(--sc-card)',
   backdropFilter: 'none',
   WebkitBackdropFilter: 'none',
-  border: '1px solid #E7E3EF',
+  border: '1px solid var(--sc-border)',
   borderRadius: 24,
   padding: '20px',
   marginBottom: 14,
@@ -43,7 +43,7 @@ const CARD = {
 };
 
 const LABEL = {
-  fontSize: 11, color: '#A56A12', fontWeight: 700,
+  fontSize: 11, color: 'var(--sc-gold-text)', fontWeight: 700,
   textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 10,
 };
 
@@ -64,18 +64,18 @@ function HealingTreeProgress({ totalWins }) {
       {/* Milestone row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
         <div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: '#171642', lineHeight: 1 }}>{totalWins}</div>
-          <div style={{ fontSize: 11, color: '#69677D' }}>Total Wins</div>
+          <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--sc-text)', lineHeight: 1 }}>{totalWins}</div>
+          <div style={{ fontSize: 11, color: 'var(--sc-text-2)' }}>Total Wins</div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontSize: 24, lineHeight: 1, marginBottom: 2 }}>{next.icon}</div>
           <div style={{ fontSize: 11, color: next.color, fontWeight: 600 }}>{next.label}</div>
-          <div style={{ fontSize: 10, color: '#69677D' }}>{next.wins - totalWins} more</div>
+          <div style={{ fontSize: 10, color: 'var(--sc-text-2)' }}>{next.wins - totalWins} more</div>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 6, borderRadius: 6, background: '#F7F5FB', overflow: 'hidden' }}>
+      <div style={{ height: 6, borderRadius: 6, background: 'var(--sc-bg)', overflow: 'hidden' }}>
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
@@ -88,8 +88,8 @@ function HealingTreeProgress({ totalWins }) {
         />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5 }}>
-        <span style={{ fontSize: 10, color: '#69677D' }}>{prevWins} wins</span>
-        <span style={{ fontSize: 10, color: '#69677D' }}>{next.wins} wins</span>
+        <span style={{ fontSize: 10, color: 'var(--sc-text-2)' }}>{prevWins} wins</span>
+        <span style={{ fontSize: 10, color: 'var(--sc-text-2)' }}>{next.wins} wins</span>
       </div>
 
       {/* Milestone badges */}
@@ -105,7 +105,7 @@ function HealingTreeProgress({ totalWins }) {
               opacity: reached ? 1 : 0.5,
             }}>
               <span style={{ fontSize: 13 }}>{m.icon}</span>
-              <span style={{ fontSize: 10, fontWeight: 600, color: reached ? m.color : '#69677D' }}>{m.label}</span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: reached ? m.color : 'var(--sc-text-2)' }}>{m.label}</span>
             </div>
           );
         })}
@@ -128,7 +128,7 @@ function WeeklyStats({ getWeeklyStats }) {
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'transparent' }} />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <div style={LABEL}>📊 THIS WEEK</div>
-        <div style={{ fontSize: 18, fontWeight: 800, color: '#171642' }}>{total} <span style={{ fontSize: 11, fontWeight: 400, color: '#69677D' }}>wins</span></div>
+        <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--sc-text)' }}>{total} <span style={{ fontSize: 11, fontWeight: 400, color: 'var(--sc-text-2)' }}>wins</span></div>
       </div>
 
       {/* Bar chart */}
@@ -142,11 +142,11 @@ function WeeklyStats({ getWeeklyStats }) {
                 width: '100%', height: h, borderRadius: 4,
                 background: count > 0
                   ? '#8066D5'
-                  : '#EFEBF7',
+                  : 'var(--sc-surface)',
                 transition: 'height 0.6s ease',
                 boxShadow: 'none',
               }} />
-              <span style={{ fontSize: 9, color: '#69677D' }}>{day.slice(0,1)}</span>
+              <span style={{ fontSize: 9, color: 'var(--sc-text-2)' }}>{day.slice(0,1)}</span>
             </div>
           );
         })}
@@ -160,15 +160,15 @@ function WeeklyStats({ getWeeklyStats }) {
             background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)',
           }}>
             <div style={{ fontSize: 9, color: '#10B981', fontWeight: 700, textTransform: 'uppercase', marginBottom: 2 }}>Most</div>
-            <div style={{ fontSize: 11, color: '#171642', fontWeight: 600 }}>{mostCompleted}</div>
+            <div style={{ fontSize: 11, color: 'var(--sc-text)', fontWeight: 600 }}>{mostCompleted}</div>
           </div>
           {leastCompleted && leastCompleted !== mostCompleted && (
             <div style={{
               flex: 1, padding: '8px 10px', borderRadius: 12,
-              background: '#EFEAFB', border: '1px solid #DCD2F2',
+              background: 'var(--sc-tint)', border: '1px solid var(--sc-line)',
             }}>
-              <div style={{ fontSize: 9, color: '#5E47B8', fontWeight: 700, textTransform: 'uppercase', marginBottom: 2 }}>Try More</div>
-              <div style={{ fontSize: 11, color: '#171642', fontWeight: 600 }}>{leastCompleted}</div>
+              <div style={{ fontSize: 9, color: 'var(--sc-purple-text)', fontWeight: 700, textTransform: 'uppercase', marginBottom: 2 }}>Try More</div>
+              <div style={{ fontSize: 11, color: 'var(--sc-text)', fontWeight: 600 }}>{leastCompleted}</div>
             </div>
           )}
         </div>
@@ -187,7 +187,7 @@ function HistoryList({ history }) {
     return (
       <div style={{ ...CARD, textAlign: 'center', padding: '28px' }}>
         <div style={{ fontSize: 28, marginBottom: 10 }}>🌱</div>
-        <div style={{ fontSize: 14, color: '#69677D' }}>Your history will appear here as you complete Tiny Wins.</div>
+        <div style={{ fontSize: 14, color: 'var(--sc-text-2)' }}>Your history will appear here as you complete Tiny Wins.</div>
       </div>
     );
   }
@@ -213,8 +213,8 @@ function HistoryList({ history }) {
               style={{
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '10px 12px', borderRadius: 14,
-                background: '#F7F5FB',
-                border: '1px solid #E7E3EF',
+                background: 'var(--sc-bg)',
+                border: '1px solid var(--sc-border)',
               }}
             >
               <div style={{
@@ -228,13 +228,13 @@ function HistoryList({ history }) {
               </div>
 
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#171642', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--sc-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {entry.title}
                 </div>
-                <div style={{ fontSize: 11, color: '#69677D' }}>{entry.category}</div>
+                <div style={{ fontSize: 11, color: 'var(--sc-text-2)' }}>{entry.category}</div>
               </div>
 
-              <div style={{ fontSize: 11, color: '#69677D', flexShrink: 0 }}>{label}</div>
+              <div style={{ fontSize: 11, color: 'var(--sc-text-2)', flexShrink: 0 }}>{label}</div>
             </motion.div>
           );
         })}
@@ -266,10 +266,10 @@ function WorkModeSelector({ current, onChange }) {
         onClick={() => setOpen(v => !v)}
         style={{
           display: 'flex', alignItems: 'center', gap: 6,
-          background: '#EFEAFB',
-          border: '1px solid #DCD2F2',
+          background: 'var(--sc-tint)',
+          border: '1px solid var(--sc-line)',
           borderRadius: 20, padding: '5px 12px',
-          color: '#5E47B8', fontSize: 12, fontWeight: 600,
+          color: 'var(--sc-purple-text)', fontSize: 12, fontWeight: 600,
           cursor: 'pointer', fontFamily: 'inherit',
         }}
       >
@@ -290,7 +290,7 @@ function WorkModeSelector({ current, onChange }) {
               background: 'rgba(20,10,50,0.96)',
               backdropFilter: 'none',
               WebkitBackdropFilter: 'none',
-              border: '1px solid #DCD2F2',
+              border: '1px solid var(--sc-line)',
               borderRadius: 16,
               padding: '8px',
               boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
@@ -342,10 +342,10 @@ function ReflectionToast({ text, onDismiss }) {
       style={{
         position: 'fixed', bottom: 32, left: '50%', transform: 'translateX(-50%)',
         zIndex: 9999,
-        background: '#FFFFFF',
+        background: 'var(--sc-card)',
         backdropFilter: 'none',
         WebkitBackdropFilter: 'none',
-        border: '1px solid #DCD2F2',
+        border: '1px solid var(--sc-line)',
         borderRadius: 20, padding: '14px 22px',
         display: 'flex', alignItems: 'center', gap: 12,
         boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
@@ -363,7 +363,7 @@ function ReflectionToast({ text, onDismiss }) {
           fontSize: 16, boxShadow: 'none',
         }}
       >💜</motion.div>
-      <p style={{ margin: 0, fontSize: 13, color: '#171642', lineHeight: 1.5, fontStyle: 'italic' }}>
+      <p style={{ margin: 0, fontSize: 13, color: 'var(--sc-text)', lineHeight: 1.5, fontStyle: 'italic' }}>
         {text}
       </p>
     </motion.div>
@@ -388,9 +388,9 @@ function MilestoneToast({ data, onDismiss }) {
       style={{
         position: 'fixed', bottom: 100, left: '50%', transform: 'translateX(-50%)',
         zIndex: 10000,
-        background: '#FFFFFF',
+        background: 'var(--sc-card)',
         backdropFilter: 'none',
-        border: '1px solid #DCD2F2',
+        border: '1px solid var(--sc-line)',
         borderRadius: 24, padding: '20px 28px',
         textAlign: 'center',
         boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
@@ -404,9 +404,9 @@ function MilestoneToast({ data, onDismiss }) {
       >
         {data.icon}
       </motion.div>
-      <div style={{ fontSize: 16, fontWeight: 800, color: '#171642', marginBottom: 4 }}>Milestone Unlocked!</div>
-      <div style={{ fontSize: 14, color: '#5E47B8' }}>{data.label}</div>
-      <div style={{ fontSize: 12, color: '#69677D', marginTop: 4 }}>{data.total} wins total</div>
+      <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--sc-text)', marginBottom: 4 }}>Milestone Unlocked!</div>
+      <div style={{ fontSize: 14, color: 'var(--sc-purple-text)' }}>{data.label}</div>
+      <div style={{ fontSize: 12, color: 'var(--sc-text-2)', marginTop: 4 }}>{data.total} wins total</div>
     </motion.div>
   );
 }
@@ -456,14 +456,14 @@ export default function TinyWins() {
           transition: background-color 0.15s ease, color 0.15s ease;
         }
         .tw-tab.active {
-          background: #E5DDF5;
-          color: #4B3699;
+          background: var(--sc-purple-soft);
+          color: var(--sc-purple-deep);
         }
         .tw-tab.inactive {
           background: transparent;
-          color: #69677D;
+          color: var(--sc-text-2);
         }
-        .tw-tab.inactive:hover { background: #EFEBF7; color: #171642; }
+        .tw-tab.inactive:hover { background: var(--sc-surface); color: var(--sc-text); }
       `}</style>
 
       {/* Toasts */}
@@ -497,19 +497,19 @@ export default function TinyWins() {
               onClick={() => navigate('/home')}
               style={{
                 width: 38, height: 38, borderRadius: 12,
-                background: '#F7F5FB',
-                border: '1px solid #E7E3EF',
+                background: 'var(--sc-bg)',
+                border: '1px solid var(--sc-border)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer',
               }}
             >
-              <ChevronLeft size={18} color="#69677D" />
+              <ChevronLeft size={18} color="var(--sc-text-2)" />
             </button>
             <div>
-              <h1 style={{ fontSize: 22, fontWeight: 800, color: '#171642', margin: 0, letterSpacing: '-0.02em' }}>
+              <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--sc-text)', margin: 0, letterSpacing: '-0.02em' }}>
                 Tiny Wins
               </h1>
-              <p style={{ fontSize: 12, color: '#69677D', margin: 0 }}>Small steps. Big change.</p>
+              <p style={{ fontSize: 12, color: 'var(--sc-text-2)', margin: 0 }}>Small steps. Big change.</p>
             </div>
           </div>
 
@@ -517,12 +517,12 @@ export default function TinyWins() {
             <WorkModeSelector current={workMode} onChange={handleWorkModeChange} />
             <button style={{
               width: 36, height: 36, borderRadius: 10,
-              background: '#F7F5FB',
-              border: '1px solid #E7E3EF',
+              background: 'var(--sc-bg)',
+              border: '1px solid var(--sc-border)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer',
             }}>
-              <Settings size={16} color="#69677D" />
+              <Settings size={16} color="var(--sc-text-2)" />
             </button>
           </div>
         </div>
@@ -532,22 +532,22 @@ export default function TinyWins() {
           <div style={{ ...CARD, padding: '16px 20px', marginBottom: 0 }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'transparent' }} />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#171642' }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--sc-text)' }}>
                 Today's Progress
               </span>
-              <span style={{ fontSize: 12, color: '#69677D' }}>
+              <span style={{ fontSize: 12, color: 'var(--sc-text-2)' }}>
                 {completedCount} / {dailyWins.length || 3} completed
               </span>
             </div>
             {/* Bar */}
-            <div style={{ height: 6, borderRadius: 6, background: '#F7F5FB', overflow: 'hidden' }}>
+            <div style={{ height: 6, borderRadius: 6, background: 'var(--sc-bg)', overflow: 'hidden' }}>
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${dailyWins.length > 0 ? (completedCount / dailyWins.length) * 100 : 0}%` }}
                 transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
                 style={{
                   height: '100%', borderRadius: 6,
-                  background: allDone ? '#2E9E6E' : '#8066D5',
+                  background: allDone ? 'var(--sc-success)' : '#8066D5',
                   boxShadow: 'none',
                 }}
               />
@@ -610,10 +610,10 @@ export default function TinyWins() {
                 ) : (
                   <div style={{ ...CARD, textAlign: 'center', padding: '36px 24px' }}>
                     <div style={{ fontSize: 36, marginBottom: 12 }}>🌱</div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: '#171642', marginBottom: 6 }}>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--sc-text)', marginBottom: 6 }}>
                       Your Tiny Wins are being prepared
                     </div>
-                    <p style={{ fontSize: 13, color: '#69677D', margin: 0 }}>
+                    <p style={{ fontSize: 13, color: 'var(--sc-text-2)', margin: 0 }}>
                       Complete a Soul Climate check-in on the Home page to personalize your wins.
                     </p>
                   </div>
@@ -682,12 +682,12 @@ export default function TinyWins() {
                     ].map(stat => (
                       <div key={stat.label} style={{
                         padding: '12px 14px', borderRadius: 16,
-                        background: '#F7F5FB',
-                        border: '1px solid #E7E3EF',
+                        background: 'var(--sc-bg)',
+                        border: '1px solid var(--sc-border)',
                       }}>
                         <div style={{ fontSize: 20, marginBottom: 4 }}>{stat.icon}</div>
-                        <div style={{ fontSize: 20, fontWeight: 800, color: '#171642', lineHeight: 1 }}>{stat.value}</div>
-                        <div style={{ fontSize: 11, color: '#69677D', marginTop: 2 }}>{stat.label}</div>
+                        <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--sc-text)', lineHeight: 1 }}>{stat.value}</div>
+                        <div style={{ fontSize: 11, color: 'var(--sc-text-2)', marginTop: 2 }}>{stat.label}</div>
                       </div>
                     ))}
                   </div>

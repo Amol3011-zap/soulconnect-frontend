@@ -102,7 +102,7 @@ export default function SearchModal({ isOpen, onClose }) {
                 background: 'linear-gradient(145deg, rgba(22,10,54,0.99) 0%, rgba(40,18,88,0.97) 100%)',
                 backdropFilter: 'none',
                 WebkitBackdropFilter: 'none',
-                border: '1px solid #DCD2F2',
+                border: '1px solid var(--sc-line)',
                 borderRadius: 24,
                 padding: '20px 20px 12px',
                 boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
@@ -124,7 +124,7 @@ export default function SearchModal({ isOpen, onClose }) {
               {showDefault && (
                 <>
                   <div style={{
-                    fontSize: 11, color: '#69677D', fontWeight: 500,
+                    fontSize: 11, color: 'var(--sc-text-2)', fontWeight: 500,
                     padding: '0 12px', marginBottom: 12,
                   }}>
                     Suggested
@@ -147,9 +147,9 @@ export default function SearchModal({ isOpen, onClose }) {
 
               {/* No results */}
               {!showDefault && !hasResults(results) && (
-                <div style={{ textAlign: 'center', padding: '28px 0 16px', color: '#69677D' }}>
+                <div style={{ textAlign: 'center', padding: '28px 0 16px', color: 'var(--sc-text-2)' }}>
                   <div style={{ fontSize: 30, marginBottom: 8 }}>🔍</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#69677D', marginBottom: 4 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--sc-text-2)', marginBottom: 4 }}>
                     No results found
                   </div>
                   <div style={{ fontSize: 12 }}>Try a different search term</div>

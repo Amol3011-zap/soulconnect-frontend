@@ -70,7 +70,7 @@ export default function FloatingCompanion({
             transition={{ type: 'spring', stiffness: 340, damping: 26 }}
             style={{
               background: '#16093A',
-              border: '1px solid #DCD2F2',
+              border: '1px solid var(--sc-line)',
               borderRadius: 22,
               padding: '14px 14px',
               boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
@@ -90,7 +90,7 @@ export default function FloatingCompanion({
             }} />
 
             {/* Title */}
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#A56A12', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4, paddingLeft: 2 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--sc-gold-text)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4, paddingLeft: 2 }}>
               How can I help?
             </div>
 
@@ -100,14 +100,14 @@ export default function FloatingCompanion({
                 initial={{ opacity: 0, x: 12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.06, duration: 0.25 }}
-                whileHover={{ background: '#EFEAFB', x: 3 }}
+                whileHover={{ background: 'var(--sc-tint)', x: 3 }}
                 onClick={() => handleItem(item.id)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 12px',
                   borderRadius: 14,
-                  background: '#F7F5FB',
-                  border: '1px solid #E7E3EF',
+                  background: 'var(--sc-bg)',
+                  border: '1px solid var(--sc-border)',
                   cursor: 'pointer',
                   fontFamily: 'inherit',
                   width: '100%',
@@ -124,7 +124,7 @@ export default function FloatingCompanion({
                 }}>
                   {item.icon}
                 </div>
-                <span style={{ fontSize: 13, fontWeight: 600, color: '#171642' }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--sc-text)' }}>
                   {item.label}
                 </span>
               </motion.button>
@@ -139,7 +139,7 @@ export default function FloatingCompanion({
         <div
           style={{
             position: 'absolute', inset: -8, borderRadius: '50%',
-            border: '1.5px solid #DCD2F2',
+            border: '1.5px solid var(--sc-line)',
             pointerEvents: 'none',
           }}
         />
@@ -154,7 +154,7 @@ export default function FloatingCompanion({
             background: open
               ? 'linear-gradient(135deg, #A855F7, #7C3AED)'
               : 'linear-gradient(135deg, #7C3AED, #5B21B6)',
-            border: '1.5px solid #DCD2F2',
+            border: '1.5px solid var(--sc-line)',
             boxShadow: 'none',
             cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -180,7 +180,7 @@ export default function FloatingCompanion({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4 }}
             style={{
-              fontSize: 10, fontWeight: 700, color: '#69677D',
+              fontSize: 10, fontWeight: 700, color: 'var(--sc-text-2)',
               textAlign: 'center', letterSpacing: '0.03em',
               textShadow: 'none',
             }}

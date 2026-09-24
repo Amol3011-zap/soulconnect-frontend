@@ -16,8 +16,8 @@ export default function RecentActivity({ activities = DEFAULT_ACTIVITIES, onView
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3 }}
       style={{
-        background: '#FFFFFF',
-        border: '1px solid #E7E3EF',
+        background: 'var(--sc-card)',
+        border: '1px solid var(--sc-border)',
         borderRadius: 24,
         padding: 20,
         marginBottom: 20,
@@ -25,7 +25,7 @@ export default function RecentActivity({ activities = DEFAULT_ACTIVITIES, onView
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: '#171642', margin: 0 }}>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--sc-text)', margin: 0 }}>
           Recent Activity
         </h3>
         <motion.button
@@ -34,7 +34,7 @@ export default function RecentActivity({ activities = DEFAULT_ACTIVITIES, onView
           onClick={onViewAll}
           style={{
             fontSize: 12,
-            color: '#5E47B8',
+            color: 'var(--sc-purple-text)',
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
@@ -61,22 +61,22 @@ export default function RecentActivity({ activities = DEFAULT_ACTIVITIES, onView
               padding: '12px 14px',
               background: 'transparent',
               borderRadius: 14,
-              border: '1px solid #E7E3EF',
+              border: '1px solid var(--sc-border)',
               cursor: 'pointer',
               transition: 'all 0.2s',
             }}
-            whileHover={{ background: '#F7F5FB' }}
+            whileHover={{ background: 'var(--sc-bg)' }}
           >
             <div style={{ fontSize: 18, flexShrink: 0 }}>{activity.emoji}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#171642' }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--sc-text)' }}>
                 {activity.title}
               </div>
-              <div style={{ fontSize: 11, color: '#69677D', marginTop: 2 }}>
+              <div style={{ fontSize: 11, color: 'var(--sc-text-2)', marginTop: 2 }}>
                 {activity.time}
               </div>
             </div>
-            <ChevronRight size={14} color="#69677D" />
+            <ChevronRight size={14} color="var(--sc-text-2)" />
           </motion.div>
         ))}
       </div>

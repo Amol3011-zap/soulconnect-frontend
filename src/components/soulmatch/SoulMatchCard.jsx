@@ -47,7 +47,7 @@ function Avatar({ name, id, src, size = 72 }) {
         width: '100%', height: '100%', borderRadius: '50%', overflow: 'hidden',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         background: `linear-gradient(150deg, ${from}D9 0%, ${to} 100%)`,
-        border: '2px solid #1B1039', color: '#171642',
+        border: '2px solid #1B1039', color: 'var(--sc-text)',
         fontSize: size * 0.3, fontWeight: 700,
       }}>
         {show ? (
@@ -74,8 +74,8 @@ function ScoreRing({ percent, size = 54 }) {
         position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center', lineHeight: 1,
       }}>
-        <span style={{ fontSize: 13.5, fontWeight: 800, color: '#171642' }}>{percent}%</span>
-        <span style={{ fontSize: 8, fontWeight: 600, color: '#69677D', marginTop: 2 }}>Match</span>
+        <span style={{ fontSize: 13.5, fontWeight: 800, color: 'var(--sc-text)' }}>{percent}%</span>
+        <span style={{ fontSize: 8, fontWeight: 600, color: 'var(--sc-text-2)', marginTop: 2 }}>Match</span>
       </div>
     </div>
   );

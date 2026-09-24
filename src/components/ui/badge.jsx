@@ -10,7 +10,7 @@ const badgeVariants = cva(
         default: 'bg-secondary text-secondary-foreground',
         outline: 'border border-border bg-card text-muted-foreground',
         solid: 'bg-primary text-primary-foreground',
-        warm: 'border border-[#EFE6D6] bg-[#FAF7F2] text-[#7A5C33]',
+        warm: 'border border-[color:var(--sc-warm-line)] bg-[color:var(--sc-warm)] text-[color:var(--sc-warm-text)]',
       },
     },
     defaultVariants: { variant: 'default' },

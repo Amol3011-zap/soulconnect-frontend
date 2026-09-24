@@ -47,7 +47,7 @@ function NotifItem({ n }) {
           {n.title}
         </div>
         {n.sub && (
-          <div style={{ fontSize: 11, color: '#5E47B8', marginTop: 2, fontWeight: 600 }}>
+          <div style={{ fontSize: 11, color: 'var(--sc-purple-text)', marginTop: 2, fontWeight: 600 }}>
             {n.sub}
           </div>
         )}
@@ -113,6 +113,7 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
         <motion.div
           ref={dropdownRef}
           key="notif-dropdown"
+          className="sc-portal"
           initial={{ opacity: 0, y: -10, scale: 0.96 }}
           animate={{ opacity: 1, y: 0,   scale: 1    }}
           exit={{   opacity: 0, y: -6,   scale: 0.98 }}
@@ -124,7 +125,7 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
             width: 320,
             zIndex: 99999,
             background: '#160A36',
-            border: '1px solid #DCD2F2',
+            border: '1px solid var(--sc-line)',
             borderRadius: 18,
             boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
             overflow: 'hidden',
@@ -141,14 +142,14 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: '14px 16px 10px',
-            borderBottom: '1px solid #E7E3EF',
+            borderBottom: '1px solid var(--sc-border)',
           }}>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#171642', letterSpacing: '-0.01em' }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--sc-text)', letterSpacing: '-0.01em' }}>
                 Notifications
               </div>
               {unreadCount > 0 && (
-                <div style={{ fontSize: 11, color: '#5E47B8', marginTop: 1, fontWeight: 500 }}>
+                <div style={{ fontSize: 11, color: 'var(--sc-purple-text)', marginTop: 1, fontWeight: 500 }}>
                   {unreadCount} Unread
                 </div>
               )}
@@ -158,7 +159,7 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
                 onClick={markAllRead}
                 style={{
                   background: 'none', border: 'none',
-                  color: '#5E47B8', fontSize: 11, fontWeight: 600,
+                  color: 'var(--sc-purple-text)', fontSize: 11, fontWeight: 600,
                   cursor: 'pointer', fontFamily: 'inherit',
                   padding: '4px 8px', borderRadius: 6,
                 }}
@@ -182,7 +183,7 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
 
           {/* Footer */}
           <div style={{
-            borderTop: '1px solid #E7E3EF',
+            borderTop: '1px solid var(--sc-border)',
             padding: '12px 16px',
             textAlign: 'center',
           }}>
@@ -190,7 +191,7 @@ export default function NotificationDropdown({ isOpen, onClose, anchorRef }) {
               onClick={() => { navigate('/notifications'); onClose(); }}
               style={{
                 background: 'none', border: 'none',
-                color: '#5E47B8', fontSize: 13, fontWeight: 600,
+                color: 'var(--sc-purple-text)', fontSize: 13, fontWeight: 600,
                 cursor: 'pointer', fontFamily: 'inherit',
                 display: 'inline-flex', alignItems: 'center', gap: 5,
               }}

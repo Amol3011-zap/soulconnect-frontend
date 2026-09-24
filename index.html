@@ -3,6 +3,19 @@
   <head>
     <meta charset="UTF-8" />
 
+    <!-- ── App theme (logged-in app only) — resolved before first paint so a
+         dark-mode user never sees a light flash. Mirrors src/store/theme.js. -->
+    <script>
+      (function () {
+        var t = 'light';
+        try {
+          var m = (JSON.parse(localStorage.getItem('theme-store') || '{}').state || {}).mode;
+          if (m === 'dark' || (m === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) t = 'dark';
+        } catch (e) {}
+        document.documentElement.setAttribute('data-sc-theme', t);
+      })();
+    </script>
+
     <!-- ── Viewport ── -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 

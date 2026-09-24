@@ -26,8 +26,8 @@ export default function LifeChapterCard() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.05 }}
       style={{
-        background: '#FFFFFF',
-        border: '1px solid #E7E3EF',
+        background: 'var(--sc-card)',
+        border: '1px solid var(--sc-border)',
         borderRadius: 24,
         padding: 20,
         marginBottom: 20,
@@ -35,7 +35,7 @@ export default function LifeChapterCard() {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, color: '#5E47B8', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--sc-purple-text)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           Current Chapter
         </span>
         {!isEditing && (
@@ -48,7 +48,7 @@ export default function LifeChapterCard() {
               fontSize: 11,
               border: 'none',
               background: 'transparent',
-              color: '#5E47B8',
+              color: 'var(--sc-purple-text)',
               cursor: 'pointer',
               fontFamily: 'inherit',
               fontWeight: 600,
@@ -70,9 +70,9 @@ export default function LifeChapterCard() {
               flex: 1,
               padding: '10px 12px',
               borderRadius: 10,
-              border: '1px solid #DCD2F2',
-              background: '#EFEAFB',
-              color: '#171642',
+              border: '1px solid var(--sc-line)',
+              background: 'var(--sc-tint)',
+              color: 'var(--sc-text)',
               fontSize: 12,
               fontFamily: 'inherit',
               outline: 'none',
@@ -87,7 +87,7 @@ export default function LifeChapterCard() {
               borderRadius: 10,
               border: 'none',
               background: '#8066D5',
-              color: '#171642',
+              color: 'var(--sc-text)',
               fontSize: 12,
               fontWeight: 600,
               cursor: 'pointer',
@@ -98,7 +98,7 @@ export default function LifeChapterCard() {
           </motion.button>
         </div>
       ) : (
-        <div style={{ fontSize: 16, fontWeight: 600, color: '#171642', lineHeight: 1.5 }}>
+        <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--sc-text)', lineHeight: 1.5 }}>
           {currentChapter}
         </div>
       )}

@@ -53,7 +53,7 @@ export default function HomeTinyWinCard({ win, isCompleted, onComplete }) {
       <span
         className={cn(
           'flex h-7 w-7 shrink-0 items-center justify-center rounded-full border',
-          isCompleted ? 'border-[#2E9E6E] bg-[#2E9E6E] text-white' : 'border-border bg-card text-transparent'
+          isCompleted ? 'border-[color:var(--sc-success)] bg-[color:var(--sc-success)] text-white' : 'border-border bg-card text-transparent'
         )}
         aria-hidden="true"
       >

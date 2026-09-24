@@ -55,12 +55,12 @@ export default function MatchDetailPanel({ match, requested, onClose, onConnect,
       >
         <header style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
           <div style={{ minWidth: 0 }}>
-            <h2 id="sm-detail-title" style={{ margin: 0, fontSize: 19, fontWeight: 700, color: '#171642' }}>
+            <h2 id="sm-detail-title" style={{ margin: 0, fontSize: 19, fontWeight: 700, color: 'var(--sc-text)' }}>
               {match.age ? `${match.name}, ${match.age}` : match.name}
             </h2>
             {match.city && (
               <p style={{
-                margin: '5px 0 0', fontSize: 12.5, color: '#69677D',
+                margin: '5px 0 0', fontSize: 12.5, color: 'var(--sc-text-2)',
                 display: 'flex', alignItems: 'center', gap: 5,
               }}>
                 <MapPin size={12} strokeWidth={2} aria-hidden="true" />{match.city}
@@ -87,7 +87,7 @@ export default function MatchDetailPanel({ match, requested, onClose, onConnect,
           </p>
         )}
 
-        <h3 style={{ margin: '22px 0 10px', fontSize: 14, fontWeight: 700, color: '#171642' }}>
+        <h3 style={{ margin: '22px 0 10px', fontSize: 14, fontWeight: 700, color: 'var(--sc-text)' }}>
           Why you two matched
         </h3>
         <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 9 }}>

@@ -56,7 +56,7 @@ export default function ErrorToast({
         >
           <div
             style={{
-              background: '#FFFFFF',
+              background: 'var(--sc-card)',
               backdropFilter: 'none',
               border: '1px solid rgba(248, 113, 113, 0.3)',
               borderRadius: 16,
@@ -83,7 +83,7 @@ export default function ErrorToast({
               {/* Error Message */}
               <p
                 style={{
-                  color: '#171642',
+                  color: 'var(--sc-text)',
                   fontSize: 14,
                   fontWeight: 500,
                   lineHeight: '1.5',
@@ -141,7 +141,7 @@ export default function ErrorToast({
                 flexShrink: 0,
                 background: 'none',
                 border: 'none',
-                color: '#69677D',
+                color: 'var(--sc-text-2)',
                 cursor: 'pointer',
                 padding: '4px',
                 display: 'flex',

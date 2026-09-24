@@ -3,13 +3,13 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Plus, Users, ChevronRight } from 'lucide-react';
 
-const BG = '#F7F5FB';
-const CARD = '#FFFFFF';
-const BORDER = '#E7E3EF';
+const BG = 'var(--sc-bg)';
+const CARD = 'var(--sc-card)';
+const BORDER = 'var(--sc-border)';
 const PURPLE = '#8066D5';
-const GOLD = '#A56A12';
-const TEXT2 = '#69677D';
-const TEXT3 = '#4A4760';
+const GOLD = 'var(--sc-gold-text)';
+const TEXT2 = 'var(--sc-text-2)';
+const TEXT3 = 'var(--sc-text-3)';
 
 const MY_COMMUNITIES = [
   { id: 1, name: 'Anxiety Support', icon: '🌊', members: '12.4K', color: '#7C3AED', unread: 3, desc: 'A safe space to share and support each other through anxiety.' },
@@ -61,7 +61,7 @@ export default function Community() {
               bottom: 90,
               left: '50%',
               transform: 'translateX(-50%)',
-              background: '#FFFFFF',
+              background: 'var(--sc-card)',
               border: `1px solid ${GOLD}`,
               color: GOLD,
               padding: '12px 24px',
@@ -84,7 +84,7 @@ export default function Community() {
         transition={{ duration: 0.4 }}
         style={{ marginBottom: 20 }}
       >
-        <h1 style={{ fontSize: 28, fontWeight: 800, color: '#171642', margin: 0 }}>Community</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: 'var(--sc-text)', margin: 0 }}>Community</h1>
         <p style={{ fontSize: 14, color: TEXT2, marginTop: 4, marginBottom: 0 }}>
           Support circles built around shared healing.
         </p>
@@ -109,11 +109,11 @@ export default function Community() {
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            background: '#FFFFFF',
-            border: '1px solid #E7E3EF',
+            background: 'var(--sc-card)',
+            border: '1px solid var(--sc-border)',
             borderRadius: 12,
             padding: '10px 16px 10px 40px',
-            color: '#171642',
+            color: 'var(--sc-text)',
             fontSize: 14,
             outline: 'none',
             boxSizing: 'border-box',
@@ -130,10 +130,10 @@ export default function Community() {
         style={{ marginBottom: 28 }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#171642' }}>My Communities</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--sc-text)' }}>My Communities</span>
           <span
             onClick={triggerToast}
-            style={{ fontSize: 12, color: PURPLE, cursor: 'pointer', fontWeight: 500 }}
+            style={{ fontSize: 12, color: 'var(--sc-purple-ink)', cursor: 'pointer', fontWeight: 500 }}
           >
             View All
           </span>
@@ -178,7 +178,7 @@ export default function Community() {
 
             {/* Name & members */}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#171642' }}>{community.name}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--sc-text)' }}>{community.name}</div>
               <div style={{ fontSize: 12, color: TEXT2, marginTop: 2 }}>{community.members} members</div>
             </div>
 
@@ -190,7 +190,7 @@ export default function Community() {
                     width: 20,
                     height: 20,
                     borderRadius: '50%',
-                    background: PURPLE,
+                    background: 'var(--sc-purple-fill)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -216,14 +216,14 @@ export default function Community() {
         style={{ marginBottom: 28 }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#171642' }}>Trending Communities</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--sc-text)' }}>Trending Communities</span>
           <button
             onClick={triggerToast}
             style={{
               width: 28,
               height: 28,
               borderRadius: '50%',
-              background: PURPLE,
+              background: 'var(--sc-purple-fill)',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
@@ -280,7 +280,7 @@ export default function Community() {
                     style={{
                       background: `${PURPLE}33`,
                       border: `1px solid ${PURPLE}66`,
-                      color: PURPLE,
+                      color: 'var(--sc-purple-ink)',
                       fontSize: 10,
                       fontWeight: 700,
                       padding: '2px 8px',
@@ -292,7 +292,7 @@ export default function Community() {
                 )}
               </div>
 
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#171642', marginBottom: 4 }}>{community.name}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--sc-text)', marginBottom: 4 }}>{community.name}</div>
               <div style={{ fontSize: 11, color: TEXT2, marginBottom: 12 }}>{community.members} members</div>
 
               <button
@@ -300,8 +300,8 @@ export default function Community() {
                   width: '100%',
                   padding: '6px 0',
                   borderRadius: 8,
-                  background: '#F7F5FB',
-                  border: '1px solid #E7E3EF',
+                  background: 'var(--sc-bg)',
+                  border: '1px solid var(--sc-border)',
                   color: TEXT3,
                   fontSize: 12,
                   fontWeight: 600,
@@ -322,7 +322,7 @@ export default function Community() {
         transition={{ delay: 0.5, duration: 0.4 }}
         style={{ marginBottom: 20 }}
       >
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#171642', marginBottom: 12 }}>Browse by Topic</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--sc-text)', marginBottom: 12 }}>Browse by Topic</div>
         <div
           style={{
             display: 'flex',
@@ -340,7 +340,7 @@ export default function Community() {
                 padding: '7px 16px',
                 borderRadius: 20,
                 border: `1px solid ${activeCategory === cat ? PURPLE : BORDER}`,
-                background: activeCategory === cat ? PURPLE : 'rgba(255,255,255,0.04)',
+                background: activeCategory === cat ? 'var(--sc-purple-fill)' : 'rgba(255,255,255,0.04)',
                 color: activeCategory === cat ? '#fff' : TEXT3,
                 fontSize: 13,
                 fontWeight: activeCategory === cat ? 600 : 400,
@@ -369,7 +369,7 @@ export default function Community() {
           width: 52,
           height: 52,
           borderRadius: '50%',
-          background: `#8066D5`,
+          background: 'var(--sc-purple-fill)',
           border: 'none',
           cursor: 'pointer',
           display: 'flex',

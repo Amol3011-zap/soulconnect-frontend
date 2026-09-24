@@ -134,6 +134,25 @@ export const pulseAPI = {
     }),
 };
 
+// Soul Climate daily check-in. The server derives the user from the token and
+// the calendar day from the IANA timezone; one check-in per local day.
+export const soulClimateAPI = {
+  getToday: (timezone) =>
+    api.get('/soul-climate/today', { params: { timezone } }).then(r => r.data).catch(err => {
+      const status = err?.response?.status;
+      if (status === 401) throw { type: 'auth', message: 'Session expired. Please log in again.' };
+      throw { type: 'network', message: "Couldn't load today's check-in." };
+    }),
+  checkIn: (weather, timezone) =>
+    api.post('/soul-climate/checkin', { weather, timezone }).then(r => r.data).catch(err => {
+      const status = err?.response?.status;
+      if (status === 409) throw { type: 'already_checked_in', message: 'You already checked in today.', entry: err.response.data?.detail };
+      if (status === 401) throw { type: 'auth', message: 'Session expired. Please log in again.' };
+      if (status === 422) throw { type: 'validation', message: 'Please pick one of the moods.' };
+      throw { type: 'network', message: "Couldn't save your check-in. Please try again." };
+    }),
+};
+
 export const analyticsAPI = {
   sessionStart: (data) => api.post('/analytics/session/start', data).catch(() => {}),
   sessionUpdate: (data) => api.post('/analytics/session/update', data).catch(() => {}),

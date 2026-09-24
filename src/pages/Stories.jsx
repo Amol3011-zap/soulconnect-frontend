@@ -16,17 +16,17 @@ import ErrorToast from '../components/ErrorToast';
 import { StoriesSkeleton } from '../components/Skeletons';
 
 /* ─── Design tokens ──────────────────────────────────────────────────────────── */
-const BG       = '#F7F5FB';
-const CARD     = '#FFFFFF';
-const BORDER   = '#E7E3EF';
+const BG       = 'var(--sc-bg)';
+const CARD     = 'var(--sc-card)';
+const BORDER   = 'var(--sc-border)';
 const PURPLE   = '#8066D5';
-const GOLD     = '#A56A12';
-const TEXT_DIM = '#69677D';
-const TEXT_MID = '#4A4760';
+const GOLD     = 'var(--sc-gold-text)';
+const TEXT_DIM = 'var(--sc-text-2)';
+const TEXT_MID = 'var(--sc-text-3)';
 const GLASS_BTN = {
-  background: '#F7F5FB',
-  border: '1px solid #E7E3EF',
-  borderRadius: 12, color: '#171642',
+  background: 'var(--sc-bg)',
+  border: '1px solid var(--sc-border)',
+  borderRadius: 12, color: 'var(--sc-text)',
   cursor: 'pointer', fontFamily: 'inherit',
 };
 
@@ -67,8 +67,8 @@ const TRIGGER_WARNINGS = ['None', 'Mental Health', 'Loss', 'Trauma', 'Relationsh
 const TRENDING = [
   { topic: 'Burnout',       count: '1.2K', emoji: '🔥', color: '#F97316' },
   { topic: 'Anxiety',       count: '2.8K', emoji: '😔', color: '#3B82F6' },
-  { topic: 'Gratitude',     count: '923',  emoji: '🙏', color: '#A56A12' },
-  { topic: 'Relationships', count: '1.5K', emoji: '💜', color: '#5E47B8' },
+  { topic: 'Gratitude',     count: '923',  emoji: '🙏', color: 'var(--sc-gold-text)' },
+  { topic: 'Relationships', count: '1.5K', emoji: '💜', color: 'var(--sc-purple-text)' },
   { topic: 'Meditation',    count: '1.1K', emoji: '🧘', color: '#2DD4BF' },
   { topic: 'Growth',        count: '876',  emoji: '🌱', color: '#10B981' },
   { topic: 'Grief',         count: '634',  emoji: '🌧', color: '#6366F1' },
@@ -217,7 +217,7 @@ export function GradientAvatar({ name, isAnon, size = 40 }) {
     return (
       <div style={{
         width: size, height: size, borderRadius: '50%', flexShrink: 0,
-        background: '#E5DDF5',
+        background: 'var(--sc-purple-soft)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: Math.round(size * 0.42),
       }}>
@@ -250,7 +250,7 @@ function Toast({ message, visible }) {
           transition={{ type: 'spring', stiffness: 280, damping: 24 }}
           style={{
             position: 'fixed', bottom: 90, left: '50%', transform: 'translateX(-50%)',
-            background: '#FFFFFF', backdropFilter: 'none',
+            background: 'var(--sc-card)', backdropFilter: 'none',
             border: '1px solid rgba(244,197,66,0.35)', borderRadius: 16,
             color: GOLD, padding: '12px 24px', fontSize: 14, fontWeight: 600,
             zIndex: 9999, whiteSpace: 'nowrap',
@@ -309,7 +309,7 @@ function ComposerCard({ onShare, triggerOpen, onTriggerConsumed }) {
             style={{
               position: 'absolute', top: 'calc(100% + 6px)', left: 0,
               background: 'rgba(20,10,50,0.98)', backdropFilter: 'none',
-              border: '1px solid #DCD2F2', borderRadius: 14,
+              border: '1px solid var(--sc-line)', borderRadius: 14,
               padding: '6px', zIndex: 200, minWidth: 160,
               boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
             }}
@@ -361,8 +361,8 @@ function ComposerCard({ onShare, triggerOpen, onTriggerConsumed }) {
       transition={{ delay: 0.06, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       onClick={() => setOpenDrop(null)}
       style={{
-        background: '#FFFFFF',
-        border: '1px solid #E7E3EF',
+        background: 'var(--sc-card)',
+        border: '1px solid var(--sc-border)',
         borderRadius: 20, padding: '18px 16px 16px',
         marginBottom: 16, position: 'relative', overflow: 'visible',
         boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
@@ -380,7 +380,7 @@ function ComposerCard({ onShare, triggerOpen, onTriggerConsumed }) {
           <div
             onClick={() => { setFocused(true); setTimeout(() => textareaRef.current?.focus(), 50); }}
             style={{
-              background: '#F7F5FB', border: '1px solid #E7E3EF',
+              background: 'var(--sc-bg)', border: '1px solid var(--sc-border)',
               borderRadius: 16, padding: '12px 14px', marginBottom: 14, cursor: 'text',
               display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10,
             }}
@@ -424,9 +424,9 @@ function ComposerCard({ onShare, triggerOpen, onTriggerConsumed }) {
               rows={5}
               style={{
                 width: '100%', boxSizing: 'border-box',
-                background: '#F7F5FB', border: '1px solid #DCD2F2',
+                background: 'var(--sc-bg)', border: '1px solid var(--sc-line)',
                 borderRadius: 16, padding: '12px 14px', resize: 'vertical',
-                fontFamily: 'inherit', fontSize: 14, color: '#171642',
+                fontFamily: 'inherit', fontSize: 14, color: 'var(--sc-text)',
                 lineHeight: 1.6, outline: 'none',
               }}
             />
@@ -453,7 +453,7 @@ function ComposerCard({ onShare, triggerOpen, onTriggerConsumed }) {
             whileTap={{ scale: 0.97 }}
             onClick={focused ? handleShare : () => { setFocused(true); setTimeout(() => textareaRef.current?.focus(), 50); }}
             style={{
-              background: '#8066D5',
+              background: 'var(--sc-purple-fill)',
               border: 'none', borderRadius: 14, color: '#FFFFFF',
               fontWeight: 700, fontSize: 14, padding: '11px 24px',
               cursor: 'pointer', fontFamily: 'inherit',
@@ -492,7 +492,7 @@ function FeaturedStoryCard({ story, onNavigate }) {
       onClick={() => onNavigate(story.id)}
       style={{
         borderRadius: 24, overflow: 'hidden',
-        border: '1px solid #DCD2F2',
+        border: '1px solid var(--sc-line)',
         boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
         cursor: 'pointer', position: 'relative', marginBottom: 12,
       }}
@@ -509,10 +509,10 @@ function FeaturedStoryCard({ story, onNavigate }) {
         </div>
       </div>
       <div style={{
-        background: '#FFFFFF',
-        padding: '16px 16px 16px', borderTop: '1px solid #E7E3EF',
+        background: 'var(--sc-card)',
+        padding: '16px 16px 16px', borderTop: '1px solid var(--sc-border)',
       }}>
-        <h2 style={{ fontSize: 18, fontWeight: 600, color: '#171642', margin: '0 0 8px', lineHeight: 1.3, letterSpacing: '-0.01em' }}>
+        <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--sc-text)', margin: '0 0 8px', lineHeight: 1.3, letterSpacing: '-0.01em' }}>
           {story.title}
         </h2>
         <p style={{ fontSize: 13, color: TEXT_MID, margin: '0 0 14px', lineHeight: 1.6 }}>
@@ -532,7 +532,7 @@ function FeaturedStoryCard({ story, onNavigate }) {
             whileTap={{ scale: 0.97 }}
             onClick={e => { e.stopPropagation(); onNavigate(story.id); }}
             style={{
-              background: '#8066D5', border: 'none',
+              background: 'var(--sc-purple-fill)', border: 'none',
               borderRadius: 12, color: '#FFFFFF', fontWeight: 600, fontSize: 13,
               padding: '9px 18px', cursor: 'pointer', fontFamily: 'inherit',
               display: 'flex', alignItems: 'center', gap: 6,
@@ -556,7 +556,7 @@ function DailyPromptCard({ onWrite }) {
       transition={{ delay: 0.14, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       style={{
         background: CARD, backdropFilter: 'none', WebkitBackdropFilter: 'none',
-        border: '1px solid #DCD2F2', borderRadius: 24,
+        border: '1px solid var(--sc-line)', borderRadius: 24,
         padding: '20px 20px', marginBottom: 20, position: 'relative', overflow: 'hidden',
         boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
         display: 'grid', gridTemplateColumns: '1fr auto', gap: 16, alignItems: 'center',
@@ -565,7 +565,7 @@ function DailyPromptCard({ onWrite }) {
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'transparent' }} />
       <div>
         <div style={{ fontSize: 11, color: GOLD, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>✨ Today's Prompt</div>
-        <p style={{ fontSize: 16, fontWeight: 700, color: '#171642', margin: '0 0 8px', lineHeight: 1.4, letterSpacing: '-0.01em' }}>
+        <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--sc-text)', margin: '0 0 8px', lineHeight: 1.4, letterSpacing: '-0.01em' }}>
           "What is one thing you forgive yourself for today?"
         </p>
         <p style={{ fontSize: 12, color: TEXT_DIM, margin: '0 0 14px' }}>2,438 people answered today</p>
@@ -573,7 +573,7 @@ function DailyPromptCard({ onWrite }) {
           whileTap={{ scale: 0.97 }}
           onClick={onWrite}
           style={{
-            background: '#8066D5', border: 'none',
+            background: 'var(--sc-purple-fill)', border: 'none',
             borderRadius: 12, color: '#FFFFFF', fontWeight: 600, fontSize: 13,
             padding: '9px 18px', cursor: 'pointer', fontFamily: 'inherit',
             display: 'flex', alignItems: 'center', gap: 6,
@@ -593,7 +593,7 @@ function TrendingTopics({ onSelect }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <span style={{ fontSize: 13, fontWeight: 700, color: '#171642' }}>Trending Topics</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--sc-text)' }}>Trending Topics</span>
       </div>
       <div style={{ display: 'flex', gap: 10, overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: 4 }}>
         {TRENDING.map((t, i) => (
@@ -616,7 +616,7 @@ function TrendingTopics({ onSelect }) {
             onMouseLeave={e => { e.currentTarget.style.borderColor = t.color + '25'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.3)'; }}
           >
             <div style={{ fontSize: 20, marginBottom: 6 }}>{t.emoji}</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#171642', marginBottom: 2 }}>{t.topic}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--sc-text)', marginBottom: 2 }}>{t.topic}</div>
             <div style={{ fontSize: 11, color: TEXT_DIM }}>{t.count} Stories</div>
           </motion.button>
         ))}
@@ -635,7 +635,7 @@ function FilterBar({ active, setActive }) {
       display: 'flex', gap: 8, overflowX: 'auto', scrollbarWidth: 'none',
       paddingBottom: 4, marginBottom: 16,
       position: 'sticky', top: 0, zIndex: 40,
-      background: 'linear-gradient(180deg, rgba(247,245,251,0.97) 80%, rgba(247,245,251,0))',
+      background: 'linear-gradient(180deg, var(--sc-topbar-bg) 80%, rgba(247,245,251,0))',
       backdropFilter: 'none', marginLeft: -32, marginRight: -32,
       padding: '10px 32px 10px',
     }}>
@@ -649,7 +649,7 @@ function FilterBar({ active, setActive }) {
               flexShrink: 0, display: 'flex', alignItems: 'center', gap: 5,
               padding: '8px 16px', borderRadius: 20, cursor: 'pointer',
               fontFamily: 'inherit', fontSize: 13, fontWeight: isActive ? 700 : 500,
-              background: isActive ? '#8066D5' : 'rgba(255,255,255,0.06)',
+              background: isActive ? 'var(--sc-purple-fill)' : 'rgba(255,255,255,0.06)',
               border: isActive ? 'none' : '1px solid rgba(255,255,255,0.09)',
               color: isActive ? '#fff' : TEXT_MID,
               boxShadow: isActive ? '0 4px 14px rgba(124,58,237,0.4)' : 'none',
@@ -699,11 +699,11 @@ function RepliesPanel({ storyId, onClose }) {
     >
       <div style={{
         background: 'rgba(20,10,50,0.9)', backdropFilter: 'none',
-        border: '1px solid #DCD2F2', borderRadius: 16,
+        border: '1px solid var(--sc-line)', borderRadius: 16,
         padding: '16px', marginTop: 8,
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#171642' }}>Support Replies ({allReplies.length})</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--sc-text)' }}>Support Replies ({allReplies.length})</span>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: TEXT_DIM }}>
             <X size={16} />
           </button>
@@ -721,9 +721,9 @@ function RepliesPanel({ storyId, onClose }) {
                 <GradientAvatar name={reply.authorName} isAnon={reply.isAnon} size={32} />
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#171642' }}>{reply.authorName}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--sc-text)' }}>{reply.authorName}</span>
                     {reply.isAnon && (
-                      <span style={{ background: '#EFEAFB', border: '1px solid #DCD2F2', color: '#5E47B8', fontSize: 9, fontWeight: 600, borderRadius: 20, padding: '1px 6px' }}>Anon</span>
+                      <span style={{ background: 'var(--sc-tint)', border: '1px solid var(--sc-line)', color: 'var(--sc-purple-text)', fontSize: 9, fontWeight: 600, borderRadius: 20, padding: '1px 6px' }}>Anon</span>
                     )}
                   </div>
                   <p style={{ fontSize: 13, color: TEXT_MID, margin: 0, lineHeight: 1.55 }}>{reply.content}</p>
@@ -743,9 +743,9 @@ function RepliesPanel({ storyId, onClose }) {
               rows={2}
               style={{
                 width: '100%', boxSizing: 'border-box',
-                background: '#F7F5FB', border: '1px solid #E7E3EF',
+                background: 'var(--sc-bg)', border: '1px solid var(--sc-border)',
                 borderRadius: 12, padding: '10px 12px', resize: 'none',
-                fontFamily: 'inherit', fontSize: 13, color: '#171642',
+                fontFamily: 'inherit', fontSize: 13, color: 'var(--sc-text)',
                 outline: 'none',
               }}
             />
@@ -762,9 +762,9 @@ function RepliesPanel({ storyId, onClose }) {
             onClick={handleSubmit}
             disabled={!text.trim()}
             style={{
-              background: text.trim() ? '#8066D5' : 'rgba(255,255,255,0.06)',
+              background: text.trim() ? 'var(--sc-purple-fill)' : 'rgba(255,255,255,0.06)',
               border: 'none', borderRadius: 12, padding: '10px 14px', cursor: text.trim() ? 'pointer' : 'default',
-              color: '#171642', flexShrink: 0,
+              color: 'var(--sc-text)', flexShrink: 0,
             }}
           >
             <Send size={15} />
@@ -821,7 +821,7 @@ function StoryCard({ story, index, userStoryIds, toast }) {
       transition={{ delay: Math.min(index * 0.04, 0.3), duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
       style={{
         background: CARD, backdropFilter: 'none', WebkitBackdropFilter: 'none',
-        border: '1px solid #E7E3EF', borderRadius: 22,
+        border: '1px solid var(--sc-border)', borderRadius: 22,
         padding: '16px 16px 14px', marginBottom: 10,
         position: 'relative', overflow: 'visible',
         boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
@@ -838,9 +838,9 @@ function StoryCard({ story, index, userStoryIds, toast }) {
           <GradientAvatar name={story.authorName} isAnon={story.isAnon} size={38} />
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#171642' }}>{story.authorName}</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--sc-text)' }}>{story.authorName}</span>
               {story.isAnon && (
-                <span style={{ background: '#EFEAFB', border: '1px solid #DCD2F2', color: '#5E47B8', fontSize: 10, fontWeight: 600, borderRadius: 20, padding: '1px 7px' }}>
+                <span style={{ background: 'var(--sc-tint)', border: '1px solid var(--sc-line)', color: 'var(--sc-purple-text)', fontSize: 10, fontWeight: 600, borderRadius: 20, padding: '1px 7px' }}>
                   Anonymous
                 </span>
               )}
@@ -881,7 +881,7 @@ function StoryCard({ story, index, userStoryIds, toast }) {
                   style={{
                     position: 'absolute', top: 'calc(100% + 4px)', right: 0,
                     background: 'rgba(20,10,50,0.98)', backdropFilter: 'none',
-                    border: '1px solid #DCD2F2', borderRadius: 14,
+                    border: '1px solid var(--sc-line)', borderRadius: 14,
                     padding: '6px', zIndex: 300, minWidth: 160,
                     boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
                   }}
@@ -925,7 +925,7 @@ function StoryCard({ story, index, userStoryIds, toast }) {
           {story.category}
         </span>
         <span style={{
-          background: '#F7F5FB', border: '1px solid #E7E3EF',
+          background: 'var(--sc-bg)', border: '1px solid var(--sc-border)',
           color: TEXT_MID, fontSize: 11, fontWeight: 500, borderRadius: 20, padding: '2px 10px',
           display: 'flex', alignItems: 'center', gap: 4,
         }}>
@@ -936,7 +936,7 @@ function StoryCard({ story, index, userStoryIds, toast }) {
       {/* Title */}
       <h3
         onClick={() => navigate(`/story/${story.id}`)}
-        style={{ fontSize: 15, fontWeight: 700, color: '#171642', margin: '0 0 8px', lineHeight: 1.35, cursor: 'pointer', letterSpacing: '-0.01em' }}
+        style={{ fontSize: 15, fontWeight: 700, color: 'var(--sc-text)', margin: '0 0 8px', lineHeight: 1.35, cursor: 'pointer', letterSpacing: '-0.01em' }}
         onMouseEnter={e => e.currentTarget.style.color = '#C4B5FD'}
         onMouseLeave={e => e.currentTarget.style.color = '#fff'}
       >
@@ -965,12 +965,12 @@ function StoryCard({ story, index, userStoryIds, toast }) {
         {!expanded && (
           <div style={{
             position: 'absolute', bottom: 0, left: 0, right: 0, height: 28,
-            background: 'linear-gradient(transparent, #FFFFFF)',
+            background: 'linear-gradient(transparent, var(--sc-card))',
             display: 'flex', alignItems: 'flex-end',
           }}>
             <button
               onClick={() => navigate(`/story/${story.id}`)}
-              style={{ background: 'none', border: 'none', color: '#5E47B8', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}
+              style={{ background: 'none', border: 'none', color: 'var(--sc-purple-text)', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}
             >
               Read More →
             </button>
@@ -981,7 +981,7 @@ function StoryCard({ story, index, userStoryIds, toast }) {
       {expanded && (
         <button
           onClick={() => setExpanded(false)}
-          style={{ background: 'none', border: 'none', color: '#5E47B8', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: '0 0 10px', fontFamily: 'inherit' }}
+          style={{ background: 'none', border: 'none', color: 'var(--sc-purple-text)', fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: '0 0 10px', fontFamily: 'inherit' }}
         >
           Show Less ↑
         </button>
@@ -1047,8 +1047,8 @@ function AIInsightCard() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.35 }}
       style={{
-        background: '#FFFFFF',
-        border: '1px solid #E7E3EF', borderRadius: 20,
+        background: 'var(--sc-card)',
+        border: '1px solid var(--sc-border)', borderRadius: 20,
         padding: '16px 18px', marginBottom: 10,
         boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
       }}
@@ -1056,12 +1056,12 @@ function AIInsightCard() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
         <div style={{
           width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
-          background: '#8066D5',
+          background: 'var(--sc-purple-fill)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
           boxShadow: 'none',
         }}>🧠</div>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#171642' }}>AI Insight</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--sc-text)' }}>AI Insight</div>
           <div style={{ fontSize: 11, color: TEXT_DIM }}>Based on what you've been reading</div>
         </div>
       </div>
@@ -1092,7 +1092,7 @@ function EmptyState({ filter, search }) {
       style={{ textAlign: 'center', padding: '60px 20px' }}
     >
       <div style={{ fontSize: 48, marginBottom: 16 }}>🌿</div>
-      <h3 style={{ fontSize: 20, fontWeight: 700, color: '#171642', margin: '0 0 8px' }}>
+      <h3 style={{ fontSize: 20, fontWeight: 700, color: 'var(--sc-text)', margin: '0 0 8px' }}>
         {search ? 'No stories found' : `No ${filter} stories yet`}
       </h3>
       <p style={{ fontSize: 14, color: TEXT_DIM, margin: '0 0 20px', lineHeight: 1.6 }}>
@@ -1116,7 +1116,7 @@ function FloatingShareButton({ onClick }) {
       onClick={onClick}
       style={{
         position: 'fixed', bottom: 28, right: 28, zIndex: 200,
-        background: '#8066D5',
+        background: 'var(--sc-purple-fill)',
         border: 'none', borderRadius: 20, color: '#FFFFFF',
         fontFamily: 'inherit', fontWeight: 700, fontSize: 14,
         padding: '14px 22px', cursor: 'pointer',
@@ -1301,7 +1301,7 @@ export default function Stories() {
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 700, color: '#171642', margin: 0, letterSpacing: '-0.01em' }}>Soul Stories</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--sc-text)', margin: 0, letterSpacing: '-0.01em' }}>Soul Stories</h1>
             <p style={{ fontSize: 13, color: TEXT_DIM, margin: '4px 0 0' }}>Real stories. Real people. Real healing.</p>
           </div>
           <motion.button
@@ -1319,7 +1319,7 @@ export default function Stories() {
         {/* Search */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          background: '#F7F5FB', border: '1px solid #E7E3EF',
+          background: 'var(--sc-bg)', border: '1px solid var(--sc-border)',
           borderRadius: 16, padding: '10px 14px',
         }}>
           <Search size={15} color={TEXT_DIM} />
@@ -1329,7 +1329,7 @@ export default function Stories() {
             placeholder="Search stories, authors, categories..."
             style={{
               flex: 1, background: 'none', border: 'none', outline: 'none',
-              fontFamily: 'inherit', fontSize: 13, color: '#171642',
+              fontFamily: 'inherit', fontSize: 13, color: 'var(--sc-text)',
             }}
           />
           {searchQuery && (
@@ -1381,7 +1381,7 @@ export default function Stories() {
       {/* Infinite scroll sentinel */}
       {hasMore && (
         <div ref={sentinelRef} style={{ height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid #DCD2F2', borderTopColor: PURPLE, animation: 'spin 0.7s linear infinite' }} />
+          <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--sc-line)', borderTopColor: PURPLE, animation: 'spin 0.7s linear infinite' }} />
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       )}

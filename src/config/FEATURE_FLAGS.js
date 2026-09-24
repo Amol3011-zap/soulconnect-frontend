@@ -29,3 +29,8 @@ export const FEATURES = {
   VOICE_JOURNAL:  false,   // Voice-to-text journaling (v2)
   LETTERS:        false,   // Letters to future/past self (v2)
 };
+
+// Soul Climate check-ins use the backend (/api/soul-climate) only when this
+// build sets VITE_SOUL_CLIMATE_API=true — i.e. after that backend is deployed.
+// Until then check-ins are stored on the device (same once-per-local-day rule).
+export const SOUL_CLIMATE_SERVER = import.meta.env.VITE_SOUL_CLIMATE_API === 'true';

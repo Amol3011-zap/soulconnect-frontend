@@ -22,7 +22,7 @@ function MoodSelector({ mood, onMoodSelect, todayMoodMeta, onAddDetails }) {
           </p>
         </div>
         {checkedIn && (
-          <Badge className="shrink-0 gap-1 bg-[#E7F6EF] py-1 text-[#1F7A55]">
+          <Badge className="shrink-0 gap-1 bg-[color:var(--sc-success-bg)] py-1 text-[color:var(--sc-success-text)]">
             <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" /> Checked in
           </Badge>
         )}
@@ -45,7 +45,7 @@ function MoodSelector({ mood, onMoodSelect, todayMoodMeta, onAddDetails }) {
             >
               <span className="text-[26px] leading-none" aria-hidden="true">{m.emoji}</span>
               {/* wraps instead of truncating ("Not Good" → 2 lines on a 393px phone) */}
-              <span className={cn('w-full text-center text-[11.5px] font-medium leading-tight', on ? 'text-[#4B3699]' : 'text-foreground')}>
+              <span className={cn('w-full text-center text-[11.5px] font-medium leading-tight', on ? 'text-[color:var(--sc-purple-deep)]' : 'text-foreground')}>
                 {m.label}
               </span>
             </button>

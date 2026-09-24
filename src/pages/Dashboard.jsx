@@ -31,7 +31,7 @@ function CrisisPopup({ onClose, onNavigate }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 99999,
-      background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)',
+      background: 'var(--sc-scrim)', backdropFilter: 'blur(8px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
     }}>
       <motion.div
@@ -39,10 +39,10 @@ function CrisisPopup({ onClose, onNavigate }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
         style={{
-          background: '#1A1033', borderRadius: 28, padding: '36px 30px',
+          background: 'var(--sc-card)', borderRadius: 28, padding: '36px 30px',
           maxWidth: 420, width: '100%',
           border: '1px solid rgba(139,92,246,0.3)',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.7), 0 0 60px rgba(124,58,237,0.2)',
+          boxShadow: '0 24px 80px var(--sc-shadow), 0 0 60px rgba(124,58,237,0.2)',
           textAlign: 'center',
         }}
       >
@@ -56,14 +56,14 @@ function CrisisPopup({ onClose, onNavigate }) {
         <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '0 0 10px', letterSpacing: '-0.02em' }}>
           We hear you
         </h2>
-        <p style={{ color: 'rgba(196,181,253,0.8)', fontSize: 14, lineHeight: 1.75, margin: '0 0 22px' }}>
+        <p style={{ color: 'var(--sc-text-2)', fontSize: 14, lineHeight: 1.75, margin: '0 0 22px' }}>
           What you're feeling matters. You don't have to carry this alone. Trained professionals are ready to help right now.
         </p>
         <div style={{
           background: 'rgba(251,191,36,0.1)', borderRadius: 12, padding: '12px 16px',
           marginBottom: 20, border: '1px solid rgba(251,191,36,0.25)',
         }}>
-          <p style={{ margin: 0, color: '#FCD34D', fontSize: 13, fontWeight: 700, lineHeight: 1.5 }}>
+          <p style={{ margin: 0, color: 'var(--sc-gold-text)', fontSize: 13, fontWeight: 700, lineHeight: 1.5 }}>
             🚨 If you're in immediate danger — call <strong>112 / 911 / 999</strong>
           </p>
         </div>
@@ -81,7 +81,7 @@ function CrisisPopup({ onClose, onNavigate }) {
           }}>🧘 Find Professional Support</button>
         </div>
         <button onClick={onClose} style={{
-          background: 'none', border: 'none', color: 'rgba(196,181,253,0.5)',
+          background: 'none', border: 'none', color: 'var(--sc-muted)',
           fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
           textDecoration: 'underline',
         }}>I'm okay, continue chatting</button>
@@ -235,13 +235,13 @@ function SafetyNotice({ onDismiss }) {
     >
       <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>⚠️</span>
       <div style={{ flex: 1 }}>
-        <p style={{ margin: '0 0 2px', fontSize: 11, fontWeight: 700, color: '#FCD34D' }}>
+        <p style={{ margin: '0 0 2px', fontSize: 11, fontWeight: 700, color: 'var(--sc-gold-text)' }}>
           Safety &amp; Privacy Notice
         </p>
-        <p style={{ margin: 0, fontSize: 11, color: 'rgba(253,211,77,0.75)', lineHeight: 1.6 }}>
+        <p style={{ margin: 0, fontSize: 11, color: 'var(--sc-gold-text)', lineHeight: 1.6 }}>
           Never share your phone number, address, or social media with matches.
           Your safety is our priority. If you feel unsafe,{' '}
-          <Link to="/safety" style={{ fontWeight: 600, color: '#FCD34D', textDecoration: 'underline' }}>
+          <Link to="/safety" style={{ fontWeight: 600, color: 'var(--sc-gold-text)', textDecoration: 'underline' }}>
             visit our Safety Center
           </Link>.
           This is a peer support space — not a substitute for professional care.
@@ -253,7 +253,7 @@ function SafetyNotice({ onDismiss }) {
         style={{
           flexShrink: 0, width: 24, height: 24, borderRadius: '50%',
           background: 'rgba(251,191,36,0.1)', border: 'none',
-          color: '#FCD34D', fontSize: 12, cursor: 'pointer',
+          color: 'var(--sc-gold-text)', fontSize: 12, cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontFamily: 'Inter, sans-serif',
         }}
@@ -275,9 +275,9 @@ function TypingIndicator() {
       }}>SG</div>
       <div style={{
         padding: '14px 18px', borderRadius: '4px 20px 20px 20px',
-        background: '#1A1033',
+        background: 'var(--sc-card)',
         border: '1px solid rgba(139,92,246,0.2)',
-        boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+        boxShadow: '0 4px 16px var(--sc-shadow)',
       }}>
         <div style={{ display: 'flex', gap: 5, alignItems: 'center', height: 14 }}>
           {[0,1,2].map(i => (
@@ -326,7 +326,7 @@ function ConvCard({ conv, isActive, onClick }) {
             position: 'absolute', bottom: 1, right: 1,
             width: 10, height: 10, borderRadius: '50%',
             background: '#10B981',
-            border: '2px solid #110C22',
+            border: '2px solid var(--sc-card)',
             boxShadow: '0 0 6px rgba(16,185,129,0.7)',
           }} />
         )}
@@ -335,15 +335,15 @@ function ConvCard({ conv, isActive, onClick }) {
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: isActive ? '#E2DEFF' : '#C4B5FD', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 120 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: isActive ? 'var(--sc-text)' : 'var(--sc-purple-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 120 }}>
             {conv.name}
           </span>
-          <span style={{ fontSize: 10, color: 'rgba(139,116,230,0.5)', flexShrink: 0 }}>
+          <span style={{ fontSize: 10, color: 'var(--sc-muted)', flexShrink: 0 }}>
             {conv.time}
           </span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 11, color: 'rgba(139,116,230,0.6)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 140 }}>
+          <span style={{ fontSize: 11, color: 'var(--sc-text-2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 140 }}>
             {conv.lastMsg}
           </span>
           {conv.unread > 0 && (
@@ -393,13 +393,13 @@ function MessageBubble({ msg, isBot, fmt }) {
           padding: '13px 18px',
           borderRadius: isBot ? '4px 20px 20px 20px' : '20px 4px 20px 20px',
           background: isBot
-            ? '#1A1033'
+            ? 'var(--sc-card)'
             : 'linear-gradient(135deg,#7C3AED,#A855F7)',
           border: isBot ? '1px solid rgba(139,92,246,0.2)' : 'none',
           boxShadow: isBot
-            ? '0 4px 20px rgba(0,0,0,0.3)'
+            ? '0 4px 20px var(--sc-shadow)'
             : '0 4px 20px rgba(124,58,237,0.4)',
-          color: '#E2DEFF',
+          color: isBot ? 'var(--sc-text)' : '#fff',
           fontSize: 14, lineHeight: 1.65,
           fontFamily: 'Inter, sans-serif',
           wordBreak: 'break-word',
@@ -407,7 +407,7 @@ function MessageBubble({ msg, isBot, fmt }) {
           {msg.text}
         </div>
         <div style={{
-          fontSize: 10, color: 'rgba(139,116,230,0.45)',
+          fontSize: 10, color: 'var(--sc-muted)',
           marginTop: 5,
           textAlign: isBot ? 'left' : 'right',
           paddingLeft: isBot ? 4 : 0,
@@ -432,8 +432,8 @@ function DateSeparator({ label }) {
     }}>
       <div style={{ flex: 1, height: 1, background: 'rgba(139,92,246,0.12)' }} />
       <span style={{
-        fontSize: 11, fontWeight: 600, color: 'rgba(139,116,230,0.5)',
-        background: '#0B0816', padding: '4px 14px', borderRadius: 20,
+        fontSize: 11, fontWeight: 600, color: 'var(--sc-muted)',
+        background: 'var(--sc-bg)', padding: '4px 14px', borderRadius: 20,
         border: '1px solid rgba(139,92,246,0.12)',
       }}>
         {label}
@@ -638,7 +638,7 @@ export default function Dashboard() {
         }
         .dc-conv:hover { background: rgba(139,92,246,0.07) !important; }
         .dc-filter-btn { transition: all 0.25s ease !important; }
-        .dc-filter-btn:hover { background: rgba(255,255,255,0.06) !important; color: #fff !important; }
+        .dc-filter-btn:hover { background: var(--sc-surface) !important; color: #fff !important; }
         .dc-filter-bar::-webkit-scrollbar { display: none; }
         .dc-msg-area::-webkit-scrollbar { width: 3px; }
         .dc-msg-area::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.2); border-radius: 3px; }
@@ -685,7 +685,7 @@ export default function Dashboard() {
         position: 'fixed', inset: 0,
         display: 'grid',
         gridTemplateColumns: '272px 1fr 300px',
-        background: '#0B0816',
+        background: 'var(--sc-bg)',
         fontFamily: 'Inter, -apple-system, sans-serif',
       }}>
 
@@ -693,7 +693,7 @@ export default function Dashboard() {
             LEFT SIDEBAR
         ══════════════════════════════════════════ */}
         <aside className="dc-left-sidebar" style={{
-          background: '#110C22',
+          background: 'var(--sc-card)',
           borderRight: '1px solid rgba(139,92,246,0.1)',
           display: 'flex', flexDirection: 'column',
           height: '100%', overflow: 'hidden',
@@ -711,8 +711,8 @@ export default function Dashboard() {
                 }}
               />
               <div>
-                <div style={{ fontSize: 15, fontWeight: 800, color: '#E2DEFF', letterSpacing: '-0.02em' }}>SoulConnect</div>
-                <div style={{ fontSize: 9, color: 'rgba(139,116,230,0.5)', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600 }}>
+                <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--sc-text)', letterSpacing: '-0.02em' }}>SoulConnect</div>
+                <div style={{ fontSize: 9, color: 'var(--sc-muted)', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600 }}>
                   HEAL · CONNECT · GROW
                 </div>
               </div>
@@ -740,18 +740,18 @@ export default function Dashboard() {
             {/* Search */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: 8,
-              background: 'rgba(255,255,255,0.04)',
+              background: 'var(--sc-surface)',
               border: '1px solid rgba(139,92,246,0.12)',
               borderRadius: 12, padding: '9px 12px',
             }}>
-              <Search size={13} color="rgba(139,116,230,0.5)" />
+              <Search size={13} color="var(--sc-muted)" />
               <input
                 value={sidebarSearch}
                 onChange={e => setSidebarSearch(e.target.value)}
                 placeholder="Search conversations..."
                 style={{
                   flex: 1, background: 'none', border: 'none', outline: 'none',
-                  fontSize: 12, color: '#C4B5FD', fontFamily: 'Inter, sans-serif',
+                  fontSize: 12, color: 'var(--sc-purple-text)', fontFamily: 'Inter, sans-serif',
                 }}
               />
             </div>
@@ -763,7 +763,7 @@ export default function Dashboard() {
               className="dc-filter-bar"
               style={{
                 display: 'flex', gap: 4,
-                background: 'rgba(255,255,255,0.04)',
+                background: 'var(--sc-surface)',
                 borderRadius: 14, padding: 5,
                 overflowX: 'auto', scrollbarWidth: 'none',
                 height: 42, alignItems: 'center',
@@ -789,7 +789,7 @@ export default function Dashboard() {
                       background: isActive
                         ? 'linear-gradient(135deg,#7C3AED,#A855F7)'
                         : 'transparent',
-                      color: isActive ? '#fff' : 'rgba(255,255,255,0.65)',
+                      color: isActive ? '#fff' : 'var(--sc-text-2)',
                       boxShadow: isActive
                         ? '0 0 14px rgba(124,58,237,0.45), inset 0 1px 0 rgba(255,255,255,0.15)'
                         : 'none',
@@ -803,7 +803,7 @@ export default function Dashboard() {
                         minWidth: 16, height: 16, borderRadius: 8, padding: '0 4px',
                         fontSize: 9, fontWeight: 700, lineHeight: 1,
                         background: isActive ? 'rgba(255,255,255,0.2)' : 'rgba(139,92,246,0.25)',
-                        color: isActive ? '#fff' : '#C4B5FD',
+                        color: isActive ? '#fff' : 'var(--sc-purple-text)',
                       }}>
                         {count}
                       </span>
@@ -847,10 +847,10 @@ export default function Dashboard() {
                   }}
                 >
                   <div style={{ fontSize: 36, marginBottom: 12 }}>🔍</div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#C4B5FD', marginBottom: 6 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--sc-purple-text)', marginBottom: 6 }}>
                     No conversations found.
                   </div>
-                  <div style={{ fontSize: 11, color: 'rgba(139,116,230,0.5)', lineHeight: 1.6, marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, color: 'var(--sc-muted)', lineHeight: 1.6, marginBottom: 16 }}>
                     Try another filter or start a new conversation.
                   </div>
                   <motion.button
@@ -894,10 +894,10 @@ export default function Dashboard() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
               }}>👨‍⚕️</div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#E2DEFF' }}>Book Professional Support</div>
-                <div style={{ fontSize: 10, color: 'rgba(196,181,253,0.6)' }}>Talk to a verified professional</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--sc-text)' }}>Book Professional Support</div>
+                <div style={{ fontSize: 10, color: 'var(--sc-text-2)' }}>Talk to a verified professional</div>
               </div>
-              <ChevronRight size={14} color="rgba(139,116,230,0.6)" />
+              <ChevronRight size={14} color="var(--sc-text-2)" />
             </motion.div>
 
             {/* My Account */}
@@ -915,7 +915,7 @@ export default function Dashboard() {
                 {userInitials}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#E2DEFF' }}>My Account</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--sc-text)' }}>My Account</div>
                 <div
                   onClick={() => navigate('/profile')}
                   style={{ fontSize: 10, color: '#A78BFA', cursor: 'pointer' }}
@@ -925,7 +925,7 @@ export default function Dashboard() {
                 onClick={() => { logout(); navigate('/'); }}
                 style={{
                   background: 'none', border: 'none', cursor: 'pointer',
-                  color: 'rgba(139,116,230,0.4)', padding: 4,
+                  color: 'var(--sc-muted)', padding: 4,
                 }}
               >
                 <LogOut size={13} />
@@ -939,14 +939,14 @@ export default function Dashboard() {
         ══════════════════════════════════════════ */}
         <main style={{
           display: 'flex', flexDirection: 'column',
-          background: '#0B0816', height: '100%', overflow: 'hidden',
+          background: 'var(--sc-bg)', height: '100%', overflow: 'hidden',
           borderRight: '1px solid rgba(139,92,246,0.08)',
         }}>
           {/* Header */}
           <div className="dc-chat-header" style={{
             padding: '0 24px',
             borderBottom: '1px solid rgba(139,92,246,0.1)',
-            background: '#110C22',
+            background: 'var(--sc-card)',
             flexShrink: 0,
           }}>
             <div style={{
@@ -962,13 +962,13 @@ export default function Dashboard() {
                   style={{
                     display: 'none', /* shown via CSS on mobile */
                     width: 36, height: 36, borderRadius: 10,
-                    background: 'rgba(255,255,255,0.05)',
+                    background: 'var(--sc-surface)',
                     border: '1px solid rgba(139,92,246,0.12)',
                     alignItems: 'center', justifyContent: 'center',
                     cursor: 'pointer', flexShrink: 0,
                   }}
                 >
-                  <ArrowLeft size={18} color="#C4B5FD" />
+                  <ArrowLeft size={18} color="var(--sc-purple-text)" />
                 </button>
                 <div style={{ position: 'relative' }}>
                   <div style={{
@@ -981,15 +981,15 @@ export default function Dashboard() {
                   <div style={{
                     position: 'absolute', bottom: 1, right: 1,
                     width: 10, height: 10, borderRadius: '50%',
-                    background: '#10B981', border: '2px solid #0B0816',
+                    background: '#10B981', border: '2px solid var(--sc-bg)',
                     animation: 'onlinePulse 2s ease infinite',
                   }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: '#E2DEFF', letterSpacing: '-0.01em' }}>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--sc-text)', letterSpacing: '-0.01em' }}>
                     Soul Guide 💜
                   </div>
-                  <div style={{ fontSize: 11, color: 'rgba(139,116,230,0.6)' }}>
+                  <div style={{ fontSize: 11, color: 'var(--sc-text-2)' }}>
                     Your healing companion
                   </div>
                 </div>
@@ -1007,15 +1007,15 @@ export default function Dashboard() {
                     title={label}
                     style={{
                       width: 36, height: 36, borderRadius: 10,
-                      background: 'rgba(255,255,255,0.05)',
+                      background: 'var(--sc-surface)',
                       border: '1px solid rgba(139,92,246,0.12)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       cursor: 'pointer', transition: 'background 0.2s',
                     }}
                     onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,92,246,0.15)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'var(--sc-surface)'}
                   >
-                    <Icon size={15} color="rgba(196,181,253,0.7)" />
+                    <Icon size={15} color="var(--sc-text-2)" />
                   </button>
                 ))}
               </div>
@@ -1031,7 +1031,7 @@ export default function Dashboard() {
                     padding: '10px 20px', background: 'none', border: 'none',
                     cursor: 'pointer', fontFamily: 'Inter, sans-serif',
                     fontSize: 13, fontWeight: mainTab === tab.key ? 700 : 500,
-                    color: mainTab === tab.key ? '#A78BFA' : 'rgba(139,116,230,0.5)',
+                    color: mainTab === tab.key ? '#A78BFA' : 'var(--sc-muted)',
                     borderBottom: mainTab === tab.key ? '2px solid #8B5CF6' : '2px solid transparent',
                     transition: 'all 0.2s',
                   }}
@@ -1093,7 +1093,7 @@ export default function Dashboard() {
                       padding: '7px 14px', borderRadius: 20,
                       background: 'rgba(139,92,246,0.08)',
                       border: '1px solid rgba(139,92,246,0.2)',
-                      color: '#C4B5FD', fontSize: 12, fontWeight: 500,
+                      color: 'var(--sc-purple-text)', fontSize: 12, fontWeight: 500,
                       cursor: 'pointer', fontFamily: 'Inter, sans-serif',
                       transition: 'all 0.2s ease',
                       whiteSpace: 'nowrap',
@@ -1110,7 +1110,7 @@ export default function Dashboard() {
                 <div
                   className="dc-input-bar"
                   style={{
-                    background: '#1A1033',
+                    background: 'var(--sc-card)',
                     border: '1px solid rgba(139,92,246,0.2)',
                     borderRadius: 20,
                     padding: '4px 6px 4px 16px',
@@ -1126,7 +1126,7 @@ export default function Dashboard() {
                       placeholder="Tell me what's on your mind..."
                       style={{
                         flex: 1, background: 'none', border: 'none', outline: 'none',
-                        color: '#E2DEFF', fontSize: 14, fontFamily: 'Inter, sans-serif',
+                        color: 'var(--sc-text)', fontSize: 14, fontFamily: 'Inter, sans-serif',
                         padding: '10px 0',
                       }}
                     />
@@ -1145,7 +1145,7 @@ export default function Dashboard() {
                         boxShadow: input.trim() && !typing ? '0 4px 14px rgba(124,58,237,0.45)' : 'none',
                       }}
                     >
-                      <Send size={16} color={input.trim() && !typing ? '#fff' : 'rgba(139,116,230,0.4)'} />
+                      <Send size={16} color={input.trim() && !typing ? '#fff' : 'var(--sc-muted)'} />
                     </motion.button>
                   </div>
                   <div style={{
@@ -1156,18 +1156,18 @@ export default function Dashboard() {
                       style={{
                         display: 'flex', alignItems: 'center', gap: 5,
                         background: 'none', border: 'none', cursor: 'pointer',
-                        color: 'rgba(139,116,230,0.5)', fontSize: 11,
+                        color: 'var(--sc-muted)', fontSize: 11,
                         fontFamily: 'Inter, sans-serif',
                       }}
                     >
                       <Mic size={12} /> Voice Reflection
                     </button>
-                    <div style={{ fontSize: 10, color: 'rgba(139,116,230,0.35)' }}>
+                    <div style={{ fontSize: 10, color: 'var(--sc-muted)' }}>
                       🔒 Anonymous · Encrypted · Private
                     </div>
                   </div>
                   <div style={{
-                    fontSize: 10, color: 'rgba(139,116,230,0.35)',
+                    fontSize: 10, color: 'var(--sc-muted)',
                     padding: '0 4px 6px', textAlign: 'center',
                   }}>
                     Everything shared here stays private and secure.
@@ -1197,7 +1197,7 @@ export default function Dashboard() {
             RIGHT SIDEBAR
         ══════════════════════════════════════════ */}
         <aside className="dc-right-panel" style={{
-          background: '#110C22',
+          background: 'var(--sc-card)',
           height: '100%', overflow: 'hidden',
           padding: '14px 12px',
           borderLeft: '1px solid rgba(139,92,246,0.08)',
@@ -1211,12 +1211,12 @@ export default function Dashboard() {
             transition={{ duration: 0.4, delay: 0.05 }}
             style={{
               flex: '1 1 0', minHeight: 0, overflow: 'hidden',
-              background: 'linear-gradient(145deg, #1A1033, #200E45)',
+              background: 'linear-gradient(145deg, var(--sc-card), #200E45)',
               border: '1px solid rgba(139,92,246,0.2)',
               borderRadius: 18,
               padding: '14px 16px',
               position: 'relative',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+              boxShadow: '0 8px 32px var(--sc-shadow)',
               display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
             }}
           >
@@ -1249,7 +1249,7 @@ export default function Dashboard() {
                   margin: '0 0 2px',
                   fontSize: i === 0 ? 15 : 13,
                   fontWeight: i === 0 ? 700 : 400,
-                  color: i === 0 ? '#E2DEFF' : 'rgba(196,181,253,0.75)',
+                  color: i === 0 ? 'var(--sc-text)' : 'var(--sc-text-2)',
                   lineHeight: 1.45,
                   fontStyle: i > 0 ? 'italic' : 'normal',
                 }}>{line}</p>
@@ -1266,11 +1266,11 @@ export default function Dashboard() {
             transition={{ duration: 0.4, delay: 0.1 }}
             style={{
               flex: '1 1 0', minHeight: 0, overflow: 'hidden',
-              background: '#1A1033',
+              background: 'var(--sc-card)',
               border: '1px solid rgba(139,92,246,0.15)',
               borderRadius: 18,
               padding: '14px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+              boxShadow: '0 8px 32px var(--sc-shadow)',
               display: 'flex', flexDirection: 'column',
             }}
           >
@@ -1283,7 +1283,7 @@ export default function Dashboard() {
                   fontSize: 12,
                 }}>🎵</div>
                 <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: '#E2DEFF' }}>Calm Sounds on Spotify</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--sc-text)' }}>Calm Sounds on Spotify</div>
                 </div>
               </div>
               <a
@@ -1319,7 +1319,7 @@ export default function Dashboard() {
                       position: 'relative', overflow: 'hidden',
                       cursor: 'pointer', height: '100%',
                       display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                      boxShadow: '0 4px 16px var(--sc-shadow)',
                     }}
                   >
                     {/* Play button */}
@@ -1346,15 +1346,15 @@ export default function Dashboard() {
             transition={{ duration: 0.4, delay: 0.15 }}
             style={{
               flexShrink: 0,
-              background: '#1A1033',
+              background: 'var(--sc-card)',
               border: '1px solid rgba(139,92,246,0.15)',
               borderRadius: 18,
               padding: '14px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+              boxShadow: '0 8px 32px var(--sc-shadow)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#E2DEFF' }}>Recommended Story</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--sc-text)' }}>Recommended Story</div>
               <button
                 onClick={() => navigate('/stories')}
                 style={{
@@ -1372,7 +1372,7 @@ export default function Dashboard() {
                 background: 'linear-gradient(135deg,#1A0A3E,#4C1D95)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 24, overflow: 'hidden',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.4)',
+                boxShadow: '0 4px 14px var(--sc-shadow)',
               }}>🌅</div>
 
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -1389,7 +1389,7 @@ export default function Dashboard() {
                 <div
                   onClick={() => navigate('/stories')}
                   style={{
-                    fontSize: 13, fontWeight: 700, color: '#E2DEFF',
+                    fontSize: 13, fontWeight: 700, color: 'var(--sc-text)',
                     cursor: 'pointer', lineHeight: 1.35, marginBottom: 6,
                   }}
                 >
@@ -1397,10 +1397,10 @@ export default function Dashboard() {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 11, color: 'rgba(139,116,230,0.5)' }}>3 min read</span>
+                  <span style={{ fontSize: 11, color: 'var(--sc-muted)' }}>3 min read</span>
                   <button style={{
                     background: 'none', border: 'none', cursor: 'pointer',
-                    color: 'rgba(139,116,230,0.5)', padding: 0,
+                    color: 'var(--sc-muted)', padding: 0,
                   }}>
                     <Bookmark size={14} />
                   </button>

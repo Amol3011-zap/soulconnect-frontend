@@ -19,10 +19,10 @@ export default function ReflectionToast({ text, onDismiss }) {
       style={{
         position: 'fixed', bottom: 32, left: '50%', transform: 'translateX(-50%)',
         zIndex: 9999,
-        background: '#FFFFFF',
+        background: 'var(--sc-card)',
         backdropFilter: 'none',
         WebkitBackdropFilter: 'none',
-        border: '1px solid #DCD2F2',
+        border: '1px solid var(--sc-line)',
         borderRadius: 20,
         padding: '14px 22px',
         display: 'flex', alignItems: 'center', gap: 12,
@@ -40,7 +40,7 @@ export default function ReflectionToast({ text, onDismiss }) {
         💜
       </div>
       <p style={{
-        margin: 0, fontSize: 13, color: '#171642',
+        margin: 0, fontSize: 13, color: 'var(--sc-text)',
         lineHeight: 1.5, fontStyle: 'italic', fontWeight: 400,
       }}>
         {text}

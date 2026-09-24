@@ -2,7 +2,8 @@ import React, { Suspense } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { motion, AnimatePresence } from 'motion/react';
-import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound, BarChart3, Heart, Bell } from 'lucide-react';
+import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound, BarChart3, Heart, Bell, Moon, Sun } from 'lucide-react';
+import { useThemeStore } from '../store/theme';
 
 /* ── Desktop sidebar nav ── */
 const NAV_ITEMS = [
@@ -46,6 +47,9 @@ export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const isDark = useThemeStore((s) => s.resolved === 'dark');
+  const toggleTheme = useThemeStore((s) => s.toggle);
+  const onHome = location.pathname === '/home' || location.pathname === '/';
 
   const showMobileNav = !HIDE_MOBILE_NAV_ON.some(p => location.pathname.startsWith(p));
 
@@ -61,8 +65,8 @@ export default function DashboardLayout() {
           left: 0; top: 0; bottom: 0;
           width: 210px;
           z-index: 90;
-          background: #FFFFFF;
-          border-right: 1px solid #E7E3EF;
+          background: var(--sc-card);
+          border-right: 1px solid var(--sc-border);
           overflow-y: auto;
           display: flex;
           flex-direction: column;
@@ -82,7 +86,7 @@ export default function DashboardLayout() {
         .dash-logo-text {
           font-size: 16px;
           font-weight: 700;
-          color: #171642;
+          color: var(--sc-text);
           letter-spacing: -0.02em;
         }
 
@@ -94,7 +98,7 @@ export default function DashboardLayout() {
           border-radius: 16px;
           margin: 2px 10px;
           width: calc(100% - 20px);
-          color: #69677D;
+          color: var(--sc-text-2);
           text-decoration: none;
           font-size: 14px;
           font-weight: 500;
@@ -105,15 +109,15 @@ export default function DashboardLayout() {
           position: relative;
         }
         .dash-nav-link:hover {
-          background: #F7F5FB;
-          color: #171642;
+          background: var(--sc-bg);
+          color: var(--sc-text);
         }
         .dash-nav-link.active {
-          background: #E5DDF5;
-          color: #5E47B8;
+          background: var(--sc-purple-soft);
+          color: var(--sc-purple-text);
           font-weight: 600;
         }
-        .dash-nav-link.active svg { color: #8066D5; }
+        .dash-nav-link.active svg { color: var(--sc-nav-active-icon); }
 
         /* ─── Content ─── */
         .dash-content-wrapper {
@@ -147,7 +151,7 @@ export default function DashboardLayout() {
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb {
-          background: #D8CFEC;
+          background: var(--sc-scrollbar);
           border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover { background: #C4B7E6; }
@@ -180,22 +184,24 @@ export default function DashboardLayout() {
             align-items: center; justify-content: space-between;
             height: calc(60px + env(safe-area-inset-top, 0px));
             padding: env(safe-area-inset-top, 0px) 8px 0 16px;
-            background: rgba(247,245,251,0.97);
-            border-bottom: 1px solid #E7E3EF;
+            background: var(--sc-topbar-bg);
+            border-bottom: 1px solid var(--sc-border);
             box-sizing: border-box;
           }
           .app-topbar-brand {
             display: flex; align-items: center; gap: 10px;
-            min-height: 48px; text-decoration: none; color: #171642;
+            min-height: 48px; text-decoration: none; color: var(--sc-text);
           }
           .app-topbar-brand img { width: 28px; height: 28px; border-radius: 8px; display: block; }
           .app-topbar-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
           .app-topbar-action {
             width: 48px; height: 48px; border-radius: 999px;
             display: flex; align-items: center; justify-content: center;
-            color: #171642; -webkit-tap-highlight-color: transparent;
+            color: var(--sc-text); -webkit-tap-highlight-color: transparent;
           }
-          .app-topbar-action:active { background: #EFEBF7; }
+          .app-topbar-action:active { background: var(--sc-surface); }
+          .app-topbar-actions { display: flex; align-items: center; }
+          button.app-topbar-action { background: none; border: 0; padding: 0; cursor: pointer; }
 
           /* Show mobile bottom nav */
           .mobile-bottom-nav {
@@ -203,8 +209,8 @@ export default function DashboardLayout() {
             position: fixed;
             bottom: 0; left: 0; right: 0;
             z-index: 999;
-            background: rgba(255,255,255,0.96);
-            border-top: 1px solid #E7E3EF;
+            background: var(--sc-nav-bg);
+            border-top: 1px solid var(--sc-border);
             padding-bottom: env(safe-area-inset-bottom, 0px);
             padding-top: 6px;
             align-items: flex-start;
@@ -238,16 +244,16 @@ export default function DashboardLayout() {
             justify-content: center;
             transition: background-color 0.15s ease, transform 0.12s ease;
           }
-          .mob-tab.active .mob-tab-icon { background: #E5DDF5; }
+          .mob-tab.active .mob-tab-icon { background: var(--sc-purple-soft); }
           .mob-tab:active .mob-tab-icon { transform: scale(0.94); }
 
           .mob-tab-label {
             font-size: 11px;
             font-weight: 500;
-            color: #69677D;
+            color: var(--sc-nav-label);
             letter-spacing: 0.01em;
           }
-          .mob-tab.active .mob-tab-label { color: #5E47B8; font-weight: 600; }
+          .mob-tab.active .mob-tab-label { color: var(--sc-purple-text); font-weight: 600; }
           .mob-tab:focus-visible { outline: 2px solid #8066D5; outline-offset: -2px; border-radius: 12px; }
         }
       `}</style>
@@ -284,9 +290,22 @@ export default function DashboardLayout() {
             <img src="/logo-icon.png" alt="" />
             <span className="app-topbar-title">{titleFor(location.pathname)}</span>
           </NavLink>
-          <NavLink to="/notifications" className="app-topbar-action" aria-label="Notifications">
-            <Bell size={21} strokeWidth={2} />
-          </NavLink>
+          <div className="app-topbar-actions">
+            {onHome && (
+              <button
+                type="button"
+                className="app-topbar-action"
+                onClick={toggleTheme}
+                aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                title={isDark ? 'Light mode' : 'Dark mode'}
+              >
+                {isDark ? <Sun size={21} strokeWidth={2} /> : <Moon size={21} strokeWidth={2} />}
+              </button>
+            )}
+            <NavLink to="/notifications" className="app-topbar-action" aria-label="Notifications">
+              <Bell size={21} strokeWidth={2} />
+            </NavLink>
+          </div>
         </header>
         {/* ONE loading boundary for every tab, mounted once with the shell.
             With router transitions enabled, switching tabs keeps the current
@@ -319,7 +338,7 @@ export default function DashboardLayout() {
                   <item.icon
                     size={21}
                     strokeWidth={2}
-                    color={isActive ? '#8066D5' : '#8A889C'}
+                    color={isActive ? 'var(--sc-nav-active-icon)' : 'var(--sc-nav-icon)'}
                   />
                 </div>
                 <span className="mob-tab-label">{item.label}</span>

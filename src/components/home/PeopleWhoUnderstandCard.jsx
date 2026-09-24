@@ -42,7 +42,7 @@ export default function PeopleWhoUnderstandCard({ match, index = 0, onConnect, o
           </div>
         </div>
         {matchPercent != null && (
-          <span className="shrink-0 rounded-full bg-[#E7F6EF] px-2 py-0.5 text-xs font-semibold text-[#1F7A55]">
+          <span className="shrink-0 rounded-full bg-[color:var(--sc-success-bg)] px-2 py-0.5 text-xs font-semibold text-[color:var(--sc-success-text)]">
             {matchPercent}%
           </span>
         )}

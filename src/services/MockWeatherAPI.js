@@ -6,12 +6,19 @@ const STORAGE_KEY = 'sc_weather_v1';
 
 const WEATHER_IDS = ['clear-sky', 'hope', 'blooming', 'fog', 'heavy-rain', 'storm'];
 
+// Dates are the user's LOCAL calendar day. (toISOString() is UTC, which put
+// check-ins made between midnight and 05:30 IST on the previous day.)
+export function localDateKey(d = new Date()) {
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  return localDateKey();
 }
 
 function formatDate(d) {
-  return d.toISOString().slice(0, 10);
+  return localDateKey(d);
 }
 
 function formatTime(d) {

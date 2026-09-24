@@ -66,7 +66,7 @@ function MoodChart({ last7Days }) {
         </defs>
         {[3, 5, 7, 9].map(v => {
           const y = py + yR - ((v - 1) / 9) * yR;
-          return <line key={v} x1={px} y1={y} x2={W - px} y2={y} stroke="#EFEBF7" strokeWidth="1" />;
+          return <line key={v} x1={px} y1={y} x2={W - px} y2={y} stroke="var(--sc-surface)" strokeWidth="1" />;
         })}
         {areaD && <path d={areaD} fill="url(#scMoodArea)" />}
         {pathD && <path d={pathD} fill="none" stroke="#8066D5" strokeWidth="2.5" strokeLinecap="round" />}
@@ -77,11 +77,11 @@ function MoodChart({ last7Days }) {
               <text x={p.x} y={p.y - 13} textAnchor="middle" fontSize="12">{emojis[p.v] || ''}</text>
             </g>
           ) : (
-            <circle key={i} cx={px + i * xS} cy={H / 2} r="3" fill="#E7E3EF" />
+            <circle key={i} cx={px + i * xS} cy={H / 2} r="3" fill="var(--sc-border)" />
           )
         )}
         {labels.map((l, i) => (
-          <text key={i} x={px + i * xS} y={H + 18} textAnchor="middle" fontSize="12" fontWeight="500" fill="#69677D">{l}</text>
+          <text key={i} x={px + i * xS} y={H + 18} textAnchor="middle" fontSize="12" fontWeight="500" fill="var(--sc-text-2)">{l}</text>
         ))}
       </svg>
     </Card>
@@ -231,7 +231,7 @@ export default function MoodTracker() {
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogDescription className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#5E47B8]">
+            <DialogDescription className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[color:var(--sc-purple-text)]">
               Step {modalStep} of 7
             </DialogDescription>
             <Progress value={(modalStep / 7) * 100} aria-label="Log mood progress" />
@@ -273,7 +273,7 @@ export default function MoodTracker() {
                       onClick={() => moodData.handleEmotion(tag.id)}
                       className={cn(
                         'flex min-h-[44px] items-center gap-1.5 rounded-full border px-3.5 text-[14px] font-medium transition-colors',
-                        on ? 'border-primary bg-secondary text-[#4B3699]' : 'border-border bg-card text-foreground hover:bg-muted'
+                        on ? 'border-primary bg-secondary text-[color:var(--sc-purple-deep)]' : 'border-border bg-card text-foreground hover:bg-muted'
                       )}
                     >
                       <span aria-hidden="true">{tag.emoji}</span>{tag.label}

@@ -23,20 +23,20 @@ export default function SettingsList({ items, onLogout }) {
               alignItems: 'center',
               gap: 12,
               padding: '14px 16px',
-              background: '#FFFFFF',
-              border: '1px solid #E7E3EF',
+              background: 'var(--sc-card)',
+              border: '1px solid var(--sc-border)',
               borderRadius: 16,
               cursor: item.action ? 'pointer' : 'default',
               transition: 'all 0.2s',
             }}
-            whileHover={item.action ? { background: '#FFFFFF' } : {}}
+            whileHover={item.action ? { background: 'var(--sc-card)' } : {}}
           >
             <div
               style={{
                 width: 36,
                 height: 36,
                 borderRadius: '50%',
-                background: '#EFEAFB',
+                background: 'var(--sc-tint)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -48,17 +48,17 @@ export default function SettingsList({ items, onLogout }) {
             </div>
 
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 600, color: '#171642' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--sc-text)' }}>
                 {item.label}
               </div>
               {item.sub && (
-                <div style={{ fontSize: 12, color: '#69677D', marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: 'var(--sc-text-2)', marginTop: 2 }}>
                   {item.sub}
                 </div>
               )}
             </div>
 
-            {item.action && <ChevronRight size={16} color="#69677D" />}
+            {item.action && <ChevronRight size={16} color="var(--sc-text-2)" />}
           </motion.div>
         ))}
       </div>

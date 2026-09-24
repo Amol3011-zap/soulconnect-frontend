@@ -65,7 +65,7 @@ export default function GuidedHealing({ problemType, matchName, userId }) {
               className="flex items-center gap-2 px-3 py-3 rounded-2xl text-left transition-all"
               style={{
                 background: selectedProblem === p.key ? 'rgba(124,58,237,0.12)' : 'var(--bg-card)',
-                border: `1.5px solid ${selectedProblem === p.key ? '#7c3aed' : 'var(--border)'}`,
+                border: `1.5px solid ${selectedProblem === p.key ? '#7c3aed' : 'var(--sc-border)'}`,
               }}>
               <span style={{ fontSize: 22 }}>{p.emoji}</span>
               <span className="text-sm font-semibold" style={{ color: selectedProblem === p.key ? '#a855f7' : 'var(--text)' }}>{p.label}</span>
@@ -113,7 +113,7 @@ export default function GuidedHealing({ problemType, matchName, userId }) {
                 <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all"
                   style={{
                     background: i < stage ? 'linear-gradient(135deg,#7c3aed,#a855f7)' : i === stage ? 'rgba(124,58,237,0.15)' : 'var(--bg-subtle)',
-                    border: i <= stage ? '2px solid #7c3aed' : '2px solid var(--border)',
+                    border: i <= stage ? '2px solid #7c3aed' : '2px solid var(--sc-border)',
                     color: i <= stage ? (i < stage ? 'white' : '#7c3aed') : 'var(--text-muted)',
                     fontSize: 16,
                   }}>
