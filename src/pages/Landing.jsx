@@ -866,15 +866,43 @@ export default function Landing() {
          a "is it in the viewport" check but still reading as "too much
          scroll before real content." Tightened further: 200px floor and a
          lower vw ratio. */
-      .l-hero-illus{height:clamp(110px,26vw,460px)!important;order:-1;margin-left:-32px!important;width:100vw!important;}
+      .l-hero-illus{height:clamp(90px,20vw,460px)!important;order:-1;margin-left:-32px!important;width:100vw!important;}
       /* Stacked layout centers the text, so padding needs to be symmetric
          here too — the inline style's 0-left/48px-right pairing is a
          two-column-desktop assumption (image bleeds to the grid edge on
          the left) that doesn't apply once the columns stack. */
-      .l-hero-text{text-align:center;align-items:center!important;padding:clamp(16px,4vw,56px) clamp(20px,5vw,32px) clamp(48px,8vw,64px)!important;}
-      .l-trust-badge{max-width:90vw;flex-wrap:wrap;justify-content:center;}
-      .l-hero-pills{justify-content:center!important;}
-      .l-hero-btns{justify-content:center!important;}
+      .l-hero-text{text-align:center;align-items:center!important;padding:clamp(12px,3vw,56px) clamp(20px,5vw,32px) clamp(32px,6vw,64px)!important;}
+      /* Full compact rewrite of the mobile hero content, per direct request
+         after two rounds of incremental shrinking still left the CTA below
+         the fold on a real 393x852 device. Every fixed inline margin below
+         is overridden here rather than nudged further. */
+      .l-trust-badge{
+        max-width:90vw!important; justify-content:center!important;
+        padding:8px 16px!important; margin-bottom:14px!important;
+        gap:6px!important; border-radius:14px!important;
+      }
+      .l-trust-badge-text{font-size:12px!important;}
+      .l-trust-badge-label{font-size:11px!important;}
+      .l-hero-h1{
+        font-size:clamp(2rem,9vw,72px)!important;
+        line-height:1.08!important;
+        margin-bottom:14px!important;
+      }
+      .l-hero-p{
+        font-size:15px!important;
+        line-height:1.5!important;
+        margin-bottom:20px!important;
+        max-width:340px!important;
+      }
+      .l-hero-btns{justify-content:center!important; margin-bottom:0!important;}
+      .l-hero-pills{
+        justify-content:center!important;
+        margin-top:16px!important;
+        gap:8px!important;
+      }
+      .l-hero-pills>div{padding:6px 12px!important;}
+      .l-hero-pills span{font-size:11.5px!important;}
+      .l-hero-pills svg{width:13px!important;height:13px!important;}
       .l-struggle-grid{grid-template-columns:repeat(3,1fr)!important;}
       .l-help-strip{grid-template-columns:repeat(3,1fr)!important;row-gap:28px!important;}
       .l-gp-row{grid-template-columns:1fr!important;gap:40px!important;}
@@ -1192,7 +1220,7 @@ export default function Landing() {
               <span className="l-trust-badge-label">Building With Our First Community Members</span>
             </div>
 
-            <h1 style={{
+            <h1 className="l-hero-h1" style={{
               fontFamily:SF,
               // Floor was a flat 3rem/48px regardless of width — at 320px
               // that's tight against the edge with only ~20px of padding on
@@ -1211,34 +1239,16 @@ export default function Landing() {
               }}>Go Through It Alone.</span>
             </h1>
 
-            <p style={{fontSize:'clamp(15px,1.5vw,18px)',
+            <p className="l-hero-p" style={{fontSize:'clamp(15px,1.5vw,18px)',
               color:'rgba(255,255,255,0.58)',
               lineHeight:1.88, marginBottom:36, maxWidth:460}}>
               SoulConnect is a safe space to share, connect, and heal with people
               who truly understand what you're going through.
             </p>
 
-            {/* Feature pills */}
-            <div className="l-hero-pills" style={{display:'flex', flexWrap:'wrap',
-              gap:10, marginBottom:42}}>
-              {[
-                {Icon:Heart,       label:'Real Connections'},
-                {Icon:ShieldCheck, label:'Safe Community'},
-                {Icon:HandHeart,   label:'Emotional Support'},
-              ].map((t,i)=>(
-                <div key={i} style={{display:'flex', alignItems:'center', gap:8,
-                  background:'rgba(255,255,255,0.07)',
-                  border:'1px solid rgba(255,255,255,0.15)',
-                  borderRadius:99, padding:'9px 18px',
-                  backdropFilter:'blur(8px)'}}>
-                  <t.Icon size={15} strokeWidth={1.5} color="rgba(255,255,255,0.72)" />
-                  <span style={{color:'rgba(255,255,255,0.85)',
-                    fontSize:13, fontWeight:500}}>{t.label}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Buttons */}
+            {/* Buttons — moved above the feature pills on mobile via CSS
+                order, so the primary CTA lands before secondary decorative
+                content rather than after it. See the <1100px block. */}
             <div className="l-hero-btns" style={{display:'flex', flexWrap:'wrap', gap:14}}>
               <a href="#early" className="l-btn-p"
                 style={{fontSize:16, padding:'16px 38px', borderRadius:15}}>
@@ -1256,6 +1266,29 @@ export default function Landing() {
                   <span className="l-btn-gp-main">How are you feeling? <span className="l-btn-gp-arrow">→</span></span>
                 </span>
               </Link>
+            </div>
+
+            {/* Feature pills — kept, but now after the primary CTA (was
+                before it), and compact on mobile via .l-hero-pills in the
+                <1100px block: a tight horizontal row instead of 3 stacked
+                full-width pills eating ~180px of vertical space. */}
+            <div className="l-hero-pills" style={{display:'flex', flexWrap:'wrap',
+              gap:10, marginTop:24}}>
+              {[
+                {Icon:Heart,       label:'Real Connections'},
+                {Icon:ShieldCheck, label:'Safe Community'},
+                {Icon:HandHeart,   label:'Emotional Support'},
+              ].map((t,i)=>(
+                <div key={i} style={{display:'flex', alignItems:'center', gap:8,
+                  background:'rgba(255,255,255,0.07)',
+                  border:'1px solid rgba(255,255,255,0.15)',
+                  borderRadius:99, padding:'9px 18px',
+                  backdropFilter:'blur(8px)'}}>
+                  <t.Icon size={15} strokeWidth={1.5} color="rgba(255,255,255,0.72)" />
+                  <span style={{color:'rgba(255,255,255,0.85)',
+                    fontSize:13, fontWeight:500}}>{t.label}</span>
+                </div>
+              ))}
             </div>
 
             {/* Sub note */}
