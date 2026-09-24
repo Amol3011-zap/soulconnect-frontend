@@ -866,12 +866,12 @@ export default function Landing() {
          a "is it in the viewport" check but still reading as "too much
          scroll before real content." Tightened further: 200px floor and a
          lower vw ratio. */
-      .l-hero-illus{height:clamp(180px,40vw,460px)!important;order:-1;margin-left:-32px!important;width:100vw!important;}
+      .l-hero-illus{height:clamp(110px,26vw,460px)!important;order:-1;margin-left:-32px!important;width:100vw!important;}
       /* Stacked layout centers the text, so padding needs to be symmetric
          here too — the inline style's 0-left/48px-right pairing is a
          two-column-desktop assumption (image bleeds to the grid edge on
          the left) that doesn't apply once the columns stack. */
-      .l-hero-text{text-align:center;align-items:center!important;padding:clamp(32px,8vw,56px) clamp(20px,5vw,32px) clamp(48px,8vw,64px)!important;}
+      .l-hero-text{text-align:center;align-items:center!important;padding:clamp(16px,4vw,56px) clamp(20px,5vw,32px) clamp(48px,8vw,64px)!important;}
       .l-trust-badge{max-width:90vw;flex-wrap:wrap;justify-content:center;}
       .l-hero-pills{justify-content:center!important;}
       .l-hero-btns{justify-content:center!important;}
