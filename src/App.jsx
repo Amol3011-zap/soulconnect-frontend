@@ -86,6 +86,14 @@ import MetaHead from './components/MetaHead';
 const HIDE_FLOAT_PATHS = ['/safety', '/report', '/community-rules', '/guide-terms'];
 const LAUNCH_READY = import.meta.env.VITE_LAUNCH_READY === 'true';
 
+// Auth pages are closed on production until launch. vercel.json 307s direct
+// loads of /login, /signup, /register and /dashboard to /maintenance, but
+// in-app <Link> navigation (e.g. About's "Sign up" buttons) never reaches
+// the server, so the SPA has to enforce it too. Open in local dev; set
+// VITE_AUTH_OPEN=true on Vercel (and drop the vercel.json redirects) to launch.
+const AUTH_OPEN = import.meta.env.DEV || import.meta.env.VITE_AUTH_OPEN === 'true';
+const closed = <Navigate to="/" replace />;
+
 // Routes that use DashboardLayout
 const DASHBOARD_PATHS = [
   '/home', '/matches', '/stories', '/community', '/messages', '/mood',
@@ -189,9 +197,9 @@ function AppInner() {
 
           {!token || !LAUNCH_READY ? (
             <>
-              <Route path="/signup"          element={<Suspense fallback={<PageLoader />}><Signup /></Suspense>} />
-              <Route path="/login"           element={<Login />} />
-              <Route path="/forgot-password" element={<Suspense fallback={<PageLoader />}><ForgotPassword /></Suspense>} />
+              <Route path="/signup"          element={AUTH_OPEN ? <Suspense fallback={<PageLoader />}><Signup /></Suspense> : closed} />
+              <Route path="/login"           element={AUTH_OPEN ? <Login /> : closed} />
+              <Route path="/forgot-password" element={AUTH_OPEN ? <Suspense fallback={<PageLoader />}><ForgotPassword /></Suspense> : closed} />
               <Route path="/terms"           element={<Suspense fallback={<PageLoader />}><TermsPrivacy /></Suspense>} />
               <Route path="*"                element={<Navigate to="/" replace />} />
             </>
