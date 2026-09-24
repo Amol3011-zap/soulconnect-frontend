@@ -847,13 +847,26 @@ export default function Landing() {
 
     /* ── Responsive ── */
     @media(max-width:1100px){
+      /* Nav is transparent-until-scroll by design on desktop, where the
+         wide hero gives the logo room to sit over the art. On a narrow
+         phone the illustration is directly behind the logo/hamburger with
+         no separation, reading as visual collision rather than an
+         intentional blend. Solid immediately on mobile instead. */
+      .l-nav{background:rgba(8,2,28,0.92)!important;backdrop-filter:blur(20px)!important;
+        border-bottom:1px solid rgba(109,74,255,0.14)!important;}
       .l-hero-grid{grid-template-columns:1fr!important;min-height:auto!important;}
       /* Was a flat 460px on every width from 320px phones to 1099px
          tablets — identical size regardless of how much viewport height is
          actually available. Scaling with clamp() means a small phone
          doesn't lose more than a third of its screen to the illustration
          before any headline text appears. */
-      .l-hero-illus{height:clamp(240px,52vw,460px)!important;order:-1;margin-left:-32px!important;width:100vw!important;}
+      /* Real-device testing (not just simulated viewport height) showed the
+         headline landing at the very bottom edge of the first screen on an
+         iPhone 13 (664px visual viewport after Safari's toolbar) -- passing
+         a "is it in the viewport" check but still reading as "too much
+         scroll before real content." Tightened further: 200px floor and a
+         lower vw ratio. */
+      .l-hero-illus{height:clamp(180px,40vw,460px)!important;order:-1;margin-left:-32px!important;width:100vw!important;}
       /* Stacked layout centers the text, so padding needs to be symmetric
          here too — the inline style's 0-left/48px-right pairing is a
          two-column-desktop assumption (image bleeds to the grid edge on
@@ -1018,7 +1031,7 @@ export default function Landing() {
           space — a fixed top-0 nav with no safe-area padding can render
           partly behind the notch/status bar. env() falls back to 0 on
           devices without an inset, so this is a no-op everywhere else. */}
-      <nav style={{
+      <nav className="l-nav" style={{
         position:'fixed', top:0, left:0, right:0, zIndex:400,
         height:'calc(72px + env(safe-area-inset-top, 0px))',
         paddingTop:'env(safe-area-inset-top, 0px)',
