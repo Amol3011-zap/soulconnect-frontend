@@ -114,12 +114,14 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     const ctx = canvas.getContext('2d');
 
     // Deep navy/midnight ocean with subtle horizontal light banding
+    // Light theme (landing page "Dawn" palette): a pale lavender globe
+    // with violet land dots instead of a midnight-navy sphere, so it sits
+    // calmly on a light page instead of reading as a dark hole.
+    const oceanStops = lightTheme
+      ? ['#D9CEEC', '#E4DBF3', '#EAE3F6', '#E4DBF3', '#D9CEEC']
+      : ['#0B1C3D', '#122A54', '#16305E', '#122A54', '#0B1C3D'];
     const oceanGradient = ctx.createLinearGradient(0, 0, 0, TH);
-    oceanGradient.addColorStop(0, '#0B1C3D');
-    oceanGradient.addColorStop(0.28, '#122A54');
-    oceanGradient.addColorStop(0.5, '#16305E');
-    oceanGradient.addColorStop(0.72, '#122A54');
-    oceanGradient.addColorStop(1, '#0B1C3D');
+    [0, 0.28, 0.5, 0.72, 1].forEach((o, i) => oceanGradient.addColorStop(o, oceanStops[i]));
     ctx.fillStyle = oceanGradient;
     ctx.fillRect(0, 0, TW, TH);
 
@@ -128,7 +130,7 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
       const x = Math.random() * TW;
       const y = Math.random() * TH;
       const r = Math.random() * 1.4;
-      ctx.fillStyle = `rgba(90,140,220,${Math.random() * 0.06})`;
+      ctx.fillStyle = lightTheme ? `rgba(107,79,160,${Math.random() * 0.04})` : `rgba(90,140,220,${Math.random() * 0.06})`;
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
       ctx.fill();
@@ -166,7 +168,7 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     ctx.beginPath();
     coastPath(LAND_FEATURE);
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(139,164,230,0.22)';
+    ctx.strokeStyle = lightTheme ? 'rgba(94,62,148,0.45)' : 'rgba(139,164,230,0.22)';
     ctx.stroke();
 
     // Dense dot grid over land — this IS the continent now, not a fill.
@@ -181,9 +183,11 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
         const r = Math.random();
         ctx.beginPath();
         ctx.arc(jx, jy, r < 0.08 ? 1.6 : r < 0.3 ? 1.1 : 0.7, 0, Math.PI * 2);
-        ctx.fillStyle = r < 0.08
-          ? 'rgba(148,140,190,0.85)'   // occasional brighter dot, still muted
-          : `rgba(110,118,160,${0.35 + r * 0.35})`;
+        ctx.fillStyle = lightTheme
+          ? (r < 0.08 ? 'rgba(78,50,128,0.9)' : `rgba(94,62,148,${0.42 + r * 0.38})`)
+          : (r < 0.08
+            ? 'rgba(148,140,190,0.85)'   // occasional brighter dot, still muted
+            : `rgba(110,118,160,${0.35 + r * 0.35})`);
         ctx.fill();
       }
     }
@@ -196,13 +200,13 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
       if (!isLand(x, y)) continue;
       ctx.beginPath();
       ctx.arc(x, y, Math.random() * 0.9 + 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,244,214,0.7)';
+      ctx.fillStyle = lightTheme ? 'rgba(201,152,96,0.85)' : 'rgba(255,244,214,0.7)';
       ctx.fill();
     }
 
     // Sparse star-like sparkle across the whole sphere (ocean included) —
     // the "space dust" texture visible in the reference's background.
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < (lightTheme ? 0 : 500); i++) {
       const x = Math.random() * TW;
       const y = Math.random() * TH;
       ctx.beginPath();
@@ -230,12 +234,16 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     // MeshStandardMaterial with high roughness gives soft, non-reflective
     // shading from the lights below — depth and geography stay readable
     // without any glossy highlight moving across the sphere.
-    const material = new THREE.MeshStandardMaterial({
-      map: texture,
-      roughness: 1,
-      metalness: 0,
-      side: THREE.FrontSide,
-    });
+    // Light theme: unlit material so the pale lavender texture shows as
+    // painted — scene lighting on a light texture greyed the whole sphere.
+    const material = lightTheme
+      ? new THREE.MeshBasicMaterial({ map: texture, side: THREE.FrontSide })
+      : new THREE.MeshStandardMaterial({
+          map: texture,
+          roughness: 1,
+          metalness: 0,
+          side: THREE.FrontSide,
+        });
 
     const globe = new THREE.Mesh(geometry, material);
     scene.add(globe);
@@ -248,10 +256,10 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     // above already removed the surface response for; keeping a bright
     // point light would just relight a matte surface into looking shiny
     // again via the ambient term.
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
+    const ambientLight = new THREE.AmbientLight(0xffffff, lightTheme ? 0.85 : 0.35);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 0.7);
+    const keyLight = new THREE.DirectionalLight(0xffffff, lightTheme ? 0.35 : 0.7);
     keyLight.position.set(4, 2.5, 3.5);
     scene.add(keyLight);
 
@@ -270,8 +278,8 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     // so the planet's face stays completely clear.
     const atmosphereMaterial = new THREE.ShaderMaterial({
       uniforms: {
-        uColorInner: { value: new THREE.Color(0x7FB4FF) },
-        uColorOuter: { value: new THREE.Color(0xB98BFF) },
+        uColorInner: { value: new THREE.Color(lightTheme ? 0xDCD0F0 : 0x7FB4FF) },
+        uColorOuter: { value: new THREE.Color(lightTheme ? 0xB39DDB : 0xB98BFF) },
       },
       vertexShader: `
         varying vec3 vNormalView;
@@ -308,6 +316,44 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     );
     scene.add(atmosphere);
 
+    // Light theme: a fine gold-to-lavender rim hugging the globe's
+    // silhouette so the pale sphere reads as a defined object on the light
+    // page. The camera is fixed on the z axis, so a flat ring at z=0 always
+    // faces it; radius ~1.075 is where a unit sphere's edge projects from
+    // z=2.75, so the ring sits just outside the visible limb.
+    let rim = null;
+    if (lightTheme) {
+      const rimMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          uGold: { value: new THREE.Color(0xD4B07A) },
+          uViolet: { value: new THREE.Color(0x8F77C5) },
+        },
+        vertexShader: `
+          varying vec2 vPos;
+          void main() {
+            vPos = position.xy;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 uGold;
+          uniform vec3 uViolet;
+          varying vec2 vPos;
+          void main() {
+            // gold at top-left, lavender-violet at bottom-right
+            float t = clamp(0.5 + 0.5 * dot(normalize(vPos), normalize(vec2(0.75, -0.66))), 0.0, 1.0);
+            gl_FragColor = vec4(mix(uGold, uViolet, t), 0.85);
+          }
+        `,
+        transparent: true,
+        depthTest: false,
+        depthWrite: false,
+      });
+      rim = new THREE.Mesh(new THREE.RingGeometry(1.082, 1.094, 256), rimMaterial);
+      rim.renderOrder = 10;
+      scene.add(rim);
+    }
+
     // ── Background particle field: thousands of tiny glowing dots ──
     // GPU-instanced via a single THREE.Points/BufferGeometry draw call
     // (not individual meshes/React components) so this stays cheap even
@@ -319,11 +365,10 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     const dotPositions = new Float32Array(DOT_COUNT * 3);
     const dotColors = new Float32Array(DOT_COUNT * 3);
     const dotSizes = new Float32Array(DOT_COUNT);
-    const dotPalette = [
-      new THREE.Color('#A855F7'), new THREE.Color('#8B5CF6'),
-      new THREE.Color('#F472B6'), new THREE.Color('#60A5FA'),
-      new THREE.Color('#67E8F9'), new THREE.Color('#FBBF24'),
-    ];
+    const dotPalette = (lightTheme
+      ? ['#6B4FA0', '#8F77C5', '#C98A6B', '#5B7FB0', '#6FA88A', '#D4B07A']
+      : ['#A855F7', '#8B5CF6', '#F472B6', '#60A5FA', '#67E8F9', '#FBBF24']
+    ).map((c) => new THREE.Color(c));
 
     for (let i = 0; i < DOT_COUNT; i++) {
       let lat, lng;
@@ -681,6 +726,7 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
       texture.dispose();
       atmosphere.geometry.dispose();
       atmosphereMaterial.dispose();
+      if (rim) { rim.geometry.dispose(); rim.material.dispose(); }
       dotGeometry.dispose();
       dotMaterial.dispose();
       markersRef.current.forEach((m) => {

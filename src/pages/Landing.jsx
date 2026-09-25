@@ -24,11 +24,11 @@ const GlobePlaceholder = React.memo(function GlobePlaceholder() {
     <div style={{
       position:'absolute', inset:0, borderRadius:'50%',
       display:'flex', alignItems:'center', justifyContent:'center',
-      background:'radial-gradient(circle at 35% 30%, rgba(167,139,250,0.28), rgba(109,74,255,0.12) 55%, rgba(109,74,255,0.02) 78%)',
-      border:'1px solid rgba(167,139,250,0.22)',
+      background:'radial-gradient(circle at 35% 30%, #EFE7F8, #E6DDF3 60%, rgba(230,221,243,0.4) 80%)',
+      border:'1px solid #E6DDF3',
       animation:'globeFallbackPulse 2.2s ease-in-out infinite',
     }}>
-      <GlobeIcon size={40} strokeWidth={1.5} color="rgba(167,139,250,0.55)" />
+      <GlobeIcon size={40} strokeWidth={1.5} color="#8F77C5" />
     </div>
   );
 });
@@ -36,20 +36,31 @@ const GlobePlaceholder = React.memo(function GlobePlaceholder() {
 /* ═══════════════════════════════════════════════════════════════════════════════
    DESIGN TOKENS
 ═══════════════════════════════════════════════════════════════════════════════ */
-// P is the accent on the LIGHT sections (steps/vision/building-in-public
-// text, icons, eyebrows) — muted per the "muted violet" brief, not the
-// vivid brand purple. The dark hero/CTA panels use their own hardcoded
-// rgba(109,74,255,...) values in the .l-btn-p CSS class and gradient
-// stops below, which this does NOT touch, so those stay unaffected.
-const P    = '#6F4EBC';
-const LAV  = '#8F77C5';
-const GLD  = '#F5B841';
-const PNK  = '#F472B6';
+// "Dawn" palette — soft lavender/blush grounds, ONE violet for actions,
+// gold kept for the lotus mark. Every text colour below passes WCAG AA on
+// the light grounds it is used on.
+const P    = '#6B4FA0';   // Soul Violet — buttons, links, accents
+const LAV  = '#8F77C5';   // decorative lavender (never body text)
+const GLD  = '#D4B07A';   // Lotus Gold — mark & icons only
+const GOLD_TXT = '#8A6A3E'; // deep gold for small eyebrow labels on light grounds
+const PNK  = '#C98A6B';   // (legacy name) warm clay accent
 // DARK is the text colour on light sections — "dark navy" per the brief,
 // not the near-black used on the dark panels' own text (#fff/rgba white).
-const DARK = '#1F1B37';
-const NAVY_SOFT = '#4A4560'; // softer navy for body copy on light sections
+const DARK = '#221B3A';   // Deep Indigo — headings/UI text
+const NAVY_SOFT = '#5B5470'; // Dusk Grey — body copy
+const MUTED = '#6E6784';     // small/secondary text (≥4.7:1 on all grounds)
 const SQ3  = 1.7320508;
+// Cream + navy identity
+const CREAM   = '#FAF8FC';   // Morning Mist — page background
+const CREAM_2 = '#F3EFF9';   // Lavender Haze — alternate sections
+const BLUSH   = '#FBF3EE';   // Dawn Blush — warm sections
+const IVORY   = '#FFFFFF';   // cards
+const LILAC_LINE = '#E6DDF3'; // borders
+const SEA     = '#CFE3DA';   // Sea Glass — calm / safe states
+const SEA_TXT = '#2F5A45';
+const LINE    = 'rgba(34,27,58,0.08)';
+const TWILIGHT = '#2A2150';  // the ONE dark band (vision card)
+const NAVY_BAND = TWILIGHT;
 
 const NAV_LINKS = [
   { label: 'Explore',      href: '/explore', isRoute: true },
@@ -62,15 +73,15 @@ const NAV_LINKS = [
 /* Mock data for Global Pulse demo on landing page */
 const GLOBAL_PULSE_DATA = {
   colors: {
-    anxiety: '#E879F9',
-    depression: '#A78BFA',
-    loneliness: '#60A5FA',
-    heartbreak: '#F472B6',
-    burnout: '#F59E0B',
-    grief: '#8B5CF6',
-    'relationship-issues': '#EC4899',
-    'work-stress': '#FBBF24',
-    other: '#A855F7',
+    anxiety: '#8F77C5',
+    depression: '#6B4FA0',
+    loneliness: '#5B7FB0',
+    heartbreak: '#C98A6B',
+    burnout: '#D4A15A',
+    grief: '#7A6A9A',
+    'relationship-issues': '#B8798F',
+    'work-stress': '#C9A45C',
+    other: '#9C8FC2',
   },
   countries: [
     { code: 'IN', name: 'India', count_range: '100-499' },
@@ -95,10 +106,87 @@ const GLOBAL_PULSE_DATA = {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   HERO SVG ILLUSTRATION
+   BRAND LOTUS — the real SoulConnect mark (line lotus, meditating figure,
+   glowing heart). Replaces the old two-souls/neon-orb hero art and the
+   glowing 8-petal vision lotus: one consistent mark everywhere instead of
+   generated-looking cosmic illustrations. Drawn in a 200-unit box.
 ═══════════════════════════════════════════════════════════════════════════════ */
+const LOTUS_PETALS = [
+  'M100,150 C72,150 32,138 14,100 C48,96 82,116 100,150',
+  'M100,150 C128,150 168,138 186,100 C152,96 118,116 100,150',
+  'M100,150 C60,140 40,100 58,56 C80,66 94,80 100,94',
+  'M100,150 C140,140 160,100 142,56 C120,66 106,80 100,94',
+  'M100,150 C64,122 66,72 100,40 C134,72 136,122 100,150',
+];
+const LOTUS_THEMES = {
+  // on light backgrounds
+  light: {
+    stroke: ['#E2B98A', '#D4B07A', '#B0714F'], strokeW: 2.4,
+    glow: ['#C4ACE2', 0.55], petal: ['#EFE7F8', 0.75],
+    heart: ['#FFE7C2', '#F4C07E', '#E48A4E'], heartGlow: 0.45, spark: '#C9A06A',
+  },
+  // on the one dark (Twilight) band
+  dark: {
+    stroke: ['#F7DDB8', '#D4B07A', '#C4876A'], strokeW: 2.2,
+    glow: ['#9A4E86', 0.55], petal: ['#3A2A66', 0.55],
+    heart: ['#FFF4DC', '#F9D39A', '#EE9E62'], heartGlow: 0.8, spark: '#F7DDB8',
+  },
+};
+
+function LotusMark({ variant = 'light', id = 'lm' }) {
+  const t = LOTUS_THEMES[variant];
+  return (
+    <g>
+      <defs>
+        <linearGradient id={`${id}St`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={t.stroke[0]} />
+          <stop offset="0.55" stopColor={t.stroke[1]} />
+          <stop offset="1" stopColor={t.stroke[2]} />
+        </linearGradient>
+        <radialGradient id={`${id}Gl`} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor={t.glow[0]} stopOpacity={t.glow[1]} />
+          <stop offset="1" stopColor={t.glow[0]} stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id={`${id}Hf`} cx="0.5" cy="0.45" r="0.6">
+          <stop offset="0" stopColor={t.heart[0]} />
+          <stop offset="0.6" stopColor={t.heart[1]} />
+          <stop offset="1" stopColor={t.heart[2]} />
+        </radialGradient>
+        <radialGradient id={`${id}Hg`} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#F4A460" stopOpacity={t.heartGlow} />
+          <stop offset="1" stopColor="#F4A460" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="100" cy="108" rx="62" ry="52" fill={`url(#${id}Gl)`} />
+      <g fill={t.petal[0]} fillOpacity={t.petal[1]}>
+        {LOTUS_PETALS.map((d, i) => <path key={i} d={`${d} Z`} />)}
+      </g>
+      <circle cx="100" cy="112" r="28" fill={`url(#${id}Hg)`} />
+      <g fill="none" stroke={`url(#${id}St)`} strokeWidth={t.strokeW}
+        strokeLinejoin="round" strokeLinecap="round">
+        {LOTUS_PETALS.map((d, i) => <path key={i} d={i === 4 ? `${d} Z` : d} />)}
+        <path d="M99,151 C80,150 52,152 30,158 C50,176 80,178 99,151" />
+        <path d="M101,151 C120,150 148,152 170,158 C150,176 120,178 101,151" />
+        <line x1="100" y1="84" x2="100" y2="94" />
+        <path d="M100,70 C102.5,73 104,75.5 104,78.5 A4,4 0 0 1 96,78.5 C96,75.5 97.5,73 100,70 Z"
+          strokeWidth={t.strokeW * 0.82} />
+      </g>
+      <path d="M100,127 C92,121 84,115 84,108 C84,102 89,99 94,101 C97,102 99,105 100,107 C101,105 103,102 106,101 C111,99 116,102 116,108 C116,115 108,121 100,127 Z"
+        fill={`url(#${id}Hf)`} />
+      <g fill={t.spark}>
+        <path d="M100,21 L102,25 L100,29 L98,25 Z" />
+        <circle cx="100" cy="25" r="1.6" />
+        <circle cx="80" cy="36" r="1.7" />
+        <circle cx="120" cy="36" r="1.7" />
+        <circle cx="100" cy="12" r="0.9" fillOpacity="0.6" />
+      </g>
+    </g>
+  );
+}
+
 function HeroIllustration() {
-  /* ── Two Souls Connecting & Healing ──
+  /* ── Two Souls Connecting & Healing — light "Dawn" recolour of the
+     original composition (same layout, figures, beam, nexus, lotus). ──
      Layers: cosmic bg → stars → nebula → sacred geometry →
      left soul orb → right soul orb → energy beam → nexus →
      healing lotus → particles
@@ -123,7 +211,7 @@ function HeroIllustration() {
   const pts = Array.from({length:30},(_,i)=>({
     x: 20+((i*83+i*i*13)%760), y: 60+((i*67+i*i*17)%820),
     r: 0.8+(i%5)*0.45,
-    col:[LAV,GLD,PNK,'#C4B5FD','#FDE68A','#E879F9'][i%6],
+    col:[LAV,GLD,PNK,'#C2B1E4','#E3BB8A','#B8A6DC'][i%6],
     dur: 2.8+(i%5)*0.9, del: i*0.25,
   }));
 
@@ -138,82 +226,92 @@ function HeroIllustration() {
       <defs>
         {/* ── Backgrounds ── */}
         <linearGradient id="hiBg" x1="20%" y1="0%" x2="80%" y2="100%">
-          <stop offset="0%"   stopColor="#020115"/>
-          <stop offset="40%"  stopColor="#0A0330"/>
-          <stop offset="75%"  stopColor="#160848"/>
-          <stop offset="100%" stopColor="#070122"/>
+          <stop offset="0%"   stopColor="#F3EFF9" stopOpacity="0"/>
+          <stop offset="100%" stopColor="#F3EFF9" stopOpacity="0"/>
         </linearGradient>
 
         {/* ── Left soul orb: 3D sphere (highlight top-left) ── */}
         <radialGradient id="hiLOrb" cx="32%" cy="28%">
-          <stop offset="0%"   stopColor="#DDD6FE"/>
-          <stop offset="18%"  stopColor="#A78BFA"/>
-          <stop offset="45%"  stopColor="#6D4AFF"/>
-          <stop offset="78%"  stopColor="#3A1C8A"/>
-          <stop offset="100%" stopColor="#180650" stopOpacity="0.8"/>
+          <stop offset="0%"   stopColor="#FFFFFF"/>
+          <stop offset="18%"  stopColor="#F3EDFB"/>
+          <stop offset="45%"  stopColor="#DCD0F0"/>
+          <stop offset="78%"  stopColor="#C2B1E4"/>
+          <stop offset="100%" stopColor="#A893D6" stopOpacity="0.9"/>
         </radialGradient>
         <radialGradient id="hiLAura" cx="50%" cy="50%">
-          <stop offset="0%"   stopColor="#6D4AFF" stopOpacity="0.38"/>
-          <stop offset="100%" stopColor="#6D4AFF" stopOpacity="0"/>
+          <stop offset="0%"   stopColor="#C9B8E8" stopOpacity="0.28"/>
+          <stop offset="100%" stopColor="#C9B8E8" stopOpacity="0"/>
         </radialGradient>
 
         {/* ── Right soul orb: 3D sphere (slightly warmer hue) ── */}
         <radialGradient id="hiROrb" cx="68%" cy="28%">
-          <stop offset="0%"   stopColor="#F0EAFF"/>
-          <stop offset="18%"  stopColor="#C4B5FD"/>
-          <stop offset="45%"  stopColor="#8B5CF6"/>
-          <stop offset="78%"  stopColor="#4C1D95"/>
-          <stop offset="100%" stopColor="#1E0B52" stopOpacity="0.8"/>
+          <stop offset="0%"   stopColor="#FFFFFF"/>
+          <stop offset="18%"  stopColor="#F7EEF6"/>
+          <stop offset="45%"  stopColor="#E6D5EE"/>
+          <stop offset="78%"  stopColor="#CDB6E2"/>
+          <stop offset="100%" stopColor="#B29BD8" stopOpacity="0.9"/>
         </radialGradient>
         <radialGradient id="hiRAura" cx="50%" cy="50%">
-          <stop offset="0%"   stopColor="#8B5CF6" stopOpacity="0.32"/>
-          <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0"/>
+          <stop offset="0%"   stopColor="#DCC8EC" stopOpacity="0.28"/>
+          <stop offset="100%" stopColor="#DCC8EC" stopOpacity="0"/>
         </radialGradient>
 
         {/* ── Center nexus ── */}
         <radialGradient id="hiNex" cx="50%" cy="50%">
           <stop offset="0%"   stopColor="#FFFFFF"/>
-          <stop offset="8%"   stopColor="#FEF9C3"/>
-          <stop offset="28%"  stopColor={GLD} stopOpacity="0.85"/>
-          <stop offset="55%"  stopColor={LAV} stopOpacity="0.45"/>
-          <stop offset="100%" stopColor={P}   stopOpacity="0"/>
+          <stop offset="10%"  stopColor="#FFF1DC"/>
+          <stop offset="30%"  stopColor="#F4C98E" stopOpacity="0.75"/>
+          <stop offset="60%"  stopColor="#FBE6DA" stopOpacity="0.45"/>
+          <stop offset="100%" stopColor="#FBE6DA" stopOpacity="0"/>
         </radialGradient>
 
         {/* ── Energy beam ── */}
         <linearGradient id="hiBeam" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%"   stopColor={LAV} stopOpacity="0.05"/>
-          <stop offset="22%"  stopColor={LAV} stopOpacity="0.72"/>
-          <stop offset="50%"  stopColor="#FFFFFF" stopOpacity="1"/>
-          <stop offset="78%"  stopColor={LAV} stopOpacity="0.72"/>
-          <stop offset="100%" stopColor={LAV} stopOpacity="0.05"/>
+          <stop offset="0%"   stopColor={LAV} stopOpacity="0.1"/>
+          <stop offset="22%"  stopColor={LAV} stopOpacity="0.6"/>
+          <stop offset="50%"  stopColor="#E3A857" stopOpacity="1"/>
+          <stop offset="78%"  stopColor={LAV} stopOpacity="0.6"/>
+          <stop offset="100%" stopColor={LAV} stopOpacity="0.1"/>
         </linearGradient>
 
         {/* ── Lotus ── */}
         <linearGradient id="hiLP" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stopColor="#F0E8FF" stopOpacity="0.97"/>
-          <stop offset="100%" stopColor="#7C3AED" stopOpacity="0.55"/>
+          <stop offset="0%"   stopColor="#F6F1FC" stopOpacity="1"/>
+          <stop offset="100%" stopColor="#A893D6" stopOpacity="0.85"/>
         </linearGradient>
         <radialGradient id="hiLC" cx="50%" cy="38%">
-          <stop offset="0%"   stopColor="#FEF9C3"/>
-          <stop offset="48%"  stopColor={GLD}/>
-          <stop offset="100%" stopColor={GLD} stopOpacity="0"/>
+          <stop offset="0%"   stopColor="#FFF1DC"/>
+          <stop offset="48%"  stopColor="#F4C98E"/>
+          <stop offset="100%" stopColor="#F4C98E" stopOpacity="0"/>
         </radialGradient>
         <linearGradient id="hiVLine" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%"   stopColor={GLD} stopOpacity="0.4"/>
           <stop offset="100%" stopColor={LAV} stopOpacity="0.05"/>
         </linearGradient>
 
+        {/* Soft warm wash behind the nexus + lotus (pure gradient, fades to 0,
+            so it never shows an edge the way blurred solid shapes did) */}
+        <radialGradient id="hiWarm" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stopColor="#FBE6DA" stopOpacity="0.55"/>
+          <stop offset="55%"  stopColor="#F6EEF8" stopOpacity="0.35"/>
+          <stop offset="100%" stopColor="#F6EEF8" stopOpacity="0"/>
+        </radialGradient>
+        <radialGradient id="hiGround" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stopColor={LAV} stopOpacity="0.22"/>
+          <stop offset="100%" stopColor={LAV} stopOpacity="0"/>
+        </radialGradient>
+
         {/* ── Filters ── */}
         <filter id="hiXGlow" x="-120%" y="-120%" width="340%" height="340%">
-          <feGaussianBlur stdDeviation="28" result="b"/>
+          <feGaussianBlur stdDeviation="20" result="b"/>
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
         <filter id="hiLGlow" x="-80%" y="-80%" width="260%" height="260%">
-          <feGaussianBlur stdDeviation="16" result="b"/>
+          <feGaussianBlur stdDeviation="10" result="b"/>
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
         <filter id="hiMGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="10" result="b"/>
+          <feGaussianBlur stdDeviation="4" result="b"/>
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
         <filter id="hiSGlow" x="-80%" y="-80%" width="260%" height="260%">
@@ -225,7 +323,7 @@ function HeroIllustration() {
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
         <filter id="hiPGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="9" result="b"/>
+          <feGaussianBlur stdDeviation="3" result="b"/>
           <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
@@ -234,13 +332,11 @@ function HeroIllustration() {
       <rect x="0" y="0" width={W} height={H} fill="url(#hiBg)"/>
 
       {/* Nebula soft clouds */}
-      <ellipse cx="160" cy="240" rx="220" ry="170" fill="rgba(109,74,255,0.06)" filter="url(#hiXGlow)"/>
-      <ellipse cx="650" cy="270" rx="190" ry="150" fill="rgba(139,92,246,0.05)" filter="url(#hiXGlow)"/>
-      <ellipse cx="400" cy="500" rx="200" ry="160" fill="rgba(245,184,65,0.025)" filter="url(#hiXGlow)"/>
+      <ellipse cx="400" cy="470" rx="330" ry="300" fill="url(#hiWarm)"/>
 
       {/* ── STARS ── */}
       {stars.map((s,i)=>(
-        <circle key={i} cx={s.x} cy={s.y} r={s.r} fill="#fff" opacity={s.op}>
+        <circle key={i} cx={s.x} cy={s.y} r={s.r} fill={i%3===0?"#D4B07A":"#B8A6DC"} opacity={s.op}>
           <animate attributeName="opacity"
             values={`${s.op};${Math.min(s.op*3,0.95)};${s.op}`}
             dur={`${s.dur}s`} begin={`${s.del}s`} repeatCount="indefinite"/>
@@ -248,7 +344,7 @@ function HeroIllustration() {
       ))}
 
       {/* ── SACRED GEOMETRY RING (center, faint) ── */}
-      <g opacity="0.09" transform={`translate(${CX},${MY})`}>
+      <g opacity="0.16" transform={`translate(${CX},${MY})`}>
         {[65,95,125,148].map((r,i)=>(
           <circle key={i} cx="0" cy="0" r={r}
             stroke={i%2===0?LAV:GLD} strokeWidth={i===0?1:0.65} fill="none"
@@ -271,7 +367,7 @@ function HeroIllustration() {
           LEFT SOUL ORB  — deep violet sphere
       ════════════════════════════════════════ */}
       {/* Outer aura / atmosphere */}
-      <circle cx={LX} cy={MY} r={168} fill="url(#hiLAura)" filter="url(#hiXGlow)"/>
+      <circle cx={LX} cy={MY} r={160} fill="url(#hiLAura)"/>
       {/* 3D Sphere body */}
       <circle cx={LX} cy={MY} r={90} fill="url(#hiLOrb)" filter="url(#hiMGlow)"/>
       {/* Specular shine top-left (makes it feel 3D) */}
@@ -280,17 +376,17 @@ function HeroIllustration() {
       <ellipse cx={LX-20} cy={MY-26} rx={10} ry={7}
         fill="rgba(255,255,255,0.38)"/>
       {/* Inner core glow */}
-      <circle cx={LX} cy={MY} r={46} fill="rgba(167,139,250,0.18)" filter="url(#hiMGlow)"/>
+      <circle cx={LX} cy={MY} r={46} fill="rgba(255,255,255,0.25)" filter="url(#hiMGlow)"/>
 
       {/* Meditating figure inside left orb — reaching right */}
       <g transform={`translate(${LX},${MY})`} opacity="0.82">
         {/* Head */}
-        <ellipse cx="-4" cy="-54" rx="13" ry="15" fill="#0C0326"/>
-        <ellipse cx="-4" cy="-67" rx="15" ry="7"  fill="#080220"/>
+        <ellipse cx="-4" cy="-54" rx="13" ry="15" fill="#3A2E63"/>
+        <ellipse cx="-4" cy="-67" rx="15" ry="7"  fill="#2E2452"/>
         {/* Body */}
-        <path d="M-17,-40 Q-21,-6 -14,18 L6,18 Q13,-6 9,-40 Z" fill="#0C0326"/>
+        <path d="M-17,-40 Q-21,-6 -14,18 L6,18 Q13,-6 9,-40 Z" fill="#3A2E63"/>
         {/* Right arm reaching toward center/nexus */}
-        <path d="M9,-22 Q30,-12 52,-10" stroke="#0C0326" strokeWidth="9"
+        <path d="M9,-22 Q30,-12 52,-10" stroke="#3A2E63" strokeWidth="9"
           strokeLinecap="round" fill="none"/>
         {/* Glowing hand/energy at tip */}
         <circle cx="52" cy="-10" r="7" fill={GLD} opacity="0.85" filter="url(#hiSGlow)">
@@ -302,9 +398,9 @@ function HeroIllustration() {
           <animate attributeName="opacity" values="0.22;0.04;0.22" dur="2.3s" repeatCount="indefinite"/>
         </circle>
         {/* Cross-legged base */}
-        <ellipse cx="-4" cy="28" rx="28" ry="11" fill="#0C0326"/>
-        <ellipse cx="-24" cy="22" rx="16" ry="9" fill="#100430"/>
-        <ellipse cx="16" cy="22" rx="16" ry="9" fill="#100430"/>
+        <ellipse cx="-4" cy="28" rx="28" ry="11" fill="#3A2E63"/>
+        <ellipse cx="-24" cy="22" rx="16" ry="9" fill="#463A73"/>
+        <ellipse cx="16" cy="22" rx="16" ry="9" fill="#463A73"/>
         {/* Third eye */}
         <circle cx="-4" cy="-58" r="2.8" fill={GLD} opacity="0.65">
           <animate attributeName="opacity" values="0.25;0.95;0.25" dur="3s" repeatCount="indefinite"/>
@@ -314,7 +410,7 @@ function HeroIllustration() {
       {/* Pulsing rings left */}
       {[0,1,2].map(i=>(
         <circle key={i} cx={LX} cy={MY} r={102+i*24}
-          stroke={LAV} strokeWidth="0.9" fill="none">
+          stroke="#B8A6DC" strokeWidth="0.9" fill="none">
           <animate attributeName="r"
             values={`${98+i*24};${122+i*24};${98+i*24}`}
             dur={`${3.2+i*0.9}s`} begin={`${i*0.65}s`} repeatCount="indefinite"/>
@@ -326,21 +422,21 @@ function HeroIllustration() {
       {/* ════════════════════════════════════════
           RIGHT SOUL ORB — lavender sphere
       ════════════════════════════════════════ */}
-      <circle cx={RX} cy={MY} r={168} fill="url(#hiRAura)" filter="url(#hiXGlow)"/>
+      <circle cx={RX} cy={MY} r={160} fill="url(#hiRAura)"/>
       <circle cx={RX} cy={MY} r={90} fill="url(#hiROrb)" filter="url(#hiMGlow)"/>
       <ellipse cx={RX-30} cy={MY-32} rx={26} ry={18}
         fill="rgba(255,255,255,0.2)" filter="url(#hiSGlow)"/>
       <ellipse cx={RX-20} cy={MY-26} rx={10} ry={7}
         fill="rgba(255,255,255,0.34)"/>
-      <circle cx={RX} cy={MY} r={46} fill="rgba(196,181,253,0.16)" filter="url(#hiMGlow)"/>
+      <circle cx={RX} cy={MY} r={46} fill="rgba(255,255,255,0.22)" filter="url(#hiMGlow)"/>
 
       {/* Meditating figure inside right orb — reaching left */}
       <g transform={`translate(${RX},${MY})`} opacity="0.82">
-        <ellipse cx="4" cy="-54" rx="13" ry="15" fill="#0C0326"/>
-        <ellipse cx="4" cy="-67" rx="15" ry="7"  fill="#080220"/>
-        <path d="M-9,-40 Q-13,-6 -6,18 L14,18 Q21,-6 17,-40 Z" fill="#0C0326"/>
+        <ellipse cx="4" cy="-54" rx="13" ry="15" fill="#3A2E63"/>
+        <ellipse cx="4" cy="-67" rx="15" ry="7"  fill="#2E2452"/>
+        <path d="M-9,-40 Q-13,-6 -6,18 L14,18 Q21,-6 17,-40 Z" fill="#3A2E63"/>
         {/* Left arm reaching toward center */}
-        <path d="M-9,-22 Q-30,-12 -52,-10" stroke="#0C0326" strokeWidth="9"
+        <path d="M-9,-22 Q-30,-12 -52,-10" stroke="#3A2E63" strokeWidth="9"
           strokeLinecap="round" fill="none"/>
         <circle cx="-52" cy="-10" r="7" fill={GLD} opacity="0.85" filter="url(#hiSGlow)">
           <animate attributeName="r"       values="5;9;5"       dur="2.7s" begin="0.4s" repeatCount="indefinite"/>
@@ -350,9 +446,9 @@ function HeroIllustration() {
           <animate attributeName="r"       values="10;18;10"      dur="2.7s" begin="0.4s" repeatCount="indefinite"/>
           <animate attributeName="opacity" values="0.2;0.04;0.2"   dur="2.7s" begin="0.4s" repeatCount="indefinite"/>
         </circle>
-        <ellipse cx="4" cy="28" rx="28" ry="11" fill="#0C0326"/>
-        <ellipse cx="-16" cy="22" rx="16" ry="9" fill="#100430"/>
-        <ellipse cx="24" cy="22" rx="16" ry="9" fill="#100430"/>
+        <ellipse cx="4" cy="28" rx="28" ry="11" fill="#3A2E63"/>
+        <ellipse cx="-16" cy="22" rx="16" ry="9" fill="#463A73"/>
+        <ellipse cx="24" cy="22" rx="16" ry="9" fill="#463A73"/>
         <circle cx="4" cy="-58" r="2.8" fill={GLD} opacity="0.65">
           <animate attributeName="opacity" values="0.25;0.95;0.25" dur="3.4s" begin="0.5s" repeatCount="indefinite"/>
         </circle>
@@ -360,7 +456,7 @@ function HeroIllustration() {
 
       {[0,1,2].map(i=>(
         <circle key={i} cx={RX} cy={MY} r={102+i*24}
-          stroke={LAV} strokeWidth="0.9" fill="none">
+          stroke="#B8A6DC" strokeWidth="0.9" fill="none">
           <animate attributeName="r"
             values={`${98+i*24};${122+i*24};${98+i*24}`}
             dur={`${3.6+i*0.9}s`} begin={`${i*0.5+0.3}s`} repeatCount="indefinite"/>
@@ -386,12 +482,12 @@ function HeroIllustration() {
         filter="url(#hiBGlow)" strokeLinecap="round" opacity="0.96"/>
       {/* Upper fine ribbon */}
       <path d={`M${bx1},${MY-12} C${LX+160},${bcy-18} ${RX-160},${bcy-18} ${bx2},${MY-12}`}
-        stroke="rgba(196,181,253,0.32)" strokeWidth="1.2" fill="none" strokeLinecap="round"/>
+        stroke="rgba(168,147,214,0.45)" strokeWidth="1.2" fill="none" strokeLinecap="round"/>
       {/* Lower fine ribbon */}
       <path d={`M${bx1},${MY+12} C${LX+160},${bcy+24} ${RX-160},${bcy+24} ${bx2},${MY+12}`}
-        stroke="rgba(196,181,253,0.22)" strokeWidth="1" fill="none" strokeLinecap="round"/>
+        stroke="rgba(168,147,214,0.32)" strokeWidth="1" fill="none" strokeLinecap="round"/>
       {/* Traveling light particle L→R */}
-      <circle r="4.5" fill="#fff" opacity="0.92" filter="url(#hiSGlow)">
+      <circle r="4.5" fill="#E3A857" opacity="0.92" filter="url(#hiSGlow)">
         <animateMotion path={beamPath} dur="3.2s" repeatCount="indefinite"/>
       </circle>
       {/* Traveling light particle R→L */}
@@ -403,8 +499,7 @@ function HeroIllustration() {
           CENTER NEXUS — souls meeting point
       ════════════════════════════════════════ */}
       {/* Large outer glow */}
-      <circle cx={CX} cy={MY} r={110} fill="url(#hiNex)" opacity="0.65"
-        filter="url(#hiLGlow)"/>
+      <circle cx={CX} cy={MY} r={110} fill="url(#hiNex)" opacity="0.7"/>
       {/* Starburst rays */}
       {Array.from({length:24},(_,i)=>{
         const a=i*(Math.PI*2/24);
@@ -418,12 +513,12 @@ function HeroIllustration() {
       {/* Nexus ring halos */}
       {[42,30,20].map((r,i)=>(
         <circle key={i} cx={CX} cy={MY} r={r}
-          fill={['rgba(245,184,65,0.2)','rgba(245,184,65,0.45)','rgba(245,184,65,0.75)'][i]}
+          fill={['rgba(244,201,142,0.22)','rgba(244,201,142,0.45)','rgba(236,176,104,0.8)'][i]}
           filter={i===2?'url(#hiSGlow)':undefined}>
           {i===2&&<animate attributeName="r" values="17;23;17" dur="2.6s" repeatCount="indefinite"/>}
         </circle>
       ))}
-      <circle cx={CX} cy={MY} r={8} fill="#FEF9C3" filter="url(#hiSGlow)"/>
+      <circle cx={CX} cy={MY} r={8} fill="#FFF6E6" filter="url(#hiSGlow)"/>
       {/* 3 orbiting dots */}
       {[0,120,240].map((a,i)=>{
         const rad=a*Math.PI/180;
@@ -448,15 +543,14 @@ function HeroIllustration() {
           HEALING LOTUS (below nexus)
       ════════════════════════════════════════ */}
       {/* Ground aura */}
-      <ellipse cx={CX} cy={LY+28} rx={130} ry={28}
-        fill={LAV} opacity="0.07" filter="url(#hiLGlow)"/>
+      <ellipse cx={CX} cy={LY+30} rx={150} ry={30} fill="url(#hiGround)"/>
       <g filter="url(#hiPGlow)">
         {/* Outer petals ×8 */}
         {OD.map((d,i)=>{
           const r=(d-90)*Math.PI/180;
           const px=CX+90*Math.cos(r), py=LY+90*Math.sin(r);
           return <ellipse key={i} cx={px} cy={py} rx={14} ry={46}
-            fill="url(#hiLP)" opacity="0.88"
+            fill="url(#hiLP)" opacity="0.92" stroke="#C2B1E4" strokeWidth="0.8"
             transform={`rotate(${d},${px},${py})`}/>;
         })}
         {/* Mid petals ×8 */}
@@ -464,7 +558,7 @@ function HeroIllustration() {
           const r=(d-90)*Math.PI/180;
           const px=CX+59*Math.cos(r), py=LY+59*Math.sin(r);
           return <ellipse key={i} cx={px} cy={py} rx={11} ry={30}
-            fill="#DDD6FE" opacity="0.93"
+            fill="#DCD0F0" opacity="0.95" stroke="#C2B1E4" strokeWidth="0.8"
             transform={`rotate(${d},${px},${py})`}/>;
         })}
         {/* Inner petals ×6 */}
@@ -472,21 +566,21 @@ function HeroIllustration() {
           const r=(d-90)*Math.PI/180;
           const px=CX+33*Math.cos(r), py=LY+33*Math.sin(r);
           return <ellipse key={i} cx={px} cy={py} rx={8} ry={18}
-            fill="#F0E8FF" opacity="0.97"
+            fill="#FBF8FE" opacity="0.98" stroke="#D9CCF0" strokeWidth="0.8"
             transform={`rotate(${d},${px},${py})`}/>;
         })}
         {/* Lotus center */}
         <circle cx={CX} cy={LY} r={38} fill="url(#hiLC)" filter="url(#hiLGlow)"/>
-        <circle cx={CX} cy={LY} r={15} fill={GLD}>
+        <circle cx={CX} cy={LY} r={15} fill="#ECB068">
           <animate attributeName="r"       values="13;19;13" dur="4.2s" repeatCount="indefinite"/>
           <animate attributeName="opacity" values="0.8;1;0.8" dur="4.2s" repeatCount="indefinite"/>
         </circle>
-        <circle cx={CX} cy={LY} r={8} fill="#FEF9C3"/>
+        <circle cx={CX} cy={LY} r={8} fill="#FFF6E6"/>
       </g>
 
       {/* ── FLOATING PARTICLES ── */}
       {pts.map((p,i)=>(
-        <circle key={i} cx={p.x} cy={p.y} r={p.r} fill={p.col} opacity="0.38">
+        <circle key={i} cx={p.x} cy={p.y} r={p.r} fill={p.col} opacity="0.5">
           <animate attributeName="cy"
             values={`${p.y};${p.y-18};${p.y}`}
             dur={`${p.dur}s`} begin={`${p.del}s`} repeatCount="indefinite"/>
@@ -499,99 +593,11 @@ function HeroIllustration() {
   );
 }
 
-
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   VISION LOTUS SVG
-═══════════════════════════════════════════════════════════════════════════════ */
+/* Vision card lotus — same mark, dark-band colours. */
 function VisionLotus() {
-  const cx=130, cy=130;
-  const OD=[0,45,90,135,180,225,270,315];
-  const MD=[22.5,67.5,112.5,157.5,202.5,247.5,292.5,337.5];
-  const ID=[0,60,120,180,240,300];
   return (
-    <svg viewBox="0 0 260 260" width="100%" height="100%" aria-hidden="true">
-      <defs>
-        <radialGradient id="vlGlow" cx="50%" cy="50%">
-          <stop offset="0%"   stopColor={LAV} stopOpacity="0.55"/>
-          <stop offset="100%" stopColor={LAV} stopOpacity="0"/>
-        </radialGradient>
-        <linearGradient id="vlPetal" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stopColor="#F0E8FF" stopOpacity="0.96"/>
-          <stop offset="100%" stopColor="#7C3AED" stopOpacity="0.6"/>
-        </linearGradient>
-        <radialGradient id="vlCenter" cx="50%" cy="40%">
-          <stop offset="0%"   stopColor="#FEF9C3"/>
-          <stop offset="45%"  stopColor={GLD}/>
-          <stop offset="100%" stopColor={GLD} stopOpacity="0"/>
-        </radialGradient>
-        <filter id="vlGlowF" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="9" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <ellipse cx={cx} cy={cy} rx={120} ry={120} fill="url(#vlGlow)"/>
-      <circle cx={cx} cy={cy} r={108} stroke="rgba(167,139,250,0.22)" strokeWidth="0.8" fill="none" strokeDasharray="5 7"/>
-      <circle cx={cx} cy={cy} r={118} stroke={GLD} strokeWidth="0.5" fill="none" strokeDasharray="2 9" opacity="0.3"/>
-      <g filter="url(#vlGlowF)">
-        {OD.map((d,i)=>{const r=(d-90)*Math.PI/180,px=cx+76*Math.cos(r),py=cy+76*Math.sin(r);return<ellipse key={i} cx={px} cy={py} rx={11} ry={36} fill="url(#vlPetal)" opacity="0.88" transform={`rotate(${d},${px},${py})`}/>;}) }
-        {MD.map((d,i)=>{const r=(d-90)*Math.PI/180,px=cx+50*Math.cos(r),py=cy+50*Math.sin(r);return<ellipse key={i} cx={px} cy={py} rx={8.5} ry={24} fill="#DDD6FE" opacity="0.93" transform={`rotate(${d},${px},${py})`}/>;}) }
-        {ID.map((d,i)=>{const r=(d-90)*Math.PI/180,px=cx+28*Math.cos(r),py=cy+28*Math.sin(r);return<ellipse key={i} cx={px} cy={py} rx={6} ry={14} fill="#F5F3FF" opacity="0.97" transform={`rotate(${d},${px},${py})`}/>;}) }
-        <circle cx={cx} cy={cy} r={30} fill="url(#vlCenter)"/>
-        <circle cx={cx} cy={cy} r={12} fill={GLD}>
-          <animate attributeName="r" values="10;15;10" dur="3.8s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.8;1;0.8" dur="3.8s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx={cx} cy={cy} r={6}  fill="#FEF9C3"/>
-      </g>
-    </svg>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   PEOPLE SUNSET SVG
-═══════════════════════════════════════════════════════════════════════════════ */
-function PeopleSunset() {
-  return (
-    <svg viewBox="0 0 340 420" width="100%" height="100%"
-      preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <defs>
-        <linearGradient id="psSky" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stopColor="#0A0220"/>
-          <stop offset="38%"  stopColor="#361070"/>
-          <stop offset="68%"  stopColor="#8B2A60"/>
-          <stop offset="100%" stopColor="#E0723E"/>
-        </linearGradient>
-        <radialGradient id="psSun" cx="50%" cy="47%">
-          <stop offset="0%"   stopColor="#FCD34D" stopOpacity="0.95"/>
-          <stop offset="28%"  stopColor="#F59E0B" stopOpacity="0.5"/>
-          <stop offset="100%" stopColor="#8B2A60"  stopOpacity="0"/>
-        </radialGradient>
-        <linearGradient id="psWater" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stopColor="#3D1A6E" stopOpacity="0.82"/>
-          <stop offset="100%" stopColor="#0E0430"/>
-        </linearGradient>
-      </defs>
-      <rect width="340" height="420" fill="url(#psSky)"/>
-      <ellipse cx="170" cy="196" rx="140" ry="120" fill="url(#psSun)"/>
-      <circle  cx="170" cy="196" r="28"  fill="#FCD34D" opacity="0.88"/>
-      <circle  cx="170" cy="196" r="17"  fill="#FEF9C3"/>
-      <path d="M0,270 L55,200 L110,238 L165,188 L220,225 L275,198 L340,228 L340,420 L0,420Z"
-        fill="#1A0840" opacity="0.92"/>
-      <rect x="0" y="286" width="340" height="134" fill="url(#psWater)"/>
-      {[.73,.79,.85,.92].map((y,i)=>
-        <line key={i} x1="12" y1={420*y} x2="328" y2={420*y}
-          stroke="rgba(167,139,250,0.1)" strokeWidth="0.8"/>
-      )}
-      {[82,118,155,192,226].map((x,i)=>(
-        <g key={i} transform={`translate(${x},274) scale(${0.9+i%3*.07})`}>
-          <circle cy="-42" r="9"  fill="#080216"/>
-          <path d="M-10,-34 Q-13,-4 -11,14 L11,14 Q13,-4 10,-34Z" fill="#080216"/>
-          <path d="M-11,12 Q-20,22 -16,30 L16,30 Q20,22 11,12Z" fill="#080216"/>
-        </g>
-      ))}
-      <ellipse cx="170" cy="285" rx="100" ry="9" fill="#080216" opacity="0.5"/>
-      <ellipse cx="170" cy="310" rx="60" ry="14" fill="#FCD34D" opacity="0.08"/>
+    <svg viewBox="0 0 200 200" width="100%" height="100%" aria-hidden="true">
+      <LotusMark variant="dark" id="visionLotus" />
     </svg>
   );
 }
@@ -604,6 +610,18 @@ export default function Landing() {
   const [menuOpen,       setMenuOpen]       = useState(false);
   const [earlyForm,      setEarlyForm]      = useState({challenge:'',name:'',email:'',referralSource:''});
   const [earlySubmitted, setEarlySubmitted] = useState(false);
+
+  // Arriving from another page with a #hash (e.g. About → "/#early"):
+  // the router doesn't scroll to it, so do it once the page has laid out.
+  useEffect(()=>{
+    const id = window.location.hash.slice(1);
+    if(!id) return;
+    const timers = [80, 450, 1100].map(ms => setTimeout(()=>{
+      const el = document.getElementById(id);
+      if(el) el.scrollIntoView({behavior: ms===80 ? 'auto' : 'smooth', block:'start'});
+    }, ms));
+    return ()=>timers.forEach(clearTimeout);
+  },[]);
 
   useEffect(()=>{
     [['sc-pjs','https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'],
@@ -666,8 +684,8 @@ export default function Landing() {
     @keyframes globeFallbackPulse{0%,100%{opacity:0.75;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
     @keyframes orbDrift  {0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-14px)}}
     @keyframes glowBreathe{
-      0%,100%{box-shadow:0 0 0 0 rgba(109,74,255,0),0 6px 28px rgba(109,74,255,0.22);}
-      50%{box-shadow:0 0 0 16px rgba(109,74,255,0.04),0 14px 52px rgba(109,74,255,0.42);}
+      0%,100%{box-shadow:0 0 0 0 rgba(16,27,61,0),0 6px 22px rgba(16,27,61,0.18);}
+      50%{box-shadow:0 0 0 10px rgba(16,27,61,0.03),0 12px 34px rgba(16,27,61,0.26);}
     }
     @keyframes goldGlow  {
       0%,100%{box-shadow:0 0 0 0 rgba(245,184,65,0),0 4px 18px rgba(245,184,65,0.2);}
@@ -695,42 +713,53 @@ export default function Landing() {
     /* Trust badge */
     .l-trust-badge{
       display:inline-flex;align-items:center;gap:10px;
-      background:rgba(109,74,255,0.12);
-      border:1px solid rgba(109,74,255,0.28);
-      backdrop-filter:blur(14px);border-radius:999px;
-      padding:12px 24px;cursor:default;
-      animation:badgeFloat 5s ease-in-out infinite,badgeGlow 5s ease-in-out infinite;
+      background:#FFFFFF;
+      border:1px solid #DCD0F0;
+      border-radius:999px;
+      padding:10px 20px;cursor:default;
     }
     .l-trust-badge-dot{
       width:8px;height:8px;border-radius:50%;
-      background:linear-gradient(135deg,#6D4AFF,#A78BFA);
-      animation:pulse 2.5s ease-in-out infinite;flex-shrink:0;
+      background:#6FA88A;flex-shrink:0;
     }
-    .l-trust-badge-rocket{font-size:16px;line-height:1;}
-    .l-trust-badge-text{font-size:14px;font-weight:600;color:#A78BFA;letter-spacing:.01em;white-space:nowrap;}
-    .l-trust-badge-sep{width:1px;height:14px;background:rgba(167,139,250,0.35);flex-shrink:0;}
-    .l-trust-badge-label{font-size:13px;font-weight:500;color:rgba(167,139,250,0.75);white-space:nowrap;}
+    .l-trust-badge-rocket{font-size:16px;line-height:1;color:${P};display:flex;}
+    .l-trust-badge-text{font-size:13.5px;font-weight:700;color:${P};letter-spacing:.01em;white-space:nowrap;}
+    .l-trust-badge-sep{width:1px;height:14px;background:#DCD0F0;flex-shrink:0;}
+    .l-trust-badge-label{font-size:13px;font-weight:500;color:${NAVY_SOFT};white-space:nowrap;}
 
     /* Nav */
     .l-nav-a{
-      color:rgba(255,255,255,0.8);font-size:14px;font-weight:500;
-      text-decoration:none;padding:8px 16px;border-radius:10px;
-      transition:all .18s;white-space:nowrap;
+      position:relative;
+      color:${NAVY_SOFT};font-size:14.5px;font-weight:500;letter-spacing:.005em;
+      text-decoration:none;padding:8px 15px;border-radius:999px;
+      transition:color .2s, background .2s;white-space:nowrap;
     }
-    .l-nav-a:hover{color:#fff;background:rgba(255,255,255,0.1);}
+    /* soft gold underline that grows from the centre on hover */
+    .l-nav-a::after{
+      content:'';position:absolute;left:50%;bottom:3px;height:2px;width:0;
+      border-radius:2px;transform:translateX(-50%);
+      background:linear-gradient(90deg,#D4B07A,#B08AD6);
+      transition:width .25s ease;
+    }
+    .l-nav-a:hover{color:${P};background:rgba(107,79,160,0.06);}
+    .l-nav-a:hover::after{width:18px;}
+    .l-nav-a:focus-visible{outline:2px solid #C9B8E8;outline-offset:2px;color:${P};}
 
     /* Buttons */
     .l-btn-p{
       display:inline-flex;align-items:center;gap:8px;
       padding:15px 34px;border-radius:14px;font-size:15px;font-weight:700;
-      background:linear-gradient(135deg,${P} 0%,#5B3CE8 100%);
-      color:#fff;border:none;cursor:pointer;text-decoration:none;
+      background:${P};
+      color:#FFFFFF;border:none;cursor:pointer;text-decoration:none;
       font-family:inherit;letter-spacing:.01em;
-      box-shadow:0 8px 32px rgba(109,74,255,0.48);
-      transition:all .28s ease;
-      animation:glowBreathe 5s ease-in-out infinite;
+      box-shadow:0 2px 8px rgba(107,79,160,0.18);
+      transition:background .2s ease,transform .2s ease,box-shadow .2s ease;
     }
-    .l-btn-p:hover{transform:translateY(-4px);box-shadow:0 18px 52px rgba(109,74,255,0.62);animation:none;}
+    .l-btn-p:hover{background:#5A4190;transform:translateY(-1px);box-shadow:0 6px 16px rgba(107,79,160,0.22);}
+    .l-btn-p:focus-visible{outline:3px solid #C9B8E8;outline-offset:2px;}
+    /* on the one dark (Twilight) band the primary button inverts to white */
+    .l-dark .l-btn-p{background:#FFFFFF;color:${DARK};box-shadow:none;}
+    .l-dark .l-btn-p:hover{background:#F3EFF9;}
     .l-btn-g{
       display:inline-flex;align-items:center;gap:9px;
       padding:15px 34px;border-radius:14px;font-size:15px;font-weight:700;
@@ -747,25 +776,22 @@ export default function Landing() {
       100%{transform:scale(2.2);opacity:0;}
     }
     @keyframes gpCoreGlow{
-      0%,100%{box-shadow:0 0 6px 1px rgba(167,139,250,0.55),0 0 0 0 rgba(244,114,182,0);}
-      50%{box-shadow:0 0 10px 3px rgba(167,139,250,0.85),0 0 14px 3px rgba(244,114,182,0.35);}
+      0%,100%{box-shadow:0 0 0 0 rgba(107,79,160,0);}
+      50%{box-shadow:0 0 0 3px rgba(107,79,160,0.12);}
     }
     .l-btn-gp{
       display:inline-flex;align-items:center;gap:12px;
-      padding:14px 26px;border-radius:14px;
-      background:rgba(255,255,255,0.06);
-      border:1.5px solid rgba(167,139,250,0.28);
+      padding:11px 22px;border-radius:14px;
+      background:#FFFFFF;
+      border:1px solid #DCD0F0;
       cursor:pointer;text-decoration:none;font-family:inherit;color:inherit;
-      backdrop-filter:blur(10px);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),0 4px 18px rgba(109,74,255,0.14);
-      transition:all .25s ease;
+      transition:all .2s ease;
       position:relative;
     }
     .l-btn-gp:hover{
-      background:rgba(255,255,255,0.1);
-      border-color:rgba(167,139,250,0.55);
-      transform:translateY(-2px);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 10px 30px rgba(109,74,255,0.3);
+      border-color:#C9B8E8;
+      background:#FDFCFE;
+      transform:translateY(-1px);
     }
     .l-btn-gp-icon{
       position:relative;flex-shrink:0;
@@ -775,34 +801,34 @@ export default function Landing() {
     .l-btn-gp-core{
       position:relative;z-index:2;
       width:7px;height:7px;border-radius:50%;
-      background:radial-gradient(circle,#fff 0%,${LAV} 70%);
+      background:${P};
       animation:gpCoreGlow 2.8s ease-in-out infinite;
     }
     .l-btn-gp-ring{
       position:absolute;inset:0;margin:auto;
       width:7px;height:7px;border-radius:50%;
-      border:1px solid rgba(167,139,250,0.55);
-      animation:gpRingExpand 2.8s cubic-bezier(0.2,0.6,0.4,1) infinite;
+      border:1px solid rgba(107,79,160,0.35);
+      animation:gpRingExpand 3.6s cubic-bezier(0.2,0.6,0.4,1) infinite;
     }
-    .l-btn-gp-ring:nth-child(2){animation-delay:0.6s;border-color:rgba(244,114,182,0.4);}
-    .l-btn-gp-ring:nth-child(3){animation-delay:1.2s;border-color:rgba(245,184,65,0.32);}
+    .l-btn-gp-ring:nth-child(2){animation-delay:1.2s;}
+    .l-btn-gp-ring:nth-child(3){display:none;}
     .l-btn-gp-text{display:flex;flex-direction:column;gap:2px;line-height:1.15;}
     .l-btn-gp-eyebrow{
       font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-      color:${LAV};opacity:0.85;
+      color:${GOLD_TXT};
     }
-    .l-btn-gp-main{font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px;}
-    .l-btn-gp-arrow{transition:transform .25s ease;font-size:14px;color:rgba(255,255,255,0.7);}
-    .l-btn-gp:hover .l-btn-gp-arrow{transform:translateX(4px);color:#fff;}
+    .l-btn-gp-main{font-size:15px;font-weight:700;color:${DARK};display:flex;align-items:center;gap:6px;}
+    .l-btn-gp-arrow{transition:transform .25s ease;font-size:14px;color:${P};}
+    .l-btn-gp:hover .l-btn-gp-arrow{transform:translateX(3px);}
     .l-btn-gp:hover .l-btn-gp-core{animation-duration:1.6s;}
     .l-btn-gp:hover .l-btn-gp-ring{animation-duration:1.6s;}
 
     /* Challenge cards */
     .l-struggle-card{
-      background:#fff;border-radius:28px;
+      background:#FCF9EF;border-radius:28px;
       padding:40px 20px 32px;
-      border:1.5px solid rgba(109,74,255,0.07);
-      box-shadow:0 4px 28px rgba(109,74,255,0.06);
+      border:1.5px solid rgba(16,27,61,0.08);
+      box-shadow:0 4px 24px rgba(16,27,61,0.05);
       text-align:center;transition:all .32s cubic-bezier(.175,.885,.32,1.275);
       cursor:default;display:flex;flex-direction:column;
       align-items:center;min-height:210px;
@@ -811,43 +837,47 @@ export default function Landing() {
 
     /* Help strip boxes */
     .l-help-box:hover{
-      transform:translateY(-4px);
-      box-shadow:0 12px 28px rgba(109,74,255,0.12);
-      border-color:rgba(109,74,255,0.22);
+      transform:translateY(-2px);
+      box-shadow:0 10px 24px rgba(34,27,58,0.06);
+      border-color:#DCD0F0;
     }
 
     /* Vision feature tiles */
     .l-vision-feat{
-      background:rgba(255,255,255,0.07);backdrop-filter:blur(16px);
-      border:1px solid rgba(167,139,250,0.18);border-radius:20px;
-      padding:26px 20px;text-align:center;transition:all .26s;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.10);border-radius:18px;
+      padding:24px 18px;text-align:center;transition:background .2s,border-color .2s;
     }
     .l-vision-feat:hover{
-      background:rgba(109,74,255,0.2);
-      border-color:rgba(167,139,250,0.45);
-      transform:translateY(-4px);
-      box-shadow:0 12px 36px rgba(109,74,255,0.28);
+      background:rgba(255,255,255,0.08);
+      border-color:rgba(227,187,138,0.35);
     }
 
     /* Form */
     .l-form-field{
       width:100%;padding:15px 18px;border-radius:14px;
-      border:1.5px solid rgba(255,255,255,0.22);
-      background:rgba(255,255,255,0.1);
-      color:#fff;font-size:14px;font-family:inherit;
-      outline:none;transition:border .2s,box-shadow .2s;backdrop-filter:blur(8px);
+      border:1px solid #DCD0F0;
+      background:#FFFFFF;
+      color:${DARK};font-size:14px;font-family:inherit;
+      outline:none;transition:border .2s,box-shadow .2s;
     }
-    .l-form-field:focus{border-color:rgba(255,255,255,0.6);box-shadow:0 0 0 3px rgba(109,74,255,0.2);}
-    .l-form-field option{background:#2D1060;color:#fff;}
-    .l-form-field::placeholder{color:rgba(255,255,255,0.45);}
+    .l-form-field:focus{border-color:${P};box-shadow:0 0 0 3px rgba(107,79,160,0.14);}
+    .l-form-field option{background:#FFFFFF;color:${DARK};}
+    .l-form-field::placeholder{color:${MUTED};}
     select.l-form-field{appearance:none;-webkit-appearance:none;padding-right:38px;}
 
     /* Footer */
     .l-ft-link{
-      display:block;color:rgba(255,255,255,0.5);font-size:14px;
+      display:block;color:${NAVY_SOFT};font-size:14px;
       text-decoration:none;transition:all .18s;margin-bottom:10px;
     }
-    .l-ft-link:hover{color:${LAV};transform:translateX(2px);}
+    .l-ft-link:hover{color:${P};transform:translateX(2px);}
+
+    /* Desktop hero: fade the artwork's own backdrop into the navy panel so
+       the two halves meet softly instead of at a hard vertical edge. */
+    @media(min-width:1100px){
+      .l-hero-illus{-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 18%);mask-image:linear-gradient(90deg,transparent 0%,#000 18%);}
+    }
 
     /* ── Responsive ── */
     @media(max-width:1100px){
@@ -856,8 +886,8 @@ export default function Landing() {
          phone the illustration is directly behind the logo/hamburger with
          no separation, reading as visual collision rather than an
          intentional blend. Solid immediately on mobile instead. */
-      .l-nav{background:rgba(8,2,28,0.92)!important;backdrop-filter:blur(20px)!important;
-        border-bottom:1px solid rgba(109,74,255,0.14)!important;}
+      .l-nav{background:rgba(250,248,252,0.97)!important;backdrop-filter:blur(20px)!important;
+        border-bottom:1px solid rgba(34,27,58,0.08)!important;}
       .l-hero-grid{grid-template-columns:1fr!important;min-height:auto!important;}
       /* Was a flat 460px on every width from 320px phones to 1099px
          tablets — identical size regardless of how much viewport height is
@@ -1081,7 +1111,7 @@ export default function Landing() {
   ];
 
   return (
-    <div style={{fontFamily:F, background:'#F4F1FB', color:DARK, overflowX:'hidden'}}>
+    <div style={{fontFamily:F, background:CREAM, color:DARK, overflowX:'hidden'}}>
       <style>{css}</style>
 
       {/* ══════════════════════════════════════════════════════════════════════
@@ -1098,9 +1128,9 @@ export default function Landing() {
         paddingTop:'env(safe-area-inset-top, 0px)',
         paddingLeft:'env(safe-area-inset-left, 0px)',
         paddingRight:'env(safe-area-inset-right, 0px)',
-        background:scrolled?'rgba(8,2,28,0.97)':'transparent',
-        backdropFilter:scrolled?'blur(28px)':'none',
-        borderBottom:scrolled?'1px solid rgba(109,74,255,0.18)':'none',
+        background:'rgba(250,248,252,0.92)',
+        backdropFilter:'blur(20px)',
+        borderBottom:`1px solid ${scrolled ? 'rgba(34,27,58,0.12)' : LINE}`,
         transition:'all .35s ease',
         display:'flex', alignItems:'center',
         boxSizing:'border-box',
@@ -1111,20 +1141,16 @@ export default function Landing() {
           {/* Logo */}
           <Link to="/" style={{display:'flex', alignItems:'center', gap:10,
             textDecoration:'none', flexShrink:0, marginRight:36}}>
-            <picture>
-              <source srcSet="/brand/logo/soulconnect-logo-primary-sm.webp" type="image/webp" />
-              <img src="/brand/logo/soulconnect-logo-primary-sm.png" alt="SoulConnect"
-                width="44" height="44"
-                style={{height:44, width:'auto', display:'block',
-                  filter:'drop-shadow(0 4px 14px rgba(109,74,255,0.5))'}}/>
-            </picture>
+            <img src="/brand/logo/soulconnect-lotus-mark.svg" alt=""
+              width="47" height="46"
+              style={{height:46, width:'auto', display:'block'}}/>
             <div>
-              <div style={{fontSize:18, fontWeight:600, color:'#fff',
-                letterSpacing:'-0.02em', lineHeight:1.1}}>
-                Soul<span style={{color:LAV}}>Connect</span>
+              <div style={{fontFamily:SF, fontSize:22, fontWeight:700, color:DARK,
+                letterSpacing:'-0.01em', lineHeight:1}}>
+                Soul<span style={{color:'#A87B45'}}>Connect</span>
               </div>
-              <div className="l-logo-sub" style={{fontSize:9, color:LAV,
-                fontWeight:700, letterSpacing:'0.14em', textTransform:'uppercase', marginTop:1}}>
+              <div className="l-logo-sub" style={{fontSize:9, color:P,
+                fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', marginTop:4}}>
                 Heal · Connect · Grow
               </div>
             </div>
@@ -1144,8 +1170,7 @@ export default function Landing() {
           <div className="l-desktop-btns" style={{display:'flex',
             alignItems:'center', gap:10, marginLeft:'auto'}}>
             <a href="#early" className="l-btn-p"
-              style={{padding:'10px 24px', fontSize:14, borderRadius:11,
-                animation:'glowBreathe 5s ease-in-out infinite'}}>
+              style={{padding:'10px 22px', fontSize:14, borderRadius:11}}>
               Find My Circle
             </a>
           </div>
@@ -1156,11 +1181,11 @@ export default function Landing() {
           <button onClick={()=>setMenuOpen(v=>!v)} className="l-mob-ham"
             aria-label="Open menu"
             style={{display:'none', marginLeft:'auto', width:48, height:48,
-              borderRadius:10, background:'rgba(255,255,255,0.1)', border:'none',
+              borderRadius:10, background:'rgba(107,79,160,0.07)', border:'none',
               cursor:'pointer', flexDirection:'column', alignItems:'center',
               justifyContent:'center', gap:5}}>
             {[0,1,2].map(i=><span key={i} style={{width:20, height:2,
-              background:'#fff', borderRadius:2, display:'block'}}/>)}
+              background:DARK, borderRadius:2, display:'block'}}/>)}
           </button>
         </div>
       </nav>
@@ -1172,31 +1197,31 @@ export default function Landing() {
           home-indicator area and landscape notch on either side. */}
       {menuOpen&&(
         <div style={{position:'fixed', inset:0, zIndex:399,
-          background:'rgba(8,2,28,0.97)', backdropFilter:'blur(18px)',
+          background:'rgba(250,248,252,0.985)', backdropFilter:'blur(18px)',
           paddingBottom:'env(safe-area-inset-bottom, 0px)',
           paddingLeft:'env(safe-area-inset-left, 0px)',
           paddingRight:'env(safe-area-inset-right, 0px)'}}
           onClick={()=>setMenuOpen(false)}>
           <div style={{position:'absolute',
             top:'calc(72px + env(safe-area-inset-top, 0px))', left:0, right:0,
-            padding:'24px 32px', borderBottom:`1px solid rgba(109,74,255,0.2)`}}
+            padding:'24px 32px', borderBottom:`1px solid ${LINE}`}}
             onClick={e=>e.stopPropagation()}>
             {NAV_LINKS.map(l=>(
               l.isRoute
                 ? <Link key={l.label} to={l.href} onClick={()=>setMenuOpen(false)}
                     style={{display:'block', padding:'15px 0', fontSize:17, fontWeight:500,
-                      color:'rgba(255,255,255,0.82)', textDecoration:'none',
-                      borderBottom:'1px solid rgba(255,255,255,0.07)'}}>{l.label}</Link>
+                      color:DARK, textDecoration:'none',
+                      borderBottom:`1px solid ${LINE}`}}>{l.label}</Link>
                 : <a key={l.label} href={l.href} onClick={()=>setMenuOpen(false)}
                     style={{display:'block', padding:'15px 0', fontSize:17, fontWeight:500,
-                      color:'rgba(255,255,255,0.82)', textDecoration:'none',
-                      borderBottom:'1px solid rgba(255,255,255,0.07)'}}>{l.label}</a>
+                      color:DARK, textDecoration:'none',
+                      borderBottom:`1px solid ${LINE}`}}>{l.label}</a>
             ))}
             <a href="#early" onClick={()=>setMenuOpen(false)}
               style={{display:'block', textAlign:'center', marginTop:24, padding:'15px',
-                borderRadius:13, fontSize:15, fontWeight:700, color:'#fff',
+                borderRadius:13, fontSize:15, fontWeight:700, color:'#FFFFFF',
                 textDecoration:'none',
-                background:`linear-gradient(135deg,${P},#5B3CE8)`}}>
+                background:P}}>
               Find My Circle
             </a>
           </div>
@@ -1208,22 +1233,9 @@ export default function Landing() {
       ══════════════════════════════════════════════════════════════════════ */}
       <section id="hero" style={{
         position:'relative',
-        background:`linear-gradient(155deg,#0F0B1B 0%,#1A132D 30%,#2A2046 60%,#1A132D 100%)`,
+        background:`linear-gradient(180deg,${CREAM_2} 0%,${CREAM} 100%)`,
         minHeight:850, overflow:'hidden',
       }}>
-        {/* Ambient orbs */}
-        <div style={{position:'absolute', top:'-8%', right:'2%', width:560, height:560,
-          borderRadius:'50%',
-          background:'radial-gradient(circle,rgba(109,74,255,0.22) 0%,transparent 70%)',
-          pointerEvents:'none', animation:'orbDrift 14s ease-in-out infinite'}}/>
-        <div style={{position:'absolute', bottom:'-4%', left:'4%', width:420, height:420,
-          borderRadius:'50%',
-          background:'radial-gradient(circle,rgba(245,184,65,0.06) 0%,transparent 70%)',
-          pointerEvents:'none'}}/>
-        <div style={{position:'absolute', top:'40%', left:'30%', width:300, height:300,
-          borderRadius:'50%',
-          background:'radial-gradient(circle,rgba(167,139,250,0.08) 0%,transparent 70%)',
-          pointerEvents:'none', animation:'orbDrift 22s ease-in-out 4s infinite'}}/>
 
         <div className="l-hero-grid" style={{
           maxWidth:1440, margin:'0 auto',
@@ -1260,21 +1272,17 @@ export default function Landing() {
               // each side. 2.15rem/34px still reads as a confident headline
               // at 320-360px without crowding the line.
               fontSize:'clamp(2.15rem,7vw,72px)',
-              fontWeight:800, color:'#fff',
-              lineHeight:1.06, letterSpacing:'-0.03em',
+              fontWeight:700, color:DARK,
+              lineHeight:1.06, letterSpacing:'-0.025em',
               marginBottom:26,
             }}>
-              You Don't Have To<br/>
-              <span style={{
-                background:`linear-gradient(135deg,#fff 30%,${LAV} 70%,${GLD})`,
-                WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
-                backgroundClip:'text',
-              }}>Go Through It Alone.</span>
+              You are more than<br/>
+              what you’re <span style={{color:P}}>going through</span>
             </h1>
 
             <p className="l-hero-p" style={{fontSize:'clamp(15px,1.5vw,18px)',
-              color:'rgba(255,255,255,0.58)',
-              lineHeight:1.88, marginBottom:36, maxWidth:460}}>
+              color:NAVY_SOFT,
+              lineHeight:1.75, marginBottom:36, maxWidth:470}}>
               SoulConnect is a safe space to share, connect, and heal with people
               who truly understand what you're going through.
             </p>
@@ -1308,25 +1316,23 @@ export default function Landing() {
             <div className="l-hero-pills" style={{display:'flex', flexWrap:'wrap',
               gap:10, marginTop:24}}>
               {[
-                {Icon:Heart,       label:'Real Connections'},
-                {Icon:ShieldCheck, label:'Safe Community'},
-                {Icon:HandHeart,   label:'Emotional Support'},
+                {Icon:Heart,       label:'Real Connections',  bg:SEA,       fg:SEA_TXT},
+                {Icon:ShieldCheck, label:'Safe Community',    bg:'#F8E6DB', fg:'#7A4A2E'},
+                {Icon:HandHeart,   label:'Emotional Support', bg:'#EDE6F7', fg:'#4E3680'},
               ].map((t,i)=>(
                 <div key={i} style={{display:'flex', alignItems:'center', gap:8,
-                  background:'rgba(255,255,255,0.07)',
-                  border:'1px solid rgba(255,255,255,0.15)',
-                  borderRadius:99, padding:'9px 18px',
-                  backdropFilter:'blur(8px)'}}>
-                  <t.Icon size={15} strokeWidth={1.5} color="rgba(255,255,255,0.72)" />
-                  <span style={{color:'rgba(255,255,255,0.85)',
-                    fontSize:13, fontWeight:500}}>{t.label}</span>
+                  background:t.bg,
+                  borderRadius:99, padding:'8px 16px'}}>
+                  <t.Icon size={15} strokeWidth={1.75} color={t.fg} />
+                  <span style={{color:t.fg,
+                    fontSize:13, fontWeight:600}}>{t.label}</span>
                 </div>
               ))}
             </div>
 
             {/* Sub note */}
-            <p style={{marginTop:22, fontSize:12,
-              color:'rgba(255,255,255,0.25)', lineHeight:1.6}}>
+            <p style={{marginTop:22, fontSize:12.5,
+              color:MUTED, lineHeight:1.6}}>
               No fake metrics. No fake testimonials. Just real community.
             </p>
           </div>
@@ -1347,7 +1353,7 @@ export default function Landing() {
           SECTION 2 — GLOBAL PULSE (3D Interactive Globe) — PREMIUM LIGHT THEME
       ══════════════════════════════════════════════════════════════════════ */}
       <section id="global-pulse" style={{
-        background:'#FFFFFF',
+        background:IVORY,
         padding:'clamp(56px,9vw,88px) 32px clamp(40px,7vw,64px)',
         position:'relative',
         overflow:'hidden',
@@ -1361,7 +1367,7 @@ export default function Landing() {
           width:'1100px',
           height:'1100px',
           borderRadius:'50%',
-          background:'radial-gradient(circle, rgba(147,51,234,0.09) 0%, rgba(168,139,250,0.05) 35%, transparent 68%)',
+          background:'radial-gradient(circle, rgba(243,239,249,0.9) 0%, rgba(243,239,249,0.4) 40%, transparent 68%)',
           pointerEvents:'none',
           zIndex:0,
         }}/>
@@ -1378,18 +1384,18 @@ export default function Landing() {
                 matching the reference's single left-column composition) */}
             <div style={{display:'flex', flexDirection:'column', gap:20}}>
               <div>
-                <p style={{fontSize:12, fontWeight:700, color:P,
+                <p style={{fontSize:12, fontWeight:700, color:GOLD_TXT,
                   letterSpacing:'0.18em', textTransform:'uppercase', marginBottom:14}}>
-                  ◈ GLOBAL PULSE
+                  Global Pulse
                 </p>
                 <h2 className="l-gp-headline" style={{fontFamily:SF, fontSize:'clamp(1.6rem,2.6vw,2.6rem)',
-                  fontWeight:800, color:DARK, letterSpacing:'-0.02em', marginBottom:14,
+                  fontWeight:700, color:DARK, letterSpacing:'-0.02em', marginBottom:14,
                   lineHeight:1.18,
                 }}>
                   Maybe what you're feeling<br className="l-gp-headline-break"/>{' '}
                   <span style={{color:P}}>isn't only yours.</span>
                 </h2>
-                <p style={{fontSize:14.5, color:'#6B7280', lineHeight:1.75, margin:0, maxWidth:320}}>
+                <p style={{fontSize:15, color:NAVY_SOFT, lineHeight:1.75, margin:0, maxWidth:330}}>
                   See anonymized emotional patterns from people around the world. Discover that your feelings are part of a bigger human story.
                 </p>
               </div>
@@ -1400,25 +1406,25 @@ export default function Landing() {
                 justifyContent:'center',
                 gap:8,
                 padding:'14px 26px',
-                borderRadius:24,
-                background:'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                borderRadius:14,
+                background:P,
                 color:'#FFFFFF',
                 fontSize:14,
                 fontWeight:600,
                 textDecoration:'none',
-                boxShadow:'0 8px 24px rgba(124,58,237,0.32)',
+                boxShadow:'0 2px 8px rgba(107,79,160,0.18)',
                 transition:'all 0.2s ease-out',
                 border:'none',
                 cursor:'pointer',
                 width:'fit-content',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 12px 32px rgba(124,58,237,0.42)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(107,79,160,0.22)';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(124,58,237,0.32)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(107,79,160,0.18)';
               }}>
                 Explore Global Pulse
                 <span>→</span>
@@ -1433,17 +1439,17 @@ export default function Landing() {
                   {[1,2,3,4].map(i => (
                     <div key={i} style={{
                       width:34, height:34, borderRadius:'50%',
-                      background:`linear-gradient(135deg, hsl(${i*55+250},55%,68%), hsl(${i*55+280},55%,78%))`,
+                      background:['#DCD0F0','#CFE3DA','#F6DCCB','#E6DDF3','#D6E3F0','#F1E4C8'][i%6],
                       border:'2px solid #FFFFFF',
                       marginLeft: i > 1 ? -12 : 0,
                       zIndex:10-i,
                       display:'flex', alignItems:'center', justifyContent:'center',
                     }}>
-                      <UserRound size={16} strokeWidth={2} color="rgba(255,255,255,0.9)"/>
+                      <UserRound size={16} strokeWidth={1.75} color="#4E3680"/>
                     </div>
                   ))}
                 </div>
-                <span style={{fontSize:13, color:'#6B7280', lineHeight:1.4}}>Real people. Real feelings.<br/>A more connected world.</span>
+                <span style={{fontSize:13, color:MUTED, lineHeight:1.4}}>Real people. Real feelings.<br/>A more connected world.</span>
               </div>
             </div>
 
@@ -1482,18 +1488,18 @@ export default function Landing() {
                 gap:16,
                 padding:'28px 30px',
                 borderRadius:24,
-                background:'#FFFFFF',
-                border:'1px solid rgba(31,27,55,0.08)',
-                boxShadow:'0 16px 48px rgba(111,78,188,0.10)',
+                background:IVORY,
+                border:`1px solid ${LILAC_LINE}`,
+                boxShadow:'0 12px 36px rgba(34,27,58,0.06)',
                 maxWidth:340,
               }}>
-                <p style={{fontSize:11, fontWeight:700, color:P, letterSpacing:'0.12em', textTransform:'uppercase', margin:0}}>
+                <p style={{fontSize:11, fontWeight:700, color:GOLD_TXT, letterSpacing:'0.12em', textTransform:'uppercase', margin:0}}>
                   You are not alone
                 </p>
                 <h4 style={{fontSize:19, fontWeight:700, color:DARK, margin:0, lineHeight:1.3}}>
                   Different places.<br/>Similar feelings.
                 </h4>
-                <p style={{fontSize:13.5, color:'#6B7280', lineHeight:1.7, margin:0}}>
+                <p style={{fontSize:13.5, color:NAVY_SOFT, lineHeight:1.7, margin:0}}>
                   Real stories. Real people. A global community reminding you that you don't have to navigate difficult feelings alone.
                 </p>
 
@@ -1503,13 +1509,13 @@ export default function Landing() {
                   {[1,2,3,4,5,6].map(i => (
                     <div key={i} style={{
                       width:32, height:32, borderRadius:'50%',
-                      background:`linear-gradient(135deg, hsl(${i*48+250},55%,68%), hsl(${i*48+280},55%,78%))`,
+                      background:['#DCD0F0','#CFE3DA','#F6DCCB','#E6DDF3','#D6E3F0','#F1E4C8'][i%6],
                       border:'2px solid #FFFFFF',
                       marginLeft: i > 1 ? -10 : 0,
                       zIndex:10-i,
                       display:'flex', alignItems:'center', justifyContent:'center',
                     }}>
-                      <UserRound size={15} strokeWidth={2} color="rgba(255,255,255,0.9)"/>
+                      <UserRound size={15} strokeWidth={1.75} color="#4E3680"/>
                     </div>
                   ))}
                 </div>
@@ -1517,12 +1523,12 @@ export default function Landing() {
                 {/* Quote */}
                 <div style={{
                   paddingTop:14,
-                  borderTop:'1px solid rgba(147,51,234,0.1)',
+                  borderTop:`1px solid ${LILAC_LINE}`,
                 }}>
-                  <p style={{fontSize:13.5, color:'#374151', lineHeight:1.6, margin:'0 0 6px 0', fontStyle:'italic'}}>
+                  <p style={{fontSize:13.5, color:'#3A3350', lineHeight:1.6, margin:'0 0 6px 0', fontStyle:'italic'}}>
                     "It helps to see that I'm not the only one feeling this way."
                   </p>
-                  <p style={{fontSize:12, color:'#9CA3AF', margin:0}}>
+                  <p style={{fontSize:12, color:MUTED, margin:0}}>
                     — Community member
                   </p>
                 </div>
@@ -1538,20 +1544,17 @@ export default function Landing() {
       {/* Flat 120px top+bottom compounded with the adjacent sections' own
           padding at each seam — same fixed-padding-stacking pattern as the
           vision/help-strip boundary below. */}
-      <section id="how" style={{background:'#EDE9F9', padding:'clamp(64px,10vw,120px) 32px'}}>
+      <section id="how" style={{background:CREAM, padding:'clamp(64px,10vw,120px) 32px'}}>
         <div style={{maxWidth:1180, margin:'0 auto'}}>
           <div style={{textAlign:'center', marginBottom:80}}>
-            <p style={{fontSize:12, fontWeight:700, color:P,
+            <p style={{fontSize:12, fontWeight:700, color:GOLD_TXT,
               letterSpacing:'0.15em', textTransform:'uppercase', marginBottom:12}}>
               YOUR PATH FORWARD
             </p>
             <h2 style={{fontFamily:SF, fontSize:'clamp(2rem,3.2vw,52px)',
-              fontWeight:800, color:DARK, letterSpacing:'-0.028em', marginBottom:18}}>
+              fontWeight:700, color:DARK, letterSpacing:'-0.025em', marginBottom:0}}>
               Healing Starts With Connection
             </h2>
-            <div style={{width:60, height:4,
-              background:`linear-gradient(90deg,${P},${LAV})`,
-              borderRadius:99, margin:'0 auto'}}/>
           </div>
 
           {/* Timeline */}
@@ -1562,13 +1565,13 @@ export default function Landing() {
               top:50,
               left:'calc(12.5% + 44px)',
               right:'calc(12.5% + 44px)',
-              height:2,
+              height:1,
               // Static line, no shimmer. The brief calls for motion that's
               // "almost invisible" — a line that visibly sweeps forever on a
               // calm, editorial light section fights that, so it's removed
               // here (kept on the dark hero/CTA where motion already reads
               // as ambient rather than attention-grabbing).
-              background:`linear-gradient(90deg,transparent 0%,${LAV} 20%,${P} 50%,${LAV} 80%,transparent 100%)`,
+              background:'#DCD0F0',
               zIndex:0,
             }}/>
 
@@ -1584,11 +1587,11 @@ export default function Landing() {
                   {/* Step circle */}
                   <div style={{
                     width:88, height:88, borderRadius:'50%',
-                    background:'rgba(109,74,255,0.07)',
+                    background:CREAM_2,
                     display:'flex', flexDirection:'column',
                     alignItems:'center', justifyContent:'center',
                     boxShadow:'none',
-                    border:'1px solid rgba(109,74,255,0.16)',
+                    border:`1px solid ${LILAC_LINE}`,
                     marginBottom:26, position:'relative',
                   }}>
                     <s.Icon size={30} strokeWidth={1.5} color={P} />
@@ -1597,8 +1600,8 @@ export default function Landing() {
                     <div style={{
                       position:'absolute', top:-2, right:-2,
                       width:24, height:24, borderRadius:'50%',
-                      background:'#FFFFFF',
-                      border:'1px solid rgba(109,74,255,0.18)',
+                      background:IVORY,
+                      border:`1px solid ${LILAC_LINE}`,
                       display:'flex', alignItems:'center', justifyContent:'center',
                       fontSize:11, fontWeight:600, color:P,
                       letterSpacing:'0.02em',
@@ -1607,8 +1610,8 @@ export default function Landing() {
 
                   <h3 style={{fontSize:18, fontWeight:650, color:DARK,
                     marginBottom:12, lineHeight:1.25}}>{s.title}</h3>
-                  <p style={{fontSize:14, color:'#6B7280', lineHeight:1.72,
-                    maxWidth:180}}>{s.desc}</p>
+                  <p style={{fontSize:14, color:NAVY_SOFT, lineHeight:1.7,
+                    maxWidth:190}}>{s.desc}</p>
                 </div>
               ))}
             </div>
@@ -1624,53 +1627,15 @@ export default function Landing() {
           them at every viewport — proportionally much heavier on short
           mobile screens than on desktop. clamp() keeps the intentional
           breathing room on large screens without the mobile overrun. */}
-      <section id="vision" style={{background:'#EDE9F9', padding:'0 32px clamp(56px,8vw,120px)'}}>
+      <section id="vision" style={{background:CREAM, padding:'0 32px clamp(56px,8vw,120px)'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
           <div style={{
-            background:`linear-gradient(145deg,#0E0428 0%,#1E0A4A 40%,#2E1060 70%,#0E0428 100%)`,
-            borderRadius:32,
+            background:TWILIGHT,
+            borderRadius:28,
             padding:'clamp(40px,5vw,72px)',
             position:'relative', overflow:'hidden',
-            border:'1px solid rgba(167,139,250,0.12)',
-            boxShadow:'0 40px 100px rgba(0,0,0,0.5)',
+            boxShadow:'0 24px 60px rgba(34,27,58,0.14)',
           }}>
-            {/* Sacred geometry background */}
-            <div style={{position:'absolute', inset:0, pointerEvents:'none', overflow:'hidden'}}>
-              <svg style={{position:'absolute', top:'-15%', right:'-8%', opacity:0.04}}
-                viewBox="0 0 400 400" width="500" height="500" aria-hidden="true">
-                {[0,30,60,90,120,150,180,210,240,270,300,330].map((a,i)=>{
-                  const r=(a)*Math.PI/180;
-                  return <line key={i} x1="200" y1="200"
-                    x2={200+190*Math.cos(r)} y2={200+190*Math.sin(r)}
-                    stroke={LAV} strokeWidth="0.8"/>;
-                })}
-                {[40,80,120,160,190].map((r,i)=>(
-                  <circle key={i} cx="200" cy="200" r={r}
-                    stroke={LAV} strokeWidth="0.7" fill="none"
-                    strokeDasharray={i%2===0?'4 6':'2 8'}/>
-                ))}
-              </svg>
-              {/* Gold accent circles */}
-              <div style={{position:'absolute', top:'20%', left:'18%',
-                width:280, height:280, borderRadius:'50%',
-                border:`1px solid rgba(245,184,65,0.08)`,
-                pointerEvents:'none'}}/>
-              <div style={{position:'absolute', top:'25%', left:'23%',
-                width:180, height:180, borderRadius:'50%',
-                border:`1px solid rgba(245,184,65,0.05)`,
-                pointerEvents:'none'}}/>
-            </div>
-
-            {/* Glow orb */}
-            <div style={{position:'absolute', top:'50%', left:'22%',
-              transform:'translate(-50%,-50%)', width:460, height:460, borderRadius:'50%',
-              background:'radial-gradient(circle,rgba(109,74,255,0.2) 0%,transparent 70%)',
-              pointerEvents:'none'}}/>
-            <div style={{position:'absolute', top:'50%', left:'50%',
-              transform:'translate(-50%,-50%)', width:300, height:300, borderRadius:'50%',
-              background:`radial-gradient(circle,rgba(245,184,65,0.06) 0%,transparent 70%)`,
-              pointerEvents:'none'}}/>
-
             <div className="l-vision-inner" style={{
               display:'grid',
               gridTemplateColumns:'2fr 1.6fr 2fr',
@@ -1680,31 +1645,28 @@ export default function Landing() {
             }}>
               {/* LEFT — copy */}
               <div>
-                <div style={{fontSize:11, fontWeight:700, color:GLD,
-                  letterSpacing:'0.15em', textTransform:'uppercase', marginBottom:18,
-                  display:'flex', alignItems:'center', gap:8}}>
-                  <div style={{width:20, height:1, background:GLD}}/>
+                <div style={{fontSize:11, fontWeight:700, color:'#E3BB8A',
+                  letterSpacing:'0.15em', textTransform:'uppercase', marginBottom:18}}>
                   OUR VISION
-                  <div style={{width:20, height:1, background:GLD}}/>
                 </div>
                 <h2 style={{fontFamily:SF,
                   fontSize:'clamp(1.8rem,3vw,3.4rem)',
-                  fontWeight:800, color:'#fff', lineHeight:1.12,
-                  letterSpacing:'-0.026em', marginBottom:22}}>
+                  fontWeight:700, color:'#F5F1FA', lineHeight:1.12,
+                  letterSpacing:'-0.022em', marginBottom:22}}>
                   A world where nobody<br/>
-                  <span style={{color:LAV}}>struggles alone.</span>
+                  <span style={{color:'#C9B8E8'}}>struggles alone.</span>
                 </h2>
-                <p style={{fontSize:16, color:'rgba(255,255,255,0.48)', lineHeight:1.9, marginBottom:28}}>
+                <p style={{fontSize:16, color:'#C9BEE0', lineHeight:1.8, marginBottom:28}}>
                   We believe healing happens faster when we feel understood,
                   supported, and connected to people who truly get it.
                 </p>
                 <div style={{display:'flex', alignItems:'center', gap:12}}>
                   <div style={{width:38, height:38, borderRadius:11,
-                    background:`linear-gradient(135deg,rgba(245,184,65,0.2),rgba(245,184,65,0.08))`,
-                    border:`1px solid rgba(245,184,65,0.25)`,
+                    background:'rgba(227,187,138,0.12)',
+                    border:'1px solid rgba(227,187,138,0.3)',
                     display:'flex', alignItems:'center', justifyContent:'center',
-                    color:'rgba(245,184,65,0.9)'}}><Heart size={17} strokeWidth={1.5} /></div>
-                  <p style={{fontSize:13, color:'rgba(255,255,255,0.35)', lineHeight:1.6}}>
+                    color:'#E3BB8A'}}><Heart size={17} strokeWidth={1.5} /></div>
+                  <p style={{fontSize:13, color:'#B3A8CC', lineHeight:1.6}}>
                     Community-first. Human-first. Always.
                   </p>
                 </div>
@@ -1713,9 +1675,7 @@ export default function Landing() {
               {/* CENTER — Lotus */}
               <div className="l-lotus-col" style={{display:'flex',
                 justifyContent:'center', alignItems:'center'}}>
-                <div style={{width:240, height:240,
-                  animation:'floatY 9s ease-in-out infinite',
-                  filter:'drop-shadow(0 0 40px rgba(109,74,255,0.35))'}}>
+                <div style={{width:240, height:240}}>
                   <VisionLotus/>
                 </div>
               </div>
@@ -1730,17 +1690,17 @@ export default function Landing() {
                 ].map((f,i)=>(
                   <div key={i} className="l-vision-feat">
                     <div style={{width:44, height:44, borderRadius:13,
-                      background:`linear-gradient(135deg,rgba(109,74,255,0.22),rgba(167,139,250,0.1))`,
-                      border:'1px solid rgba(167,139,250,0.2)',
+                      background:'rgba(255,255,255,0.06)',
+                      border:'1px solid rgba(255,255,255,0.12)',
                       display:'flex', alignItems:'center', justifyContent:'center',
                       fontSize:22, margin:'0 auto 12px'}}>
-                      <f.Icon size={21} strokeWidth={1.5} color="rgba(255,255,255,0.88)" />
+                      <f.Icon size={21} strokeWidth={1.5} color="#E3BB8A" />
                     </div>
-                    <div style={{fontSize:13, fontWeight:700, color:'#fff',
+                    <div style={{fontSize:13, fontWeight:700, color:'#F5F1FA',
                       marginBottom:6, whiteSpace:'pre-line', lineHeight:1.3}}>
                       {f.label}
                     </div>
-                    <div style={{fontSize:11, color:'rgba(255,255,255,0.38)',
+                    <div style={{fontSize:11.5, color:'#B3A8CC',
                       lineHeight:1.5}}>{f.sub}</div>
                   </div>
                 ))}
@@ -1753,7 +1713,7 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 5 — HOW SOULCONNECT HELPS YOU  (compact line-icon strip)
       ══════════════════════════════════════════════════════════════════════ */}
-      <section style={{background:'#EDE9F9', padding:'clamp(32px,6vw,56px) 32px'}}>
+      <section style={{background:CREAM, padding:'clamp(32px,6vw,56px) 32px'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
           <div className="l-help-strip" style={{
             display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:16}}>
@@ -1764,13 +1724,13 @@ export default function Landing() {
                 <Tag key={i} {...(isLive ? {to:href} : {})} className="l-help-box" style={{
                   display:'flex', flexDirection:'column', alignItems:'center',
                   textAlign:'center', padding:'22px 14px',
-                  background:'#FFFFFF', borderRadius:16,
-                  border: isLive ? '1px solid rgba(52,195,143,0.25)' : '1px solid rgba(109,74,255,0.1)',
-                  boxShadow: isLive ? '0 4px 16px rgba(52,195,143,0.08)' : '0 4px 16px rgba(109,74,255,0.05)',
+                  background:IVORY, borderRadius:16,
+                  border: isLive ? '1px solid #BFD9CC' : `1px solid ${LILAC_LINE}`,
+                  boxShadow:'none',
                   transition:'all .25s ease',
                   textDecoration:'none', color:'inherit', cursor: isLive ? 'pointer' : 'default',
                 }}>
-                  <Icon size={26} strokeWidth={2} color={isLive ? '#34C38F' : P} style={{marginBottom:8}}/>
+                  <Icon size={26} strokeWidth={1.75} color={isLive ? '#3F7A5E' : P} style={{marginBottom:8}}/>
                   <h3 style={{fontSize:13.5, fontWeight:650, color:DARK,
                     margin:'0 0 4px 0', lineHeight:1.25}}>
                     {title}
@@ -1778,21 +1738,19 @@ export default function Landing() {
                   {isLive ? (
                     <span style={{display:'inline-flex', alignItems:'center', gap:5}}>
                       <span style={{width:4, height:4, borderRadius:'50%',
-                        background:'#34C38F', display:'inline-block', flexShrink:0,
-                        animation:'pulse 2s ease-in-out infinite'}}/>
-                      <span style={{fontSize:10.5, fontWeight:700, color:'#34C38F',
+                        background:'#3F7A5E', display:'inline-block', flexShrink:0}}/>
+                      <span style={{fontSize:10.5, fontWeight:700, color:SEA_TXT,
                         letterSpacing:'0.04em'}}>Live now</span>
                     </span>
                   ) : (
                     <span style={{display:'inline-flex', alignItems:'center', gap:5}}>
                       <span style={{width:4, height:4, borderRadius:'50%',
-                        background:P, display:'inline-block', flexShrink:0,
-                        animation:'pulse 2s ease-in-out infinite'}}/>
+                        background:P, display:'inline-block', flexShrink:0}}/>
                       <span style={{fontSize:10.5, fontWeight:700, color:P,
                         letterSpacing:'0.04em'}}>Coming Soon</span>
                     </span>
                   )}
-                  <span style={{fontSize:11.5, color:'#6B7280', marginTop:2}}>{desc}</span>
+                  <span style={{fontSize:12, color:MUTED, marginTop:2}}>{desc}</span>
                 </Tag>
               );
             })}
@@ -1803,14 +1761,14 @@ export default function Landing() {
       {/* ══════════════════════════════════════════════════════════════════════
           SECTION 5b — CURRENTLY BUILDING IN PUBLIC
       ══════════════════════════════════════════════════════════════════════ */}
-      <section style={{background:'#EDE9F9', padding:'clamp(56px,9vw,100px) 32px'}}>
+      <section style={{background:CREAM_2, padding:'clamp(56px,9vw,100px) 32px'}}>
         <div style={{maxWidth:960, margin:'0 auto', textAlign:'center'}}>
           <div style={{display:'inline-flex', alignItems:'center', gap:8,
-            background:`rgba(109,74,255,0.1)`,
-            border:`1px solid rgba(109,74,255,0.2)`,
-            borderRadius:99, padding:'7px 20px', marginBottom:28}}>
-            <span style={{width:7, height:7, borderRadius:'50%', background:'#34C38F',
-              display:'inline-block', animation:'pulse 2s ease-in-out infinite'}}/>
+            background:IVORY,
+            border:'1px solid #DCD0F0',
+            borderRadius:99, padding:'7px 18px', marginBottom:28}}>
+            <span style={{width:7, height:7, borderRadius:'50%', background:'#6FA88A',
+              display:'inline-block'}}/>
             <span style={{fontSize:11, fontWeight:700, color:P,
               letterSpacing:'0.12em', textTransform:'uppercase'}}>
               Building In Public
@@ -1818,11 +1776,11 @@ export default function Landing() {
           </div>
 
           <h2 style={{fontFamily:SF, fontSize:'clamp(1.8rem,3vw,46px)',
-            fontWeight:800, color:DARK, lineHeight:1.15,
-            letterSpacing:'-0.026em', marginBottom:22}}>
+            fontWeight:700, color:DARK, lineHeight:1.15,
+            letterSpacing:'-0.022em', marginBottom:22}}>
             Currently Building With<br/>Early Community Members
           </h2>
-          <p style={{fontSize:'clamp(15px,1.6vw,18px)', color:'#4B5563',
+          <p style={{fontSize:'clamp(15px,1.6vw,18px)', color:NAVY_SOFT,
             lineHeight:1.88, maxWidth:720, margin:'0 auto 52px'}}>
             SoulConnect is being built alongside people navigating anxiety, loneliness,
             overthinking, burnout, grief, and life transitions. You are not just an
@@ -1839,16 +1797,16 @@ export default function Landing() {
               {Icon:Compass,       title:'No Fake Promises',
                desc:'We are honest about what we are building. Early access = real community, not a polished product.'},
             ].map((p,i)=>(
-              <div key={i} className="l-values-card" style={{background:'#fff', borderRadius:22, padding:'32px 24px',
-                border:'1.5px solid rgba(109,74,255,0.09)',
-                boxShadow:'0 4px 24px rgba(109,74,255,0.07)', textAlign:'left',
+              <div key={i} className="l-values-card" style={{background:IVORY, borderRadius:22, padding:'32px 24px',
+                border:`1px solid ${LILAC_LINE}`,
+                boxShadow:'0 2px 12px rgba(34,27,58,0.03)', textAlign:'left',
                 transition:'all .28s',}}
-                onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-6px)';e.currentTarget.style.boxShadow='0 18px 48px rgba(109,74,255,0.14)';}}
-                onMouseLeave={e=>{e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.boxShadow='0 4px 24px rgba(109,74,255,0.07)';}}
+                onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.boxShadow='0 12px 28px rgba(34,27,58,0.06)';}}
+                onMouseLeave={e=>{e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.boxShadow='0 2px 12px rgba(34,27,58,0.03)';}}
               >
                 <div className="l-values-icon" style={{marginBottom:16, color:P}}><p.Icon size={30} strokeWidth={1.5} /></div>
                 <h3 className="l-values-h3" style={{fontSize:16, fontWeight:650, color:DARK, marginBottom:10, lineHeight:1.3}}>{p.title}</h3>
-                <p className="l-values-p" style={{fontSize:13, color:'#6B7280', lineHeight:1.68}}>{p.desc}</p>
+                <p className="l-values-p" style={{fontSize:14, color:NAVY_SOFT, lineHeight:1.68}}>{p.desc}</p>
               </div>
             ))}
           </div>
@@ -1859,31 +1817,9 @@ export default function Landing() {
           SECTION 6 — EARLY ACCESS  (emotional, community sunset)
       ══════════════════════════════════════════════════════════════════════ */}
       <section id="early" style={{
-        background:`linear-gradient(145deg,#0E0228 0%,#200A4E 40%,#3C1675 70%,#0E0228 100%)`,
+        background:`linear-gradient(180deg,${BLUSH} 0%,${CREAM} 100%)`,
         padding:'clamp(64px,10vw,120px) 32px', position:'relative', overflow:'hidden',
       }}>
-        {/* Floating particles */}
-        {Array.from({length:18},(_,i)=>(
-          <div key={i} style={{position:'absolute',
-            left:`${4+(i*6.7)%90}%`, top:`${5+(i*11.3)%88}%`,
-            width:i%4===0?3:2, height:i%4===0?3:2,
-            borderRadius:'50%',
-            background:[LAV,GLD,PNK,'#C4B5FD'][i%4], opacity:0.3,
-            animation:`floatY ${5+(i%5)*1.4}s ease-in-out ${i*.5}s infinite`,
-            pointerEvents:'none'}}/>
-        ))}
-        {/* Community sunset bg */}
-        <div className="l-early-right" style={{
-          position:'absolute', right:0, top:0, bottom:0, width:'32%',
-          overflow:'hidden', opacity:0.55, pointerEvents:'none'}}>
-          <PeopleSunset/>
-        </div>
-        {/* Glow */}
-        <div style={{position:'absolute', top:'40%', left:'35%',
-          transform:'translate(-50%,-50%)', width:500, height:500, borderRadius:'50%',
-          background:'radial-gradient(circle,rgba(109,74,255,0.12) 0%,transparent 70%)',
-          pointerEvents:'none'}}/>
-
         <div className="l-early-inner" style={{
           maxWidth:1200, margin:'0 auto',
           display:'grid', gridTemplateColumns:'1fr 1.15fr',
@@ -1897,19 +1833,19 @@ export default function Landing() {
                 competing with the headline (9.5:1 against this ground — far
                 more contrast than an orienting label needs). Lighter weight,
                 softened gold and wider tracking let it read as a label. */}
-            <div style={{fontSize:11, fontWeight:600, color:'rgba(245,184,65,0.78)',
-              letterSpacing:'0.2em', textTransform:'uppercase', marginBottom:20}}>
+            <div style={{fontSize:11.5, fontWeight:700, color:GOLD_TXT,
+              letterSpacing:'0.18em', textTransform:'uppercase', marginBottom:20}}>
               Join Our Early Community
             </div>
             <h2 style={{fontFamily:SF,
               fontSize:'clamp(2.2rem,3.5vw,4rem)',
-              fontWeight:800, color:'#fff', lineHeight:1.08,
-              letterSpacing:'-0.03em', marginBottom:24}}>
+              fontWeight:700, color:DARK, lineHeight:1.08,
+              letterSpacing:'-0.025em', marginBottom:24}}>
               Find Your Circle.<br/>
-              <span style={{color:PNK}}>We'll walk with you.</span>
+              <span style={{color:P}}>We'll walk with you.</span>
             </h2>
-            <p style={{fontSize:17, color:'rgba(255,255,255,0.48)',
-              lineHeight:1.88, maxWidth:420, marginBottom:36}}>
+            <p style={{fontSize:17, color:NAVY_SOFT,
+              lineHeight:1.75, maxWidth:430, marginBottom:36}}>
               Tell us what you're going through so we can connect you with
               the right people and resources.
             </p>
@@ -1919,33 +1855,36 @@ export default function Landing() {
               'You help shape what SoulConnect becomes.'].map((t,i)=>(
               <div key={i} style={{display:'flex', alignItems:'flex-start', gap:12, marginBottom:14}}>
                 <div style={{width:22, height:22, borderRadius:'50%', flexShrink:0, marginTop:1,
-                  background:`linear-gradient(135deg,${P},${LAV})`,
+                  background:SEA,
                   display:'flex', alignItems:'center', justifyContent:'center',
-                  color:'#fff'}}><Check size={12} strokeWidth={2.5} /></div>
-                <p style={{fontSize:14, color:'rgba(255,255,255,0.52)', lineHeight:1.6}}>{t}</p>
+                  color:SEA_TXT}}><Check size={12} strokeWidth={2.5} /></div>
+                <p style={{fontSize:15, color:NAVY_SOFT, lineHeight:1.6}}>{t}</p>
               </div>
             ))}
           </div>
 
           {/* RIGHT — Form */}
           <div style={{
-            background:'rgba(255,255,255,0.07)', backdropFilter:'blur(24px)',
-            border:'1px solid rgba(255,255,255,0.14)',
-            borderRadius:28, padding:'clamp(28px,4vw,44px)',
-            boxShadow:'0 32px 80px rgba(0,0,0,0.3)',
+            // Soft gold-to-lilac gradient border (padding-box/border-box
+            // trick) with a faint white halo, so the card edge feels
+            // finished rather than a flat lilac hairline.
+            border:'2px solid transparent',
+            background:`linear-gradient(${IVORY},${IVORY}) padding-box, linear-gradient(155deg,#D4B07A 0%,#E7D3E4 45%,#9C86CC 100%) border-box`,
+            borderRadius:24, padding:'clamp(28px,4vw,44px)',
+            boxShadow:'0 0 0 6px rgba(255,255,255,0.55), 0 24px 56px rgba(107,79,160,0.10)',
           }}>
             {earlySubmitted ? (
               <div style={{textAlign:'center', padding:'32px 12px',
                 animation:'slideInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1)'}}>
-                <div style={{marginBottom:24, color:'rgba(245,184,65,0.9)',
+                <div style={{marginBottom:24, color:'#3F7A5E',
                   display:'flex', justifyContent:'center'}}>
                   <Sprout size={52} strokeWidth={1.25} />
                 </div>
                 <h3 style={{fontFamily:SF, fontSize:28, fontWeight:800,
-                  color:'#fff', marginBottom:12, letterSpacing:'-0.02em'}}>
+                  color:DARK, marginBottom:12, letterSpacing:'-0.02em'}}>
                   You're on the list.
                 </h3>
-                <p style={{color:'rgba(255,255,255,0.65)', fontSize:15, lineHeight:1.8, marginBottom:24}}>
+                <p style={{color:NAVY_SOFT, fontSize:15, lineHeight:1.8, marginBottom:24}}>
                   Thank you for believing in SoulConnect.<br/><br/>
                   We'll send occasional updates as we build a place where people can heal, connect and grow together.
                 </p>
@@ -1953,28 +1892,28 @@ export default function Landing() {
                   <a href="https://www.instagram.com/soulconnect.health" target="_blank" rel="noopener noreferrer"
                     style={{
                       padding:'12px 24px', borderRadius:12,
-                      background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.15)',
-                      color:'#fff', fontSize:14, fontWeight:600,
+                      background:IVORY, border:'1px solid #DCD0F0',
+                      color:DARK, fontSize:14, fontWeight:600,
                       textDecoration:'none', cursor:'pointer',
                       transition:'all 0.3s ease',
                       display:'inline-flex', alignItems:'center', gap:8
                     }}
-                    onMouseEnter={e=>{e.target.style.background='rgba(245,184,65,0.15)'; e.target.style.borderColor='rgba(245,184,65,0.3)'}}
-                    onMouseLeave={e=>{e.target.style.background='rgba(255,255,255,0.08)'; e.target.style.borderColor='rgba(255,255,255,0.15)'}}>
+                    onMouseEnter={e=>{e.target.style.background=CREAM_2; e.target.style.borderColor='#C9B8E8'}}
+                    onMouseLeave={e=>{e.target.style.background=IVORY; e.target.style.borderColor='#DCD0F0'}}>
                     Follow Instagram
                   </a>
                   <button onClick={()=>{setEarlySubmitted(false); setEarlyForm({challenge:'',name:'',email:''})}}
                     style={{
                       padding:'12px 24px', borderRadius:12,
-                      background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.15)',
-                      color:'#fff', fontSize:14, fontWeight:600,
+                      background:IVORY, border:'1px solid #DCD0F0',
+                      color:DARK, fontSize:14, fontWeight:600,
                       cursor:'pointer',
                       transition:'all 0.3s ease',
                       display:'inline-flex', alignItems:'center', gap:8,
                       fontFamily:'inherit'
                     }}
-                    onMouseEnter={e=>{e.target.style.background='rgba(167,139,250,0.15)'; e.target.style.borderColor='rgba(167,139,250,0.3)'}}
-                    onMouseLeave={e=>{e.target.style.background='rgba(255,255,255,0.08)'; e.target.style.borderColor='rgba(255,255,255,0.15)'}}>
+                    onMouseEnter={e=>{e.target.style.background=CREAM_2; e.target.style.borderColor='#C9B8E8'}}
+                    onMouseLeave={e=>{e.target.style.background=IVORY; e.target.style.borderColor='#DCD0F0'}}>
                     ← Return Home
                   </button>
                 </div>
@@ -1984,8 +1923,8 @@ export default function Landing() {
                 style={{display:'flex', flexDirection:'column', gap:18}}>
                 <div style={{marginBottom:4}}>
                   <h3 style={{fontFamily:SF, fontSize:22, fontWeight:700,
-                    color:'#fff', marginBottom:6}}>Become an Early Member</h3>
-                  <p style={{fontSize:13, color:'rgba(255,255,255,0.55)'}}>
+                    color:DARK, marginBottom:6}}>Become an Early Member</h3>
+                  <p style={{fontSize:14, color:NAVY_SOFT}}>
                     Join a community that cares.
                   </p>
                 </div>
@@ -2000,18 +1939,18 @@ export default function Landing() {
                   ].map((b,i)=>(
                     <div key={i} style={{
                       padding:'10px 12px', borderRadius:12,
-                      background:'rgba(255,255,255,0.06)', border:'1px solid rgba(245,184,65,0.2)',
+                      background:CREAM, border:`1px solid ${LILAC_LINE}`,
                       display:'flex', alignItems:'center', gap:8,
-                      fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.78)',
+                      fontSize:12.5, fontWeight:600, color:'#3A3350',
                     }}>
-                      <b.Icon size={14} strokeWidth={1.5} color="rgba(245,184,65,0.85)" />
+                      <b.Icon size={14} strokeWidth={1.75} color={GOLD_TXT} />
                       <span>{b.text}</span>
                     </div>
                   ))}
                 </div>
 
                 <label style={{fontSize:13, fontWeight:600,
-                  color:'rgba(255,255,255,0.65)', marginTop:8}}>
+                  color:'#3A3350', marginTop:8}}>
                   What are you struggling with most?
                 </label>
                 <div style={{position:'relative'}}>
@@ -2025,7 +1964,7 @@ export default function Landing() {
                     ))}
                   </select>
                   <span style={{position:'absolute', right:16, top:'50%',
-                    transform:'translateY(-50%)', color:'rgba(255,255,255,0.4)',
+                    transform:'translateY(-50%)', color:MUTED,
                     pointerEvents:'none', fontSize:11}}>▼</span>
                 </div>
                 <input type="text" placeholder="Your Name"
@@ -2042,7 +1981,7 @@ export default function Landing() {
                   className="l-form-field" required/>
 
                 <label style={{fontSize:13, fontWeight:600,
-                  color:'rgba(255,255,255,0.65)'}}>
+                  color:'#3A3350'}}>
                   How did you hear about SoulConnect?
                 </label>
                 <div style={{position:'relative'}}>
@@ -2056,14 +1995,13 @@ export default function Landing() {
                     ))}
                   </select>
                   <span style={{position:'absolute', right:16, top:'50%',
-                    transform:'translateY(-50%)', color:'rgba(255,255,255,0.4)',
+                    transform:'translateY(-50%)', color:MUTED,
                     pointerEvents:'none', fontSize:11}}>▼</span>
                 </div>
 
                 <button type="submit" className="l-btn-p"
                   style={{marginTop:4, width:'100%', justifyContent:'center',
-                    borderRadius:14, padding:'16px', fontSize:15,
-                    animation:'glowBreathe 5s ease-in-out infinite'}}>
+                    borderRadius:14, padding:'16px', fontSize:15}}>
                   Join Early Community →
                 </button>
 
@@ -2076,15 +2014,15 @@ export default function Landing() {
                     {Icon:BellOff, text:'Unsubscribe anytime'},
                   ].map((t,i)=>(
                     <div key={i} style={{display:'flex', alignItems:'center', gap:8,
-                      fontSize:12, color:'rgba(255,255,255,0.55)'}}>
-                      <t.Icon size={13} strokeWidth={1.5} color="rgba(255,255,255,0.5)" />
+                      fontSize:12.5, color:NAVY_SOFT}}>
+                      <t.Icon size={13} strokeWidth={1.75} color={P} />
                       <span>{t.text}</span>
                     </div>
                   ))}
                 </div>
 
                 <p style={{textAlign:'center', fontSize:11,
-                  color:'rgba(255,255,255,0.42)', margin:'8px 0 0', lineHeight:1.5,
+                  color:MUTED, margin:'8px 0 0', lineHeight:1.5,
                   fontWeight:500}}>
                   Takes less than 10 seconds • Free forever • No credit card required
                 </p>
@@ -2098,9 +2036,9 @@ export default function Landing() {
           SECTION 7 — TRUST STRIP  (premium, single row)
       ══════════════════════════════════════════════════════════════════════ */}
       <section id="trust" style={{
-        background:'#fff',
-        borderTop:'1px solid rgba(109,74,255,0.08)',
-        borderBottom:'1px solid rgba(109,74,255,0.08)',
+        background:IVORY,
+        borderTop:`1px solid ${LILAC_LINE}`,
+        borderBottom:`1px solid ${LILAC_LINE}`,
         padding:'28px 32px',
       }}>
         <div className="l-trust-row" style={{
@@ -2119,19 +2057,19 @@ export default function Landing() {
             <React.Fragment key={i}>
               <div style={{display:'flex', alignItems:'center', gap:12, flexShrink:0}}>
                 <div style={{width:42, height:42, borderRadius:13,
-                  background:t.color,
-                  border:`1.5px solid ${t.border}`,
+                  background:CREAM_2,
+                  border:`1px solid ${LILAC_LINE}`,
                   display:'flex', alignItems:'center', justifyContent:'center',
                   fontSize:19, flexShrink:0}}>
-                  <t.Icon size={19} strokeWidth={1.5} color={t.iconColor||DARK} />
+                  <t.Icon size={19} strokeWidth={1.5} color={P} />
                 </div>
                 <div>
                   <div style={{fontSize:13, fontWeight:700, color:DARK}}>{t.title}</div>
-                  <div style={{fontSize:11, color:'#9CA3AF', lineHeight:1.4}}>{t.sub}</div>
+                  <div style={{fontSize:12, color:MUTED, lineHeight:1.4}}>{t.sub}</div>
                 </div>
               </div>
               {i<arr.length-1&&(
-                <div style={{width:1, height:32, background:'rgba(109,74,255,0.1)', flexShrink:0}}/>
+                <div style={{width:1, height:32, background:LILAC_LINE, flexShrink:0}}/>
               )}
             </React.Fragment>
           ))}
@@ -2142,72 +2080,12 @@ export default function Landing() {
           SECTION — FINAL CTA  (premium · single · emotional)
       ══════════════════════════════════════════════════════════════════════ */}
       <section style={{
-        background:`linear-gradient(155deg,#120E20 0%,#201838 55%,#332748 100%)`,
+        background:`radial-gradient(ellipse at 50% 0%, ${BLUSH} 0%, rgba(251,243,238,0) 60%), ${CREAM_2}`,
         padding:'clamp(64px,8vw,96px) 32px',
         position:'relative', overflow:'hidden',
         minHeight:280,
         display:'flex', alignItems:'center',
       }}>
-        {/* Sacred geometry */}
-        <div style={{position:'absolute',inset:0,pointerEvents:'none',zIndex:0}} aria-hidden="true">
-          <svg viewBox="0 0 900 350" width="100%" height="100%"
-            preserveAspectRatio="xMidYMid slice" style={{opacity:0.055}}>
-            {[0,30,60,90,120,150,180,210,240,270,300,330].map((a,i)=>{
-              const r=a*Math.PI/180;
-              return <line key={i} x1="450" y1="175"
-                x2={450+240*Math.cos(r)} y2={175+240*Math.sin(r)}
-                stroke={LAV} strokeWidth="0.6"/>;
-            })}
-            {[45,90,135,175,215].map((r,i)=>(
-              <circle key={i} cx="450" cy="175" r={r}
-                stroke={LAV} strokeWidth="0.5" fill="none" strokeDasharray="3 7"/>
-            ))}
-          </svg>
-        </div>
-
-        {/* Soft lotus radial glow */}
-        <div style={{
-          position:'absolute', top:'50%', left:'50%',
-          transform:'translate(-50%,-50%)',
-          width:560, height:560,
-          background:`radial-gradient(ellipse at center,rgba(109,74,255,0.22) 0%,rgba(167,139,250,0.07) 45%,transparent 70%)`,
-          pointerEvents:'none', zIndex:0,
-        }}/>
-
-        {/* Gentle top light */}
-        <div style={{
-          position:'absolute', top:-60, left:'50%', transform:'translateX(-50%)',
-          width:700, height:200,
-          background:`radial-gradient(ellipse at center,rgba(167,139,250,0.12) 0%,transparent 70%)`,
-          pointerEvents:'none', zIndex:0,
-        }}/>
-
-        {/* Floating particles */}
-        <svg style={{position:'absolute',inset:0,width:'100%',height:'100%',
-          pointerEvents:'none',zIndex:0}} aria-hidden="true">
-          {Array.from({length:24},(_,i)=>({
-            x:3+((i*97+i*i*13)%94),
-            y:3+((i*67+i*i*17)%94),
-            r:0.7+(i%5)*0.45,
-            // Cool-only palette. Gold/yellow particles sat directly behind
-            // the glass form, and backdrop-blur smeared them into a peach
-            // wash across the inputs. Staying in the violet family keeps the
-            // glass reading as glass.
-            col:[LAV,'#C4B5FD','#9F8FE8','#B9A7F5','#8B7BD8'][i%5],
-            dur:3.2+(i%5)*1.1, del:i*0.35,
-          })).map((p,i)=>(
-            <circle key={i} cx={`${p.x}%`} cy={`${p.y}%`} r={p.r}
-              fill={p.col} opacity={0.3+(i%3)*0.1}>
-              <animate attributeName="opacity"
-                values={`${0.18+(i%3)*0.12};${0.5+(i%3)*0.18};${0.18+(i%3)*0.12}`}
-                dur={`${p.dur}s`} begin={`${p.del}s`} repeatCount="indefinite"/>
-              <animateTransform attributeName="transform" type="translate"
-                values={`0,0;${(i%2?4:-4)},${(i%3?-5:5)};0,0`}
-                dur={`${p.dur*1.6}s`} begin={`${p.del}s`} repeatCount="indefinite"/>
-            </circle>
-          ))}
-        </svg>
-
         {/* ── Content ── */}
         <div style={{
           maxWidth:900, margin:'0 auto', textAlign:'center',
@@ -2217,18 +2095,17 @@ export default function Landing() {
           {/* Badge */}
           <div style={{
             display:'inline-flex', alignItems:'center', gap:10,
-            background:'rgba(109,74,255,0.2)',
-            border:'1px solid rgba(167,139,250,0.3)',
+            background:IVORY,
+            border:'1px solid #DCD0F0',
             borderRadius:99, padding:'8px 20px', marginBottom:30,
-            backdropFilter:'blur(12px)',
           }}>
-            <span style={{display:'flex', color:LAV}}><Heart size={14} strokeWidth={1.5} /></span>
+            <span style={{display:'flex', color:P}}><Heart size={14} strokeWidth={1.5} /></span>
             <div style={{textAlign:'left'}}>
-              <div style={{fontSize:10, fontWeight:650, color:LAV,
+              <div style={{fontSize:10.5, fontWeight:700, color:P,
                 letterSpacing:'0.14em', textTransform:'uppercase', lineHeight:1.3}}>
                 Early Access
               </div>
-              <div style={{fontSize:10, color:'rgba(255,255,255,0.38)',
+              <div style={{fontSize:11, color:NAVY_SOFT,
                 letterSpacing:'0.04em', lineHeight:1.3}}>
                 Building With Our First Community Members
               </div>
@@ -2239,7 +2116,7 @@ export default function Landing() {
           <h2 style={{
             fontFamily:SF,
             fontSize:'clamp(2.25rem,5.5vw,4rem)',
-            fontWeight:800, color:'#fff', lineHeight:1.08,
+            fontWeight:700, color:DARK, lineHeight:1.08,
             letterSpacing:'-0.02em', marginBottom:22,
           }}>
             Find Your Circle.
@@ -2248,8 +2125,8 @@ export default function Landing() {
           {/* Subtext */}
           <p style={{
             fontSize:'clamp(15px,1.7vw,18px)',
-            color:'rgba(255,255,255,0.52)',
-            lineHeight:1.78, maxWidth:560, margin:'0 auto 42px',
+            color:NAVY_SOFT,
+            lineHeight:1.75, maxWidth:560, margin:'0 auto 42px',
           }}>
             Healing happens faster when people feel understood, supported, and connected.
             Join the SoulConnect community and take your first step forward.
@@ -2261,9 +2138,8 @@ export default function Landing() {
             gap:24, flexWrap:'wrap',
           }}>
             <a href="#early" className="l-btn-p"
-              style={{padding:'17px 44px', borderRadius:16, fontSize:17,
-                fontWeight:700, display:'inline-block', textDecoration:'none',
-                animation:'glowBreathe 5s ease-in-out infinite'}}>
+              style={{padding:'16px 40px', borderRadius:14, fontSize:16,
+                fontWeight:700, display:'inline-block', textDecoration:'none'}}>
               Find My Circle →
             </a>
             {/* Secondary text link next to the primary CTA — was a 26.5px
@@ -2272,13 +2148,13 @@ export default function Landing() {
                 shift the visible layout) brings the real hit area closer to
                 the 48px minimum without changing how it looks. */}
             <Link to="/how-it-works"
-              style={{fontSize:15, color:'rgba(255,255,255,0.45)',
-                textDecoration:'none', fontWeight:500,
-                borderBottom:'1px solid rgba(255,255,255,0.2)',
+              style={{fontSize:15, color:P,
+                textDecoration:'none', fontWeight:600,
+                borderBottom:'1px solid #C9B8E8',
                 padding:'12px 4px 3px', margin:'-12px -4px 0', display:'inline-block',
                 transition:'color .2s'}}
-              onMouseEnter={e=>{e.currentTarget.style.color=LAV;}}
-              onMouseLeave={e=>{e.currentTarget.style.color='rgba(255,255,255,0.45)';}}
+              onMouseEnter={e=>{e.currentTarget.style.color=DARK;}}
+              onMouseLeave={e=>{e.currentTarget.style.color=P;}}
             >
               Learn More
             </Link>
@@ -2290,39 +2166,20 @@ export default function Landing() {
           FOOTER  — compact links · social · crisis · copyright
       ══════════════════════════════════════════════════════════════════════ */}
       <footer style={{
-        background:`linear-gradient(180deg,#0A0222 0%,#050114 100%)`,
-        borderTop:'1px solid rgba(109,74,255,0.16)',
+        background:IVORY,
+        borderTop:`1px solid ${LILAC_LINE}`,
         padding:'0 32px', position:'relative', overflow:'hidden',
       }}>
-        {/* Sacred geometry watermark */}
-        <div style={{position:'absolute', bottom:'-10%', right:'-5%',
-          opacity:0.03, pointerEvents:'none',
-          animation:'floatY 22s ease-in-out infinite'}}>
-          <svg viewBox="0 0 280 280" width="400" height="400" aria-hidden="true">
-            {[0,30,60,90,120,150,180,210,240,270,300,330].map((a,i)=>{
-              const r=a*Math.PI/180;
-              return <line key={i} x1="140" y1="140"
-                x2={140+130*Math.cos(r)} y2={140+130*Math.sin(r)}
-                stroke={LAV} strokeWidth="0.8"/>;
-            })}
-            {[30,60,90,120,130].map((r,i)=>(
-              <circle key={i} cx="140" cy="140" r={r}
-                stroke={LAV} strokeWidth="0.7" fill="none"
-                strokeDasharray="3 5"/>
-            ))}
-          </svg>
-        </div>
-
         <div style={{maxWidth:1440, margin:'0 auto', position:'relative', zIndex:1}}>
 
           {/* ── Crisis strip — disabled pre-launch ── */}
 
           {/* ── Disclaimer ── */}
-          <div style={{padding:'16px 0', borderBottom:'1px solid rgba(255,255,255,0.04)'}}>
-            <p style={{fontSize:11, color:'rgba(255,255,255,0.22)',
+          <div style={{padding:'18px 0', borderBottom:`1px solid ${LILAC_LINE}`}}>
+            <p style={{fontSize:12, color:MUTED,
               lineHeight:1.7, textAlign:'center'}}>
-              <strong style={{color:'rgba(255,255,255,0.32)'}}>Disclaimer:</strong>{' '}
-              SoulConnect is a peer-support and wellness platform — not a medical,
+              <strong style={{color:'#3A3350'}}>Disclaimer:</strong>{' '}
+              SoulConnect is a peer-support and wellness platform, not a medical,
               psychiatric, or emergency service. If you are in immediate danger,
               please call emergency services or visit your nearest hospital.{' '}
             </p>
@@ -2336,16 +2193,12 @@ export default function Landing() {
             {/* Logo */}
             <Link to="/" style={{display:'flex', alignItems:'center', gap:10,
               textDecoration:'none', flexShrink:0}}>
-              <picture>
-                <source srcSet="/brand/logo/soulconnect-logo-primary-sm.webp" type="image/webp" />
-                <img src="/brand/logo/soulconnect-logo-primary-sm.png" alt="SoulConnect"
-                  width="36" height="36"
-                  style={{height:36, width:'auto', display:'block',
-                    filter:'drop-shadow(0 3px 10px rgba(109,74,255,0.45)) brightness(1.05)'}}/>
-              </picture>
-              <div style={{fontSize:14, fontWeight:600, color:'rgba(255,255,255,0.7)',
+              <img src="/brand/logo/soulconnect-lotus-mark.svg" alt=""
+                width="39" height="38"
+                style={{height:38, width:'auto', display:'block'}}/>
+              <div style={{fontFamily:SF, fontSize:18, fontWeight:700, color:DARK,
                 letterSpacing:'-0.01em'}}>
-                Soul<span style={{color:LAV}}>Connect</span>
+                Soul<span style={{color:'#A87B45'}}>Connect</span>
               </div>
             </Link>
 
@@ -2371,22 +2224,22 @@ export default function Landing() {
                       changing how dense the row looks visually. */}
                   {l.isRoute
                     ? <Link to={l.to} style={{fontSize:12,
-                        color:'rgba(255,255,255,0.3)', textDecoration:'none',
+                        color:NAVY_SOFT, textDecoration:'none',
                         padding:'13px 11px', margin:'-13px 0', display:'inline-flex', alignItems:'center',
                         transition:'color .18s'}}
-                        onMouseEnter={e=>e.currentTarget.style.color=LAV}
-                        onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.3)'}
+                        onMouseEnter={e=>e.currentTarget.style.color=P}
+                        onMouseLeave={e=>e.currentTarget.style.color=NAVY_SOFT}
                       >{l.label}</Link>
                     : <a href={l.href} style={{fontSize:12,
-                        color:'rgba(255,255,255,0.3)', textDecoration:'none',
+                        color:NAVY_SOFT, textDecoration:'none',
                         padding:'13px 11px', margin:'-13px 0', display:'inline-flex', alignItems:'center',
                         transition:'color .18s'}}
-                        onMouseEnter={e=>e.currentTarget.style.color=LAV}
-                        onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.3)'}
+                        onMouseEnter={e=>e.currentTarget.style.color=P}
+                        onMouseLeave={e=>e.currentTarget.style.color=NAVY_SOFT}
                       >{l.label}</a>
                   }
                   {i<arr.length-1&&(
-                    <span style={{color:'rgba(255,255,255,0.1)', fontSize:11,
+                    <span style={{color:'#DCD0F0', fontSize:11,
                       userSelect:'none'}}>|</span>
                   )}
                 </React.Fragment>
@@ -2419,19 +2272,19 @@ export default function Landing() {
               ].map((s,i)=>(
                 <a key={i} href={s.href} aria-label={s.label}
                   style={{width:44, height:44, borderRadius:10,
-                    background:'rgba(109,74,255,0.1)',
-                    border:'1px solid rgba(109,74,255,0.2)',
+                    background:CREAM_2,
+                    border:`1px solid ${LILAC_LINE}`,
                     display:'flex', alignItems:'center', justifyContent:'center',
-                    color:'rgba(167,139,250,0.85)', textDecoration:'none', transition:'all .2s',}}
-                  onMouseEnter={e=>{e.currentTarget.style.background='rgba(109,74,255,0.28)';e.currentTarget.style.transform='translateY(-3px)';e.currentTarget.style.boxShadow='0 6px 18px rgba(109,74,255,0.3)';e.currentTarget.style.color='#fff';}}
-                  onMouseLeave={e=>{e.currentTarget.style.background='rgba(109,74,255,0.1)';e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.boxShadow='none';e.currentTarget.style.color='rgba(167,139,250,0.85)';}}
+                    color:P, textDecoration:'none', transition:'all .2s',}}
+                  onMouseEnter={e=>{e.currentTarget.style.background=P;e.currentTarget.style.color='#fff';}}
+                  onMouseLeave={e=>{e.currentTarget.style.background=CREAM_2;e.currentTarget.style.color=P;}}
                 >{s.svg}</a>
               ))}
             </div>
           </div>
 
           {/* Copyright */}
-          <p style={{fontSize:11, color:'rgba(255,255,255,0.15)',
+          <p style={{fontSize:12, color:MUTED,
             textAlign:'center', paddingBottom:22}}>
             © 2026 SoulConnect. Built in India, for anyone who needs a place to land.
           </p>
