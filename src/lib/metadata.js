@@ -5,7 +5,7 @@
 
 export const METADATA = {
   '/': {
-    title: 'SoulConnect | You Don\'t Have To Go Through It Alone',
+    title: 'SoulConnect | You are more than what you’re going through',
     description: 'Find support, connection, healing circles, wellness tools, and community for anxiety, loneliness, burnout, grief, and personal growth. Building India\'s community-driven healing platform.',
     canonical: 'https://soulconnect.health/',
     ogType: 'website',
