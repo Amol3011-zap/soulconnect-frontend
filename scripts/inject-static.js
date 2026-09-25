@@ -26,13 +26,13 @@ const STATIC_HTML = `
 <div id="root">
 <div id="app-shell" style="
   position:fixed;inset:0;z-index:9999;
-  background:linear-gradient(155deg,#06011A 0%,#130530 40%,#1E0848 70%,#06011A 100%);
+  background:linear-gradient(180deg,#F3EFF9 0%,#FAF8FC 100%);
   display:flex;align-items:center;justify-content:center;
   font-family:'Plus Jakarta Sans',Inter,sans-serif;
 ">
   <div style="text-align:center;">
-    <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect" style="height:48px;margin-bottom:24px;opacity:0.9;" />
-    <div style="width:36px;height:36px;margin:0 auto;border-radius:50%;border:3px solid rgba(167,139,250,0.2);border-top-color:#A78BFA;animation:spin .8s linear infinite;"></div>
+    <img src="/brand/logo/soulconnect-lotus-mark.svg" alt="SoulConnect" width="56" height="55" style="height:56px;width:auto;display:block;margin:0 auto 22px;" />
+    <div style="width:36px;height:36px;margin:0 auto;border-radius:50%;border:3px solid rgba(111,78,188,0.16);border-top-color:#6F4EBC;animation:spin .8s linear infinite;"></div>
   </div>
 </div>
 <style>#app-shell{transition:opacity .2s ease}@keyframes spin{to{transform:rotate(360deg)}}</style>
