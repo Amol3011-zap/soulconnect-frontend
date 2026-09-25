@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { Check, ChevronRight } from 'lucide-react';
 import { SUPPORT_OPTIONS } from '../../data/pulseExperienceData';
-
-const P = '#7C3AED';
-const LAV = '#A78BFA';
+import { P, DARK, NAVY_SOFT, SF, TINTS, supportIcon } from './pulseTheme';
 
 function SupportSelection({ onSelect }) {
   const [selectedId, setSelectedId] = useState(null);
@@ -22,27 +21,32 @@ function SupportSelection({ onSelect }) {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '40px',
+        gap: '36px',
         width: '100%',
+        maxWidth: 720,
+        margin: '0 auto',
       }}
     >
       {/* Headline */}
       <div style={{ textAlign: 'center' }}>
         <h2
           style={{
+            fontFamily: SF,
             fontSize: 'clamp(28px, 4vw, 42px)',
-            fontWeight: 800,
+            fontWeight: 700,
+            color: DARK,
             margin: '0 0 12px 0',
             letterSpacing: '-0.02em',
+            lineHeight: 1.18,
           }}
         >
-          What would feel most helpful right now?
+          What would feel most <span style={{ color: P }}>helpful</span> right now?
         </h2>
         <p
           style={{
-            fontSize: '16px',
+            fontSize: '16.5px',
             fontWeight: 400,
-            color: 'rgba(255,255,255,0.6)',
+            color: NAVY_SOFT,
             margin: 0,
             lineHeight: 1.6,
           }}
@@ -56,56 +60,62 @@ function SupportSelection({ onSelect }) {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '14px',
+          gap: '12px',
           width: '100%',
         }}
       >
-        {SUPPORT_OPTIONS.map((option) => {
+        {SUPPORT_OPTIONS.map((option, i) => {
           const isSelected = selectedId === option.id;
+          const t = TINTS[i % TINTS.length];
+          const Icon = supportIcon(option.id);
 
           return (
             <motion.button
               key={option.id}
+              className="pl-card"
               onClick={() => handleSelect(option.id)}
-              whileHover={{ scale: 1.01, x: 4 }}
-              whileTap={{ scale: 0.98 }}
-              animate={{
-                boxShadow: isSelected
-                  ? `0 0 32px rgba(124,58,237,0.6), 0 8px 32px rgba(124,58,237,0.2)`
-                  : `0 8px 32px rgba(0,0,0,0.4)`,
-              }}
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.99 }}
               style={{
                 display: 'flex',
-                alignItems: 'flex-start',
+                alignItems: 'center',
                 gap: '16px',
-                padding: '20px 24px',
-                borderRadius: '16px',
-                border: isSelected
-                  ? `2px solid ${P}`
-                  : '1px solid rgba(168,85,247,0.15)',
-                backgroundColor: 'rgba(34,18,73,0.72)',
-                backdropFilter: 'blur(24px)',
+                padding: '18px 20px',
+                borderRadius: '18px',
+                ...(isSelected
+                  ? {
+                      border: '2px solid transparent',
+                      background: `linear-gradient(90deg, ${t.wash} 0%, #FFFFFF 100%) padding-box, linear-gradient(150deg, ${P} 0%, #A992DA 55%, ${t.edge[0]} 100%) border-box`,
+                      boxShadow: '0 0 0 4px rgba(107,79,160,0.10), 0 12px 28px rgba(107,79,160,0.14)',
+                    }
+                  : {
+                      border: '1.5px solid transparent',
+                      background: `linear-gradient(90deg, ${t.wash} 0%, #FFFFFF 45%) padding-box, linear-gradient(150deg, ${t.edge[0]} 0%, ${t.edge[1]} 45%, ${t.edge[2]} 100%) border-box`,
+                      boxShadow: '0 2px 12px rgba(34,27,58,0.04)',
+                    }),
                 cursor: 'pointer',
                 font: 'inherit',
                 WebkitAppearance: 'none',
                 appearance: 'none',
-                transition: 'all 0.2s ease-out',
+                transition: 'box-shadow 0.2s ease-out',
                 textAlign: 'left',
               }}
             >
               {/* Icon */}
-              <div
+              <span
                 style={{
-                  fontSize: '28px',
-                  lineHeight: 1,
-                  minWidth: '32px',
+                  width: 46,
+                  height: 46,
+                  flexShrink: 0,
+                  borderRadius: 13,
+                  background: isSelected ? P : t.bg,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                {option.icon}
-              </div>
+                <Icon size={22} strokeWidth={1.7} color={isSelected ? '#FFFFFF' : t.fg} />
+              </span>
 
               {/* Content */}
               <div style={{ flex: 1 }}>
@@ -113,83 +123,50 @@ function SupportSelection({ onSelect }) {
                   style={{
                     fontSize: '16px',
                     fontWeight: 700,
-                    color: '#FFFFFF',
-                    margin: '0 0 4px 0',
+                    color: DARK,
+                    margin: '0 0 3px 0',
                   }}
                 >
                   {option.label}
                 </h3>
                 <p
                   style={{
-                    fontSize: '13px',
+                    fontSize: '14px',
                     fontWeight: 400,
-                    color: 'rgba(255,255,255,0.6)',
+                    color: NAVY_SOFT,
                     margin: 0,
-                    lineHeight: 1.5,
+                    lineHeight: 1.55,
                   }}
                 >
                   {option.description}
                 </p>
               </div>
 
-              {/* Checkmark */}
-              {isSelected && (
+              {/* Checkmark / chevron */}
+              {isSelected ? (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   style={{
-                    width: '20px',
-                    height: '20px',
+                    width: '24px',
+                    height: '24px',
                     borderRadius: '50%',
                     backgroundColor: P,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#FFFFFF',
-                    fontSize: '12px',
-                    fontWeight: 700,
                     flexShrink: 0,
                   }}
                 >
-                  ✓
+                  <Check size={14} strokeWidth={3} color="#FFFFFF" />
                 </motion.div>
+              ) : (
+                <ChevronRight size={20} strokeWidth={1.8} color="#B8AACF" style={{ flexShrink: 0 }} />
               )}
             </motion.button>
           );
         })}
       </div>
-
-      {/* Show Me button */}
-      {selectedId && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}
-        >
-          <motion.button
-            onClick={() => {
-              // Already handled by onClick above
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            style={{
-              padding: '14px 44px',
-              borderRadius: '16px',
-              border: 'none',
-              backgroundColor: P,
-              color: '#FFFFFF',
-              fontSize: '15px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              boxShadow: `0 8px 24px rgba(124,58,237,0.4)`,
-              transition: 'all 0.2s ease-out',
-            }}
-          >
-            Show Me →
-          </motion.button>
-        </motion.div>
-      )}
     </motion.div>
   );
 }

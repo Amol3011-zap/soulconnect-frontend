@@ -1,24 +1,62 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
 import { PROBLEMS, SUPPORT_OPTIONS } from '../../data/pulseExperienceData';
+import {
+  P, DARK, GOLD_TXT, LILAC_LINE, SF, TINTS, GOLD_EDGE, problemIcon, supportIcon,
+} from './pulseTheme';
 
-const P = '#7C3AED';
+const eyebrow = {
+  fontSize: '12px',
+  fontWeight: 700,
+  color: GOLD_TXT,
+  textTransform: 'uppercase',
+  letterSpacing: '0.16em',
+  margin: '0 0 14px 0',
+};
+
+const chip = (t) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '8px',
+  padding: '9px 16px 9px 10px',
+  borderRadius: '999px',
+  backgroundColor: '#FFFFFF',
+  border: `1.5px solid ${t.edge[1]}`,
+  fontSize: '14px',
+  fontWeight: 600,
+  color: DARK,
+  boxShadow: '0 2px 8px rgba(34,27,58,0.04)',
+});
+
+const chipIcon = (t) => ({
+  width: 26,
+  height: 26,
+  borderRadius: '50%',
+  background: t.bg,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
 
 function PulseSummary({ problems, support, onContinue }) {
   const problemLabels = PROBLEMS.filter((p) => problems.includes(p.id));
   const supportLabel = SUPPORT_OPTIONS.find((s) => s.id === support);
+  const SupportIcon = supportIcon(support);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      exit={{ opacity: 0, scale: 0.97 }}
       transition={{ duration: 0.3 }}
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '40px',
+        gap: '32px',
         width: '100%',
+        maxWidth: 720,
+        margin: '0 auto',
         textAlign: 'center',
       }}
     >
@@ -26,12 +64,11 @@ function PulseSummary({ problems, support, onContinue }) {
       <motion.div
         style={{
           position: 'relative',
-          padding: '48px 40px',
+          padding: 'clamp(32px,5vw,48px) clamp(22px,4vw,40px)',
           borderRadius: '24px',
-          border: `1px solid rgba(168,85,247,0.2)`,
-          backgroundColor: 'rgba(34,18,73,0.72)',
-          backdropFilter: 'blur(24px)',
-          boxShadow: `0 8px 32px rgba(0,0,0,0.4), 0 0 40px rgba(124,58,237,0.15)`,
+          border: '2px solid transparent',
+          background: `linear-gradient(160deg, #FBF1EC 0%, #FFFFFF 45%, #F7F3FC 100%) padding-box, ${GOLD_EDGE}`,
+          boxShadow: '0 0 0 6px rgba(255,255,255,0.6), 0 24px 56px rgba(107,79,160,0.10)',
         }}
       >
         <div
@@ -40,7 +77,7 @@ function PulseSummary({ problems, support, onContinue }) {
             zIndex: 1,
             display: 'flex',
             flexDirection: 'column',
-            gap: '32px',
+            gap: '28px',
           }}
         >
           {/* Problems section */}
@@ -49,49 +86,32 @@ function PulseSummary({ problems, support, onContinue }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
           >
-            <p
-              style={{
-                fontSize: '14px',
-                fontWeight: 600,
-                color: 'rgba(255,255,255,0.5)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                margin: '0 0 16px 0',
-              }}
-            >
-              You told us you are dealing with
-            </p>
+            <p style={eyebrow}>You told us you are dealing with</p>
 
             <div
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '12px',
+                gap: '10px',
                 justifyContent: 'center',
               }}
             >
-              {problemLabels.map((problem, i) => (
-                <motion.span
-                  key={problem.id}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.25 + i * 0.1 }}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '8px 16px',
-                    borderRadius: '20px',
-                    backgroundColor: 'rgba(124,58,237,0.2)',
-                    border: `1px solid rgba(124,58,237,0.4)`,
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#FFFFFF',
-                  }}
-                >
-                  {problem.icon} {problem.label}
-                </motion.span>
-              ))}
+              {problemLabels.map((problem, i) => {
+                const t = TINTS[i % TINTS.length];
+                const Icon = problemIcon(problem.id);
+                return (
+                  <motion.span
+                    key={problem.id}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.25 + i * 0.1 }}
+                    style={chip(t)}
+                  >
+                    <span style={chipIcon(t)}><Icon size={14} strokeWidth={1.9} color={t.fg} /></span>
+                    {problem.label}
+                  </motion.span>
+                );
+              })}
             </div>
           </motion.div>
 
@@ -101,18 +121,7 @@ function PulseSummary({ problems, support, onContinue }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
           >
-            <p
-              style={{
-                fontSize: '14px',
-                fontWeight: 600,
-                color: 'rgba(255,255,255,0.5)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                margin: '0 0 16px 0',
-              }}
-            >
-              and
-            </p>
+            <p style={eyebrow}>and</p>
 
             <div
               style={{
@@ -120,21 +129,9 @@ function PulseSummary({ problems, support, onContinue }) {
                 justifyContent: 'center',
               }}
             >
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 16px',
-                  borderRadius: '20px',
-                  backgroundColor: 'rgba(124,58,237,0.2)',
-                  border: `1px solid rgba(124,58,237,0.4)`,
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: '#FFFFFF',
-                }}
-              >
-                {supportLabel.icon} {supportLabel.label}
+              <span style={chip(TINTS[1])}>
+                <span style={chipIcon(TINTS[1])}><SupportIcon size={14} strokeWidth={1.9} color={TINTS[1].fg} /></span>
+                {supportLabel.label}
               </span>
             </div>
           </motion.div>
@@ -143,7 +140,7 @@ function PulseSummary({ problems, support, onContinue }) {
           <div
             style={{
               height: '1px',
-              background: 'linear-gradient(90deg, transparent 0%, rgba(168,85,247,0.3) 50%, transparent 100%)',
+              background: `linear-gradient(90deg, transparent 0%, ${LILAC_LINE} 20%, #E7D3E4 50%, ${LILAC_LINE} 80%, transparent 100%)`,
             }}
           />
 
@@ -153,11 +150,12 @@ function PulseSummary({ problems, support, onContinue }) {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
             style={{
-              fontSize: '18px',
-              fontWeight: 500,
-              color: '#E2DEFF',
+              fontFamily: SF,
+              fontSize: 'clamp(19px, 2.4vw, 23px)',
+              fontWeight: 700,
+              color: DARK,
               margin: 0,
-              lineHeight: 1.6,
+              lineHeight: 1.45,
             }}
           >
             Let us see how many people are going through something similar.
@@ -167,25 +165,28 @@ function PulseSummary({ problems, support, onContinue }) {
 
       {/* Continue button */}
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <motion.button
+        <button
           onClick={onContinue}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          className="pl-btn"
           style={{
-            padding: '14px 44px',
-            borderRadius: '16px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '15px 36px',
+            borderRadius: '14px',
             border: 'none',
             backgroundColor: P,
             color: '#FFFFFF',
-            fontSize: '15px',
-            fontWeight: 600,
+            fontSize: '15.5px',
+            fontWeight: 700,
+            fontFamily: 'inherit',
             cursor: 'pointer',
-            boxShadow: `0 8px 24px rgba(124,58,237,0.4)`,
-            transition: 'all 0.2s ease-out',
+            boxShadow: '0 4px 14px rgba(107,79,160,0.22)',
           }}
         >
-          Show Me The Global Pulse →
-        </motion.button>
+          Show Me The Global Pulse
+          <ArrowRight size={17} strokeWidth={2} />
+        </button>
       </div>
     </motion.div>
   );

@@ -985,7 +985,8 @@ export default function Landing() {
       .l-desktop-nav{display:none!important;}
       .l-desktop-btns{display:none!important;}
       .l-mob-ham{display:flex!important;}
-      .l-logo-sub{display:none!important;}
+      /* Tagline stays on mobile, a touch smaller so it fits beside the menu button */
+      .l-logo-sub{font-size:8px!important;letter-spacing:0.16em!important;margin-top:3px!important;white-space:nowrap;}
       .l-ft-top{flex-direction:column!important;text-align:center!important;gap:28px!important;}
       .l-ft-top > *:last-child{text-align:center!important;}
     }

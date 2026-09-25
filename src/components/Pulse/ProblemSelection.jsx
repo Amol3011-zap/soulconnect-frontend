@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { Lock, Timer, Sparkles, Check, ArrowRight } from 'lucide-react';
 import { PROBLEMS } from '../../data/pulseExperienceData';
+import {
+  P, DARK, NAVY_SOFT, MUTED, GOLD_TXT, SF, TINTS, tintedBorder, problemIcon,
+} from './pulseTheme';
 
-const P = '#7C3AED';
-const LAV = '#A78BFA';
 const MAX_SELECTIONS = 2;
 
 function ProblemSelection({ onSelect }) {
@@ -36,7 +38,7 @@ function ProblemSelection({ onSelect }) {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '40px',
+        gap: '32px',
         width: '100%',
       }}
     >
@@ -44,21 +46,24 @@ function ProblemSelection({ onSelect }) {
       <div style={{ textAlign: 'center' }}>
         <h1
           style={{
-            fontSize: 'clamp(32px, 5vw, 52px)',
-            fontWeight: 800,
-            margin: '0 0 16px 0',
+            fontFamily: SF,
+            fontSize: 'clamp(30px, 4.6vw, 48px)',
+            fontWeight: 700,
+            color: DARK,
+            margin: '0 0 14px 0',
             letterSpacing: '-0.02em',
+            lineHeight: 1.15,
           }}
         >
-          What are you dealing with right now?
+          What are you dealing with <span style={{ color: P }}>right now?</span>
         </h1>
         <p
           style={{
-            fontSize: '16px',
+            fontSize: '16.5px',
             fontWeight: 400,
-            color: 'rgba(255,255,255,0.6)',
+            color: NAVY_SOFT,
             margin: 0,
-            lineHeight: 1.6,
+            lineHeight: 1.65,
             maxWidth: '560px',
             marginLeft: 'auto',
             marginRight: 'auto',
@@ -73,32 +78,32 @@ function ProblemSelection({ onSelect }) {
         style={{
           display: 'flex',
           justifyContent: 'center',
-          gap: '12px',
+          gap: '10px',
           flexWrap: 'wrap',
+          marginTop: -8,
         }}
       >
         {[
-          { icon: '🔒', text: 'No name or email required' },
-          { icon: '⏱️', text: '60 seconds' },
-          { icon: '✨', text: 'No account required' },
-        ].map((badge, i) => (
+          { Icon: Lock, text: 'No name or email required', t: TINTS[0] },
+          { Icon: Timer, text: '60 seconds', t: TINTS[1] },
+          { Icon: Sparkles, text: 'No account required', t: TINTS[3] },
+        ].map(({ Icon, text, t }, i) => (
           <div
             key={i}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              fontSize: '12px',
-              fontWeight: 500,
-              color: 'rgba(255,255,255,0.5)',
-              padding: '6px 14px',
-              borderRadius: '20px',
-              border: '1px solid rgba(168,85,247,0.2)',
-              backgroundColor: 'rgba(168,85,247,0.05)',
+              gap: '7px',
+              fontSize: '12.5px',
+              fontWeight: 600,
+              color: t.fg,
+              padding: '7px 14px',
+              borderRadius: '999px',
+              backgroundColor: t.bg,
             }}
           >
-            <span>{badge.icon}</span>
-            <span>{badge.text}</span>
+            <Icon size={14} strokeWidth={1.9} />
+            <span>{text}</span>
           </div>
         ))}
       </div>
@@ -106,10 +111,13 @@ function ProblemSelection({ onSelect }) {
       {/* Selection counter */}
       <div style={{ textAlign: 'center' }}>
         <p
+          aria-live="polite"
           style={{
-            fontSize: '14px',
-            fontWeight: 600,
-            color: 'rgba(255,255,255,0.6)',
+            fontSize: '12px',
+            fontWeight: 700,
+            color: GOLD_TXT,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
             margin: 0,
           }}
         >
@@ -121,61 +129,77 @@ function ProblemSelection({ onSelect }) {
 
       {/* Problem cards grid */}
       <div
+        className="pl-grid"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-          gap: '12px',
+          gap: '14px',
           width: '100%',
         }}
       >
-        {PROBLEMS.map((problem) => {
+        {PROBLEMS.map((problem, i) => {
           const isSelected = selected.includes(problem.id);
           const canSelect = !isSelected && selected.length >= MAX_SELECTIONS;
+          const t = TINTS[i % TINTS.length];
+          const Icon = problemIcon(problem.id);
 
           return (
             <motion.button
               key={problem.id}
+              className="pl-card"
               onClick={() => handleToggle(problem.id)}
               disabled={canSelect}
-              whileHover={!canSelect ? { scale: 1.03, y: -2 } : {}}
+              aria-pressed={isSelected}
+              whileHover={!canSelect ? { y: -3 } : {}}
               whileTap={!canSelect ? { scale: 0.98 } : {}}
-              animate={{
-                boxShadow: isSelected
-                  ? `0 0 32px rgba(124,58,237,0.6), 0 8px 32px rgba(124,58,237,0.2)`
-                  : `0 8px 32px rgba(0,0,0,0.4)`,
-              }}
               style={{
+                position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '12px',
-                padding: '28px 16px',
-                minHeight: '160px',
+                padding: '24px 14px',
+                minHeight: '148px',
                 borderRadius: '18px',
-                border: isSelected
-                  ? `2px solid ${P}`
-                  : '1px solid rgba(168,85,247,0.15)',
-                backgroundColor: 'rgba(34,18,73,0.72)',
-                backdropFilter: 'blur(24px)',
+                ...(isSelected
+                  ? {
+                      border: '2px solid transparent',
+                      background: `linear-gradient(180deg, ${t.wash} 0%, #FFFFFF 100%) padding-box, linear-gradient(150deg, ${P} 0%, #A992DA 55%, ${t.edge[0]} 100%) border-box`,
+                      boxShadow: '0 0 0 4px rgba(107,79,160,0.10), 0 12px 28px rgba(107,79,160,0.14)',
+                    }
+                  : {
+                      ...tintedBorder(t, '55%'),
+                      boxShadow: '0 2px 12px rgba(34,27,58,0.04)',
+                    }),
                 cursor: canSelect ? 'not-allowed' : 'pointer',
                 font: 'inherit',
                 WebkitAppearance: 'none',
                 appearance: 'none',
-                transition: 'all 0.2s ease-out',
-                opacity: canSelect ? 0.5 : 1,
+                transition: 'box-shadow 0.2s ease-out, opacity 0.2s',
+                opacity: canSelect ? 0.45 : 1,
               }}
             >
-              <div style={{ fontSize: '36px', lineHeight: 1 }}>
-                {problem.icon}
-              </div>
               <span
                 style={{
-                  fontSize: '13px',
+                  width: 48,
+                  height: 48,
+                  borderRadius: 14,
+                  background: isSelected ? P : t.bg,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'background .2s',
+                }}
+              >
+                <Icon size={23} strokeWidth={1.7} color={isSelected ? '#FFFFFF' : t.fg} />
+              </span>
+              <span
+                style={{
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  color: '#FFFFFF',
+                  color: DARK,
                   textAlign: 'center',
-                  lineHeight: 1.3,
+                  lineHeight: 1.35,
                 }}
               >
                 {problem.label}
@@ -187,21 +211,18 @@ function ProblemSelection({ onSelect }) {
                   animate={{ scale: 1 }}
                   style={{
                     position: 'absolute',
-                    top: '8px',
-                    right: '8px',
-                    width: '20px',
-                    height: '20px',
+                    top: '10px',
+                    right: '10px',
+                    width: '22px',
+                    height: '22px',
                     borderRadius: '50%',
                     backgroundColor: P,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#FFFFFF',
-                    fontSize: '12px',
-                    fontWeight: 700,
                   }}
                 >
-                  ✓
+                  <Check size={13} strokeWidth={3} color="#FFFFFF" />
                 </motion.div>
               )}
             </motion.button>
@@ -210,28 +231,33 @@ function ProblemSelection({ onSelect }) {
       </div>
 
       {/* Continue button */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-        <motion.button
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginTop: '8px' }}>
+        <button
           onClick={handleContinue}
           disabled={selected.length === 0}
-          whileHover={selected.length > 0 ? { scale: 1.05 } : {}}
-          whileTap={selected.length > 0 ? { scale: 0.95 } : {}}
+          className="pl-btn"
           style={{
-            padding: '14px 44px',
-            borderRadius: '16px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '14px 40px',
+            borderRadius: '14px',
             border: 'none',
-            backgroundColor: selected.length > 0 ? P : 'rgba(124,58,237,0.3)',
+            backgroundColor: selected.length > 0 ? P : '#CFC3E6',
             color: '#FFFFFF',
-            fontSize: '15px',
-            fontWeight: 600,
+            fontSize: '15.5px',
+            fontWeight: 700,
+            fontFamily: 'inherit',
             cursor: selected.length > 0 ? 'pointer' : 'not-allowed',
-            boxShadow: selected.length > 0 ? `0 8px 24px rgba(124,58,237,0.4)` : 'none',
-            transition: 'all 0.2s ease-out',
-            opacity: selected.length > 0 ? 1 : 0.6,
+            boxShadow: selected.length > 0 ? '0 4px 14px rgba(107,79,160,0.22)' : 'none',
           }}
         >
-          Continue →
-        </motion.button>
+          Continue
+          <ArrowRight size={17} strokeWidth={2} />
+        </button>
+        {selected.length === 0 && (
+          <span style={{ fontSize: 12.5, color: MUTED }}>Pick at least one to continue</span>
+        )}
       </div>
     </motion.div>
   );

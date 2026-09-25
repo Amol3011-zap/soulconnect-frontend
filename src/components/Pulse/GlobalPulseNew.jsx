@@ -6,9 +6,8 @@ import { getLocaleCountryHint } from '../../lib/localeCountry';
 import PulseMapStage from './PulseMapStage';
 import PulseStatsPanel from './PulseStatsPanel';
 import './globalPulse.css';
-
-const P = '#7C3AED';
-const LAV = '#A78BFA';
+import { Heart, ArrowRight } from 'lucide-react';
+import { P, DARK, NAVY_SOFT, GOLD_TXT, CREAM_2, LILAC_LINE, SF, GOLD_EDGE } from './pulseTheme';
 
 function GlobalPulseNew({ problems, support, onNavigate }) {
   const [selectedIso, setSelectedIso] = useState(null);
@@ -86,11 +85,14 @@ function GlobalPulseNew({ problems, support, onNavigate }) {
       >
         <h1
           style={{
-            fontSize: 'clamp(32px, 5vw, 52px)',
-            fontWeight: 800,
+            fontFamily: SF,
+            fontSize: 'clamp(30px, 4.6vw, 48px)',
+            fontWeight: 700,
+            color: DARK,
             margin: 0,
-            letterSpacing: '-0.03em',
-            marginBottom: '10px',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.15,
+            marginBottom: '12px',
           }}
         >
           You are <span style={{ color: P }}>not the only one</span>.
@@ -99,7 +101,7 @@ function GlobalPulseNew({ problems, support, onNavigate }) {
           style={{
             fontSize: '17px',
             fontWeight: 400,
-            color: 'rgba(255,255,255,0.6)',
+            color: NAVY_SOFT,
             margin: 0,
             lineHeight: 1.6,
           }}
@@ -119,12 +121,12 @@ function GlobalPulseNew({ problems, support, onNavigate }) {
             gap: '14px',
             padding: '64px 24px',
             borderRadius: '20px',
-            border: '1px solid rgba(168,85,247,0.15)',
-            backgroundColor: 'rgba(34,18,73,0.4)',
+            border: `1.5px solid ${LILAC_LINE}`,
+            backgroundColor: '#FFFFFF',
             textAlign: 'center',
           }}
         >
-          <p style={{ fontSize: '16px', fontWeight: 600, color: '#FFFFFF', margin: 0 }}>
+          <p style={{ fontSize: '16px', fontWeight: 600, color: DARK, margin: 0 }}>
             {loadError}
           </p>
           <button
@@ -132,9 +134,10 @@ function GlobalPulseNew({ problems, support, onNavigate }) {
             style={{
               padding: '10px 24px',
               borderRadius: '12px',
-              border: `1px solid ${P}`,
-              backgroundColor: 'transparent',
-              color: LAV,
+              border: `1.5px solid #DCD0F0`,
+              backgroundColor: '#FFFFFF',
+              color: P,
+              fontFamily: 'inherit',
               fontSize: '14px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -146,16 +149,16 @@ function GlobalPulseNew({ problems, support, onNavigate }) {
       ) : !snapshot ? (
         <div
           className="pulse-main-grid"
-          style={{ opacity: 0.5 }}
+          style={{ opacity: 0.8 }}
           aria-busy="true"
           aria-label="Loading Global Pulse data"
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {[120, 90, 90].map((h, i) => (
-              <div key={i} style={{ height: h, borderRadius: '16px', backgroundColor: 'rgba(168,85,247,0.08)' }} />
+              <div key={i} style={{ height: h, borderRadius: '16px', backgroundColor: '#EFE9F8' }} />
             ))}
           </div>
-          <div style={{ borderRadius: '20px', backgroundColor: 'rgba(168,85,247,0.06)' }} />
+          <div style={{ borderRadius: '20px', backgroundColor: CREAM_2 }} />
         </div>
       ) : snapshot.total === 0 ? (
         <div
@@ -167,18 +170,18 @@ function GlobalPulseNew({ problems, support, onNavigate }) {
             gap: '10px',
             padding: '72px 24px',
             borderRadius: '20px',
-            border: '1px solid rgba(168,85,247,0.15)',
-            backgroundColor: 'rgba(34,18,73,0.4)',
+            border: `1.5px solid ${LILAC_LINE}`,
+            backgroundColor: '#FFFFFF',
             textAlign: 'center',
           }}
         >
-          <p style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: LAV, margin: 0 }}>
+          <p style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: GOLD_TXT, margin: 0 }}>
             Global Pulse
           </p>
-          <h3 style={{ fontSize: '22px', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+          <h3 style={{ fontFamily: SF, fontSize: '24px', fontWeight: 700, color: DARK, margin: 0 }}>
             You're early.
           </h3>
-          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.6)', margin: 0, maxWidth: '380px', lineHeight: 1.6 }}>
+          <p style={{ fontSize: '14.5px', color: NAVY_SOFT, margin: 0, maxWidth: '380px', lineHeight: 1.65 }}>
             Your check-in can help reveal what people around the world are experiencing. Come back soon to see the full picture.
           </p>
         </div>
@@ -200,57 +203,71 @@ function GlobalPulseNew({ problems, support, onNavigate }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
         className="pulse-cta-grid"
-        style={{ paddingTop: '24px', borderTop: '1px solid rgba(168,85,247,0.1)' }}
+        style={{
+          padding: 'clamp(24px,3vw,32px) clamp(22px,3vw,36px)',
+          borderRadius: 22,
+          border: '1.5px solid transparent',
+          background: `linear-gradient(160deg, #FBF1EC 0%, ${CREAM_2} 60%, #F1ECF9 100%) padding-box, ${GOLD_EDGE}`,
+          boxShadow: '0 16px 40px rgba(107,79,160,0.08)',
+        }}
       >
         <div>
-          <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#FFFFFF', margin: '0 0 6px 0' }}>
+          <h3 style={{ fontFamily: SF, fontSize: 'clamp(21px,2.4vw,26px)', fontWeight: 700, color: DARK, margin: '0 0 6px 0', letterSpacing: '-0.01em' }}>
             Different lives. Similar struggles.
           </h3>
-          <p style={{ fontSize: '14px', fontWeight: 400, color: 'rgba(255,255,255,0.6)', margin: 0, lineHeight: 1.6 }}>
+          <p style={{ fontSize: '15px', fontWeight: 400, color: NAVY_SOFT, margin: 0, lineHeight: 1.6 }}>
             You do not have to figure everything out on your own.
           </p>
         </div>
 
         <div style={{ display: 'flex', gap: '12px', flexDirection: 'column' }}>
-          <motion.button
+          <button
             onClick={handleNavigate}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className="pl-btn"
             style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
               padding: '15px 30px',
-              borderRadius: '16px',
+              borderRadius: '14px',
               border: 'none',
-              background: `linear-gradient(135deg, ${P} 0%, ${LAV} 100%)`,
+              background: P,
               color: '#FFFFFF',
-              fontSize: '15px',
+              fontSize: '15.5px',
               fontWeight: 700,
+              fontFamily: 'inherit',
               cursor: 'pointer',
-              boxShadow: '0 12px 32px rgba(124,58,237,0.4)',
-              transition: 'all 0.2s ease-out',
+              boxShadow: '0 4px 14px rgba(107,79,160,0.22)',
               whiteSpace: 'nowrap',
             }}
           >
-            Find My Circle 💜
-          </motion.button>
-          <motion.button
+            Find My Circle
+            <Heart size={17} strokeWidth={2} fill="#E7D3E4" color="#FFFFFF" />
+          </button>
+          <button
             onClick={handleNavigate}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className="pl-ghost"
             style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
               padding: '13px 30px',
-              borderRadius: '16px',
-              border: '1px solid rgba(168,85,247,0.3)',
-              backgroundColor: 'transparent',
-              color: LAV,
-              fontSize: '14px',
+              borderRadius: '14px',
+              border: '1.5px solid #DCD0F0',
+              backgroundColor: '#FFFFFF',
+              color: P,
+              fontSize: '14.5px',
               fontWeight: 600,
+              fontFamily: 'inherit',
               cursor: 'pointer',
-              transition: 'all 0.2s ease-out',
               whiteSpace: 'nowrap',
             }}
           >
-            Explore other support options →
-          </motion.button>
+            Explore other support options
+            <ArrowRight size={16} strokeWidth={1.9} />
+          </button>
         </div>
       </motion.div>
     </motion.div>
