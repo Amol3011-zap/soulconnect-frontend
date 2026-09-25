@@ -354,7 +354,7 @@ export function getMetadata(pathname) {
  */
 export function generateMetaTags(pathname) {
   const meta = getMetadata(pathname);
-  const imageUrl = 'https://soulconnect.health/og-image.png';
+  const imageUrl = 'https://soulconnect.health/og-image.png?v=2';
 
   return {
     title: meta.title,
