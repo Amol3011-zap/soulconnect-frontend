@@ -993,7 +993,10 @@ export default function Landing() {
     @media(max-width:720px){
       .l-struggle-grid{grid-template-columns:repeat(2,1fr)!important;}
       .l-help-strip{grid-template-columns:repeat(2,1fr)!important;row-gap:28px!important;}
-      .l-trust-row{flex-wrap:wrap!important;gap:18px!important;}
+      /* Trust strip on phones: one left-aligned column (icons line up),
+         centred as a block; the desktop row dividers are hidden. */
+      .l-trust-row{display:grid!important;grid-template-columns:auto!important;justify-content:center!important;justify-items:start!important;gap:16px!important;}
+      .l-trust-sep{display:none!important;}
       .l-ft-bottom{flex-direction:column!important;align-items:center!important;gap:16px!important;}
       .l-ft-nav{flex-wrap:wrap!important;justify-content:center!important;}
     }
@@ -2056,7 +2059,7 @@ export default function Landing() {
             {Icon:Scale, color:'rgba(59,130,246,0.12)',  border:'rgba(59,130,246,0.2)',  title:'Wellness Standards',   sub:'Evidence-based and trusted.'},
           ].map((t,i,arr)=>(
             <React.Fragment key={i}>
-              <div style={{display:'flex', alignItems:'center', gap:12, flexShrink:0}}>
+              <div className="l-trust-item" style={{display:'flex', alignItems:'center', gap:12, flexShrink:0}}>
                 <div style={{width:42, height:42, borderRadius:13,
                   background:CREAM_2,
                   border:`1px solid ${LILAC_LINE}`,
@@ -2070,7 +2073,7 @@ export default function Landing() {
                 </div>
               </div>
               {i<arr.length-1&&(
-                <div style={{width:1, height:32, background:LILAC_LINE, flexShrink:0}}/>
+                <div className="l-trust-sep" style={{width:1, height:32, background:LILAC_LINE, flexShrink:0}}/>
               )}
             </React.Fragment>
           ))}
