@@ -184,6 +184,51 @@ function LotusMark({ variant = 'light', id = 'lm' }) {
   );
 }
 
+/* Hero art: avatar group photo that fills the right half and fades into
+   the page, with a frosted "find people who get it" card. The previous
+   two-souls illustration (HeroIllustration below) is kept, unused, so it
+   can be switched back by swapping <AvatarHero/> for <HeroIllustration/>. */
+const AVATAR_CSS = `
+  .l-av{position:relative;height:100%;min-height:850px;}
+  .l-av-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;
+    -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 30%),linear-gradient(to bottom,#000 62%,transparent 94%);
+    -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(to right,transparent 0%,#000 30%),linear-gradient(to bottom,#000 62%,transparent 94%);
+    mask-composite:intersect;}
+  .l-av-tint{position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,rgba(243,239,249,.35) 0%,rgba(243,239,249,0) 30%,rgba(107,79,160,.08) 100%);}
+  .l-av-card{position:absolute;left:8%;bottom:120px;width:330px;padding:20px 22px;border-radius:22px;
+    background:rgba(255,255,255,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border:1.5px solid rgba(255,255,255,.9);box-shadow:0 20px 44px rgba(107,79,160,.18);}
+  .l-av-faces{display:flex;margin-bottom:12px;}
+  .l-av-faces img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2.5px solid #fff;}
+  .l-av-faces img+img{margin-left:-10px;}
+  @media(max-width:1100px){
+    .l-av{min-height:0;height:100%;}
+    .l-av-img{-webkit-mask-image:none;mask-image:none;object-position:50% 22%;}
+    .l-av-card{display:none;}
+  }
+`;
+function AvatarHero() {
+  return (
+    <div className="l-av">
+      <style>{AVATAR_CSS}</style>
+      <img className="l-av-img" src="/brand/hero/avatar-group.jpg"
+        alt="A group of friends smiling together" />
+      <div className="l-av-tint" />
+      <div className="l-av-card">
+        <div className="l-av-faces">
+          {[1,5,2,8].map((f)=>(<img key={f} src={`/brand/hero/face-${f}.jpg`} alt="" />))}
+        </div>
+        <div style={{fontFamily:'"Playfair Display",Georgia,serif', fontSize:20, fontWeight:700, color:'#221B3A', lineHeight:1.25}}>
+          Find people who <span style={{color:'#6B4FA0'}}>truly get it.</span>
+        </div>
+        <div style={{fontSize:13.5, color:'#5B5470', marginTop:6}}>Share, connect and heal, together.</div>
+      </div>
+    </div>
+  );
+}
+
 function HeroIllustration() {
   /* ── Two Souls Connecting & Healing — light "Dawn" recolour of the
      original composition (same layout, figures, beam, nexus, lotus). ──
@@ -1344,11 +1389,10 @@ export default function Landing() {
           {/* RIGHT — Cinematic illustration */}
           <div className="l-hero-illus" style={{
             position:'relative',
-            animation:'floatY 10s ease-in-out infinite',
             marginLeft:'-20px',
             overflow:'hidden',
           }}>
-            <HeroIllustration/>
+            <AvatarHero/>
           </div>
         </div>
       </section>
