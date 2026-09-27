@@ -924,6 +924,13 @@ export default function Landing() {
       .l-hero-illus{-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 18%);mask-image:linear-gradient(90deg,transparent 0%,#000 18%);}
     }
 
+    /* Wide screens: the hero grid stops at 1440px, which left an empty strip
+       to the right of the photo (240px at 1920). Let the photo run to the
+       window edge; the text column stays where it is. #hero clips overflow. */
+    @media(min-width:1441px){
+      .l-hero-illus{margin-right:calc((1440px - 100vw) / 2)!important;}
+    }
+
     /* ── Responsive ── */
     @media(max-width:1100px){
       /* Nav is transparent-until-scroll by design on desktop, where the
