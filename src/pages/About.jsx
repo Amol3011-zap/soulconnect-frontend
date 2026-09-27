@@ -196,7 +196,7 @@ export default function About() {
         >
           {/* Logo */}
           <Link to="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-            <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect"
+            <img src="/brand/logo/soulconnect-lotus-mark.svg" alt="SoulConnect"
               style={{ height: 38, width: "auto", display: "block" }} />
             <span
               style={{
@@ -711,7 +711,7 @@ export default function About() {
               marginBottom: 14,
             }}
           >
-            <img src="/brand/logo/soulconnect-logo-primary.png" alt="SoulConnect"
+            <img src="/brand/logo/soulconnect-lotus-mark.svg" alt="SoulConnect"
               style={{ height: 30, width: "auto", display: "block" }} />
             <span
               style={{

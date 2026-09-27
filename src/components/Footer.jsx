@@ -184,7 +184,7 @@ export default function Footer() {
           {/* ── COLUMN 1: Brand ──────────────────────────────────────── */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-              <img src="/logo-icon.png" alt="SoulConnect" style={{
+              <img src="/favicon-192.png?v=2" alt="SoulConnect" style={{
                 width: 44, height: 44, borderRadius: 14, flexShrink: 0, display: 'block',
                 border: `1px solid ${LILAC_LINE}`,
               }} />
