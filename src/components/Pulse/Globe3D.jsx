@@ -167,8 +167,10 @@ function Globe3D({ mapPoints, colors, selectedIso, onSelectCountry, countries, l
     const coastPath = geoPath(projection, ctx);
     ctx.beginPath();
     coastPath(LAND_FEATURE);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = lightTheme ? 'rgba(94,62,148,0.45)' : 'rgba(139,164,230,0.22)';
+    // Light theme: a clearer, darker violet outline so the continents read at
+    // a glance on the pale globe (was 1px at 45%, which washed out).
+    ctx.lineWidth = lightTheme ? 2 : 1;
+    ctx.strokeStyle = lightTheme ? 'rgba(74,46,128,0.8)' : 'rgba(139,164,230,0.22)';
     ctx.stroke();
 
     // Dense dot grid over land — this IS the continent now, not a fill.
