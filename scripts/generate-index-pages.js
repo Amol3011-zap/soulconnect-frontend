@@ -45,6 +45,8 @@ import { fileURLToPath } from 'url';
 import { METADATA } from '../src/lib/metadata.js';
 import { ARTICLES } from '../src/data/articles.js';
 import { emotionContentLibrary } from '../src/data/emotionContentLibrary.ts';
+import { PUBLIC_PAGE_CONTENT } from './public-pages-content.js';
+import { pageRoot, stripHomepageJsonLd } from './static-page-root.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, '../dist');
@@ -78,6 +80,18 @@ const PUBLIC_INDEX_ROUTES = [
   { route: '/pulse', dir: 'pulse', buildBody: buildPulseBody, jsonLd: buildPulseJsonLd },
   { route: '/blog', dir: 'blog', buildBody: buildBlogIndexBody, jsonLd: buildBlogIndexJsonLd },
   { route: '/explore', dir: 'explore', buildBody: buildExploreHubBody, jsonLd: buildExploreHubJsonLd },
+  // Public content pages: body text comes verbatim from the React pages via
+  // scripts/public-pages-content.js; title/description/canonical/keywords
+  // from src/lib/metadata.js (fail-loud below if either is missing).
+  ...[
+    'about', 'faq', 'how-it-works', 'crisis-support', 'trust-safety', 'safety', 'contact',
+    'community-rules', 'report', 'guide-terms', 'privacy', 'terms', 'cookies', 'accessibility',
+  ].map((dir) => ({
+    route: `/${dir}`,
+    dir,
+    buildBody: () => buildContentPageBody(`/${dir}`),
+    jsonLd: (baseUrl) => buildContentPageJsonLd(baseUrl, `/${dir}`),
+  })),
 ];
 
 function breadcrumbJsonLd(baseUrl, name, path) {
@@ -189,6 +203,69 @@ function buildExploreHubJsonLd(baseUrl) {
   ];
 }
 
+// --- public content pages (/about, /faq, …) ---------------------------------
+
+function pageContent(route) {
+  const content = PUBLIC_PAGE_CONTENT[route];
+  if (!content || !content.blocks?.length) {
+    throw new Error(
+      `Missing page content for "${route}" in scripts/public-pages-content.js — ` +
+      `refusing to prerender it with homepage content.`
+    );
+  }
+  const h1s = content.blocks.filter((b) => b.tag === 'h1');
+  if (h1s.length !== 1) {
+    throw new Error(`Page content for "${route}" must have exactly one h1 (found ${h1s.length}).`);
+  }
+  return content;
+}
+
+const plainText = (html) =>
+  html.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&').trim();
+
+// Plain semantic HTML from the verbatim content blocks; consecutive list
+// items that share a list id are wrapped in one <ul>/<ol>.
+function buildContentPageBody(route) {
+  const { blocks } = pageContent(route);
+  let html = '';
+  let openList = null;
+  for (const b of blocks) {
+    if (b.tag === 'li') {
+      if (!openList || openList.id !== b.list) {
+        if (openList) html += `    </${openList.el}>\n`;
+        openList = { id: b.list, el: b.ordered ? 'ol' : 'ul' };
+        html += `    <${openList.el}>\n`;
+      }
+      html += `      <li>${b.html}</li>\n`;
+      continue;
+    }
+    if (openList) { html += `    </${openList.el}>\n`; openList = null; }
+    html += `    <${b.tag}>${b.html}</${b.tag}>\n`;
+  }
+  if (openList) html += `    </${openList.el}>\n`;
+  return `  <main data-static-page="${route.slice(1)}" style="max-width:760px;margin:0 auto;padding:48px 24px;font-family:system-ui,sans-serif;line-height:1.7;color:#221B3A;">\n${html}  </main>`;
+}
+
+function buildContentPageJsonLd(baseUrl, route) {
+  const { blocks, faq } = pageContent(route);
+  const name = plainText(blocks.find((b) => b.tag === 'h1').html);
+  const ld = [breadcrumbJsonLd(baseUrl, name, route)];
+  if (route === '/faq') {
+    // Same question/answer pairs that are rendered visibly above.
+    if (!faq?.length) throw new Error('FAQ page content has no question/answer pairs for FAQPage JSON-LD.');
+    ld.push({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faq.map(({ q, a }) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
+    });
+  }
+  return ld;
+}
+
 // --- shared head/meta assembly -------------------------------------------
 
 function generateMetaHead(meta, jsonLdBlocks) {
@@ -270,7 +347,9 @@ async function generateIndexPages() {
 
       const metaHead = generateMetaHead(meta, jsonLd(baseUrl));
 
-      let pageHtml = indexHtml
+      // Homepage-only JSON-LD (WebPage "/", homepage FAQPage/Breadcrumb) is
+      // removed before this page's own JSON-LD is injected below.
+      let pageHtml = stripHomepageJsonLd(indexHtml)
         .replace(/<title>.*?<\/title>\s*\n?/s, '')
         .replace(/<link rel="canonical"[^>]*>\s*\n?/, '')
         .replace(/<meta name="description"[^>]*>\s*\n?/, '')
@@ -289,25 +368,16 @@ async function generateIndexPages() {
 
       pageHtml = pageHtml.replace('</head>', `  ${metaHead}\n  </head>`);
 
-      // Demote the reused homepage shell's own <h1> to <h2> so the
-      // page-specific <h1> injected below is this page's only H1 — same
-      // approach as generate-emotion-pages.js / generate-blog-pages.js.
-      pageHtml = pageHtml.replace(
-        /<h1 style="font-size:clamp\(2\.2rem,5vw,3\.8rem\)[^>]*>[\s\S]*?<\/h1>/,
-        (match) => `<h2${match.slice(3, -5)}</h2>`
-      );
-
-      pageHtml = pageHtml.replace(
-        '<div id="root">',
-        `<div id="root" data-static-route="${dir}">\n${buildBody(baseUrl)}`
-      );
+      // #root keeps only the loading screen plus THIS page's content — the
+      // homepage crawler body (and its H1) is no longer carried over.
+      pageHtml = pageRoot(pageHtml, `data-static-route="${dir}"`, buildBody(baseUrl));
 
       const pagePath = resolve(pageDir, 'index.html');
       writeFileSync(pagePath, pageHtml, 'utf-8');
 
       generatedPaths.push(`${dir}/index.html`);
       successCount++;
-      console.log(`  ✓ ${route.padEnd(12)} -> dist/${dir}/index.html`);
+      console.log(`  ✓ ${route.padEnd(16)} -> dist/${dir}/index.html`);
     }
 
     console.log('');
