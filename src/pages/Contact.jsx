@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Mail } from 'lucide-react';
+import SimpleFooter from '../components/SimpleFooter';
 
 /* "Dawn" palette — same tokens as the landing page */
 const P         = '#6B4FA0';
@@ -21,8 +22,9 @@ const css = `
 
 export default function Contact() {
   return (
-    <div style={{ minHeight: '100vh', background: BG, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', color: DARK }}>
+    <div style={{ minHeight: '100vh', background: BG, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif", display: 'flex', flexDirection: 'column', color: DARK }}>
       <style>{css}</style>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center', padding: '48px 20px', width: '100%', maxWidth: 560 }}>
         <Link to="/" className="ct-back" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 32 }}>
           <ArrowLeft size={16} strokeWidth={1.9} />
@@ -70,6 +72,9 @@ export default function Contact() {
           </a>
         </div>
       </div>
+      </div>
+
+      <SimpleFooter />
     </div>
   );
 }
