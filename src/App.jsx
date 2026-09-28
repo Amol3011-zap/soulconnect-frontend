@@ -108,16 +108,18 @@ const DASHBOARD_PATHS = [
   '/journal', '/circles', '/meditations', '/challenges', '/resources',
 ];
 
+const PUBLIC_BG = '#FAF8FC';
+
 function PageLoader() {
   return (
     <div style={{
-      minHeight: '100vh', background: '#0D0B1A',
+      minHeight: '100vh', background: 'transparent',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
     }}>
       <div style={{
         width: 32, height: 32, borderRadius: '50%',
-        border: '2px solid rgba(139,92,246,0.2)',
-        borderTopColor: '#8B5CF6',
+        border: '2px solid rgba(107,79,160,0.18)',
+        borderTopColor: '#6B4FA0',
         animation: 'spin 0.7s linear infinite',
       }} />
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
@@ -144,6 +146,15 @@ function AppInner() {
 
   const isDashboard = DASHBOARD_PATHS.some(p => location.pathname === p || location.pathname.startsWith(p + '/'));
   const isFullScreen = location.pathname === '/chat' || location.pathname.startsWith('/chat/') || location.pathname === '/groups';
+
+  // Public/marketing pages use the light "Dawn" background — never the old
+  // dark purple behind them (overscroll, page-load gaps).
+  const isPublicPage = !isDashboard && !isFullScreen && !isHealer;
+  useEffect(() => {
+    const bg = isPublicPage ? PUBLIC_BG : '';
+    document.documentElement.style.backgroundColor = bg;
+    document.body.style.backgroundColor = bg;
+  }, [isPublicPage]);
 
   const hideNav = location.pathname === '/' || isDashboard || isFullScreen || isHealer;
   const hideBottomNav = location.pathname === '/' || isFullScreen || isDashboard || !LAUNCH_READY || isHealer;
@@ -175,7 +186,7 @@ function AppInner() {
   );
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+    <div className="min-h-screen" style={{ background: isPublicPage ? PUBLIC_BG : 'var(--bg)', color: 'var(--text)' }}>
       <MetaHead />
 
       {showOnboarding && <SafetyOnboarding onComplete={() => setOnboardingDone(true)} />}
