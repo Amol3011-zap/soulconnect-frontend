@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 /* The simple public-page footer — same as the one on /about: lotus mark,
    SoulConnect wordmark and the copyright line, in the "Dawn" palette. */
+
+// The wordmark is set in Playfair Display. /about loads that font itself;
+// the other pages using this footer didn't, so the wordmark fell back to
+// Georgia (wider — it looked stretched). Load it once, the same way.
+const PLAYFAIR_HREF =
+  'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap';
 const P = '#6B4FA0';
 const DARK = '#221B3A';
 const MUTED = '#6E6784';
@@ -9,6 +15,16 @@ const LILAC_LINE = '#E6DDF3';
 const SF = '"Playfair Display",Georgia,serif';
 
 export default function SimpleFooter() {
+  useEffect(() => {
+    const already = [...document.querySelectorAll('link[rel="stylesheet"]')]
+      .some((l) => l.href.includes('family=Playfair+Display'));
+    if (already) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = PLAYFAIR_HREF;
+    document.head.appendChild(link);
+  }, []);
+
   return (
     <footer
       style={{
