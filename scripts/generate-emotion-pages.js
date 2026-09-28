@@ -33,6 +33,8 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { emotionContentLibrary } from '../src/data/emotionContentLibrary.ts';
+import { METADATA } from '../src/lib/metadata.js';
+import { pageRoot, stripHomepageJsonLd } from './static-page-root.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, '../dist');
@@ -43,11 +45,27 @@ const distIndex = resolve(distDir, 'index.html');
  * the single source of truth also used by metadata.js and the live
  * ExploreEmotionDetail page. Do not hand-maintain a parallel copy here.
  */
+function emotionMeta(slug) {
+  const meta = METADATA[`/explore/${slug}`];
+  if (!meta) {
+    throw new Error(
+      `Missing metadata.js entry for "/explore/${slug}". Add it to src/lib/metadata.js — ` +
+      `refusing to prerender this page with mismatched or homepage metadata.`
+    );
+  }
+  return meta;
+}
+
+// Static crawler H1 overrides (crawler HTML only; the React page's own H1 is
+// unchanged). /explore/self-doubt used its library display name
+// "Self-Esteem & Self-Doubt", which competed with /explore/low-self-esteem.
+const STATIC_H1_NAME = { 'self-doubt': 'Self-Doubt & Confidence' };
+
 const emotions = emotionContentLibrary.map((e) => ({
   slug: e.slug,
-  title: e.seo.title.includes('SoulConnect') ? e.seo.title : `${e.seo.title} | SoulConnect`,
-  description: e.seo.description,
-  keywords: e.seo.keywords,
+  title: emotionMeta(e.slug).title,
+  description: emotionMeta(e.slug).description,
+  keywords: emotionMeta(e.slug).keywords,
   image: `/og/${e.slug}.jpg`,
   color: '#7C3AED',
   displayName: e.displayName,
@@ -93,7 +111,7 @@ function generatePageContent(emotion, baseUrl) {
   return `
   <section style="max-width:700px;margin:0 auto;padding:56px 24px 32px;text-align:center;">
     <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#ede9fe;margin-bottom:16px;">${escapeHtml(
-      emotion.displayName
+      STATIC_H1_NAME[emotion.slug] || emotion.displayName
     )}: Support &amp; Healing</h1>
     ${emotion.heroSubtitle ? `<p style="font-size:1.05rem;color:rgba(196,181,253,0.8);line-height:1.7;margin-bottom:20px;">${escapeHtml(emotion.heroSubtitle)}</p>` : ''}
     ${emotion.summary ? `<p style="font-size:1rem;color:rgba(196,181,253,0.7);line-height:1.75;margin-bottom:24px;">${escapeHtml(emotion.summary)}</p>` : ''}
@@ -122,7 +140,7 @@ function generateMetaHead(emotion, baseUrl) {
 
   const safeTitle = escapeAttr(emotion.title);
   const safeDescription = escapeAttr(emotion.description);
-  const safeKeywords = escapeAttr(emotion.keywords.join(', '));
+  const safeKeywords = escapeAttr(emotion.keywords || '');
 
   return `
     <!-- Emotion-Specific Metadata (Prerendered) -->
@@ -223,7 +241,8 @@ async function generateEmotionPages() {
         // each instead of two conflicting copies (the previous version only
         // stripped <title>, which left a duplicate, conflicting canonical on
         // every prerendered explore page).
-        let emotionHtml = indexHtml
+        // Homepage-only JSON-LD is removed before this page's own is added.
+        let emotionHtml = stripHomepageJsonLd(indexHtml)
           .replace(/<title>.*?<\/title>\s*\n?/s, '')
           .replace(/<link rel="canonical"[^>]*>\s*\n?/, '')
           .replace(/<meta name="description"[^>]*>\s*\n?/, '')
@@ -246,27 +265,19 @@ async function generateEmotionPages() {
           `  ${metaHead}\n  </head>`
         );
 
-        // The reused template body (from inject-static.js's homepage shell)
-        // has its own <h1>You Are Not Alone in This.</h1>. Demote it to <h2>
-        // on this generated page only, so the page-specific <h1> we inject
-        // below (the real, unique heading for this emotion) is the page's
-        // only H1 — avoiding a duplicate-H1 issue. The homepage's own
-        // dist/index.html is untouched since this script only ever writes
-        // to dist/explore/{slug}/index.html.
-        emotionHtml = emotionHtml.replace(
-          /<h1 style="font-size:clamp\(2\.2rem,5vw,3\.8rem\)[^>]*>[\s\S]*?<\/h1>/,
-          (match) => `<h2${match.slice(3, -5)}</h2>`
-        );
+        // /explore/financial-worry: a single og:locale (en_IN) — drop the
+        // en_US alternate inherited from the index.html template.
+        if (emotion.slug === 'financial-worry') {
+          emotionHtml = emotionHtml.replace(/[ \t]*<meta property="og:locale:alternate"[^>]*>\s*\n?/g, '');
+        }
 
-        // Add data attribute to root for client-side React to identify emotion page,
-        // and inject real per-emotion body content right inside #root so non-JS
-        // crawlers see genuine page-specific text, not just the generic homepage
-        // shell. React's createRoot still replaces all of #root's contents on
-        // mount, so this is purely additive for crawlers/pre-hydration and has
-        // no effect on the live rendered app.
-        emotionHtml = emotionHtml.replace(
-          '<div id="root">',
-          `<div id="root" data-emotion-slug="${emotion.slug}">\n${generatePageContent(emotion, baseUrl)}`
+        // #root keeps only the loading screen plus this emotion's own content —
+        // the homepage crawler body (and its H1) is no longer carried over.
+        // React's createRoot still replaces all of #root on mount.
+        emotionHtml = pageRoot(
+          emotionHtml,
+          `data-emotion-slug="${emotion.slug}"`,
+          generatePageContent(emotion, baseUrl)
         );
 
         // Write emotion page

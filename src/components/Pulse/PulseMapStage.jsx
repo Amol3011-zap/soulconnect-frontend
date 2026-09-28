@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import Globe3D from './Globe3D';
 import { PROBLEMS } from '../../data/pulseExperienceData';
+import { NAVY_SOFT, GOLD_EDGE } from './pulseTheme';
 
 function PulseMapStage({ problems, snapshot, selectedIso, onSelectCountry }) {
   const legendProblems = problems.length > 0 ? problems : Object.keys(snapshot.colors).slice(0, 6);
@@ -28,7 +29,7 @@ function PulseMapStage({ problems, snapshot, selectedIso, onSelectCountry }) {
           gap: '18px',
           fontSize: '12px',
           fontWeight: 600,
-          color: 'rgba(255,255,255,0.7)',
+          color: NAVY_SOFT,
         }}
       >
         {legendProblems.slice(0, 6).map((problemId) => {
@@ -42,7 +43,7 @@ function PulseMapStage({ problems, snapshot, selectedIso, onSelectCountry }) {
                   height: '9px',
                   borderRadius: '50%',
                   backgroundColor: color,
-                  boxShadow: `0 0 8px ${color}`,
+                  boxShadow: `0 0 0 3px ${color}22`,
                 }}
               />
               <span>{problem?.label}</span>
@@ -59,9 +60,9 @@ function PulseMapStage({ problems, snapshot, selectedIso, onSelectCountry }) {
           flex: 1,
           minHeight: '420px',
           borderRadius: '20px',
-          backgroundColor: '#050817',
-          border: '1px solid rgba(124,90,200,0.12)',
-          boxShadow: 'inset 0 0 80px rgba(124,58,237,0.06)',
+          border: '1.5px solid transparent',
+          background: `radial-gradient(ellipse at 50% 45%, #FFFFFF 0%, #F7F3FC 55%, #F1ECF9 100%) padding-box, ${GOLD_EDGE}`,
+          boxShadow: '0 16px 40px rgba(107,79,160,0.08)',
           overflow: 'hidden',
         }}
       >
@@ -71,6 +72,7 @@ function PulseMapStage({ problems, snapshot, selectedIso, onSelectCountry }) {
           colors={snapshot.colors}
           selectedIso={selectedIso}
           onSelectCountry={onSelectCountry}
+          lightTheme
         />
       </div>
     </motion.div>

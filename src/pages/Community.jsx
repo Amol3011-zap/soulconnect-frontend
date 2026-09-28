@@ -53,7 +53,7 @@ export default function Community() {
       <AnimatePresence>
         {showToast && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
             style={{
@@ -79,7 +79,7 @@ export default function Community() {
 
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         style={{ marginBottom: 20 }}
@@ -92,7 +92,7 @@ export default function Community() {
 
       {/* Search Bar */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.08, duration: 0.4 }}
         style={{ position: 'relative', marginBottom: 28 }}
@@ -124,7 +124,7 @@ export default function Community() {
 
       {/* My Communities Section */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.12, duration: 0.4 }}
         style={{ marginBottom: 28 }}
@@ -142,7 +142,7 @@ export default function Community() {
         {MY_COMMUNITIES.map((community, i) => (
           <motion.div
             key={community.id}
-            initial={{ opacity: 0, x: -12 }}
+            initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.16 + i * 0.05 }}
             onClick={triggerToast}
@@ -210,7 +210,7 @@ export default function Community() {
 
       {/* Trending Communities Section */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.28, duration: 0.4 }}
         style={{ marginBottom: 28 }}
@@ -317,7 +317,7 @@ export default function Community() {
 
       {/* Browse by Topic */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.4 }}
         style={{ marginBottom: 20 }}

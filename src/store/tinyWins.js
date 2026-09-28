@@ -2,8 +2,20 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { selectDailyWins, getRandomReflection } from '../engine/tinyWinsEngine';
 
-function todayString() {
-  return new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
+/**
+ * Local-calendar-day string, e.g. '2026-09-21'.
+ *
+ * Deliberately NOT `new Date().toISOString().split('T')[0]` — that reads the
+ * UTC day, so for users ahead of UTC (e.g. India, UTC+5:30) "today" would
+ * flip several hours before their actual local midnight. Uses the Date
+ * object's local getters instead, so the day boundary matches the device's
+ * own clock/timezone.
+ */
+export function todayString(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 export const useTinyWinsStore = create(
@@ -153,7 +165,7 @@ export const useTinyWinsStore = create(
         const last7 = Array.from({ length: 7 }, (_, i) => {
           const d = new Date(today);
           d.setDate(d.getDate() - i);
-          return d.toISOString().split('T')[0];
+          return todayString(d);
         });
 
         const weekHistory = state.completionHistory.filter(h => last7.includes(h.date));
@@ -189,6 +201,21 @@ export const useTinyWinsStore = create(
         favorites: state.favorites,
         totalWins: state.totalWins,
       }),
+      // v1: dailyDate/completionHistory[].date switched from UTC to local
+      // calendar day (see todayString() above). Force exactly one clean
+      // regeneration on first load post-deploy by clearing the stored
+      // dailyDate, rather than guessing at a UTC->local conversion for a
+      // value that only matters for "is this still today". Historical
+      // completionHistory entries are left untouched — their old UTC-day
+      // strings just age out of the 7-day weekly-stats window naturally,
+      // no destructive rewrite needed.
+      version: 1,
+      migrate: (persistedState, version) => {
+        if (version < 1 && persistedState) {
+          return { ...persistedState, dailyDate: null };
+        }
+        return persistedState;
+      },
     }
   )
 );

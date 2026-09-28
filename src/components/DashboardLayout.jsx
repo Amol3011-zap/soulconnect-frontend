@@ -4,11 +4,12 @@ import { useAuthStore } from '../store/auth';
 import { motion, AnimatePresence } from 'motion/react';
 import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound, BarChart3, Heart, Bell, Moon, Sun } from 'lucide-react';
 import { useThemeStore } from '../store/theme';
+import InstallAppCard from './InstallAppCard';
 
 /* ── Desktop sidebar nav ── */
 const NAV_ITEMS = [
   { icon: Home,          label: 'Home',          to: '/home'          },
-  { icon: Heart,         label: 'SoulMatch',     to: '/matches'       },
+  { icon: Heart,         label: 'Soul Pond',     to: '/matches'       },
   { icon: BookHeart,     label: 'Stories',        to: '/stories'       },
   { icon: Users,         label: 'Circles',        to: '/community'     },
   { icon: BarChart3,     label: 'Mood Tracker',   to: '/mood'          },
@@ -18,17 +19,20 @@ const NAV_ITEMS = [
 ];
 
 /* ── Mobile bottom nav — 5 primary tabs per MOBILE_FIRST_RULES ── */
+/* The centre slot is the lotus: tapping it opens the Soul Pond.
+   Messages moved to the top bar (chat icon next to the bell) so both
+   Stories and Community stay one tap away in the bottom bar. */
 const MOBILE_NAV = [
   { icon: Home,          label: 'Home',      to: '/home'      },
   { icon: BookHeart,     label: 'Stories',   to: '/stories'   },
+  { lotus: true,         label: 'Soul Pond', to: '/matches'   },
   { icon: Users,         label: 'Community', to: '/community' },
-  { icon: MessageCircle, label: 'Messages',  to: '/messages'  },
   { icon: UserRound,     label: 'Profile',   to: '/profile'   },
 ];
 
 /* ── Shared mobile top bar title, by route (Home shows the brand) ── */
 const TITLES = [
-  ['/home', 'SoulConnect'], ['/matches', 'SoulMatch'], ['/stories', 'Stories'],
+  ['/home', 'SoulConnect'], ['/matches', 'Soul Pond'], ['/stories', 'Stories'],
   ['/story', 'Story'], ['/saved', 'Saved stories'], ['/community', 'Community'],
   ['/messages', 'Messages'], ['/profile', 'Profile'], ['/mood', 'Soul Climate'],
   ['/tiny-wins', 'Tiny Wins'], ['/professionals', 'Professionals'],
@@ -215,6 +219,21 @@ export default function DashboardLayout() {
             padding-top: 6px;
             align-items: flex-start;
             justify-content: space-around;
+            /* Keep the bar glued to the bottom while the mobile browser's
+               toolbar slides in and out: own GPU layer, and a solid apron
+               below it so no page content peeks through during the jump. */
+            transform: translate3d(0, 0, 0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            will-change: transform;
+          }
+          .mobile-bottom-nav::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; top: 100%;
+            height: 160px;
+            background: inherit;
+            pointer-events: none;
           }
 
           /* Each nav tab — 48px+ touch target */
@@ -255,6 +274,59 @@ export default function DashboardLayout() {
           }
           .mob-tab.active .mob-tab-label { color: var(--sc-purple-text); font-weight: 600; }
           .mob-tab:focus-visible { outline: 2px solid #8066D5; outline-offset: -2px; border-radius: 12px; }
+
+          /* ── Centre lotus: floats above the bar on its own little pond ── */
+          .mob-lotus { position: relative; overflow: visible; }
+          .mob-lotus-wrap {
+            position: relative; width: 58px; height: 58px; margin-top: -34px; margin-bottom: 6px;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .mob-lotus-ripple {
+            position: absolute; inset: 0; border-radius: 50%;
+            border: 1.5px solid rgba(156,134,204,.55);
+            animation: lotusRipple 3.6s ease-out infinite; pointer-events: none;
+          }
+          .mob-lotus-ripple.r2 { animation-delay: 1.8s; }
+          .mob-lotus-btn {
+            position: relative; width: 58px; height: 58px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid transparent;
+            background:
+              radial-gradient(circle at 50% 38%, #FFFFFF 0%, #F6F1FC 62%, #ECE3F8 100%) padding-box,
+              linear-gradient(150deg, #D4B07A, #E7D3E4 45%, #9C86CC) border-box;
+            box-shadow: 0 8px 22px rgba(107,79,160,.30), 0 0 0 4px var(--sc-nav-bg);
+            transition: transform .15s ease, box-shadow .2s ease;
+          }
+          .mob-lotus-btn img {
+            width: 40px; height: 40px; display: block;
+            animation: lotusBreathe 4.5s ease-in-out infinite;
+            transform-origin: 50% 70%;
+          }
+          .mob-lotus:active .mob-lotus-btn { transform: scale(.93); }
+          .mob-lotus.active .mob-lotus-btn {
+            background:
+              radial-gradient(circle at 50% 38%, #FFFFFF 0%, #EFE6FB 55%, #DCCDF3 100%) padding-box,
+              linear-gradient(150deg, #D4B07A, #B9A2E0 45%, #6B4FA0) border-box;
+            box-shadow: 0 10px 26px rgba(107,79,160,.42), 0 0 0 4px var(--sc-nav-bg);
+          }
+          .mob-lotus.active .mob-lotus-btn img { animation: lotusBloom .5s ease-out both, lotusBreathe 4.5s ease-in-out .5s infinite; }
+          .mob-lotus .mob-lotus-label { font-weight: 600; color: var(--sc-purple-text); }
+          @keyframes lotusRipple {
+            0%   { transform: scale(1);   opacity: .75; }
+            100% { transform: scale(1.7); opacity: 0; }
+          }
+          @keyframes lotusBreathe {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.07); }
+          }
+          @keyframes lotusBloom {
+            0%   { transform: scale(.82) rotate(-8deg); }
+            60%  { transform: scale(1.12) rotate(3deg); }
+            100% { transform: scale(1) rotate(0); }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .mob-lotus-ripple, .mob-lotus-btn img { animation: none !important; }
+          }
         }
       `}</style>
 
@@ -302,6 +374,9 @@ export default function DashboardLayout() {
                 {isDark ? <Sun size={21} strokeWidth={2} /> : <Moon size={21} strokeWidth={2} />}
               </button>
             )}
+            <NavLink to="/messages" className="app-topbar-action" aria-label="Messages" title="Messages">
+              <MessageCircle size={21} strokeWidth={2} />
+            </NavLink>
             <NavLink to="/notifications" className="app-topbar-action" aria-label="Notifications">
               <Bell size={21} strokeWidth={2} />
             </NavLink>
@@ -319,6 +394,9 @@ export default function DashboardLayout() {
         </Suspense>
       </div>
 
+      {/* Phones only: "add to home screen" card (hidden once installed) */}
+      {showMobileNav && <InstallAppCard />}
+
       {/* ══ Mobile Bottom Navigation ══ */}
       {showMobileNav && (
         <nav className="mobile-bottom-nav" aria-label="Mobile navigation">
@@ -326,6 +404,27 @@ export default function DashboardLayout() {
             const isActive =
               location.pathname === item.to ||
               (item.to === '/home' && location.pathname === '/');
+            if (item.lotus) {
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={`mob-tab mob-lotus${isActive ? ' active' : ''}`}
+                  style={{ textDecoration: 'none' }}
+                  aria-label="Open the Soul Pond"
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <span className="mob-lotus-wrap" aria-hidden="true">
+                    <span className="mob-lotus-ripple" />
+                    <span className="mob-lotus-ripple r2" />
+                    <span className="mob-lotus-btn">
+                      <img src="/brand/logo/soulconnect-lotus-mark.svg" alt="" />
+                    </span>
+                  </span>
+                  <span className="mob-tab-label mob-lotus-label">{item.label}</span>
+                </NavLink>
+              );
+            }
             return (
               <NavLink
                 key={item.to}

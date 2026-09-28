@@ -1,25 +1,39 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SimpleFooter from '../components/SimpleFooter';
 
-const P   = '#A78BFA';
-const BG  = 'linear-gradient(155deg,#06011A 0%,#130530 40%,#1E0848 70%,#06011A 100%)';
-const h2Style = { fontSize: 'clamp(17px,2.2vw,20px)', fontWeight: 700, color: '#E9D5FF', fontFamily: 'Playfair Display, Georgia, serif', margin: '40px 0 10px', paddingBottom: 8, borderBottom: '1px solid rgba(167,139,250,0.15)' };
-const pStyle  = { fontSize: 15, color: 'rgba(255,255,255,0.65)', lineHeight: 1.85, marginBottom: 14 };
-const liStyle = { fontSize: 15, color: 'rgba(255,255,255,0.65)', lineHeight: 1.85, marginBottom: 6 };
+/* "Dawn" palette — same tokens as the landing and the other public pages */
+const P         = '#6B4FA0';
+const DARK      = '#221B3A';
+const NAVY_SOFT = '#5B5470';
+const GOLD_TXT  = '#8A6A3E';
+const CREAM     = '#FAF8FC';
+const CREAM_2   = '#F3EFF9';
+const LINE      = '#E7E0F2';
+const BG = `radial-gradient(ellipse at 50% 0%, #FBF1EC 0%, rgba(251,241,236,0) 55%), linear-gradient(180deg, ${CREAM_2} 0%, ${CREAM} 100%)`;
+const CARD = {
+  background: '#FFFFFF', border: `1px solid ${LINE}`, borderRadius: 24,
+  padding: 'clamp(24px,5vw,48px)', boxShadow: '0 24px 56px rgba(107,79,160,0.08)',
+};
+const h2Style = { fontSize: 'clamp(17px,2.2vw,20px)', fontWeight: 700, color: DARK, fontFamily: 'Playfair Display, Georgia, serif', margin: '40px 0 10px', paddingBottom: 8, borderBottom: `1px solid ${LINE}` };
+const pStyle  = { fontSize: 15, color: NAVY_SOFT, lineHeight: 1.85, marginBottom: 14 };
+const liStyle = { fontSize: 15, color: NAVY_SOFT, lineHeight: 1.85, marginBottom: 6 };
 
 export default function Accessibility() {
   return (
-    <div style={{ minHeight: '100vh', background: BG, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
-      <div style={{ maxWidth: 760, margin: '0 auto', padding: '64px 24px' }}>
+    <div style={{ minHeight: '100vh', background: BG, color: DARK, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
+      <div style={{ maxWidth: 800, margin: '0 auto', padding: 'clamp(32px,6vw,64px) clamp(16px,4vw,24px)' }}>
 
-        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
+        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 28 }}>
           ← Back to Home
         </Link>
 
-        <h1 style={{ fontSize: 'clamp(28px,4vw,42px)', fontWeight: 800, color: '#fff', fontFamily: 'Playfair Display, Georgia, serif', marginBottom: 8 }}>
+        <div style={CARD}>
+
+        <h1 style={{ fontSize: 'clamp(28px,4vw,42px)', fontWeight: 700, color: DARK, fontFamily: 'Playfair Display, Georgia, serif', letterSpacing: '-0.02em', marginBottom: 8 }}>
           Accessibility Statement
         </h1>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginBottom: 48 }}>Last Updated: June 2026</p>
+        <p style={{ fontSize: 13, fontWeight: 600, color: GOLD_TXT, letterSpacing: '0.04em', marginBottom: 40 }}>Last Updated: June 2026</p>
 
         <p style={pStyle}>
           At SoulConnect, we believe that support, connection, and healing should be accessible to everyone. We are committed to improving the accessibility of our platform and creating an inclusive experience for all users.
@@ -68,8 +82,11 @@ export default function Accessibility() {
         <p style={pStyle}>
           We welcome your feedback and appreciate your help in making SoulConnect more accessible for everyone.
         </p>
+        </div>
 
       </div>
+
+      <SimpleFooter />
     </div>
   );
 }

@@ -44,8 +44,9 @@ export default function NotificationPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0D0B1A',
-      fontFamily: 'Inter, sans-serif',
+      background: 'linear-gradient(180deg, #F3EFF9 0%, #FAF8FC 45%)',
+      fontFamily: "'Plus Jakarta Sans', Inter, system-ui, sans-serif",
+      color: '#221B3A',
       paddingBottom: 24,
     }}>
       {/* ── Header ── */}
@@ -58,22 +59,23 @@ export default function NotificationPage() {
         <button
           onClick={() => navigate(-1)}
           style={{
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.09)',
-            borderRadius: 12, width: 38, height: 38,
+            background: '#fff',
+            border: '1.5px solid #E6DDF3',
+            borderRadius: 12, width: 40, height: 40,
+            boxShadow: '0 2px 8px rgba(107,79,160,0.06)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', flexShrink: 0,
           }}
         >
-          <ChevronLeft size={18} color="#B8B4D8" />
+          <ChevronLeft size={18} color="#6B4FA0" />
         </button>
 
         <div style={{ flex: 1 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 24, fontWeight: 700, color: '#221B3A', margin: 0, letterSpacing: '-0.01em' }}>
             Notifications
           </h1>
           {unreadCount > 0 && (
-            <div style={{ fontSize: 12, color: '#A78BFA', marginTop: 2 }}>{unreadCount} unread</div>
+            <div style={{ fontSize: 12.5, color: '#6B4FA0', fontWeight: 600, marginTop: 2 }}>{unreadCount} unread</div>
           )}
         </div>
 
@@ -81,11 +83,11 @@ export default function NotificationPage() {
           <button
             onClick={markAllRead}
             style={{
-              background: 'rgba(124,58,237,0.15)',
-              border: '1px solid rgba(168,85,247,0.25)',
-              borderRadius: 10, padding: '6px 12px',
-              color: '#A78BFA', fontSize: 12, fontWeight: 600,
-              cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+              background: '#fff',
+              border: '1.5px solid #DCD0F0',
+              borderRadius: 12, padding: '8px 12px',
+              color: '#6B4FA0', fontSize: 12.5, fontWeight: 600,
+              cursor: 'pointer', fontFamily: 'inherit',
               display: 'flex', alignItems: 'center', gap: 5,
               flexShrink: 0,
             }}
@@ -107,14 +109,12 @@ export default function NotificationPage() {
             onClick={() => setActiveFilter(f)}
             style={{
               padding: '7px 18px', borderRadius: 20, whiteSpace: 'nowrap',
-              background: activeFilter === f
-                ? 'linear-gradient(135deg, #7C3AED, #A855F7)'
-                : 'rgba(255,255,255,0.06)',
-              border: activeFilter === f ? 'none' : '1px solid rgba(255,255,255,0.09)',
-              color: activeFilter === f ? '#fff' : '#B8B4D8',
-              fontSize: 12, fontWeight: 600, cursor: 'pointer',
-              fontFamily: 'Inter, sans-serif',
-              boxShadow: activeFilter === f ? '0 4px 14px rgba(124,58,237,0.35)' : 'none',
+              background: activeFilter === f ? '#6B4FA0' : '#fff',
+              border: activeFilter === f ? '1.5px solid #6B4FA0' : '1.5px solid #E6DDF3',
+              color: activeFilter === f ? '#fff' : '#5B5470',
+              fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              fontFamily: 'inherit',
+              boxShadow: activeFilter === f ? '0 4px 14px rgba(107,79,160,0.22)' : 'none',
               flexShrink: 0,
               transition: 'all 0.2s',
             }}
@@ -138,7 +138,7 @@ export default function NotificationPage() {
               style={{ marginBottom: 22 }}
             >
               <div style={{
-                fontSize: 11, fontWeight: 700, color: '#F4C542',
+                fontSize: 11, fontWeight: 700, color: '#8A6A3E',
                 textTransform: 'uppercase', letterSpacing: '0.1em',
                 padding: '0 8px', marginBottom: 8,
               }}>
@@ -146,13 +146,11 @@ export default function NotificationPage() {
               </div>
 
               <div style={{
-                background: 'rgba(34,18,73,0.72)',
-                backdropFilter: 'blur(24px)',
-                WebkitBackdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: '#fff',
+                border: '1.5px solid #E6DDF3',
                 borderRadius: 20,
                 overflow: 'hidden',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+                boxShadow: '0 10px 30px rgba(107,79,160,0.06)',
               }}>
                 <AnimatePresence>
                   {items.map((n, idx) => (
@@ -163,7 +161,7 @@ export default function NotificationPage() {
                       transition={{ duration: 0.22 }}
                       style={{
                         borderBottom: idx < items.length - 1
-                          ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                          ? '1px solid #EFE9F8' : 'none',
                       }}
                     >
                       <NotificationCard
@@ -184,10 +182,10 @@ export default function NotificationPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            style={{ textAlign: 'center', padding: '56px 0', color: '#8A84B6' }}
+            style={{ textAlign: 'center', padding: '56px 0', color: '#6E6784' }}
           >
             <div style={{ fontSize: 40, marginBottom: 14 }}>🔔</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: '#E2DEFF', marginBottom: 6 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#221B3A', marginBottom: 6 }}>
               {activeFilter === 'Unread' ? 'All caught up!' : 'No notifications'}
             </div>
             <div style={{ fontSize: 12 }}>

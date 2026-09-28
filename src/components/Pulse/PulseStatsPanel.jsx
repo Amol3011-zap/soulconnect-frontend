@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { PROBLEMS } from '../../data/pulseExperienceData';
 import { getDisplayRange } from '../../data/pulseDataAdapter';
+import { P, DARK, NAVY_SOFT, MUTED, GOLD_TXT, LILAC_LINE, SEA_TXT, SF, TINTS, GOLD_EDGE, problemIcon } from './pulseTheme';
 
 function PulseStatsPanel({ problems, snapshot }) {
   const { total, recentCheckins, recentWindowHours, categories, countries, colors } = snapshot;
@@ -33,28 +34,29 @@ function PulseStatsPanel({ problems, snapshot }) {
         style={{
           padding: '22px',
           borderRadius: '16px',
-          border: '1px solid rgba(168,85,247,0.2)',
-          backgroundColor: 'rgba(34,18,73,0.72)',
-          backdropFilter: 'blur(24px)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 40px rgba(124,58,237,0.15)',
+          border: '1.5px solid transparent',
+          background: `linear-gradient(170deg, #FBF1EC 0%, #FFFFFF 60%) padding-box, ${GOLD_EDGE}`,
+          boxShadow: '0 12px 32px rgba(107,79,160,0.08)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px' }}>
-          <span style={{ fontSize: '22px', lineHeight: 1 }}>{problem?.icon || '❓'}</span>
+          <span style={{ width: 40, height: 40, flexShrink: 0, borderRadius: 12, background: TINTS[0].bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {React.createElement(problemIcon(firstProblem), { size: 20, strokeWidth: 1.7, color: P })}
+          </span>
           <div style={{ flex: 1 }}>
             <p
               style={{
                 fontSize: '11px',
-                fontWeight: 600,
-                color: 'rgba(255,255,255,0.5)',
+                fontWeight: 700,
+                color: GOLD_TXT,
                 textTransform: 'uppercase',
-                letterSpacing: '0.08em',
+                letterSpacing: '0.14em',
                 margin: 0,
               }}
             >
               People dealing with
             </p>
-            <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#FFFFFF', margin: '4px 0 0 0' }}>
+            <h3 style={{ fontSize: '17px', fontWeight: 700, color: DARK, margin: '4px 0 0 0' }}>
               {problem?.label}
             </h3>
           </div>
@@ -64,12 +66,12 @@ function PulseStatsPanel({ problems, snapshot }) {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.4, type: 'spring' }}
-          style={{ fontSize: '34px', fontWeight: 800, color: '#4ADE80', marginBottom: '6px' }}
+          style={{ fontFamily: SF, fontSize: '38px', fontWeight: 700, color: P, marginBottom: '4px', lineHeight: 1.1 }}
         >
           {total.toLocaleString()}
         </motion.div>
 
-        <p style={{ fontSize: '13px', fontWeight: 500, color: 'rgba(255,255,255,0.5)', margin: 0 }}>
+        <p style={{ fontSize: '13.5px', fontWeight: 500, color: NAVY_SOFT, margin: 0 }}>
           anonymous check-ins so far
         </p>
 
@@ -82,8 +84,8 @@ function PulseStatsPanel({ problems, snapshot }) {
               marginTop: '12px',
               padding: '5px 10px',
               borderRadius: '999px',
-              backgroundColor: 'rgba(74,222,128,0.1)',
-              border: '1px solid rgba(74,222,128,0.25)',
+              backgroundColor: '#E7F1EC',
+              border: '1px solid #D3E7DC',
             }}
           >
             <span
@@ -91,11 +93,11 @@ function PulseStatsPanel({ problems, snapshot }) {
                 width: '6px',
                 height: '6px',
                 borderRadius: '50%',
-                backgroundColor: '#4ADE80',
-                boxShadow: '0 0 6px rgba(74,222,128,0.8)',
+                backgroundColor: '#3F7A5E',
+                boxShadow: '0 0 0 3px rgba(63,122,94,0.18)',
               }}
             />
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#4ADE80' }}>
+            <span style={{ fontSize: '11.5px', fontWeight: 600, color: SEA_TXT }}>
               {recentCheckins} {recentCheckins === 1 ? 'person' : 'people'} checked in the last {recentWindowHours === 1 ? 'hour' : `${recentWindowHours} hours`}
             </span>
           </div>
@@ -110,17 +112,18 @@ function PulseStatsPanel({ problems, snapshot }) {
         style={{
           padding: '18px',
           borderRadius: '16px',
-          border: '1px solid rgba(168,85,247,0.15)',
-          backgroundColor: 'rgba(34,18,73,0.5)',
+          border: `1.5px solid ${LILAC_LINE}`,
+          backgroundColor: '#FFFFFF',
+          boxShadow: '0 2px 12px rgba(34,27,58,0.03)',
         }}
       >
         <h4
           style={{
             fontSize: '11px',
             fontWeight: 700,
-            color: 'rgba(255,255,255,0.5)',
+            color: GOLD_TXT,
             textTransform: 'uppercase',
-            letterSpacing: '0.08em',
+            letterSpacing: '0.14em',
             margin: '0 0 12px 0',
           }}
         >
@@ -128,7 +131,7 @@ function PulseStatsPanel({ problems, snapshot }) {
         </h4>
 
         {categories.length === 0 ? (
-          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontSize: '13px', color: MUTED, margin: 0, lineHeight: 1.55 }}>
             Category insights will appear as more people check in.
           </p>
         ) : (
@@ -145,10 +148,10 @@ function PulseStatsPanel({ problems, snapshot }) {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: color }} />
-                    <span style={{ fontSize: '12px', fontWeight: 600, color: '#FFFFFF', flex: 1 }}>{item.label}</span>
-                    <span style={{ fontSize: '12px', fontWeight: 700, color }}>{item.percentage}%</span>
+                    <span style={{ fontSize: '12.5px', fontWeight: 600, color: DARK, flex: 1 }}>{item.label}</span>
+                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: NAVY_SOFT }}>{item.percentage}%</span>
                   </div>
-                  <div style={{ height: '4px', borderRadius: '2px', backgroundColor: 'rgba(168,85,247,0.15)', overflow: 'hidden' }}>
+                  <div style={{ height: '4px', borderRadius: '2px', backgroundColor: '#EFE9F8', overflow: 'hidden' }}>
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${item.percentage}%` }}
@@ -171,17 +174,18 @@ function PulseStatsPanel({ problems, snapshot }) {
         style={{
           padding: '18px',
           borderRadius: '16px',
-          border: '1px solid rgba(168,85,247,0.15)',
-          backgroundColor: 'rgba(34,18,73,0.5)',
+          border: `1.5px solid ${LILAC_LINE}`,
+          backgroundColor: '#FFFFFF',
+          boxShadow: '0 2px 12px rgba(34,27,58,0.03)',
         }}
       >
         <h4
           style={{
             fontSize: '11px',
             fontWeight: 700,
-            color: 'rgba(255,255,255,0.5)',
+            color: GOLD_TXT,
             textTransform: 'uppercase',
-            letterSpacing: '0.08em',
+            letterSpacing: '0.14em',
             margin: '0 0 12px 0',
           }}
         >
@@ -189,7 +193,7 @@ function PulseStatsPanel({ problems, snapshot }) {
         </h4>
 
         {topCountries.length === 0 ? (
-          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontSize: '13px', color: MUTED, margin: 0, lineHeight: 1.55 }}>
             Country insights will appear as the community grows.
           </p>
         ) : (
@@ -207,14 +211,14 @@ function PulseStatsPanel({ problems, snapshot }) {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     fontSize: '13px',
-                    color: 'rgba(255,255,255,0.7)',
+                    color: NAVY_SOFT,
                     paddingBottom: '10px',
-                    borderBottom: i < topCountries.length - 1 ? '1px solid rgba(168,85,247,0.1)' : 'none',
+                    borderBottom: i < topCountries.length - 1 ? `1px solid ${LILAC_LINE}` : 'none',
                     gap: '12px',
                   }}
                 >
                   <span>{country.name}</span>
-                  <span style={{ fontWeight: 700, color: displayRange === null ? 'rgba(255,255,255,0.35)' : '#FBBF24', fontSize: displayRange === null ? '11px' : '13px', textAlign: 'right' }}>
+                  <span style={{ fontWeight: 700, color: displayRange === null ? MUTED : GOLD_TXT, fontSize: displayRange === null ? '11px' : '13px', textAlign: 'right' }}>
                     {displayRange === null ? 'Not enough data to display' : displayRange}
                   </span>
                 </motion.div>

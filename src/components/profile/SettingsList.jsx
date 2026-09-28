@@ -5,7 +5,7 @@ import { ChevronRight, LogOut } from 'lucide-react';
 export default function SettingsList({ items, onLogout }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.45 }}
     >
@@ -13,7 +13,7 @@ export default function SettingsList({ items, onLogout }) {
         {items.map((item, idx) => (
           <motion.div
             key={item.label}
-            initial={{ opacity: 0, x: -10 }}
+            initial={false}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 + idx * 0.03 }}
             onClick={item.action}

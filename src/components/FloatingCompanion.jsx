@@ -49,10 +49,9 @@ export default function FloatingCompanion({
   return (
     <div
       ref={ref}
+      className="fc-wrap"
       style={{
         position: 'fixed',
-        bottom: 28,
-        right: 28,
         zIndex: 200,
         display: 'flex',
         flexDirection: 'column',
@@ -60,6 +59,15 @@ export default function FloatingCompanion({
         gap: 10,
       }}
     >
+      {/* Desktop: bottom right corner. Phones: sit above the bottom tab bar
+          (it used to hide behind the Profile tab). */}
+      <style>{`
+        .fc-wrap{bottom:28px;right:28px}
+        @media (max-width:768px){
+          .fc-wrap{bottom:calc(104px + env(safe-area-inset-bottom, 0px));right:14px}
+          .fc-wrap .fc-btn{width:52px!important;height:52px!important}
+        }
+      `}</style>
       {/* Popup menu */}
       <AnimatePresence>
         {open && (
@@ -148,12 +156,13 @@ export default function FloatingCompanion({
           whileHover={{ scale: 1.1, boxShadow: 'none' }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setOpen(v => !v)}
+          className="fc-btn"
           style={{
             width: 62, height: 62,
             borderRadius: '50%',
             background: open
-              ? 'linear-gradient(135deg, #A855F7, #7C3AED)'
-              : 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+              ? 'linear-gradient(135deg, #8E74C4, #6B4FA0)'
+              : 'linear-gradient(135deg, #7457AB, #5B3F90)',
             border: '1.5px solid var(--sc-line)',
             boxShadow: 'none',
             cursor: 'pointer',

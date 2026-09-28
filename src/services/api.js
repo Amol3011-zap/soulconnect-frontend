@@ -20,6 +20,10 @@ api.interceptors.request.use((config) => {
 
 export const authAPI = {
   signup: (data) => api.post('/auth/signup', data),
+  // Signup phone verification. The backend needs these two endpoints; until
+  // they exist, local dev falls back to test mode (code 123456) in Signup.jsx.
+  sendSignupOTP: (phone) => api.post('/auth/signup/send-otp', { phone }),
+  verifySignupOTP: (phone, otp) => api.post('/auth/signup/verify-otp', { phone, otp }),
   login: (phone, password) => api.post('/auth/login', { phone, password }),
   forgotPassword: (phone) => api.post('/auth/forgot-password', { phone }),
   verifyResetOTP: (phone, otp) => api.post('/auth/verify-reset-otp', { phone, otp }),

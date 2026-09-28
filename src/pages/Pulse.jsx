@@ -5,6 +5,8 @@ import ProblemSelection from '../components/Pulse/ProblemSelection';
 import SupportSelection from '../components/Pulse/SupportSelection';
 import PulseSummary from '../components/Pulse/PulseSummary';
 import GlobalPulseNew from '../components/Pulse/GlobalPulseNew';
+import { ArrowLeft } from 'lucide-react';
+import { P, DARK, GOLD_TXT, CREAM, CREAM_2, LILAC_LINE, F, pulseCss } from '../components/Pulse/pulseTheme';
 
 /**
  * Pulse Page
@@ -51,91 +53,89 @@ function Pulse() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(180deg, #0A0818 0%, #120B2E 50%, #0D0B1A 100%)',
-        color: '#FFFFFF',
-        fontFamily: 'Inter, -apple-system, sans-serif',
+        background: `radial-gradient(ellipse at 50% 0%, #FBF1EC 0%, rgba(251,241,236,0) 55%), linear-gradient(180deg, ${CREAM_2} 0%, ${CREAM} 520px)`,
+        color: DARK,
+        fontFamily: F,
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Background orbs */}
-      <div
-        style={{
-          position: 'fixed',
-          top: '10%',
-          left: '10%',
-          width: '400px',
-          height: '400px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '10%',
-          right: '8%',
-          width: '450px',
-          height: '450px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
+      <style>{pulseCss}</style>
 
       {/* Header */}
       <div
         style={{
           position: 'relative',
           zIndex: 10,
-          padding: '20px 32px',
+          padding: '16px clamp(16px,4vw,32px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: '1px solid rgba(168,85,247,0.1)',
-          background: 'rgba(8,8,18,0.5)',
+          gap: 16,
+          borderBottom: `1px solid ${LILAC_LINE}`,
+          background: 'rgba(250,248,252,0.85)',
           backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
         }}
       >
         <button
           onClick={handleBack}
+          className="pl-back"
           style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
             background: 'transparent',
             border: 'none',
-            color: 'rgba(255,255,255,0.6)',
+            color: P,
             cursor: 'pointer',
             fontSize: '15px',
             fontWeight: 600,
             padding: '8px 0',
-            transition: 'color 0.2s',
+            fontFamily: 'inherit',
+            minWidth: 80,
           }}
-          onMouseEnter={(e) => (e.target.style.color = '#FFFFFF')}
-          onMouseLeave={(e) => (e.target.style.color = 'rgba(255,255,255,0.6)')}
         >
-          ← Back
+          <ArrowLeft size={16} strokeWidth={1.9} />
+          Back
         </button>
 
-        <div
-          style={{
-            fontSize: '13px',
-            fontWeight: 600,
-            color: 'rgba(255,255,255,0.5)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-          }}
-        >
-          {step === 1 && 'Step 1 of 4'}
-          {step === 2 && 'Step 2 of 4'}
-          {step === 3 && 'Step 3 of 4'}
-          {step === 4 && 'Your Pulse'}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          <div
+            style={{
+              fontSize: '12px',
+              fontWeight: 700,
+              color: GOLD_TXT,
+              textTransform: 'uppercase',
+              letterSpacing: '0.16em',
+            }}
+          >
+            {step === 1 && 'Step 1 of 4'}
+            {step === 2 && 'Step 2 of 4'}
+            {step === 3 && 'Step 3 of 4'}
+            {step === 4 && 'Your Pulse'}
+          </div>
+          {/* Progress */}
+          <div aria-hidden="true" style={{ display: 'flex', gap: 6 }}>
+            {[1, 2, 3, 4].map((n) => (
+              <span
+                key={n}
+                style={{
+                  width: n === step ? 22 : 8,
+                  height: 6,
+                  borderRadius: 999,
+                  background: n <= step ? P : '#DCD0F0',
+                  opacity: n < step ? 0.55 : 1,
+                  transition: 'all .3s ease',
+                }}
+              />
+            ))}
+          </div>
         </div>
 
-        <div style={{ width: '80px' }} />
+        <div style={{ minWidth: 80 }} />
       </div>
 
       {/* Main content */}
@@ -147,7 +147,7 @@ function Pulse() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: step === 4 ? '32px' : '60px 32px',
+          padding: step === 4 ? 'clamp(24px,4vw,40px) clamp(16px,3vw,32px)' : 'clamp(36px,6vw,64px) clamp(16px,4vw,32px)',
           overflow: 'auto',
         }}
       >

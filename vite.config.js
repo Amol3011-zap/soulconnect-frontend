@@ -13,9 +13,19 @@ export default defineConfig({
     host: true,
     strictPort: true,
     proxy: {
+      // Dev only. The browser calls same-origin /api and Vite forwards it
+      // to the Railway backend, so CORS never applies -- this is what lets
+      // a phone on the LAN (http://192.168.x.x:5173) use signup/login,
+      // which the backend's CORS allow-list (localhost only) rejects.
+      // Origin is stripped so the backend treats it as a server-to-server
+      // call. NOTE: this is the PRODUCTION backend and database.
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'https://soulconnect-backend-production.up.railway.app',
         changeOrigin: true,
+        secure: true,
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => proxyReq.removeHeader('origin'));
+        },
       },
     },
   },

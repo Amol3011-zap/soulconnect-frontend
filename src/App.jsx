@@ -56,7 +56,7 @@ const PRIMARY_TAB_IMPORTS = [
   () => import('./pages/Messages'),
   () => import('./pages/Profile'),
   () => import('./pages/MoodTracker'),
-  () => import('./pages/SoulMatch'),
+  () => import('./pages/SoulPond'),
   () => import('./pages/Professionals'),
   () => import('./pages/TinyWins'),
 ];
@@ -64,7 +64,8 @@ function preloadPrimaryTabs() {
   PRIMARY_TAB_IMPORTS.forEach(load => { load().catch(() => {}); });
 }
 const Home          = lazy(() => import('./pages/Home'));
-const SoulMatch     = lazy(() => import('./pages/SoulMatch'));
+const SoulMatch     = lazy(() => import('./pages/SoulMatch')); // kept for easy rollback
+const SoulPond      = lazy(() => import('./pages/SoulPond'));
 const Stories       = lazy(() => import('./pages/Stories'));
 const Community     = lazy(() => import('./pages/Community'));
 const Messages      = lazy(() => import('./pages/Messages'));
@@ -260,7 +261,7 @@ function AppInner() {
               <Route element={<DashboardLayout />}>
                 {/* Primary nav */}
                 <Route path="/home"          element={<Home />} />
-                <Route path="/matches"       element={<SoulMatch />} />
+                <Route path="/matches"       element={<SoulPond />} />
                 <Route path="/stories"       element={<Stories />} />
                 <Route path="/community"     element={<Community />} />
                 <Route path="/mood"          element={<MoodTracker />} />

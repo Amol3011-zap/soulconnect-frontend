@@ -17,14 +17,12 @@ import NotificationDropdown from '../components/NotificationDropdown';
 import EmotionWeatherModal from '../components/emotional-weather/EmotionWeatherModal';
 import GlobalPulseCard from '../components/dashboard/GlobalPulseCard';
 import { useReflections } from '../hooks/useReflections';
-import { getSoulMatches } from '../components/soulmatch/soulmatchData';
 import BreathingSession from '../components/BreathingSession';
 import OnboardingModal from '../components/OnboardingModal';
 import { onboardingAPI } from '../services/api';
 
 import HomeTinyWinCard from '../components/home/HomeTinyWinCard';
 import ReflectionToast from '../components/home/ReflectionToast';
-import PeopleWhoUnderstandCard from '../components/home/PeopleWhoUnderstandCard';
 import CommunitySection from '../components/home/CommunitySection';
 import TodaysFocusChecklistCard from '../components/home/TodaysFocusChecklistCard';
 import SoulClimateCard from '../components/home/SoulClimateCard';
@@ -63,7 +61,6 @@ export default function Home() {
   const [breathingDone, setBreathingDone] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [matches, setMatches] = useState([]);
 
   // Today's Reflection modal
   const [reflectionModalOpen, setReflectionModalOpen] = useState(false);
@@ -132,19 +129,6 @@ export default function Home() {
     const weatherId = todayEntry?.weather || 'clear-sky';
     checkAndRefresh(weatherId);
   }, [todayEntry?.weather]);
-
-  // Load SoulMatches
-  useEffect(() => {
-    const loadMatches = async () => {
-      try {
-        const res = await getSoulMatches({});
-        setMatches(res.matches?.slice(0, 3) || []);
-      } catch (err) {
-        console.error('Error loading matches:', err);
-      }
-    };
-    loadMatches();
-  }, []);
 
   // Soul Climate: one check-in per LOCAL calendar day. dayKey re-renders the
   // card at local midnight (and when the app returns to the foreground) so
@@ -372,24 +356,7 @@ export default function Home() {
             />
           </div>
 
-          {/* 3 · People who understand */}
-          <section className="mb-6">
-            {sectionHeader({ title: 'People who understand', sub: 'Going through something similar', to: '/matches' })}
-            {matches.length > 0 ? (
-              <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:overflow-visible sm:px-0 [&>*]:snap-start">
-                {matches.map((match, i) => (
-                  <PeopleWhoUnderstandCard key={match.id || i} match={match} index={i} onConnect={() => navigate('/matches')} />
-                ))}
-              </div>
-            ) : (
-              <Card className="flex items-center gap-3 p-4">
-                <Skeleton className="h-11 w-11 rounded-full" />
-                <div className="flex-1 space-y-2"><Skeleton className="h-4 w-1/2" /><Skeleton className="h-3 w-2/3" /></div>
-              </Card>
-            )}
-          </section>
-
-          {/* 4 · Today's small step (Tiny Wins) */}
+          {/* 3 · Today's small step (Tiny Wins) */}
           <section className="mb-6">
             {sectionHeader({ title: "Today's small step", to: '/tiny-wins' })}
             <Card className="p-2">
@@ -412,7 +379,7 @@ export default function Home() {
             </Card>
           </section>
 
-          {/* 5 · From the community */}
+          {/* 4 · From the community */}
           <CommunitySection
             stories={STORIES}
             onOpenStory={goToStories}
@@ -420,7 +387,7 @@ export default function Home() {
             onShare={goToStories}
           />
 
-          {/* 6 · Support when you need it (professionals) */}
+          {/* 5 · Support when you need it (professionals) */}
           <section>
             {sectionHeader({
               title: 'Support when you need it',

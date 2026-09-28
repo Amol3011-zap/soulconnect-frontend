@@ -22,7 +22,9 @@ export default function Profile() {
   const { user, logout } = useAuthStore();
   const { streak, longestStreak } = useWeatherStore();
   const { last7Days } = useMoodData();
-  const [loading, setLoading] = useState(true);
+  // No fake delay: the profile comes from the auth store, so it can show at once
+  // (a 400ms skeleton used to flash on every visit to the tab).
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   // Initialize profile on mount
@@ -31,8 +33,6 @@ export default function Profile() {
       try {
         setLoading(true);
         setError('');
-        // Simulate loading profile data
-        await new Promise(resolve => setTimeout(resolve, 400));
         setLoading(false);
       } catch (err) {
         console.error('Error loading profile:', err);

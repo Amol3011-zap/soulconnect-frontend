@@ -1,7 +1,16 @@
 import { useState, useCallback } from 'react';
 import { journeyAPI } from '../services/api';
+import { useAuthStore } from '../store/auth';
 
-const STORAGE_KEY = 'sc_journal_v2';
+// Mood data is stored per account ("sc_journal_v2:<userId>") so another
+// account on the same device never reads it. The old shared key is dropped
+// (pre-launch test data only; there is no owner to hand it to safely).
+const LEGACY_KEY = 'sc_journal_v2';
+function storageKey() {
+  const u = useAuthStore.getState().user;
+  const id = u?.id ?? u?.user_id;
+  return id != null ? `${LEGACY_KEY}:${id}` : null;
+}
 
 export const MOODS_5 = [
   { score: 1, emoji: '😭', label: 'Awful',      color: '#EF4444' },
@@ -62,14 +71,18 @@ export const GUIDED_PROMPTS = [
 
 function loadStore() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    localStorage.removeItem(LEGACY_KEY);
+    const key = storageKey();
+    return key ? JSON.parse(localStorage.getItem(key) || '{}') : {};
   } catch {
     return {};
   }
 }
 
 function saveStore(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const key = storageKey();
+  if (!key) return;
+  try { localStorage.setItem(key, JSON.stringify(data)); } catch { /* storage unavailable */ }
 }
 
 function getTodayKey() {

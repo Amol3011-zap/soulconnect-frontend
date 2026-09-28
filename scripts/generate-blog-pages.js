@@ -30,6 +30,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { ARTICLES } from '../src/data/articles.js';
+import { pageRoot, stripHomepageJsonLd } from './static-page-root.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, '../dist');
@@ -203,7 +204,8 @@ async function generateBlogPages() {
         // OG/Twitter tags before injecting the article-specific ones —
         // same dedup approach as generate-emotion-pages.js, to avoid
         // reintroducing the double-canonical bug on a second route family.
-        let articleHtml = indexHtml
+        // Homepage-only JSON-LD is removed before this article's own is added.
+        let articleHtml = stripHomepageJsonLd(indexHtml)
           .replace(/<title>.*?<\/title>\s*\n?/s, '')
           .replace(/<link rel="canonical"[^>]*>\s*\n?/, '')
           .replace(/<meta name="description"[^>]*>\s*\n?/, '')
@@ -222,24 +224,10 @@ async function generateBlogPages() {
 
         articleHtml = articleHtml.replace('</head>', `  ${metaHead}\n  </head>`);
 
-        // The reused template body (from inject-static.js's homepage shell)
-        // has its own <h1>You Are Not Alone in This.</h1>. Demote it to <h2>
-        // on this generated page only, so the page-specific <h1> injected
-        // below (this article's real title) is the page's only H1. The
-        // homepage's own dist/index.html is untouched — this only affects
-        // dist/blog/{slug}/index.html.
-        articleHtml = articleHtml.replace(
-          /<h1 style="font-size:clamp\(2\.2rem,5vw,3\.8rem\)[^>]*>[\s\S]*?<\/h1>/,
-          (match) => `<h2${match.slice(3, -5)}</h2>`
-        );
-
-        // Inject real per-article body content right inside #root so non-JS
-        // crawlers see genuine page-specific text, not just the generic
-        // homepage shell. Purely additive — React replaces #root on mount.
-        articleHtml = articleHtml.replace(
-          '<div id="root">',
-          `<div id="root" data-blog-slug="${article.slug}">\n${generatePageContent(article)}`
-        );
+        // #root keeps only the loading screen plus this article's own content —
+        // the homepage crawler body (and its H1) is no longer carried over.
+        // React's createRoot still replaces all of #root on mount.
+        articleHtml = pageRoot(articleHtml, `data-blog-slug="${article.slug}"`, generatePageContent(article));
 
         const articlePagePath = resolve(articleDir, 'index.html');
         writeFileSync(articlePagePath, articleHtml, 'utf-8');

@@ -244,7 +244,7 @@ function Toast({ message, visible }) {
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 30 }}
           transition={{ type: 'spring', stiffness: 280, damping: 24 }}
@@ -356,7 +356,7 @@ function ComposerCard({ onShare, triggerOpen, onTriggerConsumed }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.06, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       onClick={() => setOpenDrop(null)}
@@ -486,7 +486,7 @@ function FeaturedStoryCard({ story, onNavigate }) {
   if (!story) return null;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       onClick={() => onNavigate(story.id)}
@@ -551,7 +551,7 @@ function FeaturedStoryCard({ story, onNavigate }) {
 function DailyPromptCard({ onWrite }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.14, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       style={{
@@ -815,7 +815,7 @@ function StoryCard({ story, index, userStoryIds, toast }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10, scale: 0.97 }}
       transition={{ delay: Math.min(index * 0.04, 0.3), duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
@@ -1043,7 +1043,7 @@ function AIInsightCard() {
   const navigate = useNavigate();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.35 }}
       style={{
@@ -1087,7 +1087,7 @@ function AIInsightCard() {
 function EmptyState({ filter, search }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       style={{ textAlign: 'center', padding: '60px 20px' }}
     >
@@ -1294,7 +1294,7 @@ export default function Stories() {
 
       {/* ── Header ── */}
       <motion.div
-        initial={{ opacity: 0, y: 14 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         style={{ marginBottom: 20 }}

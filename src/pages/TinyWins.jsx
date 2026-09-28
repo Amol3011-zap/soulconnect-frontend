@@ -77,7 +77,7 @@ function HealingTreeProgress({ totalWins }) {
       {/* Progress bar */}
       <div style={{ height: 6, borderRadius: 6, background: 'var(--sc-bg)', overflow: 'hidden' }}>
         <motion.div
-          initial={{ width: 0 }}
+          initial={false}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 1, ease: [0.23, 1, 0.32, 1], delay: 0.3 }}
           style={{
@@ -207,7 +207,7 @@ function HistoryList({ history }) {
           return (
             <motion.div
               key={entry.id}
-              initial={{ opacity: 0, x: -10 }}
+              initial={false}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.04, duration: 0.3 }}
               style={{
@@ -542,7 +542,7 @@ export default function TinyWins() {
             {/* Bar */}
             <div style={{ height: 6, borderRadius: 6, background: 'var(--sc-bg)', overflow: 'hidden' }}>
               <motion.div
-                initial={{ width: 0 }}
+                initial={false}
                 animate={{ width: `${dailyWins.length > 0 ? (completedCount / dailyWins.length) * 100 : 0}%` }}
                 transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
                 style={{
@@ -580,7 +580,7 @@ export default function TinyWins() {
         </div>
 
         <div style={{ padding: '0 24px' }}>
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
 
             {/* ── TODAY'S WINS ── */}
             {activeTab === 'today' && (

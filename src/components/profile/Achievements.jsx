@@ -77,7 +77,7 @@ export default function Achievements({ onViewAll }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.35 }}
       style={{
@@ -121,7 +121,7 @@ export default function Achievements({ onViewAll }) {
           {displayBadges.map((badge, i) => (
             <motion.div
               key={badge.id}
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={false}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4 + i * 0.05 }}
               whileHover={{ scale: 1.05 }}
@@ -152,7 +152,7 @@ export default function Achievements({ onViewAll }) {
 
           {moreCount > 0 && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={false}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.45 }}
               whileHover={{ scale: 1.05 }}

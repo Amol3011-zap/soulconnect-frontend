@@ -1,49 +1,35 @@
 {
+  "id": "/",
   "name": "SoulConnect",
   "short_name": "SoulConnect",
-  "description": "Find Your People. Feel Better Today.",
-  "start_url": "/",
+  "description": "You are more than what you're going through.",
+  "start_url": "/home",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#0D0B1A",
-  "theme_color": "#8B5CF6",
+  "background_color": "#FAF8FC",
+  "theme_color": "#FAF8FC",
   "categories": ["health", "lifestyle", "social"],
   "icons": [
-    {
-      "src": "/favicon-32.png",
-      "sizes": "32x32",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/favicon-64.png",
-      "sizes": "64x64",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/logo-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/logo-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
-  "screenshots": [],
   "shortcuts": [
     {
-      "name": "My Matches",
-      "short_name": "Matches",
-      "description": "See your soul matches",
+      "name": "Soul Pond",
+      "short_name": "Soul Pond",
+      "description": "Float a lotus or respond to one",
       "url": "/matches",
-      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
-      "name": "Find a Healer",
-      "short_name": "Healers",
-      "description": "Connect with a therapist",
-      "url": "/healers",
-      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+      "name": "Messages",
+      "short_name": "Messages",
+      "description": "Open your conversations",
+      "url": "/messages",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
