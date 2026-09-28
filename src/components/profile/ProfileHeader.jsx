@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useMoodData } from '../../hooks/useMoodData';
+import AvatarPicker from '../AvatarPicker';
+import { avatarSrc, currentAvatarId, currentMood } from '../../data/avatars';
 
 export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) {
   const { store: moodStore } = useMoodData();
   const [todayMood, setTodayMood] = useState(null);
+  const [avatarId, setAvatarId] = useState(() => currentAvatarId(user));
+  const [picking, setPicking] = useState(false);
+  const [mood, setMood] = useState(() => currentMood(user));
+  const avatar = avatarSrc(avatarId, mood);
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -58,37 +64,25 @@ export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) 
     >
       {/* Left: Avatar + Online */}
       <div style={{ position: 'relative', flexShrink: 0 }}>
-        {user?.avatar_url ? (
-          <img
-            src={user.avatar_url}
-            alt="Avatar"
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: '50%',
-              border: '2px solid var(--sc-border)',
-              objectFit: 'cover',
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: '50%',
-              background: '#8066D5',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 24,
-              fontWeight: 700,
-              color: 'var(--sc-text)',
-              border: '2px solid var(--sc-border)',
-            }}
-          >
-            {initials}
-          </div>
-        )}
+        <button
+          type="button"
+          onClick={() => setPicking(true)}
+          aria-label={avatar ? 'Change your avatar' : 'Choose your avatar'}
+          style={{ padding: 0, border: 0, background: 'none', cursor: 'pointer', display: 'block', borderRadius: '50%' }}
+        >
+          {avatar ? (
+            <img src={avatar} alt="" style={{ width: 68, height: 68, borderRadius: '50%', display: 'block', background: 'radial-gradient(circle at 50% 38%, #FFFFFF 0%, #F4EEFB 60%, #E6DCF6 100%)', border: '2px solid #E6DDF3' }} />
+          ) : user?.avatar_url ? (
+            <img src={user.avatar_url} alt="" style={{ width: 68, height: 68, borderRadius: '50%', border: '2px solid var(--sc-border)', objectFit: 'cover', display: 'block' }} />
+          ) : (
+            <div style={{ width: 68, height: 68, borderRadius: '50%', background: 'linear-gradient(135deg,#C9B8E8,#F3D9C4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, fontWeight: 700, color: '#fff', border: '2px solid #E6DDF3' }}>
+              {initials}
+            </div>
+          )}
+          <span style={{ position: 'absolute', left: -4, bottom: -4, padding: '2px 7px', borderRadius: 999, background: '#6B4FA0', color: '#fff', fontSize: 10, fontWeight: 700, border: '2px solid #fff', whiteSpace: 'nowrap' }}>
+            {avatar ? 'Mood' : 'Pick'}
+          </span>
+        </button>
         {/* Online indicator */}
         <div
           style={{
@@ -99,7 +93,7 @@ export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) 
             height: 16,
             borderRadius: '50%',
             background: '#10B981',
-            border: '2px solid #171126',
+            border: '2px solid #fff',
           }}
         />
       </div>
@@ -110,7 +104,7 @@ export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) 
           {user?.full_name || user?.name || 'Soul Traveler'}
         </div>
         <div style={{ fontSize: 12, color: 'var(--sc-text-2)', marginBottom: 8 }}>
-          {user?.bio || "You don't have to go through it alone."}
+          {user?.bio || 'You are more than what you’re going through.'}
         </div>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--sc-text-2)' }}>
@@ -149,6 +143,7 @@ export default function ProfileHeader({ user, streak, onEditClick, level = 4 }) 
       >
         ✏️ Edit
       </motion.button>
+      <AvatarPicker open={picking} current={avatarId} currentMood={mood} onClose={() => setPicking(false)} onSaved={(id, m) => { setAvatarId(id); setMood(m); }} />
     </motion.div>
   );
 }

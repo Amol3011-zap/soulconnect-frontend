@@ -1389,6 +1389,7 @@ export default function Stories() {
       {/* ── Floating Button ── */}
       <FloatingShareButton onClick={() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.querySelector('.dash-content-wrapper')?.scrollTo?.({ top: 0, behavior: 'smooth' });
         setTimeout(() => setComposerOpen(true), 350);
       }} />
     </div>

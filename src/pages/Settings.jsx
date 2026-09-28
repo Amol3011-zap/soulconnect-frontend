@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { userAPI, authAPI } from '../services/api';
+import AvatarPicker from '../components/AvatarPicker';
+import { avatarSrc, currentAvatarId, currentMood } from '../data/avatars';
 import {
   ChevronRight, Search, LogOut, Trash2, UserRound, KeyRound, LifeBuoy,
   Phone, ShieldCheck, Eye, EyeOff, Check, Info, X,
@@ -114,6 +116,9 @@ export default function Settings() {
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState('');
   const [pwSuccess, setPwSuccess] = useState('');
+  const [avatarId, setAvatarId] = useState(() => currentAvatarId(useAuthStore.getState().user));
+  const [picking, setPicking] = useState(false);
+  const [mood, setMood] = useState(() => currentMood(useAuthStore.getState().user));
 
   useEffect(() => {
     fetchProfile();
@@ -187,7 +192,9 @@ export default function Settings() {
 
         {!q && (
           <div className="st-me">
-            <span className="st-av" aria-hidden="true">{initial}</span>
+            <button type="button" className="st-av" onClick={() => setPicking(true)} aria-label="Change your avatar" style={{ border: 0, padding: 0, cursor: 'pointer', overflow: 'hidden', background: avatarSrc(avatarId, mood) ? 'radial-gradient(circle at 50% 38%, #FFFFFF 0%, #F4EEFB 60%, #E6DCF6 100%)' : undefined }}>
+              {avatarSrc(avatarId, mood) ? <img src={avatarSrc(avatarId, mood)} alt="" style={{ width: '100%', height: '100%', display: 'block' }} /> : initial}
+            </button>
             <div style={{ minWidth: 0 }}>
               <b>{displayName}</b>
               <span>{phoneLine}</span>
@@ -260,6 +267,7 @@ export default function Settings() {
           </motion.div>
         )}
       </AnimatePresence>
+      <AvatarPicker open={picking} current={avatarId} currentMood={mood} onClose={() => setPicking(false)} onSaved={(id, m) => { setAvatarId(id); setMood(m); }} />
     </div>
   );
 }

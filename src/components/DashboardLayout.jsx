@@ -57,6 +57,16 @@ export default function DashboardLayout() {
 
   const showMobileNav = !HIDE_MOBILE_NAV_ON.some(p => location.pathname.startsWith(p));
 
+  // Lock page scrolling while the logged-in app is on screen (see CSS above).
+  React.useEffect(() => {
+    document.documentElement.classList.add('sc-app-lock');
+    return () => document.documentElement.classList.remove('sc-app-lock');
+  }, []);
+  // New tab or page: start at the top of the content area.
+  React.useEffect(() => {
+    document.querySelector('.dash-content-wrapper')?.scrollTo?.(0, 0);
+  }, [location.pathname]);
+
   return (
     // .sc-app scopes the light SoulConnect tokens (src/index.css) and the
     // shadcn/ui variables to the logged-in app only.
@@ -219,21 +229,24 @@ export default function DashboardLayout() {
             padding-top: 6px;
             align-items: flex-start;
             justify-content: space-around;
-            /* Keep the bar glued to the bottom while the mobile browser's
-               toolbar slides in and out: own GPU layer, and a solid apron
-               below it so no page content peeks through during the jump. */
-            transform: translate3d(0, 0, 0);
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            will-change: transform;
           }
-          .mobile-bottom-nav::after {
-            content: '';
-            position: absolute;
-            left: 0; right: 0; top: 100%;
-            height: 160px;
-            background: inherit;
-            pointer-events: none;
+
+          /* App-style scrolling on phones: the page never scrolls, only the
+             content area does. The browser's toolbar then stays put, so the
+             bottom tab bar can't float up while scrolling (iPhone Safari and
+             Chrome bug with position: fixed + collapsing toolbars). */
+          html.sc-app-lock, html.sc-app-lock body {
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior: none;
+          }
+          html.sc-app-lock .dash-content-wrapper {
+            box-sizing: border-box;
+            height: 100vh;
+            height: 100dvh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
           }
 
           /* Each nav tab — 48px+ touch target */

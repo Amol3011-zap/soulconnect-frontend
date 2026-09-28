@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Flower2, Users, Sparkles, MessageCircle, ShieldCheck, AlertTriangle,
-  X, Send, Flag, Wind, Phone, Clock, RefreshCw, Lock,
+  X, Send, Flag, Wind, Phone, Clock, RefreshCw, Lock, MoreHorizontal, ChevronLeft,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import { useAuthStore } from '../store/auth';
 
 import { STRUGGLES, CONVERSATION_STARTERS } from '../components/soulmatch/soulmatchOptions';
@@ -53,7 +54,7 @@ const css = `
 .sp-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(28px,4vw,40px);font-weight:700;margin:14px 0 8px;letter-spacing:-.01em}
 .sp-sub{color:${BODY};font-size:16px;line-height:1.6;max-width:620px}
 .sp-tabs{display:inline-flex;gap:4px;padding:5px;border-radius:16px;background:#EFE9F8;margin:26px 0 20px}
-.sp-tab{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;border:0;background:transparent;color:${MUTED};font:600 14.5px inherit;cursor:pointer;font-family:inherit}
+.sp-tab{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;border:0;background:transparent;color:${MUTED};font-weight:600;font-size:14.5px;cursor:pointer;font-family:inherit}
 .sp-tab.is-on{background:#fff;color:${DARK};box-shadow:0 2px 10px rgba(34,27,58,.06)}
 .sp-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:22px;align-items:start}
 @media(max-width:960px){.sp-grid{grid-template-columns:minmax(0,1fr)}}
@@ -62,7 +63,7 @@ const css = `
 .sp-h2{font-family:'Playfair Display',Georgia,serif;font-size:21px;font-weight:700;margin:0 0 4px}
 .sp-hint{font-size:13px;color:${MUTED};margin:0 0 12px;line-height:1.5}
 .sp-chips{display:flex;flex-wrap:wrap;gap:8px}
-.sp-chip{padding:8px 14px;border-radius:999px;border:1.5px solid #E6DDF3;background:#fff;color:#4E3680;font:500 13.5px inherit;cursor:pointer;font-family:inherit}
+.sp-chip{padding:8px 14px;border-radius:999px;border:1.5px solid #E6DDF3;background:#fff;color:#4E3680;font-weight:500;font-size:13.5px;cursor:pointer;font-family:inherit}
 .sp-chip.is-on{background:${P};border-color:${P};color:#fff}
 .sp-chip:disabled{opacity:.45;cursor:not-allowed}
 .sp-filter{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 0}
@@ -80,16 +81,16 @@ const css = `
 .sp-lotus.is-guide .k{color:${GOLD}}
 .sp-lotus.is-sel .t{border-color:${P}}
 .sp-lotus:focus-visible .t{outline:3px solid #C9B8E8}
-.sp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:13px 18px;font:700 14.5px inherit;cursor:pointer;background:${P};color:#fff;box-shadow:0 4px 14px rgba(107,79,160,.22);font-family:inherit}
+.sp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:13px 18px;font-weight:700;font-size:14.5px;cursor:pointer;background:${P};color:#fff;box-shadow:0 4px 14px rgba(107,79,160,.22);font-family:inherit}
 .sp-btn:hover{background:#5A4190}
 .sp-btn:disabled{background:#CFC3E6;box-shadow:none;cursor:not-allowed}
 .sp-btn--ghost{background:#fff;color:${P};border:1.5px solid #DCD0F0;box-shadow:none}
 .sp-btn--ghost:hover{background:#F3EFF9}
 .sp-selected{margin-top:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .sp-selected q{flex:1;min-width:220px;font-size:14.5px;color:${DARK};font-style:italic}
-.sp-textarea{width:100%;min-height:96px;border:1.5px solid #DCD0F0;border-radius:16px;padding:12px 14px;font:400 14.5px/1.5 inherit;color:${DARK};resize:vertical;font-family:inherit}
+.sp-textarea{width:100%;min-height:96px;border:1.5px solid #DCD0F0;border-radius:16px;padding:12px 14px;font-weight:400;font-size:14.5px;line-height:1.5;color:${DARK};resize:vertical;font-family:inherit}
 .sp-textarea:focus,.sp-input:focus{outline:none;border-color:${P};box-shadow:0 0 0 4px rgba(107,79,160,.12)}
-.sp-input{width:100%;border:1.5px dashed #C9B8E8;border-radius:12px;padding:10px 12px;font:400 14px inherit;font-family:inherit;margin-top:10px}
+.sp-input{width:100%;border:1.5px dashed #C9B8E8;border-radius:12px;padding:10px 12px;font-weight:400;font-size:14px;font-family:inherit;margin-top:10px}
 .sp-count{text-align:right;font-size:11.5px;color:#9A93AE;margin-top:4px}
 .sp-sugg{margin-top:10px;padding:11px 13px;border-radius:14px;background:#F1ECF9;font-size:13px;color:#4E3680;line-height:1.5}
 .sp-sugg button{background:none;border:0;color:${P};font-weight:700;cursor:pointer;font-family:inherit;padding:0;margin-left:4px}
@@ -97,27 +98,57 @@ const css = `
 .sp-note{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:${MUTED};margin-top:12px;line-height:1.5}
 .sp-dev{display:flex;gap:6px;align-items:center;font-size:12px;color:#9A5A3A;margin-top:12px}
 .sp-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:${DARK};color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;z-index:60;box-shadow:0 12px 30px rgba(0,0,0,.2)}
-.sp-overlay{font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;color:${DARK};position:fixed;inset:0;background:rgba(34,27,58,.35);backdrop-filter:blur(4px);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
-.sp-chat{width:min(460px,100%);height:min(640px,92vh);background:#FAF8FC;border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 70px rgba(34,27,58,.3)}
-.sp-chat-h{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #E6DDF3;background:#fff}
-.sp-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#C9B8E8,#F3D9C4);display:flex;align-items:center;justify-content:center;font:700 16px 'Playfair Display',Georgia,serif;color:#fff;flex-shrink:0}
-.sp-quote{margin:14px 18px 6px;padding:11px 13px;border-radius:14px;background:#FCF8F0;border:1.5px dashed #EEDFC4;font-size:13px;color:#3A3350}
-.sp-quote small{display:block;font-size:10.5px;font-weight:700;letter-spacing:.12em;color:${GOLD};margin-bottom:3px}
-.sp-msgs{flex:1;overflow:auto;padding:8px 18px}
-.sp-m{max-width:80%;padding:10px 13px;border-radius:16px;font-size:13.5px;line-height:1.45;margin:0 0 9px}
-.sp-m.th{background:#fff;border:1px solid #E6DDF3;border-bottom-left-radius:4px}
-.sp-m.mi{background:${P};color:#fff;margin-left:auto;border-bottom-right-radius:4px}
-.sp-starters{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 8px}
-.sp-starters button{font:500 12px inherit;font-family:inherit;border:1px solid #E6DDF3;background:#fff;color:#4E3680;border-radius:999px;padding:6px 10px;cursor:pointer}
-.sp-chat-f{padding:12px 14px 16px;background:#fff;border-top:1px solid #E6DDF3}
-.sp-acts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:10px}
-.sp-acts button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:0;border-radius:14px;padding:10px 4px;font:700 11.5px/1.2 inherit;font-family:inherit;cursor:pointer;text-align:center;min-height:62px}
-.sp-acts button:disabled{cursor:default;opacity:.9}
-.sp-send{display:flex;gap:8px}
-.sp-send input{flex:1;border:1.5px solid #E6DDF3;border-radius:22px;padding:11px 14px;font:400 14px inherit;font-family:inherit}
-.sp-send button{width:42px;height:42px;border-radius:50%;border:0;background:${P};color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sp-overlay{font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;color:${DARK};position:fixed;inset:0;background:rgba(34,27,58,.38);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1200;display:flex;align-items:center;justify-content:center;padding:16px}
+.sp-chat{position:relative;width:min(460px,100%);height:min(680px,92vh);background:#FAF8FC;border-radius:28px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 70px rgba(34,27,58,.3)}
+.sp-chat-h{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 16px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid #EEE8F6}
+.sp-chat-h .who{flex:1;min-width:0}
+.sp-chat-h .who b{display:block;font-size:16px;font-weight:700;color:${DARK};white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-chat-h .who span{display:flex;align-items:center;gap:6px;font-size:12px;color:#3F7A5E;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-chat-h .who span i{width:7px;height:7px;border-radius:50%;background:#56B083;display:inline-block;flex-shrink:0}
+.sp-ib{width:38px;height:38px;border-radius:12px;border:0;background:transparent;color:${MUTED};cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sp-ib:hover{background:#F3EFF9;color:${P}}
+.sp-back{display:none}
+.sp-menu{position:absolute;right:12px;top:62px;z-index:5;background:#fff;border-radius:16px;box-shadow:0 18px 40px rgba(34,27,58,.18);border:1px solid #EEE8F6;padding:6px;min-width:210px}
+.sp-menu button{width:100%;display:flex;align-items:center;gap:10px;padding:11px 12px;border:0;background:none;border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;color:${DARK};cursor:pointer;text-align:left}
+.sp-menu button:hover{background:#F6F3FA}
+.sp-menu button small{display:block;font-weight:400;font-size:11.5px;color:${MUTED};margin-top:1px}
+.sp-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#C9B8E8,#F3D9C4);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;font-family:'Playfair Display',Georgia,serif;color:#fff;flex-shrink:0;box-shadow:0 0 0 3px #fff,0 0 0 4.5px #E6DDF3}
+.sp-body{flex:1;overflow-y:auto;padding:14px 16px 10px;display:flex;flex-direction:column}
+.sp-quote{padding:12px 14px;border-radius:16px;background:#FCF8F0;border:1px solid #F1E3C8;font-size:13.5px;line-height:1.45;color:#3A3350;margin-bottom:12px}
+.sp-quote small{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.12em;color:${GOLD};margin-bottom:4px}
+.sp-hello{margin:auto 0 12px;text-align:center;padding:10px 6px 0}
+.sp-hello img{width:54px;height:auto;opacity:.9;display:block;margin:0 auto}
+body.sp-chat-open .mobile-bottom-nav,body.sp-chat-open .app-topbar{visibility:hidden}
+.sp-hello b{display:block;font-family:'Playfair Display',Georgia,serif;font-size:18px;color:${DARK};margin-top:6px}
+.sp-hello span{display:block;font-size:13px;color:${MUTED};margin-top:4px;line-height:1.5}
+.sp-m{max-width:82%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.45;margin:0 0 8px;word-wrap:break-word}
+.sp-m.th{background:#fff;border:1px solid #EEE8F6;border-bottom-left-radius:6px;align-self:flex-start}
+.sp-m.mi{background:${P};color:#fff;border-bottom-right-radius:6px;align-self:flex-end;box-shadow:0 4px 10px rgba(107,79,160,.18)}
+.sp-starters{display:flex;gap:8px;overflow-x:auto;padding:2px 16px 10px;scrollbar-width:none}
+.sp-starters::-webkit-scrollbar{display:none}
+.sp-starters button{flex-shrink:0;font-weight:600;font-size:12.5px;font-family:inherit;border:1px solid #E1D7F1;background:#fff;color:#4E3680;border-radius:999px;padding:8px 13px;cursor:pointer;white-space:nowrap}
+.sp-starters button:hover{background:#F6F2FC}
+.sp-chat-f{padding:10px 14px calc(12px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid #EEE8F6}
+.sp-acts{display:flex;gap:8px;margin-bottom:10px}
+.sp-acts button{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border:0;border-radius:999px;font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap}
+.sp-acts button:disabled{cursor:default}
+.sp-acts .grow{flex:1}
+.sp-send{display:flex;gap:8px;align-items:center}
+.sp-send input{flex:1;min-width:0;height:46px;border:1.5px solid #E6DDF3;border-radius:23px;padding:0 16px;font-weight:400;font-size:15px;font-family:inherit;color:${DARK};background:#FBFAFD;outline:none}
+.sp-send input:focus{border-color:${P};box-shadow:0 0 0 3px rgba(107,79,160,.12);background:#fff}
+.sp-send button{width:46px;height:46px;border-radius:50%;border:0;background:${P};color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:0 6px 14px rgba(107,79,160,.28)}
+.sp-send button:disabled{background:#D9D0EA;box-shadow:none}
+.sp-dev{display:flex;gap:6px;align-items:center;font-size:11px;color:#9A7A5A;margin:8px 0 0}
+@media(max-width:640px){
+  .sp-overlay{padding:0;align-items:stretch}
+  .sp-chat{width:100%;height:100%;height:100dvh;border-radius:0;box-shadow:none}
+  .sp-chat-h{padding-top:calc(10px + env(safe-area-inset-top,0px))}
+  .sp-back{display:flex}
+  .sp-close{display:none}
+  .sp-menu{top:calc(62px + env(safe-area-inset-top,0px))}
+}
 .sp-state b{display:block;margin-bottom:2px}
-.sp-state{margin:10px 18px;padding:12px 14px;border-radius:14px;background:#E7F1EC;color:#2F5A45;font-size:13px;line-height:1.5}
+.sp-state{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:#E7F1EC;color:#2F5A45;font-size:13px;line-height:1.5}
 .sp-crisis{margin-top:12px;padding:14px;border-radius:16px;background:#FDF2EC;border:1.5px solid #F3DACC;font-size:13.5px;color:#7A3E22;line-height:1.55}
 .sp-crisis a{display:inline-flex;align-items:center;gap:6px;margin:8px 8px 0 0;padding:8px 12px;border-radius:12px;background:#fff;border:1px solid #F3DACC;color:#9A4A30;font-weight:700;text-decoration:none}
 .sp-friend{display:flex;gap:12px;align-items:center;padding:14px;border-radius:18px;border:1.5px solid #E6DDF3;background:#fff}
@@ -202,64 +233,92 @@ function PondChat({ lotus, chatId, isMock, initial = [], initialBloomed = false,
     try { await givePetal(chatId); setPetal(true); onToast('You gave a petal of kindness.'); } catch { onToast('Could not send the petal.'); }
   };
 
+  const [menu, setMenu] = useState(false);
+  useEffect(() => {
+    document.body.classList.add('sp-chat-open');
+    return () => document.body.classList.remove('sp-chat-open');
+  }, []);
+  const report = () => { setMenu(false); onToast('Thank you. Our team will review this conversation.'); };
+
   return (
     <div className="sp-overlay" role="dialog" aria-modal="true" aria-label="Anonymous conversation" onClick={onClose}>
-      <motion.div className="sp-chat" onClick={e => e.stopPropagation()}
-        initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }}>
+      <motion.div className="sp-chat" onClick={e => { e.stopPropagation(); if (menu) setMenu(false); }}
+        initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 24 }} transition={{ duration: 0.22 }}>
         <div className="sp-chat-h">
-          <div className="sp-av">S</div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 700 }}>{connected || `Soul #${soulNo}`}</div>
-            <div style={{ fontSize: 12, color: '#3F7A5E' }}>Shares: {problemLabel(lotus)}</div>
+          <button type="button" className="sp-ib sp-back" onClick={onClose} aria-label="Back"><ChevronLeft size={22} /></button>
+          <div className="sp-av">{connected ? connected.replace('@', '').charAt(0).toUpperCase() : 'S'}</div>
+          <div className="who">
+            <b>{connected || `Soul #${soulNo}`}</b>
+            <span><i />{connected ? 'Soul Friend' : 'Anonymous'} · {problemLabel(lotus)}</span>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close" style={{ border: 0, background: 'none', cursor: 'pointer', color: MUTED }}><X size={20} /></button>
+          <button type="button" className="sp-ib" onClick={e => { e.stopPropagation(); setMenu(v => !v); }} aria-label="More options" aria-expanded={menu}><MoreHorizontal size={20} /></button>
+          <button type="button" className="sp-ib sp-close" onClick={onClose} aria-label="Close"><X size={20} /></button>
         </div>
-        <div className="sp-quote"><small>STARTED FROM THEIR LOTUS</small>&ldquo;{lotus.text}&rdquo;</div>
-        {connected ? (
-          <div className="sp-state sp-connected">
-            <b>You are now Soul Friends with {connected}</b>
-            You both chose to connect, so your SoulIDs are shared and this conversation is saved.
-            <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
-              <button type="button" className="sp-btn" style={{ padding: '8px 12px', fontSize: 13 }} onClick={() => navigate('/messages')}>Message {connected}</button>
-            </div>
-          </div>
-        ) : bloomed ? (
-          <div className="sp-state">
-            <b>You asked to connect.</b> If Soul #{soulNo} also taps Connect, you both see each other&apos;s SoulID and become Soul Friends. If not, nothing changes and nobody is told.
-            {isMock && (
-              <div style={{ marginTop: 8 }}>
-                <button type="button" onClick={previewAccept} style={{ border: '1px dashed #9A5A3A', background: '#fff', color: '#9A5A3A', borderRadius: 10, padding: '6px 10px', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>
-                  Dev preview: pretend they connect too
-                </button>
-              </div>
-            )}
-          </div>
-        ) : null}
-        <div className="sp-msgs">
-          {msgs.length === 0 && (
-            <p style={{ fontSize: 13, color: MUTED, textAlign: 'center', margin: '18px 0' }}>Say hello. You are both anonymous here.</p>
+
+        <AnimatePresence>
+          {menu && (
+            <motion.div className="sp-menu" onClick={e => e.stopPropagation()}
+              initial={{ opacity: 0, y: -6, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6 }}>
+              <button type="button" onClick={report}><Flag size={17} color="#9A5A3A" /><span>Report<small>Our team reviews it privately</small></span></button>
+              <button type="button" onClick={() => { setMenu(false); doDrift(); }}><Wind size={17} color={MUTED} /><span>Let it drift<small>Ends quietly. Nobody is told why.</small></span></button>
+            </motion.div>
           )}
+        </AnimatePresence>
+
+        <div className="sp-body">
+          <div className="sp-quote"><small><Flower2 size={12} />FROM THEIR LOTUS</small>&ldquo;{lotus.text}&rdquo;</div>
+          {connected ? (
+            <div className="sp-state sp-connected">
+              <b>You are now Soul Friends with {connected}</b>
+              You both chose to connect, so your SoulIDs are shared and this conversation is saved.
+              <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
+                <button type="button" className="sp-btn" style={{ padding: '8px 12px', fontSize: 13 }} onClick={() => navigate('/messages')}>Message {connected}</button>
+              </div>
+            </div>
+          ) : bloomed ? (
+            <div className="sp-state">
+              <b>You asked to connect.</b> If Soul #{soulNo} also taps Connect, you both see each other&apos;s SoulID and become Soul Friends. If not, nothing changes and nobody is told.
+              {isMock && (
+                <div style={{ marginTop: 8 }}>
+                  <button type="button" onClick={previewAccept} style={{ border: '1px dashed #9A5A3A', background: '#fff', color: '#9A5A3A', borderRadius: 10, padding: '6px 10px', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>
+                    Dev preview: pretend they connect too
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : null}
+          {msgs.length === 0 ? (
+            <div className="sp-hello">
+              <img src={LOTUS_GOLD} alt="" />
+              <b>Say hello</b>
+              <span>You are both anonymous here. Start with one of these, or write your own.</span>
+            </div>
+          ) : <div style={{ marginTop: 'auto' }} />}
           {msgs.map(m => <div key={m.id} className={`sp-m ${m.me ? 'mi' : 'th'}`}>{m.text}</div>)}
           <div ref={endRef} />
         </div>
+
         {msgs.length === 0 && (
           <div className="sp-starters">
             {CONVERSATION_STARTERS.slice(0, 3).map(s => <button key={s} type="button" onClick={() => send(s)}>{s}</button>)}
           </div>
         )}
+
         <div className="sp-chat-f">
           <div className="sp-acts">
-            <button type="button" onClick={doBloom} disabled={bloomed || Boolean(connected)} title="Share SoulIDs and become Soul Friends, only if you both choose it" style={{ background: '#F6EFE2', color: GOLD }}><Flower2 size={17} />{connected ? 'Connected' : bloomed ? 'Request sent' : 'Connect'}</button>
-            <button type="button" onClick={doPetal} style={{ background: '#F1ECF9', color: P }}><Sparkles size={17} />{petal ? 'Petal given' : 'Give a petal'}</button>
-            <button type="button" onClick={() => onToast('Thank you. Our team will review this conversation.')} style={{ background: '#FBEEE6', color: '#9A5A3A' }}><Flag size={17} />Report</button>
-            <button type="button" onClick={doDrift} style={{ background: '#F3EFF9', color: MUTED }}><Wind size={17} />Let it drift</button>
+            <button type="button" onClick={doBloom} disabled={bloomed || Boolean(connected)}
+              title="Share SoulIDs and become Soul Friends, only if you both choose it"
+              style={{ background: connected ? '#E8F4EE' : '#F6EFE2', color: connected ? '#2F6B4F' : GOLD }}>
+              <Flower2 size={16} />{connected ? 'Soul Friends' : bloomed ? 'Request sent' : 'Connect'}
+            </button>
+            <button type="button" onClick={doPetal} style={{ background: '#F1ECF9', color: P }}><Sparkles size={16} />{petal ? 'Petal given' : 'Give a petal'}</button>
           </div>
           <form className="sp-send" onSubmit={e => { e.preventDefault(); send(); }}>
-            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Type something kind..." aria-label="Message" maxLength={500} />
-            <button type="submit" aria-label="Send"><Send size={16} /></button>
+            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Type something kind…" aria-label="Message" maxLength={500} />
+            <button type="submit" aria-label="Send" disabled={!draft.trim()}><Send size={18} /></button>
           </form>
           {isMock && (
-            <p className="sp-dev"><AlertTriangle size={12} />Preview only: saved on this device, not sent to anyone yet.</p>
+            <p className="sp-dev"><AlertTriangle size={11} />Preview only: saved on this device, not sent to anyone yet.</p>
           )}
         </div>
       </motion.div>
@@ -663,13 +722,13 @@ export default function SoulPond() {
         )}
       </main>
 
-      <AnimatePresence>
+      {createPortal(<AnimatePresence>
         {chat && (
           <PondChat key={chat.chatId} lotus={chat.lotus} chatId={chat.chatId} isMock={chat.isMock}
             initial={chat.initial} initialBloomed={chat.bloomed} initialConnected={chat.connected}
             onClose={() => { setChat(null); refreshChats(); }} onToast={setToast} onChange={refreshChats} />
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
 
       {toast && <div className="sp-toast" role="status">{toast}</div>}
     </>

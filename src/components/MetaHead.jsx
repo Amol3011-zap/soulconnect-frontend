@@ -96,6 +96,7 @@ export default function MetaHead() {
 
     // Scroll to top on route change
     window.scrollTo(0, 0);
+    document.querySelector('.dash-content-wrapper')?.scrollTo?.(0, 0);
   }, [location.pathname]);
 
   return null; // This component doesn't render anything
