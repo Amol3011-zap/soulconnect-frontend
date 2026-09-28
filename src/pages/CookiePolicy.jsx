@@ -1,20 +1,44 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+/* "Dawn" palette — same tokens as the landing and the other public pages */
+const P         = '#6B4FA0';
+const DARK      = '#221B3A';
+const NAVY_SOFT = '#5B5470';
+const GOLD_TXT  = '#8A6A3E';
+const CREAM     = '#FAF8FC';
+const CREAM_2   = '#F3EFF9';
+const LINE      = '#E7E0F2';
+const BG = `radial-gradient(ellipse at 50% 0%, #FBF1EC 0%, rgba(251,241,236,0) 55%), linear-gradient(180deg, ${CREAM_2} 0%, ${CREAM} 100%)`;
+const CARD = {
+  background: '#FFFFFF', border: `1px solid ${LINE}`, borderRadius: 24,
+  padding: 'clamp(24px,5vw,48px)', boxShadow: '0 24px 56px rgba(107,79,160,0.08)',
+};
+
+const h2Style = {
+  fontSize: 'clamp(17px,2.2vw,20px)', fontWeight: 700, color: DARK,
+  fontFamily: 'Playfair Display, Georgia, serif', margin: '40px 0 10px',
+  paddingBottom: 8, borderBottom: `1px solid ${LINE}`,
+};
+const pStyle  = { fontSize: 15, color: NAVY_SOFT, lineHeight: 1.85, marginBottom: 14 };
+const liStyle = { fontSize: 15, color: NAVY_SOFT, lineHeight: 1.85, marginBottom: 6 };
+
 export default function CookiePolicy() {
   return (
-    <div style={{ minHeight: '100vh', background: '#FAF7F2', fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
-      <div style={{ maxWidth: 760, margin: '0 auto', padding: '64px 24px' }}>
+    <div style={{ minHeight: '100vh', background: BG, color: DARK, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
+      <div style={{ maxWidth: 800, margin: '0 auto', padding: 'clamp(32px,6vw,64px) clamp(16px,4vw,24px)' }}>
 
         {/* Back */}
-        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#6D4AFF', fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
+        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 28 }}>
           ← Back to Home
         </Link>
 
-        <h1 style={{ fontSize: 'clamp(28px,4vw,42px)', fontWeight: 800, color: '#1A1333', fontFamily: 'Playfair Display, Georgia, serif', marginBottom: 8 }}>
+        <div style={CARD}>
+
+        <h1 style={{ fontSize: 'clamp(28px,4vw,42px)', fontWeight: 700, color: DARK, fontFamily: 'Playfair Display, Georgia, serif', letterSpacing: '-0.02em', marginBottom: 8 }}>
           Cookie Policy
         </h1>
-        <p style={{ fontSize: 14, color: '#9CA3AF', marginBottom: 48 }}>Last updated: June 2026</p>
+        <p style={{ fontSize: 13, fontWeight: 600, color: GOLD_TXT, letterSpacing: '0.04em', marginBottom: 40 }}>Last updated: June 2026</p>
 
         {[
           {
@@ -52,22 +76,23 @@ export default function CookiePolicy() {
           },
         ].map((s, i) => (
           <div key={i} style={{ marginBottom: 40 }}>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: '#1A1333', marginBottom: 12 }}>{s.title}</h2>
-            {s.body && <p style={{ fontSize: 15, color: '#4B5563', lineHeight: 1.8, marginBottom: s.list ? 12 : 0 }}>{s.body}</p>}
+            <h2 style={{ ...h2Style, margin: '0 0 12px' }}>{s.title}</h2>
+            {s.body && <p style={{ ...pStyle, marginBottom: s.list ? 12 : 0 }}>{s.body}</p>}
             {s.list && (
               <ul style={{ paddingLeft: 20, margin: 0 }}>
                 {s.list.map((item, j) => (
-                  <li key={j} style={{ fontSize: 15, color: '#4B5563', lineHeight: 1.8, marginBottom: 6 }}>{item}</li>
+                  <li key={j} style={liStyle}>{item}</li>
                 ))}
               </ul>
             )}
           </div>
         ))}
 
-        <div style={{ borderTop: '1px solid rgba(109,74,255,0.1)', paddingTop: 32, display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-          <Link to="/terms" style={{ color: '#6D4AFF', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Privacy Policy</Link>
-          <Link to="/terms" style={{ color: '#6D4AFF', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Terms of Service</Link>
-          <Link to="/safety" style={{ color: '#6D4AFF', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Safety Policy</Link>
+        <div style={{ borderTop: `1px solid ${LINE}`, paddingTop: 28, display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+          <Link to="/terms" style={{ color: P, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Privacy Policy</Link>
+          <Link to="/terms" style={{ color: P, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Terms of Service</Link>
+          <Link to="/safety" style={{ color: P, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Safety Policy</Link>
+        </div>
         </div>
       </div>
     </div>
