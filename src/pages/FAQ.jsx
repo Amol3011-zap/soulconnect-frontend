@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, MessageCircleQuestion } from 'lucide-react';
-import Footer from '../components/Footer';
+import SimpleFooter from '../components/SimpleFooter';
 
 /* "Dawn" palette — same tokens as the landing page */
 const P          = '#6B4FA0';
@@ -263,7 +263,7 @@ export default function FAQ() {
       </div>
 
       {/* Footer */}
-      <Footer />
+      <SimpleFooter />
     </div>
   );
 }

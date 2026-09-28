@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SimpleFooter from '../components/SimpleFooter';
 
 /* "Dawn" palette — same tokens as the landing and the other public pages */
 const P         = '#6B4FA0';
@@ -197,6 +198,8 @@ export default function Privacy() {
         </div>
 
       </div>
+
+      <SimpleFooter />
     </div>
   );
 }

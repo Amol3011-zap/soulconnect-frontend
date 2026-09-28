@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SimpleFooter from '../components/SimpleFooter';
 import {
   ArrowLeft, UserPlus, IdCard, MessagesSquare, Leaf, Stethoscope, Lock, ShieldCheck,
 } from 'lucide-react';
@@ -219,6 +220,8 @@ export default function HowItWorks() {
         </div>
 
       </div>
+
+      <SimpleFooter />
     </div>
   );
 }

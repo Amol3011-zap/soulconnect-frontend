@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SimpleFooter from '../components/SimpleFooter';
 import {
   ArrowLeft, Lock, HeartHandshake, ShieldCheck, BadgeCheck, LifeBuoy, Handshake,
   KeyRound, Sprout, Phone,
@@ -383,6 +384,8 @@ export default function TrustSafety() {
           </div>
         </div>
       </div>
+
+      <SimpleFooter />
     </div>
   );
 }
