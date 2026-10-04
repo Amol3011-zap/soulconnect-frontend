@@ -5,12 +5,7 @@
       "has": [{ "type": "host", "value": "www.soulconnect.health" }],
       "destination": "https://soulconnect.health/:path*",
       "permanent": false
-    },
-    { "source": "/login", "destination": "/maintenance", "permanent": false },
-    { "source": "/signup", "destination": "/maintenance", "permanent": false },
-    { "source": "/register", "destination": "/maintenance", "permanent": false },
-    { "source": "/dashboard", "destination": "/maintenance", "permanent": false },
-    { "source": "/dashboard/:path*", "destination": "/maintenance", "permanent": false }
+    }
   ],
   "rewrites": [
     { "source": "/((?!assets|favicon|logo|og-image|manifest|robots|sitemap|brand|.*\\.[a-z]+$).*)", "destination": "/index.html" }
@@ -38,6 +33,12 @@
       "source": "/index.html",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/(login|signup|register|dashboard|dashboard/(.*))",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
       ]
     },
     {
