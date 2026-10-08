@@ -1,4 +1,5 @@
 import React from 'react';
+import BackLink from '../components/BackLink';
 import { Link } from 'react-router-dom';
 import SimpleFooter from '../components/SimpleFooter';
 
@@ -28,8 +29,8 @@ const sections = [
   {
     title: '1. About This Policy',
     body: [
-      'This Privacy Policy explains how SoulConnect ("we", "us", or "our") collects, uses, stores, and protects information you provide when using our website or joining our waitlist.',
-      'By using SoulConnect, you agree to the practices described in this Privacy Policy.',
+      'This Privacy Policy explains how SameFeel ("we", "us", or "our") collects, uses, stores, and protects information you provide when using our website or joining our waitlist.',
+      'By using SameFeel, you agree to the practices described in this Privacy Policy.',
     ],
   },
   {
@@ -48,7 +49,7 @@ const sections = [
     body: ['We use the information we collect to:'],
     list: [
       'Process and manage your waitlist registration',
-      'Send you updates, announcements, and launch information about SoulConnect',
+      'Send you updates, announcements, and launch information about SameFeel',
       'Respond to your enquiries and support requests',
       'Improve and develop our platform and services',
       'Comply with legal obligations',
@@ -58,7 +59,7 @@ const sections = [
   {
     title: '4. Cookies and Tracking',
     body: [
-      'SoulConnect uses cookies and similar tracking technologies to improve your experience on our website.',
+      'SameFeel uses cookies and similar tracking technologies to improve your experience on our website.',
       'Cookies help us understand how visitors use our site and allow us to make improvements.',
     ],
     list: [
@@ -92,7 +93,7 @@ const sections = [
   {
     title: '6a. DPDPA 2023 Compliance (India)',
     body: [
-      'SoulConnect complies with the Digital Personal Data Protection Act (DPDPA), 2023, India\'s primary data protection framework.',
+      'SameFeel complies with the Digital Personal Data Protection Act (DPDPA), 2023, India\'s primary data protection framework.',
       'We process personal data fairly, lawfully, and transparently with appropriate consent. Your data is stored on secure Indian data centers where applicable.',
       'All personal data including mental health information is treated as sensitive personal data and protected under DPDPA guidelines.',
     ],
@@ -120,7 +121,7 @@ const sections = [
   {
     title: '9. Children\'s Privacy',
     body: [
-      'SoulConnect is intended for users who are 18 years of age or older.',
+      'SameFeel is intended for users who are 18 years of age or older.',
       'We do not knowingly collect personal information from individuals under the age of 18. If we become aware that a minor has provided us with personal information, we will take steps to delete it promptly.',
     ],
   },
@@ -141,7 +142,7 @@ const sections = [
   {
     title: '12. Governing Law',
     body: [
-      'This Privacy Policy is governed by the laws applicable in the jurisdiction where SoulConnect operates.',
+      'This Privacy Policy is governed by the laws applicable in the jurisdiction where SameFeel operates.',
     ],
   },
 ];
@@ -151,9 +152,9 @@ export default function Privacy() {
     <div style={{ minHeight: '100vh', background: BG, color: DARK, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
       <div style={{ maxWidth: 800, margin: '0 auto', padding: 'clamp(32px,6vw,64px) clamp(16px,4vw,24px)' }}>
 
-        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 28 }}>
+        <BackLink style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 28 }}>
           ← Back to Home
-        </Link>
+        </BackLink>
 
         <div style={CARD}>
 
@@ -164,7 +165,7 @@ export default function Privacy() {
           </h1>
           <p style={{ fontSize: 13, fontWeight: 600, color: GOLD_TXT, letterSpacing: '0.04em', marginBottom: 20 }}>Effective Date: June 2026</p>
           <p style={pStyle}>
-            At SoulConnect, your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information when you visit our website or join our waitlist.
+            At SameFeel, your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information when you visit our website or join our waitlist.
           </p>
         </div>
 

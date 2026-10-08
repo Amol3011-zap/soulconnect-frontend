@@ -248,7 +248,7 @@ export default function Account() {
         </button>
 
         <p className="text-center text-xs pb-4" style={{ color: 'var(--text-muted)' }}>
-          SoulConnect v1.0 · Your data is private & encrypted
+          SameFeel v1.0 · Your data is private & encrypted
         </p>
       </div>
       <Footer />

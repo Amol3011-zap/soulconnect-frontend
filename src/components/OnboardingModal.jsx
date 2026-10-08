@@ -407,7 +407,7 @@ export default function OnboardingModal({ onComplete }) {
                 style={{ textAlign: 'center', paddingY: 20 }}
               >
                 <p style={{ fontSize: 16, color: 'rgba(184, 180, 216, 0.8)', lineHeight: 1.6 }}>
-                  🌸 Welcome to SoulConnect! You're all set to begin your healing journey.
+                  🌸 Welcome to SameFeel! You're all set to begin your healing journey.
                 </p>
               </motion.div>
             )}

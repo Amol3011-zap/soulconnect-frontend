@@ -101,7 +101,7 @@ export default function Login() {
           >
             <img
               src="/logo-footer.png"
-              alt="SoulConnect"
+              alt="SameFeel"
               className="h-16"
             />
           </motion.div>
@@ -176,7 +176,7 @@ export default function Login() {
           >
             <img
               src="/logo-footer.png"
-              alt="SoulConnect"
+              alt="SameFeel"
               className="h-14"
             />
           </motion.div>
@@ -331,7 +331,7 @@ export default function Login() {
 
               {/* Sign up link */}
               <p className="text-center text-sm text-gray-600">
-                New to SoulConnect?{' '}
+                New to SameFeel?{' '}
                 <Link
                   to="/signup"
                   className="font-semibold transition-colors hover:text-purple-700"

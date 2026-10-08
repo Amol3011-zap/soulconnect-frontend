@@ -54,7 +54,7 @@ export default function CommunityRules() {
       content: (
         <div>
           <p style={{ color: '#374151', fontSize: 14, lineHeight: 1.7, marginBottom: 14 }}>
-            <strong style={{ color: '#92400E' }}>Discussion of emotions is welcome and encouraged.</strong> SoulConnect is a space for honest, vulnerable sharing without judgment.
+            <strong style={{ color: '#92400E' }}>Discussion of emotions is welcome and encouraged.</strong> SameFeel is a space for honest, vulnerable sharing without judgment.
           </p>
           <p style={{ color: '#374151', fontSize: 14, lineHeight: 1.7, marginBottom: 14 }}>
             However, the following are strictly prohibited:
@@ -89,7 +89,7 @@ export default function CommunityRules() {
       content: (
         <div>
           <p style={{ color: '#374151', fontSize: 14, lineHeight: 1.7, marginBottom: 14 }}>
-            SoulConnect has zero tolerance for harassment or discrimination of any kind. The following are prohibited:
+            SameFeel has zero tolerance for harassment or discrimination of any kind. The following are prohibited:
           </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
             {[
@@ -129,7 +129,7 @@ export default function CommunityRules() {
           <div style={{ fontSize: 44, marginBottom: 14 }}>🤝</div>
           <h1 style={{ color: '#fff', fontSize: 36, fontWeight: 800, margin: '0 0 10px', lineHeight: 1.2 }}>Community Guidelines</h1>
           <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 16, margin: 0, maxWidth: 560, lineHeight: 1.7 }}>
-            SoulConnect exists to create a safe healing environment where every person feels respected, valued, and free to grow. These guidelines protect that space for everyone.
+            SameFeel exists to create a safe healing environment where every person feels respected, valued, and free to grow. These guidelines protect that space for everyone.
           </p>
         </div>
       </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 
 /**
- * Skeleton Loaders for SoulConnect
+ * Skeleton Loaders for SameFeel
  * Matches the glassmorphic dark theme
  */
 

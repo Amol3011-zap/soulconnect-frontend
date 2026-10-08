@@ -27,7 +27,7 @@ export default function BlogDetail() {
 
   useEffect(() => {
     if (article) {
-      document.title = `${article.title} | SoulConnect Blog`;
+      document.title = `${article.title} | SameFeel Blog`;
       const meta = document.querySelector('meta[name="description"]');
       if (meta) meta.content = article.description;
 
@@ -284,7 +284,7 @@ export default function BlogDetail() {
             },
             publisher: {
               '@type': 'Organization',
-              name: 'SoulConnect',
+              name: 'SameFeel',
               url: 'https://soulconnect.health',
               logo: {
                 '@type': 'ImageObject',

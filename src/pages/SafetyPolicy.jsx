@@ -1,4 +1,5 @@
 import React from 'react';
+import BackLink from '../components/BackLink';
 import { Link } from 'react-router-dom';
 
 const P  = '#A78BFA';
@@ -17,9 +18,9 @@ export default function SafetyPolicy() {
     <div style={{ minHeight: '100vh', background: BG, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '64px 24px' }}>
 
-        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
+        <BackLink style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
           ← Back to Home
-        </Link>
+        </BackLink>
 
         {/* Header */}
         <div style={{ marginBottom: 48 }}>
@@ -28,13 +29,13 @@ export default function SafetyPolicy() {
           </h1>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginBottom: 20 }}>Last Updated: June 2026</p>
           <p style={pStyle}>
-            At SoulConnect, your safety and wellbeing are our highest priority. Please read this page carefully so you understand what SoulConnect is, what it is not, and how we keep our community safe.
+            At SameFeel, your safety and wellbeing are our highest priority. Please read this page carefully so you understand what SameFeel is, what it is not, and how we keep our community safe.
           </p>
         </div>
 
-        {/* What SoulConnect Is */}
-        <h2 style={h2Style}>What SoulConnect Is</h2>
-        <p style={pStyle}>SoulConnect is a peer wellness and community support platform designed to help people:</p>
+        {/* What SameFeel Is */}
+        <h2 style={h2Style}>What SameFeel Is</h2>
+        <p style={pStyle}>SameFeel is a peer wellness and community support platform designed to help people:</p>
         <ul style={{ paddingLeft: 24, margin: '4px 0 14px' }}>
           {[
             'Connect with others experiencing similar life challenges',
@@ -45,13 +46,13 @@ export default function SafetyPolicy() {
           ].map((item, i) => <li key={i} style={liStyle}>{item}</li>)}
         </ul>
         <p style={pStyle}>
-          SoulConnect is a space for connection, healing, and growth — built on compassion, respect, and community.
+          SameFeel is a space for connection, healing, and growth — built on compassion, respect, and community.
         </p>
 
-        {/* What SoulConnect Is NOT */}
-        <h2 style={h2Style}>What SoulConnect Is Not</h2>
+        {/* What SameFeel Is NOT */}
+        <h2 style={h2Style}>What SameFeel Is Not</h2>
         <p style={pStyle}>
-          SoulConnect is not a clinical, medical, or emergency service. We do not provide:
+          SameFeel is not a clinical, medical, or emergency service. We do not provide:
         </p>
         <ul style={{ paddingLeft: 24, margin: '4px 0 14px' }}>
           {[
@@ -64,7 +65,7 @@ export default function SafetyPolicy() {
           ].map((item, i) => <li key={i} style={liStyle}>{item}</li>)}
         </ul>
         <p style={pStyle}>
-          Nothing on SoulConnect should be used as a substitute for professional medical, psychological, or emergency care.
+          Nothing on SameFeel should be used as a substitute for professional medical, psychological, or emergency care.
         </p>
 
         {/* Emergency Situations */}
@@ -74,7 +75,7 @@ export default function SafetyPolicy() {
             If you or someone you know is in immediate danger or experiencing a mental health emergency, please contact emergency services immediately.
           </p>
           <p style={{ ...pStyle, marginBottom: 8 }}>
-            SoulConnect is not equipped to respond to emergencies. If you are experiencing:
+            SameFeel is not equipped to respond to emergencies. If you are experiencing:
           </p>
           <ul style={{ paddingLeft: 24, margin: '4px 0 12px' }}>
             {[
@@ -91,7 +92,7 @@ export default function SafetyPolicy() {
 
         {/* Community Safety Principles */}
         <h2 style={h2Style}>Community Safety Principles</h2>
-        <p style={pStyle}>Every member of the SoulConnect community is expected to uphold these principles:</p>
+        <p style={pStyle}>Every member of the SameFeel community is expected to uphold these principles:</p>
         <ul style={{ paddingLeft: 24, margin: '4px 0 14px' }}>
           {[
             'Respect — honour every person\'s journey and lived experience',
@@ -105,7 +106,7 @@ export default function SafetyPolicy() {
 
         {/* Unacceptable Behaviour */}
         <h2 style={h2Style}>Unacceptable Behaviour</h2>
-        <p style={pStyle}>The following behaviours are not tolerated on SoulConnect:</p>
+        <p style={pStyle}>The following behaviours are not tolerated on SameFeel:</p>
         <ul style={{ paddingLeft: 24, margin: '4px 0 14px' }}>
           {[
             'Harassment, bullying, or threatening behaviour toward any member',
@@ -131,7 +132,7 @@ export default function SafetyPolicy() {
           We take every report seriously and aim to review concerns promptly. You can report a concern by contacting us directly at the email below.
         </p>
         <p style={pStyle}>
-          SoulConnect reserves the right to remove any content or member that poses a risk to the safety and wellbeing of the community.
+          SameFeel reserves the right to remove any content or member that poses a risk to the safety and wellbeing of the community.
         </p>
 
         {/* Contact */}

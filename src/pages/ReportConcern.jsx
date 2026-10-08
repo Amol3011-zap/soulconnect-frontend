@@ -80,7 +80,7 @@ export default function ReportConcern() {
           }}>✓</div>
           <h1 style={{ fontSize: 28, fontWeight: 800, color: '#065F46', marginBottom: 12 }}>Report Submitted</h1>
           <p style={{ color: '#6B7280', fontSize: 15, lineHeight: 1.7, marginBottom: 28 }}>
-            Thank you for helping keep SoulConnect safe. Our moderation team will review your report confidentially and take appropriate action. You'll be notified of the outcome.
+            Thank you for helping keep SameFeel safe. Our moderation team will review your report confidentially and take appropriate action. You'll be notified of the outcome.
           </p>
           <div style={{ background: '#fff', borderRadius: 14, padding: '20px 24px', marginBottom: 24, border: '1.5px solid #BBF7D0', textAlign: 'left' }}>
             <p style={{ margin: '0 0 6px', fontWeight: 700, color: '#065F46', fontSize: 14 }}>What happens next:</p>
@@ -100,7 +100,7 @@ export default function ReportConcern() {
               background: 'linear-gradient(135deg,#6D4AFF,#8B5CF6)', color: '#fff',
               border: 'none', borderRadius: 99, padding: '13px 24px', fontSize: 14,
               fontWeight: 700, cursor: 'pointer',
-            }}>← Back to SoulConnect</button>
+            }}>← Back to SameFeel</button>
             <button onClick={() => { setForm({ type:'', reason:'', description:'', screenshot:null, anonymous:false }); setErrors({}); setStep(1); }} style={{
               background: '#F3F4F6', color: '#374151', border: 'none', borderRadius: 99,
               padding: '13px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer',

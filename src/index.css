@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 /* ══════════════════════════════════════════════
-   SOULCONNECT GLOBAL DESIGN SYSTEM
+   SAMEFEEL GLOBAL DESIGN SYSTEM
    Mobile-first. Premium. Calm. Luxury.
    Primary target: iPhone 15 Pro (393×852)
 ══════════════════════════════════════════════ */
 
 :root {
-  /* ── SoulConnect Design Tokens ── */
+  /* ── SameFeel Design Tokens ── */
   --sc-bg:          #0D0B1A;
   --sc-surface:     #1A1035;
   --sc-card:        #211044;
@@ -62,7 +62,7 @@
   --transition-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Dark mode = default (SoulConnect is dark-first) */
+/* Dark mode = default (SameFeel is dark-first) */
 .dark {
   --bg: #0D0B1A;
   --bg-card: #211044;
@@ -213,7 +213,7 @@ html, body {
 
 /* ══════════════════════════════════════════════
    MOBILE-FIRST GLOBAL UTILITIES
-   SoulConnect Design System
+   SameFeel Design System
 ══════════════════════════════════════════════ */
 
 /* ── Body default — dark luxury ── */
@@ -488,7 +488,7 @@ html { scroll-behavior: smooth; }
 }
 
 /* ══════════════════════════════════════════════
-   LOGGED-IN APP — LIGHT THEME (SoulConnect)
+   LOGGED-IN APP — LIGHT THEME (SameFeel)
    Scoped to .sc-app (the DashboardLayout root) so nothing here reaches the
    public / marketing pages. Holds both the shadcn/ui variables (HSL
    triplets, consumed via hsl(var(--x)) in tailwind.config.js) and light

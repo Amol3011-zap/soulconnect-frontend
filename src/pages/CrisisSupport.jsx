@@ -1,234 +1,210 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Phone, Copy, Check, ChevronDown, ChevronUp, ArrowLeft, ShieldAlert } from 'lucide-react';
 
-const STYLES = `
-@keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
-@keyframes gentlePulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
-`;
-
-const CRISIS_LINES = [
-  { name: 'iCall', phone: '9152987821', country: 'India 🇮🇳', hours: 'Mon–Sat, 8am–10pm', color: '#7C3AED' },
-  { name: 'AASRA', phone: '9820466627', country: 'India 🇮🇳', hours: '24 / 7', color: '#DC2626' },
-  { name: 'Vandrevala Foundation', phone: '1860-2662-345', country: 'India 🇮🇳', hours: '24 / 7', color: '#0891B2' },
-  { name: 'Suicide & Crisis Lifeline', phone: '988', country: 'United States 🇺🇸', hours: '24 / 7', color: '#059669' },
-  { name: 'Samaritans', phone: '116 123', country: 'United Kingdom 🇬🇧', hours: '24 / 7', color: '#D97706' },
-  { name: 'Crisis Text Line', phone: 'Text HOME to 741741', country: 'United States 🇺🇸', hours: '24 / 7', color: '#6D4AFF' },
-  { name: 'Lifeline', phone: '13 11 14', country: 'Australia 🇦🇺', hours: '24 / 7', color: '#DB2777' },
+/* ── Helpline data (verified September 2026) ── */
+const PRIMARY = [
+  { name: 'Tele MANAS',           phone: '14416',         hours: '24/7', note: 'Government of India', toll: true },
+  { name: 'Vandrevala Foundation', phone: '9999 666 555',  hours: '24/7', note: 'English, Hindi and regional languages' },
+  { name: 'AASRA',                phone: '9820 466 726',  hours: '24/7', note: 'Mumbai based, nationwide reach' },
+  { name: 'Jeevan Aastha',        phone: '1800 233 3330', hours: '24/7', note: 'Toll free helpline', toll: true },
+  { name: 'iCall (TISS)',         phone: '9152 987 821',  hours: 'Mon–Sat 8am–10pm', note: 'Tata Institute of Social Sciences' },
 ];
 
-const EMERGENCY_SIGNS = [
-  { icon: '💭', text: 'Thoughts of suicide or self-harm' },
-  { icon: '😰', text: 'Feeling unable to keep yourself safe' },
-  { icon: '🆘', text: 'Immediate danger from another person' },
-  { icon: '🏥', text: 'Medical emergency or overdose' },
-  { icon: '💔', text: 'Severe emotional distress or breakdown' },
-  { icon: '🚨', text: 'Domestic violence or abuse' },
+const REGIONAL = [
+  { name: 'SNEHA Chennai',          phone: '044 2464 0050', hours: '24/7',              note: 'Also: 8976 994 777' },
+  { name: 'Sumaitri Delhi',         phone: '011 2338 9090', hours: 'Mon–Fri 2pm–10pm', note: 'Delhi' },
+  { name: 'Connecting Trust',       phone: '9922 001 122',  hours: '12pm–8pm daily', note: 'Pune, Maharashtra' },
+  { name: 'Roshni Foundation',      phone: '040 6620 2000', hours: '11am–9pm Mon–Sat', note: 'Hyderabad' },
+  { name: 'Parivarthan',            phone: '7676 602 602',  hours: '4pm–10pm Mon–Sat', note: 'Bangalore' },
+  { name: 'Maithri',                phone: '0484 254 0530', hours: '10am–6pm daily', note: 'Kochi, Kerala' },
+  { name: 'COOJ Mental Health',     phone: '0832 225 2525', hours: '1pm–7pm Mon–Sat', note: 'Goa' },
+  { name: 'NIBS Kolkata',           phone: '033 2286 5603', hours: 'Mon–Sat 10am–6pm', note: 'Kolkata' },
+  { name: 'Fortis Stress Helpline', phone: '8376 804 102',  hours: '8am–10pm daily', note: 'Fortis Healthcare' },
+  { name: 'Mann Talks',             phone: '8686 139 139',  hours: '9am–10pm daily', note: 'Youth focused' },
+  { name: 'Samaritans Mumbai',      phone: '8422 984 528',  hours: '5pm–8pm daily', note: 'English and Hindi' },
+  { name: 'Swaasthi',               phone: '0484 290 9090', hours: 'Mon–Fri 10am–6pm', note: 'For healthcare workers' },
+];
+
+const INTERNATIONAL = [
+  { name: 'Suicide & Crisis Lifeline', phone: '988',            country: 'US',     hours: '24/7' },
+  { name: 'Crisis Text Line',          phone: 'Text HOME to 741741', country: 'US', hours: '24/7' },
+  { name: 'Samaritans',                phone: '116 123',        country: 'UK',     hours: '24/7' },
+  { name: 'Lifeline',                  phone: '13 11 14',       country: 'AU',     hours: '24/7' },
+  { name: 'Befrienders Worldwide',     phone: 'befrienders.org',country: 'Global', hours: 'Directory' },
 ];
 
 export default function CrisisSupport() {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(null);
+  const [showRegional, setShowRegional] = useState(false);
+  const [showIntl, setShowIntl] = useState(false);
 
-  const handleCopy = (phone, i) => {
-    navigator.clipboard?.writeText(phone).catch(() => {});
-    setCopied(i);
+  const copy = (phone, key) => {
+    navigator.clipboard?.writeText(phone.replace(/\s/g, '')).catch(() => {});
+    setCopied(key);
     setTimeout(() => setCopied(null), 2000);
   };
 
+  const HelplineRow = ({ item, idx, section }) => {
+    const key = `${section}-${idx}`;
+    const clean = item.phone.replace(/\s/g, '');
+    const isText = item.phone.toLowerCase().includes('text') || item.phone.includes('.org');
+    return (
+      <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3.5 transition-colors hover:border-primary/30">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+          {item.name[0]}
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[14px] font-semibold text-foreground">{item.name}</span>
+            {item.toll && <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400">Toll Free</span>}
+            {item.country && <span className="text-[11px] text-muted-foreground">{item.country}</span>}
+          </div>
+          <div className="mt-0.5 text-[12px] text-muted-foreground">{item.hours}{item.note ? ` · ${item.note}` : ''}</div>
+        </div>
+        <div className="flex shrink-0 items-center gap-1.5">
+          <span className="hidden text-[14px] font-bold text-primary sm:inline">{item.phone}</span>
+          <button
+            onClick={() => copy(item.phone, key)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary text-muted-foreground transition-colors hover:text-foreground"
+            aria-label="Copy number"
+          >
+            {copied === key ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+          </button>
+          {!isText && (
+            <a
+              href={`tel:${clean}`}
+              className="flex h-8 items-center gap-1 rounded-lg bg-primary px-3 text-[12px] font-bold text-primary-foreground no-underline"
+            >
+              <Phone className="h-3 w-3" /> Call
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(160deg,#FFF7ED 0%,#FEF2F2 40%,#F5F3FF 100%)', fontFamily: "'Inter',sans-serif" }}>
-      <style>{STYLES}</style>
+    <div className="min-h-screen bg-background pb-24" style={{ fontFamily: "'Plus Jakarta Sans',Inter,system-ui,sans-serif" }}>
+      <div className="mx-auto max-w-2xl px-4 pt-5 sm:px-6">
 
-      {/* Emergency Banner */}
-      <div style={{
-        background: 'linear-gradient(135deg,#DC2626,#B91C1C)',
-        padding: '14px 24px',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-      }}>
-        <span style={{ animation: 'gentlePulse 2s ease infinite', fontSize: 18 }}>🚨</span>
-        <p style={{ margin: 0, color: '#fff', fontWeight: 700, fontSize: 15, textAlign: 'center' }}>
-          If you are in immediate danger — call <strong>emergency services (112 / 911 / 999)</strong> right now.
-        </p>
-      </div>
+        {/* Back */}
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="mb-4 flex items-center gap-1.5 rounded-full bg-secondary px-3 py-2 text-[13px] font-semibold text-foreground transition-colors hover:bg-secondary/80"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back
+        </button>
 
-      {/* Header */}
-      <div style={{
-        background: 'linear-gradient(135deg,#7C3AED,#DC2626)',
-        padding: 0, position: 'relative', overflow: 'hidden',
-      }}>
-        <div style={{ position:'absolute',top:-60,right:-60,width:240,height:240,borderRadius:'50%',background:'rgba(255,255,255,0.06)',pointerEvents:'none' }} />
-        <div style={{ position:'absolute',bottom:-40,left:-40,width:180,height:180,borderRadius:'50%',background:'rgba(255,255,255,0.05)',pointerEvents:'none' }} />
-
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px 36px', position: 'relative' }}>
-          <button onClick={() => navigate(-1)} style={{
-            background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 99,
-            color: '#fff', padding: '8px 18px', fontSize: 13, fontWeight: 600,
-            cursor: 'pointer', marginBottom: 22, display: 'flex', alignItems: 'center', gap: 6,
-          }}>← Back</button>
-
-          <div style={{ fontSize: 44, marginBottom: 12, animation: 'gentlePulse 3s ease infinite' }}>🆘</div>
-          <h1 style={{ color: '#fff', fontSize: 36, fontWeight: 800, margin: '0 0 12px', lineHeight: 1.2 }}>Need Immediate Help?</h1>
-          <p style={{ color: 'rgba(255,255,255,0.88)', fontSize: 17, margin: 0, maxWidth: 560, lineHeight: 1.7 }}>
-            If you are in immediate danger, thinking about harming yourself, or believe someone else may be at risk — please seek emergency assistance immediately. You are not alone.
+        {/* Header */}
+        <div className="mb-6">
+          <div className="mb-2 flex items-center gap-2.5">
+            <ShieldAlert className="h-7 w-7 text-red-500" />
+            <h1 className="text-[26px] font-bold tracking-tight text-foreground sm:text-[30px]" style={{ fontFamily: "'Playfair Display',Georgia,serif" }}>
+              Crisis Support
+            </h1>
+          </div>
+          <p className="text-[15px] leading-relaxed text-muted-foreground">
+            If you or someone you know is in distress, reach out. Help is always available.
           </p>
         </div>
-      </div>
 
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 24px 64px' }}>
-
-        {/* Emergency Action Card */}
-        <div style={{
-          background: 'linear-gradient(135deg,#FEF2F2,#FFF7ED)',
-          borderRadius: 18, padding: '28px 32px', marginBottom: 24,
-          border: '2px solid #FCA5A5',
-          animation: 'fadeUp 0.4s ease both',
-        }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#991B1B', margin: '0 0 16px' }}>
-            🚨 Emergency Situations
-          </h2>
-          <p style={{ color: '#7F1D1D', fontSize: 14, marginBottom: 16, fontWeight: 500 }}>
-            If you are experiencing any of the following, contact emergency services immediately:
+        {/* Emergency banner */}
+        <div className="mb-5 rounded-2xl border-2 border-red-200 bg-red-50 p-5 dark:border-red-900 dark:bg-red-950/30">
+          <h2 className="mb-2 text-[16px] font-bold text-red-800 dark:text-red-400">In Immediate Danger?</h2>
+          <p className="mb-4 text-[14px] leading-relaxed text-red-700 dark:text-red-300">
+            Call emergency services now or go to the nearest hospital.
           </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(220px,1fr))', gap: 10, marginBottom: 20 }}>
-            {EMERGENCY_SIGNS.map((s, i) => (
-              <div key={i} style={{
-                display: 'flex', alignItems: 'center', gap: 10,
-                background: 'rgba(254,226,226,0.7)', borderRadius: 10, padding: '10px 14px',
-              }}>
-                <span style={{ fontSize: 18 }}>{s.icon}</span>
-                <span style={{ fontSize: 13, color: '#7F1D1D', fontWeight: 500, lineHeight: 1.4 }}>{s.text}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-            <a href="tel:112" style={{
-              background: '#DC2626', color: '#fff', borderRadius: 99,
-              padding: '13px 26px', fontSize: 15, fontWeight: 700,
-              textDecoration: 'none', display: 'inline-block',
-            }}>📞 Call Emergency: 112</a>
-            <a href="tel:100" style={{
-              background: '#7C3AED', color: '#fff', borderRadius: 99,
-              padding: '13px 26px', fontSize: 15, fontWeight: 700,
-              textDecoration: 'none', display: 'inline-block',
-            }}>🚔 Police: 100</a>
+          <div className="flex flex-wrap gap-2.5">
+            <a href="tel:112" className="inline-flex items-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-[14px] font-bold text-white no-underline shadow-md">
+              <Phone className="h-4 w-4" /> Emergency: 112
+            </a>
+            <a href="tel:100" className="inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-[14px] font-bold text-background no-underline shadow-md">
+              <Phone className="h-4 w-4" /> Police: 100
+            </a>
           </div>
         </div>
 
-        {/* Crisis Lines */}
-        <div style={{
-          background: '#fff', borderRadius: 18, padding: '28px 32px', marginBottom: 24,
-          boxShadow: '0 2px 16px rgba(109,74,255,0.08)',
-          animation: 'fadeUp 0.5s ease both', animationDelay: '80ms',
-        }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1e1b4b', margin: '0 0 6px' }}>📞 Crisis Support Lines</h2>
-          <p style={{ color: '#6B7280', fontSize: 14, marginBottom: 20 }}>Free, confidential support available 24/7.</p>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {CRISIS_LINES.map((r, i) => (
-              <div key={i} style={{
-                display: 'flex', alignItems: 'center', gap: 14,
-                border: '1.5px solid #EDE9FE', borderRadius: 14, padding: '14px 18px',
-                flexWrap: 'wrap',
-              }}>
-                <div style={{
-                  width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
-                  background: r.color, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#fff', fontWeight: 800, fontSize: 14,
-                }}>{r.name[0]}</div>
-                <div style={{ flex: 1, minWidth: 120 }}>
-                  <div style={{ fontWeight: 700, color: '#1e1b4b', fontSize: 15 }}>{r.name}</div>
-                  <div style={{ color: '#6B7280', fontSize: 12 }}>{r.country} · {r.hours}</div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontWeight: 800, color: r.color, fontSize: 16 }}>{r.phone}</span>
-                  <button
-                    onClick={() => handleCopy(r.phone, i)}
-                    style={{
-                      background: copied === i ? '#DCFCE7' : '#F3F4F6',
-                      color: copied === i ? '#059669' : '#6B7280',
-                      border: 'none', borderRadius: 6, padding: '5px 10px',
-                      fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                    }}
-                  >{copied === i ? '✓ Copied' : 'Copy'}</button>
-                  <a href={`tel:${r.phone.replace(/\s/g,'')}`} style={{
-                    background: r.color, color: '#fff', borderRadius: 6,
-                    padding: '5px 12px', fontSize: 12, fontWeight: 700,
-                    textDecoration: 'none',
-                  }}>Call</a>
-                </div>
-              </div>
-            ))}
+        {/* Primary 24/7 helplines */}
+        <section className="mb-5">
+          <div className="mb-3 flex items-center gap-2">
+            <h2 className="text-[17px] font-semibold text-foreground">National Helplines</h2>
+            <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400">24/7</span>
           </div>
-        </div>
-
-        {/* You Are Not Alone */}
-        <div style={{
-          background: 'linear-gradient(135deg,#F5F3FF,#EDE9FE)',
-          borderRadius: 18, padding: '28px 32px', marginBottom: 24,
-          border: '1.5px solid rgba(167,139,250,0.3)',
-          animation: 'fadeUp 0.5s ease both', animationDelay: '160ms',
-        }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#4C1D95', margin: '0 0 12px' }}>💜 You Are Not Alone</h2>
-          <p style={{ color: '#5B21B6', fontSize: 15, lineHeight: 1.8, marginBottom: 16 }}>
-            Whatever you are going through right now, there are people who care and who want to help.
-            Reaching out is an act of incredible strength and courage.
-          </p>
-          <p style={{ color: '#6B7280', fontSize: 14, lineHeight: 1.7, marginBottom: 20 }}>
-            SoulConnect is a peer wellness community. We are not a crisis service, but we care deeply about your wellbeing.
-            Please use the crisis resources above for immediate professional support.
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-            <button
-              onClick={() => navigate('/healers')}
-              style={{
-                background: 'linear-gradient(135deg,#6D4AFF,#8B5CF6)',
-                color: '#fff', border: 'none', borderRadius: 99,
-                padding: '12px 22px', fontSize: 14, fontWeight: 700, cursor: 'pointer',
-              }}
-            >🧘 Find Professional Support</button>
-            <button
-              onClick={() => navigate('/dashboard')}
-              style={{
-                background: '#fff', color: '#6D4AFF', border: '2px solid #EDE9FE',
-                borderRadius: 99, padding: '12px 22px', fontSize: 14,
-                fontWeight: 700, cursor: 'pointer',
-              }}
-            >← Return to SoulConnect</button>
+          <div className="flex flex-col gap-2.5">
+            {PRIMARY.map((r, i) => <HelplineRow key={i} item={r} idx={i} section="pri" />)}
           </div>
-        </div>
+        </section>
 
-        {/* What to say */}
-        <div style={{
-          background: '#fff', borderRadius: 18, padding: '28px 32px',
-          boxShadow: '0 2px 16px rgba(109,74,255,0.07)',
-          animation: 'fadeUp 0.5s ease both', animationDelay: '240ms',
-        }}>
-          <h2 style={{ fontSize: 18, fontWeight: 800, color: '#1e1b4b', margin: '0 0 14px' }}>💬 What to Say When You Call</h2>
-          <p style={{ color: '#6B7280', fontSize: 14, marginBottom: 14, lineHeight: 1.6 }}>
-            If you're not sure what to say, you can start with:
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {/* Regional — collapsible */}
+        <section className="mb-5">
+          <button
+            type="button"
+            onClick={() => setShowRegional(!showRegional)}
+            className="mb-3 flex w-full items-center justify-between rounded-xl bg-secondary/60 px-4 py-3 text-left transition-colors hover:bg-secondary"
+          >
+            <span className="text-[15px] font-semibold text-foreground">Regional Helplines</span>
+            <span className="flex items-center gap-1 text-[13px] text-muted-foreground">
+              {REGIONAL.length} numbers {showRegional ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </span>
+          </button>
+          {showRegional && (
+            <div className="flex flex-col gap-2.5">
+              {REGIONAL.map((r, i) => <HelplineRow key={i} item={r} idx={i} section="reg" />)}
+            </div>
+          )}
+        </section>
+
+        {/* International — collapsible */}
+        <section className="mb-5">
+          <button
+            type="button"
+            onClick={() => setShowIntl(!showIntl)}
+            className="mb-3 flex w-full items-center justify-between rounded-xl bg-secondary/60 px-4 py-3 text-left transition-colors hover:bg-secondary"
+          >
+            <span className="text-[15px] font-semibold text-foreground">International Lines</span>
+            <span className="flex items-center gap-1 text-[13px] text-muted-foreground">
+              {INTERNATIONAL.length} numbers {showIntl ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </span>
+          </button>
+          {showIntl && (
+            <div className="flex flex-col gap-2.5">
+              {INTERNATIONAL.map((r, i) => <HelplineRow key={i} item={r} idx={i} section="intl" />)}
+            </div>
+          )}
+        </section>
+
+        {/* Not sure what to say */}
+        <section className="mb-5 rounded-2xl border border-border bg-card p-5">
+          <h2 className="mb-3 text-[16px] font-semibold text-foreground">Not sure what to say?</h2>
+          <p className="mb-3 text-[13px] text-muted-foreground">You can start with any of these. The person on the line will guide you.</p>
+          <div className="flex flex-col gap-2">
             {[
-              '"I\'m struggling and need someone to talk to."',
-              '"I\'m having thoughts of hurting myself."',
-              '"I\'m worried about someone I know."',
-              '"I\'m not sure what to do right now."',
+              "I'm struggling and need someone to talk to.",
+              "I'm having thoughts of hurting myself.",
+              "I'm worried about someone I know.",
+              "I just need someone to listen right now.",
             ].map((s, i) => (
-              <div key={i} style={{
-                background: '#F5F3FF', borderRadius: 10, padding: '12px 16px',
-                borderLeft: '3px solid #8B5CF6', color: '#4C1D95',
-                fontSize: 14, fontStyle: 'italic', fontWeight: 500,
-              }}>{s}</div>
+              <div key={i} className="rounded-xl border-l-[3px] border-primary bg-secondary/50 px-4 py-3 text-[14px] italic text-foreground">
+                "{s}"
+              </div>
             ))}
           </div>
+        </section>
+
+        {/* Footer note */}
+        <div className="rounded-2xl bg-secondary/40 p-5 text-center">
+          <p className="text-[14px] leading-relaxed text-muted-foreground">
+            Whatever you are going through, there are people who care and want to help.
+            Reaching out is an act of courage. 💜
+          </p>
+          <p className="mt-3 text-[12px] text-muted-foreground/70">
+            SameFeel is a peer wellness community and is not a crisis service. All numbers verified as of September 2026.
+          </p>
         </div>
 
-        {/* Footer */}
-        <p style={{ textAlign: 'center', color: '#9CA3AF', fontSize: 13, marginTop: 32, lineHeight: 1.6 }}>
-          SoulConnect is a peer wellness platform and is not a crisis service or emergency provider.<br/>
-          For emergencies, always contact local emergency services immediately.
-        </p>
       </div>
     </div>
   );

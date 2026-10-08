@@ -1,56 +1,101 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { motion, AnimatePresence } from 'motion/react';
-import { Home, BookHeart, Users, MessageCircle, Stethoscope, UserRound, BarChart3, Heart, Bell, Moon, Sun } from 'lucide-react';
+import { Home, BookHeart, Users, Stethoscope, UserRound, BarChart3, Heart, Bell, Moon, Sun, ShieldAlert } from 'lucide-react';
 import { useThemeStore } from '../store/theme';
 import InstallAppCard from './InstallAppCard';
+import ConsentDialog, { CONSENT_VERSION } from './ConsentDialog';
+
+/* Warm the chunks behind the main tabs once the app is idle. Without this the
+   first tap on each tab shows an empty panel while its chunk downloads, which
+   reads as a flash. Prefetching makes tab switches paint instantly. */
+const PREFETCH = [
+  () => import('../pages/Home'),
+  () => import('../pages/Stories'),
+  () => import('../pages/SoulPond'),
+  () => import('../pages/Community'),
+  () => import('../pages/Profile'),
+  () => import('../pages/CrisisSupport'),
+  () => import('../pages/StoryDetail'),
+  () => import('../pages/NotificationPage'),
+];
+function usePrefetchTabs() {
+  useEffect(() => {
+    let cancelled = false;
+    const run = () => { if (!cancelled) PREFETCH.forEach(load => load().catch(() => {})); };
+    const idle = window.requestIdleCallback;
+    const handle = idle ? idle(run, { timeout: 2000 }) : setTimeout(run, 800);
+    return () => {
+      cancelled = true;
+      if (idle && window.cancelIdleCallback) window.cancelIdleCallback(handle);
+      else clearTimeout(handle);
+    };
+  }, []);
+}
 
 /* ── Desktop sidebar nav ── */
 const NAV_ITEMS = [
   { icon: Home,          label: 'Home',          to: '/home'          },
-  { icon: Heart,         label: 'Soul Pond',     to: '/matches'       },
+  { icon: Heart,         label: 'Feel Pond',     to: '/matches'       },
   { icon: BookHeart,     label: 'Stories',        to: '/stories'       },
   { icon: Users,         label: 'Circles',        to: '/community'     },
   { icon: BarChart3,     label: 'Mood Tracker',   to: '/mood'          },
   { icon: Stethoscope,   label: 'Professionals',  to: '/professionals' },
-  { icon: MessageCircle, label: 'Messages',       to: '/messages'      },
   { icon: UserRound,     label: 'Profile',        to: '/profile'       },
 ];
 
 /* ── Mobile bottom nav — 5 primary tabs per MOBILE_FIRST_RULES ── */
-/* The centre slot is the lotus: tapping it opens the Soul Pond.
+/* The centre slot is the lotus: tapping it opens the Feel Pond.
    Messages moved to the top bar (chat icon next to the bell) so both
    Stories and Community stay one tap away in the bottom bar. */
 const MOBILE_NAV = [
   { icon: Home,          label: 'Home',      to: '/home'      },
   { icon: BookHeart,     label: 'Stories',   to: '/stories'   },
-  { lotus: true,         label: 'Soul Pond', to: '/matches'   },
+  { lotus: true,         label: 'Feel Pond', to: '/matches'   },
   { icon: Users,         label: 'Community', to: '/community' },
   { icon: UserRound,     label: 'Profile',   to: '/profile'   },
 ];
 
 /* ── Shared mobile top bar title, by route (Home shows the brand) ── */
 const TITLES = [
-  ['/home', 'SoulConnect'], ['/matches', 'Soul Pond'], ['/stories', 'Stories'],
+  ['/home', 'SameFeel'], ['/matches', 'Feel Pond'], ['/stories', 'Stories'],
   ['/story', 'Story'], ['/saved', 'Saved stories'], ['/community', 'Community'],
-  ['/messages', 'Messages'], ['/profile', 'Profile'], ['/mood', 'Soul Climate'],
+  ['/profile', 'Profile'], ['/mood', 'Soul Climate'],
   ['/tiny-wins', 'Tiny Wins'], ['/professionals', 'Professionals'],
   ['/notifications', 'Notifications'], ['/meditate', 'Meditate'],
   ['/journeys', 'Journeys'], ['/circles', 'Circles'], ['/healers', 'Healers'],
 ];
 const titleFor = (path) => {
   const hit = TITLES.find(([p]) => path === p || path.startsWith(p + '/'));
-  return hit ? hit[1] : 'SoulConnect';
+  return hit ? hit[1] : 'SameFeel';
 };
 
 /* ── Routes that hide the mobile bottom nav (full-screen layouts) ── */
 const HIDE_MOBILE_NAV_ON = ['/chat'];
 
 export default function DashboardLayout() {
+  usePrefetchTabs();
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuthStore();
+
+  /* Joining agreement: shown once per account, right after signup. Stored
+     per user so a second account on the same device is asked too. Replace the
+     localStorage read/write with a backend call once the endpoint exists. */
+  const consentKey = `sc-consent-${user?.id || user?.phone || 'me'}`;
+  const [needsConsent, setNeedsConsent] = useState(false);
+  useEffect(() => {
+    if (!user) { setNeedsConsent(false); return; }
+    try {
+      const saved = JSON.parse(localStorage.getItem(consentKey) || 'null');
+      setNeedsConsent(!saved || saved.version !== CONSENT_VERSION);
+    } catch { setNeedsConsent(true); }
+  }, [consentKey, user]);
+  const acceptConsent = (record) => {
+    try { localStorage.setItem(consentKey, JSON.stringify(record)); } catch { /* private mode */ }
+    setNeedsConsent(false);
+  };
   const isDark = useThemeStore((s) => s.resolved === 'dark');
   const toggleTheme = useThemeStore((s) => s.toggle);
   const onHome = location.pathname === '/home' || location.pathname === '/';
@@ -68,7 +113,7 @@ export default function DashboardLayout() {
   }, [location.pathname]);
 
   return (
-    // .sc-app scopes the light SoulConnect tokens (src/index.css) and the
+    // .sc-app scopes the light SameFeel tokens (src/index.css) and the
     // shadcn/ui variables to the logged-in app only.
     <div className="sc-app" style={{ minHeight: '100vh' }}>
 
@@ -96,6 +141,24 @@ export default function DashboardLayout() {
           text-decoration: none;
           margin-bottom: 6px;
           cursor: pointer;
+        }
+        .brand-wordmark {
+          font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+          font-weight: 600;
+          color: #4A1D6E;
+          letter-spacing: -0.01em;
+        }
+        .brand-wordmark .brand-feel { color: #8B5CF6; }
+        [data-sc-theme="dark"] .brand-wordmark { color: #F3EEFF; }
+        [data-sc-theme="dark"] .brand-wordmark .brand-feel { color: #A78BFA; }
+        .brand-tagline {
+          font-size: 8.5px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #8B5CF6;
+          margin-top: 3px;
+          white-space: nowrap;
         }
         .dash-logo-text {
           font-size: 16px;
@@ -148,7 +211,7 @@ export default function DashboardLayout() {
            50% opacity). Starting near-visible keeps the "new screen" cue
            without ever going dark. */
         @keyframes routeFadeIn {
-          from { opacity: 0.88; transform: translateY(3px); }
+          from { opacity: 0.97; transform: translateY(1px); }
           to   { opacity: 1;    transform: none; }
         }
         .route-fade {
@@ -203,11 +266,17 @@ export default function DashboardLayout() {
             box-sizing: border-box;
           }
           .app-topbar-brand {
-            display: flex; align-items: center; gap: 10px;
+            display: flex; align-items: center; gap: 9px;
             min-height: 48px; text-decoration: none; color: var(--sc-text);
+            min-width: 0; flex: 1 1 auto; overflow: hidden;
           }
-          .app-topbar-brand img { width: 28px; height: 28px; border-radius: 8px; display: block; }
-          .app-topbar-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+          .app-topbar-brand .brand-tagline {
+            font-size: 7.5px; letter-spacing: 0.06em; margin-top: 2px;
+            overflow: hidden; text-overflow: ellipsis;
+          }
+          .app-topbar-actions { flex-shrink: 0; }
+          .app-topbar-brand img.app-topbar-logo { width: 34px; height: 34px; border-radius: 10px; display: block; border: 1px solid rgba(109,74,255,0.38); box-sizing: border-box; }
+          .app-topbar-title { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
           .app-topbar-action {
             width: 48px; height: 48px; border-radius: 999px;
             display: flex; align-items: center; justify-content: center;
@@ -216,6 +285,18 @@ export default function DashboardLayout() {
           .app-topbar-action:active { background: var(--sc-surface); }
           .app-topbar-actions { display: flex; align-items: center; }
           button.app-topbar-action { background: none; border: 0; padding: 0; cursor: pointer; }
+          .app-topbar-action .tb-ic {
+            width: 38px; height: 38px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform .15s ease, background .2s ease;
+          }
+          .app-topbar-action:active .tb-ic { transform: scale(.92); }
+          .app-topbar-action.is-sos .tb-ic { background: #FDECEC; color: #D9534F; }
+          .app-topbar-action.is-bell .tb-ic { background: #EFEAFB; color: #6B4FA0; }
+          .app-topbar-action.is-sos.active .tb-ic { background: #F9D9D8; }
+          .app-topbar-action.is-bell.active .tb-ic { background: #E2D9F6; }
+          [data-sc-theme="dark"] .app-topbar-action.is-sos .tb-ic { background: rgba(229,72,77,.16); color: #FF8A8A; }
+          [data-sc-theme="dark"] .app-topbar-action.is-bell .tb-ic { background: rgba(167,139,250,.18); color: #C4B5FD; }
 
           /* Show mobile bottom nav */
           .mobile-bottom-nav {
@@ -347,11 +428,14 @@ export default function DashboardLayout() {
       <aside className="dash-sidebar" aria-label="Main navigation">
         <div className="dash-logo" onClick={() => navigate('/home')}>
           <img
-            src="/logo-icon.png"
-            alt="SoulConnect"
-            style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, display: 'block' }}
+            src="/app-logo.png"
+            alt="SameFeel"
+            style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0, display: 'block', border: '1px solid rgba(109,74,255,0.38)', boxSizing: 'border-box' }}
           />
-          <span className="dash-logo-text">SoulConnect</span>
+          <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
+            <img src={isDark ? "/brand/logo/samefeel-wordmark-light.png" : "/brand/logo/samefeel-wordmark.png"} alt="SameFeel" style={{ height: 24, width: "auto", display: "block" }} />
+            <span className="brand-tagline">Different stories. Same feelings.</span>
+          </span>
         </div>
 
         <nav style={{ padding: '4px 0', flex: 1 }}>
@@ -371,9 +455,14 @@ export default function DashboardLayout() {
       {/* ══ Page Content ══ */}
       <div className="dash-content-wrapper">
         <header className="app-topbar">
-          <NavLink to="/home" className="app-topbar-brand" aria-label="SoulConnect home">
-            <img src="/logo-icon.png" alt="" />
-            <span className="app-topbar-title">{titleFor(location.pathname)}</span>
+          <NavLink to="/home" className="app-topbar-brand" aria-label="SameFeel home">
+            <img className="app-topbar-logo" src="/app-logo.png" alt="" />
+            <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
+              <span className="app-topbar-title">{titleFor(location.pathname) === 'SameFeel' ? <img src={isDark ? "/brand/logo/samefeel-wordmark-light.png" : "/brand/logo/samefeel-wordmark.png"} alt="SameFeel" style={{ height: 24, width: "auto", maxWidth: "none", display: "block", border: 0, borderRadius: 0 }} /> : titleFor(location.pathname)}</span>
+              {titleFor(location.pathname) === 'SameFeel' && (
+                <span className="brand-tagline">Different stories. Same feelings.</span>
+              )}
+            </span>
           </NavLink>
           <div className="app-topbar-actions">
             {onHome && (
@@ -387,11 +476,11 @@ export default function DashboardLayout() {
                 {isDark ? <Sun size={21} strokeWidth={2} /> : <Moon size={21} strokeWidth={2} />}
               </button>
             )}
-            <NavLink to="/messages" className="app-topbar-action" aria-label="Messages" title="Messages">
-              <MessageCircle size={21} strokeWidth={2} />
+            <NavLink to="/crisis-support" className="app-topbar-action is-sos" aria-label="Emergency support" title="Emergency support">
+              <span className="tb-ic"><ShieldAlert size={20} strokeWidth={2.1} /></span>
             </NavLink>
-            <NavLink to="/notifications" className="app-topbar-action" aria-label="Notifications">
-              <Bell size={21} strokeWidth={2} />
+            <NavLink to="/notifications" className="app-topbar-action is-bell" aria-label="Notifications">
+              <span className="tb-ic"><Bell size={20} strokeWidth={2.1} /></span>
             </NavLink>
           </div>
         </header>
@@ -406,6 +495,12 @@ export default function DashboardLayout() {
           </div>
         </Suspense>
       </div>
+
+      <ConsentDialog
+        open={needsConsent}
+        defaultName={user?.name || ''}
+        onAccept={acceptConsent}
+      />
 
       {/* Phones only: "add to home screen" card (hidden once installed) */}
       {showMobileNav && <InstallAppCard />}
@@ -424,14 +519,14 @@ export default function DashboardLayout() {
                   to={item.to}
                   className={`mob-tab mob-lotus${isActive ? ' active' : ''}`}
                   style={{ textDecoration: 'none' }}
-                  aria-label="Open the Soul Pond"
+                  aria-label="Open the Feel Pond"
                   aria-current={isActive ? 'page' : undefined}
                 >
                   <span className="mob-lotus-wrap" aria-hidden="true">
                     <span className="mob-lotus-ripple" />
                     <span className="mob-lotus-ripple r2" />
                     <span className="mob-lotus-btn">
-                      <img src="/brand/logo/soulconnect-lotus-mark.svg" alt="" />
+                      <img src="/brand/logo/samefeel-pond-mark.png" alt="" />
                     </span>
                   </span>
                   <span className="mob-tab-label mob-lotus-label">{item.label}</span>

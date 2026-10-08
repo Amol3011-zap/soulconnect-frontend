@@ -72,7 +72,7 @@ function CrisisPopup({ onClose, onNavigate }) {
             background: 'none', border: 'none', color: '#9CA3AF',
             fontSize: 13, cursor: 'pointer', textDecoration: 'underline',
           }}
-        >Continue in SoulConnect</button>
+        >Continue in SameFeel</button>
       </div>
     </div>
   );

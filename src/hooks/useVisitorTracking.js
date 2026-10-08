@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { analyticsAPI } from '../services/api';
-import { buildSessionStartPayload, getSessionId } from '../lib/visitorSession';
+import { getSessionId, initInternalFlag, shouldTrack, buildSessionStartPayloadFor } from '../lib/visitorSession';
 
 const UPDATE_INTERVAL_MS = 30_000;
 
@@ -11,17 +11,52 @@ const UPDATE_INTERVAL_MS = 30_000;
  * changes, and periodically flushes duration/pages/click-event updates.
  * Every network call is fire-and-forget (analyticsAPI already swallows
  * errors) — tracking must never affect the app's actual functionality.
+ *
+ * Skipped entirely for: non-production hostnames (localhost/LAN dev),
+ * ?internal=1 visitors (flag persists via localStorage), bot-like user
+ * agents / navigator.webdriver, and tabs that are backgrounded on load
+ * (a session only starts once the tab is actually visible).
  */
 export function useVisitorTracking() {
   const location = useLocation();
   const startedRef = useRef(false);
   const pagesRef = useRef([]);
   const startTimeRef = useRef(Date.now());
+  // getSessionId() falls back to a fresh random id whenever sessionStorage
+  // is blocked (private browsing, storage disabled) since nothing persists
+  // it — called twice independently that would mean session/start and
+  // session/update disagree on session_id and the backend can never match
+  // the update to its session. Read it once per mount and reuse it.
+  const sessionIdRef = useRef(null);
+  if (sessionIdRef.current === null) sessionIdRef.current = getSessionId();
 
   useEffect(() => {
-    if (!startedRef.current) {
+    initInternalFlag();
+  }, []);
+
+  useEffect(() => {
+    if (startedRef.current || !shouldTrack()) return;
+
+    const start = () => {
+      if (startedRef.current || !shouldTrack()) return;
       startedRef.current = true;
-      analyticsAPI.sessionStart(buildSessionStartPayload());
+      startTimeRef.current = Date.now();
+      analyticsAPI.sessionStart(buildSessionStartPayloadFor(sessionIdRef.current));
+    };
+
+    if (document.visibilityState === 'visible') {
+      start();
+    } else {
+      // Backgrounded tab (e.g. opened in a background tab, or a prerender) —
+      // only start counting once a person actually looks at it.
+      const onVisible = () => {
+        if (document.visibilityState === 'visible') {
+          start();
+          document.removeEventListener('visibilitychange', onVisible);
+        }
+      };
+      document.addEventListener('visibilitychange', onVisible);
+      return () => document.removeEventListener('visibilitychange', onVisible);
     }
   }, []);
 
@@ -34,8 +69,9 @@ export function useVisitorTracking() {
 
   useEffect(() => {
     const flush = () => {
+      if (!startedRef.current) return; // never started (filtered out, or still backgrounded)
       analyticsAPI.sessionUpdate({
-        session_id: getSessionId(),
+        session_id: sessionIdRef.current,
         pages_viewed: pagesRef.current,
         session_duration_seconds: Math.round((Date.now() - startTimeRef.current) / 1000),
       });

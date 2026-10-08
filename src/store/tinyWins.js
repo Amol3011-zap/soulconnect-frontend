@@ -1,6 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { selectDailyWins, getRandomReflection } from '../engine/tinyWinsEngine';
+import { useAuthStore } from './auth';
+
+/* The person's primary and secondary problems, chosen at signup. Read lazily
+   from the auth store so tiny wins stay curated to what they are carrying. */
+function getStruggles() {
+  try {
+    const u = useAuthStore.getState().user || {};
+    return [u.primary_problem, ...(u.secondary_problems || [])].filter(Boolean);
+  } catch {
+    return [];
+  }
+}
 
 /**
  * Local-calendar-day string, e.g. '2026-09-21'.
@@ -73,6 +85,7 @@ export const useTinyWinsStore = create(
         const wins = selectDailyWins({
           weatherId,
           workMode: state.workMode,
+          struggles: getStruggles(),
           recentlyCompletedIds,
           completedTodayIds: [],
         });

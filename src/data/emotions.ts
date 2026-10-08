@@ -1,7 +1,7 @@
 /**
- * emotions.ts - SoulConnect Emotion Library Configuration
+ * emotions.ts - SameFeel Emotion Library Configuration
  *
- * Defines all 25 emotional challenges/life struggles supported by SoulConnect.
+ * Defines all 25 emotional challenges/life struggles supported by SameFeel.
  * Each emotion includes SEO metadata, color theming, and descriptions.
  *
  * Used by:
@@ -26,7 +26,7 @@ export const emotions: Emotion[] = [
   {
     slug: 'anxiety',
     title: 'Anxiety Support Community | Connect & Heal',
-    description: 'Find peer support for anxiety, panic attacks, and worry. Connect with people experiencing similar struggles and discover evidence-based coping strategies on SoulConnect.',
+    description: 'Find peer support for anxiety, panic attacks, and worry. Connect with people experiencing similar struggles and discover evidence-based coping strategies on SameFeel.',
     keywords: ['anxiety support', 'anxiety disorder', 'manage anxiety', 'anxiety help', 'stress relief'],
     image: '/og/anxiety.jpg',
     color: '#7C3AED',
@@ -35,8 +35,8 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'depression',
-    title: 'Depression Support & Peer Counseling | SoulConnect',
-    description: 'Connect with others experiencing depression. Access peer support, healing resources, and verified therapists to help you through depressive episodes on SoulConnect.',
+    title: 'Depression Support & Peer Counseling | SameFeel',
+    description: 'Connect with others experiencing depression. Access peer support, healing resources, and verified therapists to help you through depressive episodes on SameFeel.',
     keywords: ['depression support', 'depression help', 'manage depression', 'depression treatment', 'mental health'],
     image: '/og/depression.jpg',
     color: '#8B5CF6',
@@ -65,7 +65,7 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'loneliness',
-    title: 'Loneliness Support & Social Connection | SoulConnect',
+    title: 'Loneliness Support & Social Connection | SameFeel',
     description: 'Combat loneliness with a supportive peer community. Find meaningful connections and discover ways to build lasting relationships and combat social isolation.',
     keywords: ['loneliness support', 'social isolation', 'connect with others', 'overcome loneliness', 'make friends'],
     image: '/og/loneliness.jpg',
@@ -75,7 +75,7 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'anger',
-    title: 'Anger Management Support & Emotional Control | SoulConnect',
+    title: 'Anger Management Support & Emotional Control | SameFeel',
     description: 'Develop healthy ways to manage anger and frustration. Connect with peers and learn evidence-based techniques for emotional regulation and impulse control.',
     keywords: ['anger management', 'control anger', 'anger support', 'emotional regulation', 'frustration management'],
     image: '/og/anger.jpg',
@@ -95,7 +95,7 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'relationship-issues',
-    title: 'Relationship Support & Communication Help | SoulConnect',
+    title: 'Relationship Support & Communication Help | SameFeel',
     description: 'Improve relationships with peer guidance and communication strategies. Connect with others navigating similar challenges in marriage, dating, or partnerships.',
     keywords: ['relationship support', 'marriage counseling', 'dating advice', 'communication skills', 'relationship help'],
     image: '/og/relationship-issues.jpg',
@@ -115,7 +115,7 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'financial-worry',
-    title: 'Financial Stress Support & Money Anxiety Help | SoulConnect',
+    title: 'Financial Stress Support & Money Anxiety Help | SameFeel',
     description: 'Manage financial anxiety and money worries with peer support. Connect with others navigating debt, savings, and economic stress.',
     keywords: ['financial stress', 'money anxiety', 'financial help', 'debt support', 'money management'],
     image: '/og/financial-worry.jpg',
@@ -135,7 +135,7 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'panic-attacks',
-    title: 'Panic Attack Support & Management | SoulConnect',
+    title: 'Panic Attack Support & Management | SameFeel',
     description: 'Learn to manage panic attacks with peer support and coping strategies. Connect with others who understand the fear and physical symptoms of panic.',
     keywords: ['panic attacks', 'panic disorder', 'panic support', 'anxiety attacks', 'cope with panic'],
     image: '/og/panic-attacks.jpg',
@@ -165,7 +165,7 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'overwhelm',
-    title: 'Overwhelm Support & Coping Strategies | SoulConnect',
+    title: 'Overwhelm Support & Coping Strategies | SameFeel',
     description: 'Manage feeling overwhelmed with practical peer support. Learn to prioritize and regain control when everything feels like too much.',
     keywords: ['overwhelm support', 'feel overwhelmed', 'stress management', 'coping strategies', 'too much pressure'],
     image: '/og/overwhelm.jpg',
@@ -175,7 +175,7 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'low-self-esteem',
-    title: 'Low Self-Esteem Support & Confidence Building | SoulConnect',
+    title: 'Low Self-Esteem Support & Confidence Building | SameFeel',
     description: 'Build self-esteem with peer support and evidence-based strategies. Connect with others working on self-worth and positive self-image.',
     keywords: ['low self-esteem', 'build self-esteem', 'self-worth', 'confidence building', 'self-image'],
     image: '/og/low-self-esteem.jpg',
@@ -195,7 +195,7 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'jealousy',
-    title: 'Jealousy Support & Secure Attachment | SoulConnect',
+    title: 'Jealousy Support & Secure Attachment | SameFeel',
     description: 'Manage jealousy in relationships with peer support. Learn to address insecurity and build trust with compassion.',
     keywords: ['jealousy support', 'manage jealousy', 'relationship jealousy', 'insecurity', 'trust in relationships'],
     image: '/og/jealousy.jpg',
@@ -215,7 +215,7 @@ export const emotions: Emotion[] = [
   },
   {
     slug: 'shame',
-    title: 'Shame Support & Self-Compassion | SoulConnect',
+    title: 'Shame Support & Self-Compassion | SameFeel',
     description: 'Overcome shame with peer support and self-compassion strategies. Connect with others and heal from shame-based thinking patterns.',
     keywords: ['shame support', 'manage shame', 'shame resilience', 'self-compassion', 'shame healing'],
     image: '/og/shame.jpg',

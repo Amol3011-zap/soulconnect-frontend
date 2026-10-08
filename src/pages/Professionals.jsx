@@ -37,27 +37,10 @@ export default function Professionals() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showToast, setShowToast] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [professionals, setProfessionals] = useState(PROFESSIONALS);
 
-  // Load professionals on mount
-  useEffect(() => {
-    const loadProfessionals = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 400));
-        setProfessionals(PROFESSIONALS);
-      } catch (err) {
-        setError('Failed to load professionals. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadProfessionals();
-  }, []);
 
   const triggerToast = () => {
     setShowToast(true);
@@ -167,7 +150,7 @@ export default function Professionals() {
 
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         style={{ marginBottom: 20 }}
@@ -180,9 +163,9 @@ export default function Professionals() {
 
       {/* Search Bar */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.08, duration: 0.4 }}
+        transition={{ duration: 0.3 }}
         style={{ position: 'relative', marginBottom: 20 }}
       >
         <Search
@@ -218,9 +201,9 @@ export default function Professionals() {
 
       {/* Category Tabs */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={false}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.12 }}
+        transition={{ duration: 0.25 }}
         style={{
           display: 'flex',
           gap: 8,
@@ -260,7 +243,7 @@ export default function Professionals() {
       {/* Professional Cards */}
       {filteredPros.length === 0 ? (
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={false}
           animate={{ opacity: 1 }}
           style={{ textAlign: 'center', color: TEXT2, fontSize: 14, marginTop: 48 }}
         >
@@ -270,9 +253,9 @@ export default function Professionals() {
         filteredPros.map((pro, i) => (
           <motion.div
             key={pro.id}
-            initial={{ opacity: 0, y: 16 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.16 + i * 0.08, duration: 0.35 }}
+            transition={{ duration: 0.3 }}
             style={{
               background: CARD,
               border: `1px solid ${BORDER}`,

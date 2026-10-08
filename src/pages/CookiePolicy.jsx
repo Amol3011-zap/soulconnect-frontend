@@ -48,7 +48,7 @@ export default function CookiePolicy() {
           },
           {
             title: '2. How We Use Cookies',
-            body: 'SoulConnect uses a minimal set of cookies strictly necessary for the platform to function. We do not use advertising cookies or cross-site tracking cookies.',
+            body: 'SameFeel uses a minimal set of cookies strictly necessary for the platform to function. We do not use advertising cookies or cross-site tracking cookies.',
             list: [
               'Session cookies — to keep you logged in during your visit',
               'Security cookies — to protect against cross-site request forgery (CSRF)',
@@ -69,7 +69,7 @@ export default function CookiePolicy() {
           },
           {
             title: '5. Managing Cookies',
-            body: 'You can control and delete cookies through your browser settings. Note that disabling certain cookies may affect the functionality of SoulConnect, including the ability to stay logged in.',
+            body: 'You can control and delete cookies through your browser settings. Note that disabling certain cookies may affect the functionality of SameFeel, including the ability to stay logged in.',
           },
           {
             title: '6. Contact',

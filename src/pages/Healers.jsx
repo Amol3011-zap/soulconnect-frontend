@@ -28,15 +28,15 @@ const TIME_SLOTS = {
 const CONSENT_SECTIONS = [
   {
     heading: 'Nature of Services',
-    body: 'SoulConnect provides complementary wellness services, including Reiki, Energy Healing, Spiritual Guidance, Meditation, Coaching, and Wellness Support. These services are intended to support personal growth, relaxation, self-awareness, and overall well-being.',
+    body: 'SameFeel provides complementary wellness services, including Reiki, Energy Healing, Spiritual Guidance, Meditation, Coaching, and Wellness Support. These services are intended to support personal growth, relaxation, self-awareness, and overall well-being.',
   },
   {
     heading: 'Not Medical Treatment',
-    body: 'Reiki and energy healing are complementary wellness practices. These services are not medical treatment. SoulConnect does not diagnose illness, prescribe medication, or replace healthcare professionals.',
+    body: 'Reiki and energy healing are complementary wellness practices. These services are not medical treatment. SameFeel does not diagnose illness, prescribe medication, or replace healthcare professionals.',
   },
   {
     heading: 'Medical Responsibility',
-    body: 'I agree that I remain responsible for seeking medical care when necessary, following advice from licensed healthcare providers, and maintaining any prescribed treatment plans. I will not discontinue medications or medical treatment based on information received from SoulConnect.',
+    body: 'I agree that I remain responsible for seeking medical care when necessary, following advice from licensed healthcare providers, and maintaining any prescribed treatment plans. I will not discontinue medications or medical treatment based on information received from SameFeel.',
   },
   {
     heading: 'Voluntary Participation',
@@ -52,7 +52,7 @@ const CONSENT_SECTIONS = [
   },
   {
     heading: 'Release of Liability',
-    body: 'To the fullest extent permitted by law, I release and hold harmless SoulConnect, its owners, practitioners, employees, contractors, and affiliates from any claims, liabilities, damages, injuries, losses, costs, or expenses arising from my participation in any service.',
+    body: 'To the fullest extent permitted by law, I release and hold harmless SameFeel, its owners, practitioners, employees, contractors, and affiliates from any claims, liabilities, damages, injuries, losses, costs, or expenses arising from my participation in any service.',
   },
   {
     heading: 'Electronic Consent',
@@ -174,7 +174,7 @@ function ConsentModal({ healer, onClose, onAgree }) {
             background: 'rgba(109,74,255,0.06)', border: '1px solid rgba(109,74,255,0.15)',
           }}>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: '#4B5563', margin: 0 }}>
-              By booking a session, purchasing a service, attending a workshop, or continuing with any SoulConnect program, you acknowledge and agree to the following:
+              By booking a session, purchasing a service, attending a workshop, or continuing with any SameFeel program, you acknowledge and agree to the following:
             </p>
           </div>
 

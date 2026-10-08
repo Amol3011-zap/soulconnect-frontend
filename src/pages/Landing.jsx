@@ -109,7 +109,7 @@ const GLOBAL_PULSE_DATA = {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   BRAND LOTUS — the real SoulConnect mark (line lotus, meditating figure,
+   BRAND LOTUS — the real SameFeel mark (line lotus, meditating figure,
    glowing heart). Replaces the old two-souls/neon-orb hero art and the
    glowing 8-petal vision lotus: one consistent mark everywhere instead of
    generated-looking cosmic illustrations. Drawn in a 200-unit box.
@@ -191,7 +191,16 @@ function LotusMark({ variant = 'light', id = 'lm' }) {
    the page, with a frosted "find people who get it" card. The previous
    two-souls illustration (HeroIllustration below) is kept, unused, so it
    can be switched back by swapping <AvatarHero/> for <HeroIllustration/>. */
+const HERO_TALK = true;
 const AVATAR_CSS = `
+  .l-talk-glow{position:absolute;left:8%;right:2%;top:12%;bottom:22%;pointer-events:none;
+    background:radial-gradient(ellipse at 52% 55%,rgba(167,139,250,.30) 0%,rgba(196,181,253,.16) 38%,rgba(243,239,249,0) 70%);}
+  .l-talk-img{position:absolute;left:6%;right:2%;top:10%;width:92%;height:auto;max-height:70%;object-fit:contain;
+    filter:drop-shadow(0 26px 40px rgba(76,45,140,.20));}
+  @media(max-width:1100px){
+    .l-talk-img{left:4%;width:92%;top:6%;max-height:88%;}
+    .l-talk-glow{left:0;right:0;top:0;bottom:0;}
+  }
   .l-av{position:relative;height:100%;min-height:850px;}
   .l-av-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;
     -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 30%),linear-gradient(to bottom,#000 62%,transparent 94%);
@@ -216,8 +225,14 @@ function AvatarHero() {
   return (
     <div className="l-av">
       <style>{AVATAR_CSS}</style>
+      {/* Trial: two people talking. To go back, set HERO_TALK to false. */}
+      {HERO_TALK ? (<>
+        <div className="l-talk-glow" aria-hidden="true" />
+        <img className="l-talk-img" src="/brand/hero/samefeel-talk.png"
+          alt="Two friends sitting together and talking" />
+      </>) : (
       <img className="l-av-img" src="/brand/hero/avatar-group.jpg"
-        alt="A group of friends smiling together" />
+        alt="A group of friends smiling together" />)}
       <div className="l-av-tint" />
       <div className="l-av-card">
         <div className="l-av-faces">
@@ -644,9 +659,8 @@ function HeroIllustration() {
 /* Vision card lotus — same mark, dark-band colours. */
 function VisionLotus() {
   return (
-    <svg viewBox="0 0 200 200" width="100%" height="100%" aria-hidden="true">
-      <LotusMark variant="dark" id="visionLotus" />
-    </svg>
+    <img src="/brand/logo/samefeel-mark-dark.png" alt="" aria-hidden="true"
+      style={{width:'100%', height:'100%', objectFit:'contain', display:'block'}} />
   );
 }
 
@@ -1200,17 +1214,15 @@ export default function Landing() {
           {/* Logo */}
           <Link to="/" style={{display:'flex', alignItems:'center', gap:10,
             textDecoration:'none', flexShrink:0, marginRight:36}}>
-            <img src="/brand/logo/soulconnect-lotus-mark.svg" alt=""
-              width="47" height="46"
-              style={{height:46, width:'auto', display:'block'}}/>
+            <img src="/logo-icon.png" alt="SameFeel"
+              width="46" height="46"
+              style={{height:46, width:46, borderRadius:13, display:'block', border:'1px solid rgba(109,74,255,0.38)', boxSizing:'border-box', 
+                boxShadow:'0 4px 16px rgba(109,74,255,0.30)'}}/>
             <div>
-              <div style={{fontFamily:SF, fontSize:22, fontWeight:700, color:DARK,
-                letterSpacing:'-0.01em', lineHeight:1}}>
-                Soul<span style={{color:'#A87B45'}}>Connect</span>
-              </div>
+              <img src="/brand/logo/samefeel-wordmark.png" alt="SameFeel" style={{height:30, width:"auto", display:"block"}} />
               <div className="l-logo-sub" style={{fontSize:9, color:P,
-                fontWeight:700, letterSpacing:'0.2em', textTransform:'uppercase', marginTop:4}}>
-                Heal · Connect · Grow
+                fontWeight:600, letterSpacing:'0.14em', textTransform:'uppercase', marginTop:4}}>
+                Different stories. Same feelings.
               </div>
             </div>
           </Link>
@@ -1362,7 +1374,7 @@ export default function Landing() {
             <p className="l-hero-p" style={{fontSize:'clamp(15px,1.5vw,18px)',
               color:NAVY_SOFT,
               lineHeight:1.75, marginBottom:36, maxWidth:470}}>
-              SoulConnect is a safe space to share, connect, and heal with people
+              SameFeel is a safe space to share, connect, and heal with people
               who truly understand what you're going through.
             </p>
 
@@ -1789,7 +1801,7 @@ export default function Landing() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          SECTION 5 — HOW SOULCONNECT HELPS YOU  (compact line-icon strip)
+          SECTION 5 — HOW SAMEFEEL HELPS YOU  (compact line-icon strip)
       ══════════════════════════════════════════════════════════════════════ */}
       <section style={{background:CREAM, padding:'clamp(32px,6vw,56px) 32px'}}>
         <div style={{maxWidth:1440, margin:'0 auto'}}>
@@ -1860,7 +1872,7 @@ export default function Landing() {
           </h2>
           <p style={{fontSize:'clamp(15px,1.6vw,18px)', color:NAVY_SOFT,
             lineHeight:1.88, maxWidth:720, margin:'0 auto 52px'}}>
-            SoulConnect is being built alongside people navigating anxiety, loneliness,
+            SameFeel is being built alongside people navigating anxiety, loneliness,
             overthinking, burnout, grief, and life transitions. You are not just an
             early user — you are a <strong style={{color:P}}>founding community member</strong> shaping what this becomes.
           </p>
@@ -1871,7 +1883,7 @@ export default function Landing() {
               {Icon:Ear,           title:'We Listen First',
                desc:'Every feature is shaped by real conversations with real people going through real struggles.'},
               {Icon:MessageCircle, title:'You Shape The Platform',
-               desc:"Your feedback, your stories, and your needs define what SoulConnect becomes."},
+               desc:"Your feedback, your stories, and your needs define what SameFeel becomes."},
               {Icon:Compass,       title:'No Fake Promises',
                desc:'We are honest about what we are building. Early access = real community, not a polished product.'},
             ].map((p,i)=>(
@@ -1930,7 +1942,7 @@ export default function Landing() {
             {/* Trust points */}
             {['No spam, ever. Your privacy is sacred.',
               'We\'ll match you with your community before launch.',
-              'You help shape what SoulConnect becomes.'].map((t,i)=>(
+              'You help shape what SameFeel becomes.'].map((t,i)=>(
               <div key={i} style={{display:'flex', alignItems:'flex-start', gap:12, marginBottom:14}}>
                 <div style={{width:22, height:22, borderRadius:'50%', flexShrink:0, marginTop:1,
                   background:SEA,
@@ -1963,7 +1975,7 @@ export default function Landing() {
                   You're on the list.
                 </h3>
                 <p style={{color:NAVY_SOFT, fontSize:15, lineHeight:1.8, marginBottom:24}}>
-                  Thank you for believing in SoulConnect.<br/><br/>
+                  Thank you for believing in SameFeel.<br/><br/>
                   We'll send occasional updates as we build a place where people can heal, connect and grow together.
                 </p>
                 <div style={{display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap', marginTop:28}}>
@@ -2011,7 +2023,7 @@ export default function Landing() {
                 <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:8}}>
                   {[
                     {Icon:Compass,   text:'Early Access'},
-                    {Icon:HandHeart, text:'Help Shape SoulConnect'},
+                    {Icon:HandHeart, text:'Help Shape SameFeel'},
                     {Icon:Award,     text:'Founding Member'},
                     {Icon:Handshake, text:'Exclusive Updates'},
                   ].map((b,i)=>(
@@ -2060,7 +2072,7 @@ export default function Landing() {
 
                 <label style={{fontSize:13, fontWeight:600,
                   color:'#3A3350'}}>
-                  How did you hear about SoulConnect?
+                  How did you hear about SameFeel?
                 </label>
                 <div style={{position:'relative'}}>
                   <select value={earlyForm.referralSource}
@@ -2207,7 +2219,7 @@ export default function Landing() {
             lineHeight:1.75, maxWidth:560, margin:'0 auto 42px',
           }}>
             Healing happens faster when people feel understood, supported, and connected.
-            Join the SoulConnect community and take your first step forward.
+            Join the SameFeel community and take your first step forward.
           </p>
 
           {/* Buttons */}
@@ -2257,7 +2269,7 @@ export default function Landing() {
             <p style={{fontSize:12, color:MUTED,
               lineHeight:1.7, textAlign:'center'}}>
               <strong style={{color:'#3A3350'}}>Disclaimer:</strong>{' '}
-              SoulConnect is a peer-support and wellness platform, not a medical,
+              SameFeel is a peer-support and wellness platform, not a medical,
               psychiatric, or emergency service. If you are in immediate danger,
               please call emergency services or visit your nearest hospital.{' '}
             </p>
@@ -2271,12 +2283,15 @@ export default function Landing() {
             {/* Logo */}
             <Link to="/" style={{display:'flex', alignItems:'center', gap:10,
               textDecoration:'none', flexShrink:0}}>
-              <img src="/brand/logo/soulconnect-lotus-mark.svg" alt=""
-                width="39" height="38"
-                style={{height:38, width:'auto', display:'block'}}/>
-              <div style={{fontFamily:SF, fontSize:18, fontWeight:700, color:DARK,
-                letterSpacing:'-0.01em'}}>
-                Soul<span style={{color:'#A87B45'}}>Connect</span>
+              <img src="/logo-icon.png" alt="SameFeel"
+                width="38" height="38"
+                style={{height:38, width:38, borderRadius:11, display:'block', border:'1px solid rgba(109,74,255,0.38)', boxSizing:'border-box'}}/>
+              <div>
+                <img src="/brand/logo/samefeel-wordmark.png" alt="SameFeel" style={{height:26, width:"auto", display:"block"}} />
+                <div style={{fontSize:8.5, color:P, fontWeight:600, letterSpacing:'0.14em',
+                  textTransform:'uppercase', marginTop:5, whiteSpace:'nowrap'}}>
+                  Different stories. Same feelings.
+                </div>
               </div>
             </Link>
 
@@ -2364,7 +2379,7 @@ export default function Landing() {
           {/* Copyright */}
           <p style={{fontSize:12, color:MUTED,
             textAlign:'center', paddingBottom:22}}>
-            © 2026 SoulConnect. Built in India, for anyone who needs a place to land.
+            © 2026 SameFeel. Your first step towards a better tomorrow.
           </p>
 
         </div>

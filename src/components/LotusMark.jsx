@@ -1,7 +1,7 @@
 import React from 'react';
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   LOTUS MARK — the SoulConnect lotus as a quiet decorative layer for the
+   LOTUS MARK — the SameFeel lotus as a quiet decorative layer for the
    logged-in app (Home header, empty states). Pure SVG, no WebGL, no React
    state: it can't re-render per frame, shift layout or flicker.
 

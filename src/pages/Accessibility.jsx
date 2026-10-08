@@ -36,7 +36,7 @@ export default function Accessibility() {
         <p style={{ fontSize: 13, fontWeight: 600, color: GOLD_TXT, letterSpacing: '0.04em', marginBottom: 40 }}>Last Updated: June 2026</p>
 
         <p style={pStyle}>
-          At SoulConnect, we believe that support, connection, and healing should be accessible to everyone. We are committed to improving the accessibility of our platform and creating an inclusive experience for all users.
+          At SameFeel, we believe that support, connection, and healing should be accessible to everyone. We are committed to improving the accessibility of our platform and creating an inclusive experience for all users.
         </p>
 
         <h2 style={h2Style}>Our Commitment</h2>
@@ -45,7 +45,7 @@ export default function Accessibility() {
         </p>
 
         <h2 style={h2Style}>Accessibility Features</h2>
-        <p style={{ ...pStyle, marginBottom: 8 }}>SoulConnect currently includes:</p>
+        <p style={{ ...pStyle, marginBottom: 8 }}>SameFeel currently includes:</p>
         <ul style={{ paddingLeft: 24, margin: '0 0 24px' }}>
           {[
             'Semantic HTML structure and logical heading hierarchy',
@@ -63,12 +63,12 @@ export default function Accessibility() {
 
         <h2 style={h2Style}>Ongoing Improvements</h2>
         <p style={pStyle}>
-          SoulConnect is an early-stage platform and accessibility is an ongoing priority. We regularly review feedback and make improvements as the platform evolves.
+          SameFeel is an early-stage platform and accessibility is an ongoing priority. We regularly review feedback and make improvements as the platform evolves.
         </p>
 
         <h2 style={h2Style}>Report an Accessibility Issue</h2>
         <p style={pStyle}>
-          If you experience difficulty accessing any part of SoulConnect or would like to suggest an improvement, we encourage you to contact us.
+          If you experience difficulty accessing any part of SameFeel or would like to suggest an improvement, we encourage you to contact us.
         </p>
         <p style={pStyle}>We aim to acknowledge accessibility-related requests within 5 business days.</p>
 
@@ -80,7 +80,7 @@ export default function Accessibility() {
           </a>
         </p>
         <p style={pStyle}>
-          We welcome your feedback and appreciate your help in making SoulConnect more accessible for everyone.
+          We welcome your feedback and appreciate your help in making SameFeel more accessible for everyone.
         </p>
         </div>
 

@@ -4,7 +4,7 @@ import { Share, SquarePlus, Check, X, EllipsisVertical, Download } from 'lucide-
 import { canPromptInstall, isStandalone, onInstallChange, platform, promptInstall } from '../pwa';
 
 /**
- * "Get SoulConnect on your home screen" card for phones.
+ * "Get SameFeel on your home screen" card for phones.
  * iPhone: shows the Share → Add to Home Screen steps (iOS has no install popup).
  * Android: one tap Install when Chrome allows it, otherwise the menu steps.
  * Hidden when already installed, on desktop, or for 7 days after "Not now".
@@ -66,7 +66,7 @@ export default function InstallAppCard() {
       {open && (
         <motion.div
           role="dialog"
-          aria-label="Add SoulConnect to your home screen"
+          aria-label="Add SameFeel to your home screen"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 24 }}
@@ -85,7 +85,7 @@ export default function InstallAppCard() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <img src="/icon-192.png" alt="" width={44} height={44} style={{ borderRadius: 12, flexShrink: 0, boxShadow: '0 4px 12px rgba(107,79,160,.15)' }} />
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: 15.5, color: '#221B3A' }}>Get SoulConnect on your home screen</div>
+              <div style={{ fontWeight: 700, fontSize: 15.5, color: '#221B3A' }}>Get SameFeel on your home screen</div>
               <div style={{ fontSize: 12.5, color: '#6E6784', marginTop: 2 }}>Opens like an app. No app store needed.</div>
             </div>
             <button type="button" onClick={dismiss} aria-label="Close" style={{ width: 36, height: 36, border: 0, background: 'transparent', borderRadius: 10, color: '#8A84A0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
@@ -95,7 +95,7 @@ export default function InstallAppCard() {
 
           {androidPrompt ? (
             <button type="button" onClick={install} style={{ marginTop: 14, width: '100%', border: 0, borderRadius: 14, padding: '13px 16px', background: P, color: '#fff', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 16px rgba(107,79,160,.25)' }}>
-              <Download size={17} /> Install SoulConnect
+              <Download size={17} /> Install SameFeel
             </button>
           ) : (
             <ol style={{ listStyle: 'none', margin: '14px 0 0', padding: 0, display: 'grid', gap: 10 }}>

@@ -18,6 +18,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Auto-logout on expired / invalid token
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err?.response?.status === 401) {
+      const detail = err.response?.data?.detail || '';
+      if (/invalid|expired|token/i.test(detail)) {
+        useAuthStore.getState().logout();
+        window.location.href = '/';
+        return new Promise(() => {}); // halt chain
+      }
+    }
+    return Promise.reject(err);
+  }
+);
+
 export const authAPI = {
   signup: (data) => api.post('/auth/signup', data),
   // Signup phone verification. The backend needs these two endpoints; until

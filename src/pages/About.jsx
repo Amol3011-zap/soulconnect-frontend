@@ -56,7 +56,7 @@ const beliefs = [
   {
     Icon: Sparkles,
     title: "Healing is a Journey",
-    body: "There is no fixed timeline for healing. SoulConnect walks with you — wherever you are on your journey.",
+    body: "There is no fixed timeline for healing. SameFeel walks with you — wherever you are on your journey.",
   },
 ];
 
@@ -196,8 +196,8 @@ export default function About() {
         >
           {/* Logo */}
           <Link to="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-            <img src="/brand/logo/soulconnect-lotus-mark.svg" alt="SoulConnect"
-              style={{ height: 38, width: "auto", display: "block" }} />
+            <img src="/logo-icon.png" alt="SameFeel"
+            style={{ height: 38, width: 38, borderRadius: 11, display: "block", border: "1px solid rgba(109,74,255,0.38)", boxSizing: "border-box" }} />
             <span
               style={{
                 fontFamily: SF,
@@ -207,7 +207,7 @@ export default function About() {
                 letterSpacing: "-0.3px",
               }}
             >
-              Soul<span style={{ color: P }}>Connect</span>
+              Same<span style={{ color: P }}>Feel</span>
             </span>
           </Link>
 
@@ -293,7 +293,7 @@ export default function About() {
               margin: "0 0 22px",
             }}
           >
-            Why SoulConnect <span style={{ color: P }}>Exists</span>
+            Why SameFeel <span style={{ color: P }}>Exists</span>
           </h1>
           <p
             style={{
@@ -304,7 +304,7 @@ export default function About() {
               maxWidth: 620,
             }}
           >
-            We started SoulConnect because we know what it feels like to struggle alone — and we believe no one should have to.
+            We started SameFeel because we know what it feels like to struggle alone — and we believe no one should have to.
           </p>
         </div>
       </section>
@@ -573,16 +573,16 @@ export default function About() {
                 paddingTop: 30,
               }}
             >
-              SoulConnect started with a simple observation: many people go through life's hardest moments feeling completely alone.
+              SameFeel started with a simple observation: many people go through life's hardest moments feeling completely alone.
             </p>
             <p style={{ fontSize: "clamp(15px, 1.5vw, 17.5px)", color: NAVY_SOFT, lineHeight: 1.85, margin: "0 0 22px" }}>
               Whether it's anxiety, heartbreak, grief, burnout, loneliness, or major life changes, support often feels difficult to find. Traditional social platforms connect us to everyone, but not always to the people who truly understand what we're experiencing.
             </p>
             <p style={{ fontSize: "clamp(15px, 1.5vw, 17.5px)", color: NAVY_SOFT, lineHeight: 1.85, margin: "0 0 22px" }}>
-              I created SoulConnect to make meaningful connection easier. A place where people facing similar challenges can find each other, share their stories, support one another, and grow together through guided healing journeys.
+              I created SameFeel to make meaningful connection easier. A place where people facing similar challenges can find each other, share their stories, support one another, and grow together through guided healing journeys.
             </p>
             <p style={{ fontSize: "clamp(15px, 1.5vw, 17.5px)", color: NAVY_SOFT, lineHeight: 1.85, margin: "0 0 22px" }}>
-              We're currently building SoulConnect in public, alongside our early community. Every piece of feedback, every conversation, and every person who joins helps shape what this platform becomes.
+              We're currently building SameFeel in public, alongside our early community. Every piece of feedback, every conversation, and every person who joins helps shape what this platform becomes.
             </p>
             <p style={{ fontSize: "clamp(15px, 1.5vw, 17.5px)", color: NAVY_SOFT, lineHeight: 1.85, margin: "0 0 28px" }}>
               Thank you for being part of the journey.
@@ -598,7 +598,7 @@ export default function About() {
                 fontStyle: "italic",
               }}
             >
-              — Founder, SoulConnect
+              — Founder, SameFeel
             </p>
           </div>
         </div>
@@ -657,7 +657,7 @@ export default function About() {
               maxWidth: 580,
             }}
           >
-            We are building SoulConnect alongside real people navigating real struggles. Join our Early Community and help shape the future of healing communities.
+            We are building SameFeel alongside real people navigating real struggles. Join our Early Community and help shape the future of healing communities.
           </p>
           <Link
             to="/#early"
@@ -711,8 +711,8 @@ export default function About() {
               marginBottom: 14,
             }}
           >
-            <img src="/brand/logo/soulconnect-lotus-mark.svg" alt="SoulConnect"
-              style={{ height: 30, width: "auto", display: "block" }} />
+            <img src="/logo-icon.png" alt="SameFeel"
+            style={{ height: 30, width: 30, borderRadius: 9, display: "block", border: "1px solid rgba(109,74,255,0.38)", boxSizing: "border-box" }} />
             <span
               style={{
                 fontFamily: SF,
@@ -721,11 +721,11 @@ export default function About() {
                 color: DARK,
               }}
             >
-              Soul<span style={{ color: P }}>Connect</span>
+              Same<span style={{ color: P }}>Feel</span>
             </span>
           </div>
           <p style={{ fontSize: 13, color: MUTED, margin: 0 }}>
-            © {new Date().getFullYear()} SoulConnect. Built with care for every soul navigating the hard parts of life.
+            © {new Date().getFullYear()} SameFeel. Your first step towards a better tomorrow.
           </p>
         </div>
       </footer>

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// SoulConnect · Tiny Wins Challenge Database
+// SameFeel · Tiny Wins Challenge Database
 // 160 personalized micro-challenges across 18 categories
 // ─────────────────────────────────────────────────────────────────────────────
 

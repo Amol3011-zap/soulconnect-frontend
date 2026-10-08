@@ -99,15 +99,13 @@ export default function Navbar() {
           <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginRight: 44, flexShrink: 0 }}>
             <img
               src="/logo-icon.png"
-              alt="SoulConnect"
-              style={{ width: 40, height: 40, borderRadius: 12, flexShrink: 0, display: 'block', boxShadow: '0 4px 16px rgba(109,74,255,0.35)' }}
+              alt="SameFeel"
+              style={{ width: 40, height: 40, borderRadius: 12, flexShrink: 0, display: 'block', border: '1px solid rgba(109,74,255,0.38)', boxSizing: 'border-box', boxShadow: '0 4px 16px rgba(109,74,255,0.35)' }}
             />
             <div>
-              <span style={{ fontSize: 16, fontWeight: 800, color: '#1F1B3D', letterSpacing: '-0.02em', display: 'block', lineHeight: 1, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
-                Soul<span style={{ color: '#6D4AFF' }}>Connect</span>
-              </span>
+              <img src="/brand/logo/samefeel-wordmark.png" alt="SameFeel" style={{height:23, width:"auto", display:"block"}} />
               <span style={{ fontSize: 8.5, color: '#A78BFA', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                Heal · Connect · Grow
+                Different stories. Same feelings.
               </span>
             </div>
           </Link>

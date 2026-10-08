@@ -326,7 +326,7 @@ export default function Home() {
               <h1 className="text-[24px] font-bold leading-tight tracking-[-0.01em] text-foreground sm:text-[28px]">
                 {greeting}, {firstName}
               </h1>
-              <p className="mt-1 text-[15px] text-muted-foreground">Take a deep breath. You've got this.</p>
+              <p className="mt-1 text-[15px] text-muted-foreground">{user?.bio || "Take a deep breath. You've got this."}</p>
             </div>
             <div className="home-desktop-only relative flex shrink-0 items-center gap-1">
               <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'} title={isDark ? 'Light mode' : 'Dark mode'}>

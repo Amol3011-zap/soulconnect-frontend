@@ -4,6 +4,53 @@ import { Check, ChevronRight, CloudFog, CloudLightning, CloudRain, CloudSun, Flo
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { MoodCharacter, MoodScene, MOOD_META } from './SoulClimateArt';
+import { useAuthStore } from '../../store/auth';
+import { WEATHER_TO_MOOD, avatarSrc, currentAvatarId, saveAvatar, isFeltAvatar } from '../../data/avatars';
+import AvatarPicker from '../AvatarPicker';
+import feltAmazing from '../../assets/mood/mood-amazing.png';
+import feltGood from '../../assets/mood/mood-good.png';
+import feltOkay from '../../assets/mood/mood-okay.png';
+import feltNotGood from '../../assets/mood/mood-notgood.png';
+import feltAwful from '../../assets/mood/mood-awful.png';
+
+// New felt-avatar faces (added alongside the original illustrated
+// MoodCharacter/MoodScene system below, which stays fully intact and is
+// still used for the post-check-in "Today's Soul Climate" scene, and as a
+// fallback here for any weather mood without a felt image).
+const WEATHER_TO_FELT = {
+  'clear-sky':  feltAmazing,
+  blooming:     feltAmazing,
+  hope:         feltGood,
+  fog:          feltOkay,
+  'heavy-rain': feltNotGood,
+  storm:        feltAwful,
+};
+
+// The person's own avatar (if they picked one) wearing the mood of this weather.
+function useMyAvatar() {
+  const user = useAuthStore((s) => s.user);
+  return currentAvatarId(user);
+}
+function MoodFace({ mood, avatarId, size }) {
+  // Felt avatars take priority in this picker grid now (per request); the
+  // personalized "Choose your look" avatar still drives the post-check-in
+  // "Today's Soul Climate" scene and the rest of the app untouched (see
+  // CheckedIn below, which calls avatarSrc directly and never goes through
+  // this component).
+  const felt = WEATHER_TO_FELT[mood];
+  if (felt) {
+    return <img src={felt} alt="" width={size} height={size} draggable="false"
+      className="block object-contain" style={{ width: size, height: size }} />;
+  }
+  if (avatarId) {
+    return <img src={avatarSrc(avatarId, WEATHER_TO_MOOD[mood])} alt="" width={size} height={size} draggable="false"
+      className="block rounded-[16px] shadow-[0_2px_8px_rgba(60,40,110,0.15)]" style={{ width: size, height: size }} />;
+  }
+  return <MoodCharacter mood={mood} size={size} />;
+}
+const FLOAT_CSS = `@keyframes scAvBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+.sc-av-breathe{animation:scAvBreathe 5s ease-in-out infinite;transform-origin:50% 60%}
+@media (prefers-reduced-motion:reduce){.sc-av-breathe{animation:none}}`;
 
 /* ─────────────────────────────────────────────────────────────────────────────
    HOME · Soul Climate — a compact card with two states:
@@ -24,12 +71,26 @@ const TONE = {
   storm:        { tile: 'linear-gradient(160deg,#FCFAF7 0%,#F2EEE8 100%)', wash: 'linear-gradient(160deg,#F4F2FC 0%,#E3DFF6 100%)', ring: '#CFC8EC', icon: CloudLightning, iconColor: '#7C6AD6' },
 };
 const BASE_WASH = 'linear-gradient(160deg,#FFFCF1 0%,#FFF4D6 100%)';
+
+// Dark mode keeps the mood colour instead of falling back to the plain card.
+// Same hue as the light wash, dropped in lightness so white text still reads
+// and the card does not glare at 3am.
+const DARK_TONE = {
+  'clear-sky':  { tile: 'linear-gradient(160deg,#3B3218 0%,#2F2812 100%)', wash: 'linear-gradient(160deg,#3B3218 0%,#312813 100%)', ring: '#6E5C2A' },
+  hope:         { tile: 'linear-gradient(160deg,#412B1B 0%,#352135 100%)', wash: 'linear-gradient(160deg,#412B1B 0%,#3A2234 100%)', ring: '#7C5637' },
+  blooming:     { tile: 'linear-gradient(160deg,#3E2031 0%,#36203B 100%)', wash: 'linear-gradient(160deg,#3E2031 0%,#36203B 100%)', ring: '#7E4067' },
+  fog:          { tile: 'linear-gradient(160deg,#2C2845 0%,#262243 100%)', wash: 'linear-gradient(160deg,#2C2845 0%,#262243 100%)', ring: '#514A7A' },
+  'heavy-rain': { tile: 'linear-gradient(160deg,#202B49 0%,#232149 100%)', wash: 'linear-gradient(160deg,#202B49 0%,#232149 100%)', ring: '#405691' },
+  storm:        { tile: 'linear-gradient(160deg,#2D2551 0%,#262051 100%)', wash: 'linear-gradient(160deg,#2D2551 0%,#262051 100%)', ring: '#5A4D98' },
+};
+const DARK_BASE_WASH = 'linear-gradient(160deg,#302A1A 0%,#272214 100%)';
 const FADE = { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.2 } };
 
 function SoulClimateCard({ todayMood, tinyStep, onCheckIn, onOpenTinyStep, dark = false }) {
   const [selected, setSelected] = useState(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const avatarId = useMyAvatar();
 
   const submit = useCallback(async () => {
     if (saving) return;
@@ -37,8 +98,10 @@ function SoulClimateCard({ todayMood, tinyStep, onCheckIn, onOpenTinyStep, dark 
     setSaving(true); setError('');
     const res = await onCheckIn(selected);
     setSaving(false);
+    // Keep the profile avatar's mood in step with today's check-in.
+    if (res?.ok && avatarId && WEATHER_TO_MOOD[selected]) saveAvatar(avatarId, WEATHER_TO_MOOD[selected]);
     if (!res?.ok) setError(res?.message || "Couldn't save your check-in. Please try again.");
-  }, [selected, saving, onCheckIn]);
+  }, [selected, saving, onCheckIn, avatarId]);
 
   // Arrow keys move through the mood grid (radiogroup pattern).
   const onGridKey = useCallback((e) => {
@@ -52,9 +115,11 @@ function SoulClimateCard({ todayMood, tinyStep, onCheckIn, onOpenTinyStep, dark 
   }, [selected]);
 
   const shown = todayMood || selected;
-  const cardStyle = dark
-    ? { background: 'hsl(var(--card))' }
-    : { background: shown ? TONE[shown].wash : BASE_WASH, borderColor: shown ? TONE[shown].ring : '#F3E3B0' };
+  const palette = dark ? DARK_TONE : TONE;
+  const cardStyle = {
+    background: shown ? palette[shown].wash : (dark ? DARK_BASE_WASH : BASE_WASH),
+    borderColor: shown ? palette[shown].ring : (dark ? '#3C3526' : '#F3E3B0'),
+  };
 
   return (
     <section
@@ -65,7 +130,7 @@ function SoulClimateCard({ todayMood, tinyStep, onCheckIn, onOpenTinyStep, dark 
       <AnimatePresence mode="wait" initial={false}>
         {todayMood ? (
           <motion.div key="done" {...FADE}>
-            <CheckedIn mood={todayMood} tinyStep={tinyStep} onOpenTinyStep={onOpenTinyStep} dark={dark} />
+            <CheckedIn mood={todayMood} tinyStep={tinyStep} onOpenTinyStep={onOpenTinyStep} dark={dark} avatarId={avatarId} />
           </motion.div>
         ) : (
           <motion.div key="pick" {...FADE}>
@@ -90,9 +155,9 @@ function SoulClimateCard({ todayMood, tinyStep, onCheckIn, onOpenTinyStep, dark 
                         ? 'border-2 border-primary shadow-[0_6px_16px_rgba(128,102,213,0.25)] dark:bg-[rgba(139,92,246,0.14)]'
                         : 'border-white/80 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_1px_3px_rgba(120,90,20,0.06)] dark:border-border dark:bg-muted dark:shadow-none'
                     )}
-                    style={dark ? undefined : { background: TONE[id].tile }}
+                    style={{ background: palette[id].tile }}
                   >
-                    <MoodCharacter mood={id} size={62} />
+                    <MoodFace mood={id} avatarId={avatarId} size={62} />
                     <span className="text-[13.5px] font-semibold leading-tight text-foreground">{MOOD_META[id].label}</span>
                     {on && (
                       <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white" aria-hidden="true">
@@ -115,8 +180,9 @@ function SoulClimateCard({ todayMood, tinyStep, onCheckIn, onOpenTinyStep, dark 
   );
 }
 
-function CheckedIn({ mood, tinyStep, onOpenTinyStep, dark }) {
+function CheckedIn({ mood, tinyStep, onOpenTinyStep, dark, avatarId }) {
   const meta = MOOD_META[mood] || MOOD_META['clear-sky'];
+  const [pickerOpen, setPickerOpen] = useState(false);
   const { icon: Icon, iconColor } = TONE[mood] || TONE['clear-sky'];
   return (
     <>
@@ -128,9 +194,35 @@ function CheckedIn({ mood, tinyStep, onOpenTinyStep, dark }) {
       </div>
 
       <div className="mt-3 grid grid-cols-[minmax(0,46%)_minmax(0,1fr)] items-center gap-3">
-        <div className="h-[132px] overflow-hidden rounded-[18px] sm:h-[148px]">
-          <MoodScene mood={mood} dark={dark} />
+        <div className="relative h-[132px] overflow-hidden rounded-[18px] sm:h-[148px]">
+          {(avatarId && isFeltAvatar(avatarId)) || (!avatarId && WEATHER_TO_FELT[mood]) ? (
+            <button type="button" onClick={() => setPickerOpen(true)} aria-label="Change your avatar"
+              className="absolute inset-0 flex h-full w-full items-center justify-center overflow-hidden rounded-[18px] border-0 bg-transparent p-0">
+              <MoodScene mood={mood} dark={dark} />
+              <img src={avatarId ? avatarSrc(avatarId) : WEATHER_TO_FELT[mood]} alt={avatarId ? 'Your avatar today' : ''} draggable="false"
+                className="absolute h-[62%] w-[62%] object-contain drop-shadow-[0_6px_14px_rgba(60,40,110,0.25)]" />
+            </button>
+          ) : avatarId ? (
+            <>
+              <style>{FLOAT_CSS}</style>
+              <button type="button" onClick={() => setPickerOpen(true)} aria-label="Change your avatar"
+                className="absolute inset-0 block h-full w-full overflow-hidden rounded-[18px] p-0">
+                <img src={avatarSrc(avatarId, WEATHER_TO_MOOD[mood])} alt="Your avatar today" draggable="false"
+                  className="sc-av-breathe block h-full w-full object-cover" style={{ objectPosition: '50% 38%' }} />
+              </button>
+            </>
+          ) : (
+            <>
+              <MoodScene mood={mood} dark={dark} />
+              <button type="button" onClick={() => setPickerOpen(true)}
+                className="absolute bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-white/90 px-3 py-1 text-[12px] font-semibold text-primary shadow-[0_2px_8px_rgba(60,40,110,0.15)]">
+                Use my avatar
+              </button>
+            </>
+          )}
         </div>
+        <AvatarPicker open={pickerOpen} current={avatarId} currentMood={WEATHER_TO_MOOD[mood] || 'calm'}
+          onClose={() => setPickerOpen(false)} />
         <div className="min-w-0 text-center">
           <div className="flex items-center justify-center gap-1.5">
             <Icon className="h-6 w-6 shrink-0" style={{ color: iconColor }} strokeWidth={2} aria-hidden="true" />
@@ -143,7 +235,7 @@ function CheckedIn({ mood, tinyStep, onOpenTinyStep, dark }) {
       <button
         type="button"
         onClick={onOpenTinyStep}
-        className="mt-3 flex min-h-[56px] w-full items-center gap-3 rounded-[16px] border border-white/80 bg-white/75 p-3 text-left shadow-[0_1px_3px_rgba(120,90,20,0.06)] transition-transform active:scale-[0.99] dark:border-border dark:bg-muted dark:shadow-none"
+        className="mt-3 flex min-h-[56px] w-full items-center gap-3 rounded-[16px] border border-white/80 bg-white/75 p-3 text-left shadow-[0_1px_3px_rgba(120,90,20,0.06)] transition-transform active:scale-[0.99] dark:border-white/15 dark:bg-white/10 dark:shadow-none"
       >
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[color:var(--sc-success-bg)] text-[color:var(--sc-success)]" aria-hidden="true">
           <Sprout className="h-5 w-5" strokeWidth={2} />
@@ -152,7 +244,7 @@ function CheckedIn({ mood, tinyStep, onOpenTinyStep, dark }) {
           <span className="block text-[14px] font-semibold leading-snug text-foreground">Today's tiny step</span>
           <span className="block truncate text-[13px] text-muted-foreground">{tinyStep}</span>
         </span>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-foreground shadow-[0_1px_4px_rgba(23,22,66,0.1)] dark:bg-card" aria-hidden="true">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-foreground shadow-[0_1px_4px_rgba(23,22,66,0.1)] dark:bg-white/15" aria-hidden="true">
           <ChevronRight className="h-4 w-4" strokeWidth={2.2} />
         </span>
       </button>

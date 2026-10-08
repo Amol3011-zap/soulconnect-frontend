@@ -1,5 +1,5 @@
 /**
- * DEV-ONLY sample lotuses for trying the Soul Pond UI without a backend.
+ * DEV-ONLY sample lotuses for trying the Feel Pond UI without a backend.
  * Imported dynamically behind import.meta.env.DEV, so production builds never
  * include or show these. They are written as generic example feelings, not
  * real people.

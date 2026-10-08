@@ -1,5 +1,5 @@
 /**
- * Soul Pond data layer.
+ * Feel Pond data layer.
  *
  * The pond replaces SoulMatch's "browse profiles" model: people float one
  * anonymous line about what they feel ("a lotus"), and others respond to the
@@ -111,7 +111,13 @@ export function suggestProblems(text = '') {
 }
 
 /* ── Safety check before floating ───────────────────────────── */
-const CRISIS = /(suicid|kill myself|end my life|want to die|self.?harm|hurt myself|no reason to live)/i;
+const CRISIS = new RegExp([
+  'suicid', 'self.?harm', 'no reason to live', 'not worth living', 'better off dead',
+  '(kill|killing|hurt|hurting|harm|harming|cut|cutting|end|ending) my ?self',
+  '(end|ending) (my life|it all)', 'want(ing)? to die', 'wish i (was|were) dead',
+  "(don'?t|do not) want to (live|be alive|be here|wake up)",
+  "can'?t go on", '(no ?one|nobody) would (miss|care)', 'disappear forever', 'stop existing', 'overdose',
+].join('|'), 'i');
 export function needsCrisisSupport(text = '') {
   return CRISIS.test(text);
 }
@@ -216,6 +222,41 @@ export async function saveMessage(chatId, text) {
     ? { ...c, messages: [...(c.messages || []), { id: Date.now(), me: true, text }], updatedAt: Date.now() }
     : c));
   writeDevChats(list);
+}
+
+/** Share a photo in a pond chat. `image` is a compressed JPEG data URL
+ *  (re-encoded on the device, so camera location data is already stripped).
+ *  The backend needs to accept { image, text } on this endpoint. */
+export async function saveImage(chatId, image, text = '') {
+  if (!String(chatId).startsWith('mock-')) {
+    await api.post(`/pond/chats/${chatId}/messages`, { text, image });
+    return;
+  }
+  const list = readDevChats().map(c => (c.id === chatId
+    ? { ...c, messages: [...(c.messages || []), { id: Date.now(), me: true, text, image }], updatedAt: Date.now() }
+    : c));
+  try {
+    localStorage.setItem(DEV_CHATS_KEY, JSON.stringify(list));
+  } catch {
+    throw new Error('storage-full');
+  }
+}
+
+/** Share a short voice note. `audio` is a data URL (webm or mp4), `duration` in seconds.
+ *  The backend needs to accept { audio, duration } on this endpoint. */
+export async function saveAudio(chatId, audio, duration) {
+  if (!String(chatId).startsWith('mock-')) {
+    await api.post(`/pond/chats/${chatId}/messages`, { text: '', audio, duration });
+    return;
+  }
+  const list = readDevChats().map(c => (c.id === chatId
+    ? { ...c, messages: [...(c.messages || []), { id: Date.now(), me: true, text: '', audio, duration }], updatedAt: Date.now() }
+    : c));
+  try {
+    localStorage.setItem(DEV_CHATS_KEY, JSON.stringify(list));
+  } catch {
+    throw new Error('storage-full');
+  }
 }
 
 export function markChat(chatId, patch) {

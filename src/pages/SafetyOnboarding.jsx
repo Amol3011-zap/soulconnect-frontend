@@ -123,13 +123,13 @@ function Step1({ onNext }) {
       </div>
 
       <h1 style={{ fontSize:28, fontWeight:800, color:'#1e1b4b', margin:'0 0 10px', lineHeight:1.2 }}>
-        Welcome to SoulConnect 💜
+        Welcome to SameFeel 💜
       </h1>
       <p style={{ color:'#6B7280', fontSize:16, lineHeight:1.75, margin:'0 0 10px', maxWidth:380, marginLeft:'auto', marginRight:'auto' }}>
         A place for connection, support, growth, and healing.
       </p>
       <p style={{ color:'#9CA3AF', fontSize:14, lineHeight:1.75, margin:'0 0 28px', maxWidth:380, marginLeft:'auto', marginRight:'auto' }}>
-        SoulConnect helps people connect with others who understand their experiences through peer support, wellness circles, guided conversations, journaling, and access to independent wellness professionals.
+        SameFeel helps people connect with others who understand their experiences through peer support, wellness circles, guided conversations, journaling, and access to independent wellness professionals.
       </p>
 
       <div style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:8, marginBottom:28 }}>
@@ -158,7 +158,7 @@ function Step2({ onNext }) {
 
       {/* What we are */}
       <div style={{ background:'linear-gradient(135deg,#F0FDF4,#DCFCE7)', borderRadius:16, padding:'18px 20px', marginBottom:12, border:'1.5px solid #BBF7D0' }}>
-        <p style={{ margin:'0 0 10px', fontWeight:700, color:'#065F46', fontSize:14 }}>✅ SoulConnect IS:</p>
+        <p style={{ margin:'0 0 10px', fontWeight:700, color:'#065F46', fontSize:14 }}>✅ SameFeel IS:</p>
         {['A peer-support community for healing & connection','Wellness circles and group support spaces','Journaling and mindfulness tools','Access to independent wellness guides'].map((t,i) => (
           <div key={i} style={{ display:'flex', gap:8, alignItems:'flex-start', fontSize:14, color:'#374151', marginBottom:6, lineHeight:1.5 }}>
             <span style={{ color:'#059669', fontWeight:700, flexShrink:0 }}>✓</span>{t}
@@ -168,7 +168,7 @@ function Step2({ onNext }) {
 
       {/* What we are NOT — amber warning */}
       <div style={{ background:'linear-gradient(135deg,#FFFBEB,#FEF3C7)', borderRadius:16, padding:'18px 20px', marginBottom:20, border:'2px solid #F59E0B' }}>
-        <p style={{ margin:'0 0 10px', fontWeight:700, color:'#92400E', fontSize:14 }}>🚫 SoulConnect is NOT:</p>
+        <p style={{ margin:'0 0 10px', fontWeight:700, color:'#92400E', fontSize:14 }}>🚫 SameFeel is NOT:</p>
         {[
           'An emergency service or crisis hotline',
           'A hospital or medical facility',
@@ -206,7 +206,7 @@ function Step3({ onNext, onViewCrisis }) {
           If you are thinking about harming yourself, harming someone else, or are in immediate danger — please contact emergency services or a crisis support provider immediately.
         </p>
         <p style={{ color:'#9CA3AF', fontSize:13, lineHeight:1.6, margin:0 }}>
-          SoulConnect community members, guides, hosts, and wellness practitioners are <strong style={{ color:'#6B7280' }}>not emergency responders</strong>. Emergency situations must always be directed to professional services.
+          SameFeel community members, guides, hosts, and wellness practitioners are <strong style={{ color:'#6B7280' }}>not emergency responders</strong>. Emergency situations must always be directed to professional services.
         </p>
       </div>
 
@@ -252,7 +252,7 @@ function Step4({ onNext }) {
       <div style={{ textAlign:'center', marginBottom:22 }}>
         <div style={{ fontSize:40, marginBottom:10 }}>🌸</div>
         <h2 style={{ fontSize:22, fontWeight:800, color:'#1e1b4b', margin:'0 0 6px' }}>Our Community Values</h2>
-        <p style={{ color:'#9CA3AF', fontSize:14, margin:0 }}>These principles guide every interaction on SoulConnect.</p>
+        <p style={{ color:'#9CA3AF', fontSize:14, margin:0 }}>These principles guide every interaction on SameFeel.</p>
       </div>
 
       <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:24 }}>
@@ -294,7 +294,7 @@ function Step5({ onNext }) {
       </div>
 
       <p style={{ color:'#6B7280', fontSize:14, lineHeight:1.7, marginBottom:16 }}>
-        Guides, coaches, healers, facilitators, and wellness practitioners on SoulConnect are <strong style={{ color:'#1e1b4b' }}>independent practitioners</strong> — not employees or agents of SoulConnect.
+        Guides, coaches, healers, facilitators, and wellness practitioners on SameFeel are <strong style={{ color:'#1e1b4b' }}>independent practitioners</strong> — not employees or agents of SameFeel.
       </p>
 
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:20 }}>
@@ -337,8 +337,8 @@ function Step6({ onComplete }) {
   const toggle = i => setChecks(c => c.map((v,idx) => idx===i ? !v : v));
 
   const items = [
-    'I understand that SoulConnect is a peer-support and wellness platform.',
-    'I understand SoulConnect is not a substitute for emergency, medical, psychiatric, or crisis services.',
+    'I understand that SameFeel is a peer-support and wellness platform.',
+    'I understand SameFeel is not a substitute for emergency, medical, psychiatric, or crisis services.',
     'I agree to follow the Community Guidelines and treat others with respect.',
     'I understand that guides and healers are independent practitioners and are not emergency responders.',
     'I have read the Safety Policy and understand the boundaries of this platform.',
@@ -397,14 +397,14 @@ function Step6({ onComplete }) {
       {/* Signature section */}
       <div style={{ background:'linear-gradient(135deg,#F5F3FF,#EDE9FE)', borderRadius:14, padding:'14px 16px', marginBottom:20, border:'1px solid #C4B5FD' }}>
         <p style={{ margin:0, color:'#4C1D95', fontSize:12, lineHeight:1.6, textAlign:'center' }}>
-          By continuing, you acknowledge and agree to the SoulConnect{' '}
+          By continuing, you acknowledge and agree to the SameFeel{' '}
           <strong>Safety Policy</strong>, <strong>Community Guidelines</strong>,{' '}
           <strong>Privacy Policy</strong>, and <strong>Terms of Service</strong>.
         </p>
       </div>
 
       <Btn onClick={onComplete} disabled={!allChecked}>
-        {allChecked ? '💜 Accept & Enter SoulConnect' : `Please check all ${checks.length} boxes to continue`}
+        {allChecked ? '💜 Accept & Enter SameFeel' : `Please check all ${checks.length} boxes to continue`}
       </Btn>
 
       {!allChecked && (
@@ -491,8 +491,8 @@ export default function SafetyOnboarding({ onComplete }) {
       <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:480, padding:'24px 20px', maxHeight:'100vh', overflowY:'auto' }}>
         {/* Logo */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, marginBottom:20 }}>
-          <img src="/logo-icon.png" alt="SoulConnect" style={{ width:34, height:34, borderRadius:10, boxShadow:'0 4px 14px rgba(109,74,255,0.35)', display:'block' }} />
-          <span style={{ fontSize:16, fontWeight:800, color:'#1e1b4b' }}>Soul<span style={{ color:'#6D4AFF' }}>Connect</span></span>
+          <img src="/logo-icon.png" alt="SameFeel" style={{ width:34, height:34, borderRadius:10, boxShadow:'0 4px 14px rgba(109,74,255,0.35)', display:'block', border:'1px solid rgba(109,74,255,0.38)', boxSizing:'border-box' }} />
+          <span style={{ fontSize:16, fontWeight:800, color:'#1e1b4b' }}>Same<span style={{ color:'#6D4AFF' }}>Feel</span></span>
         </div>
 
         <ProgressDots current={step} total={TOTAL_STEPS} />

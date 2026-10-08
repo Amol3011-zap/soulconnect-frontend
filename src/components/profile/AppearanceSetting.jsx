@@ -30,7 +30,7 @@ function AppearanceSetting() {
     <Card className="mb-4 p-4">
       <div className="mb-3">
         <h3 id="appearance-title" className="text-[14px] font-bold text-foreground">Appearance</h3>
-        <p className="mt-0.5 text-[12px] text-muted-foreground">Choose how SoulConnect looks on this device.</p>
+        <p className="mt-0.5 text-[12px] text-muted-foreground">Choose how SameFeel looks on this device.</p>
       </div>
       <div
         role="radiogroup"

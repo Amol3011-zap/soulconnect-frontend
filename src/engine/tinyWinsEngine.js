@@ -1,10 +1,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// SoulConnect · Tiny Wins Personalization Engine
+// SameFeel · Tiny Wins Personalization Engine
 // Selects 3 daily challenges based on Soul Climate, time of day,
 // work mode, and completion history. Never repeats. Never pressures.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { ALL_CHALLENGES } from '../data/tinyWinsChallenges';
+import { STRUGGLE_CHALLENGES } from '../data/tinyWinsByStruggle';
 
 // ── Time helpers ──────────────────────────────────────────────────────────────
 
@@ -27,8 +28,17 @@ export function getDayType() {
  * Score a challenge for the current context.
  * Higher score = better fit.
  */
-function scoreChallenge(challenge, { weatherId, workMode, timeOfDay, dayType }) {
+function scoreChallenge(challenge, { weatherId, workMode, timeOfDay, dayType, struggles = [] }) {
   let score = 0;
+
+  // Struggle match. Weighted above work mode on purpose: where someone is
+  // matters less than what they are actually carrying. Primary problem is
+  // worth more than the second one.
+  if (challenge.struggle && struggles.length) {
+    const i = struggles.indexOf(challenge.struggle);
+    if (i === 0) score += 14;
+    else if (i > 0) score += 10;
+  }
 
   // Weather match (highest weight — soul climate is the core signal)
   if (challenge.weather.includes(weatherId)) score += 12;
@@ -130,6 +140,7 @@ function pickDiverseThree(scored) {
 export function selectDailyWins({
   weatherId = 'clear-sky',
   workMode = 'office',
+  struggles = [],
   recentlyCompletedIds = [],
   completedTodayIds = [],
 }) {
@@ -139,19 +150,24 @@ export function selectDailyWins({
   const recentSet = new Set(recentlyCompletedIds);
   const todaySet  = new Set(completedTodayIds);
 
+  // Someone's own struggles lead, but the general set stays in the mix so a
+  // person with two problems does not cycle the same 60 wins forever.
+  const mine = STRUGGLE_CHALLENGES.filter(c => struggles.includes(c.struggle));
+  const universe = mine.length ? [...mine, ...ALL_CHALLENGES] : ALL_CHALLENGES;
+
   // Filter: active, not done today, not done in last 7 days
-  const candidates = ALL_CHALLENGES.filter(c =>
+  const candidates = universe.filter(c =>
     c.active &&
     !todaySet.has(c.id) &&
     !recentSet.has(c.id)
   );
 
   // If we're too restricted (unlikely with 160 challenges) fall back
-  const pool = candidates.length >= 10 ? candidates : ALL_CHALLENGES.filter(c => !todaySet.has(c.id));
+  const pool = candidates.length >= 10 ? candidates : universe.filter(c => !todaySet.has(c.id));
 
   // Score and sort
   const scored = pool
-    .map(c => ({ ...c, _score: scoreChallenge(c, { weatherId, workMode, timeOfDay, dayType }) }))
+    .map(c => ({ ...c, _score: scoreChallenge(c, { weatherId, workMode, timeOfDay, dayType, struggles }) }))
     .sort((a, b) => b._score - a._score);
 
   return pickDiverseThree(scored);

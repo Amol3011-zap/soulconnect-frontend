@@ -6,14 +6,17 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../store/auth';
 import { authAPI } from '../services/api';
+import { STRUGGLES } from '../components/soulmatch/soulmatchOptions';
+import { checkPassword, checkPasswordBreached, passwordStrength, STRENGTH_LABELS, PASSWORD_MIN } from '../lib/passwordPolicy';
+import Turnstile from '../components/Turnstile';
 
-/* SoulConnect Dawn palette */
+/* SameFeel Dawn palette */
 const P = '#6B4FA0';
 const DARK = '#1E1833';
 const BODY = '#565070';
 const MUTED = '#77718C';
 const LINE = '#E7E1F0';
-const LOTUS = '/brand/logo/soulconnect-lotus-mark.svg';
+const LOTUS = '/logo-icon.png';
 const HERO = '/brand/hero/avatar-group.jpg';
 const FACES = [1, 5, 2, 8].map((n) => `/brand/hero/face-${n}.jpg`);
 
@@ -88,7 +91,7 @@ const css = `
   linear-gradient(180deg,rgba(30,24,51,.18) 0%,rgba(30,24,51,0) 20%,rgba(30,24,51,0) 36%,rgba(40,27,74,.55) 56%,rgba(33,22,62,.86) 76%,rgba(28,18,52,.95) 100%)}
 .su-vtop{position:absolute;z-index:2;top:22px;left:22px;right:22px;display:flex;align-items:center;justify-content:space-between}
 .su-glass{display:inline-flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;border-radius:999px;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 6px 20px rgba(30,24,51,.12);text-decoration:none}
-.su-glass img{width:34px;height:34px;display:block}
+.su-glass img{width:34px;height:34px;display:block;border-radius:10px;border:1px solid rgba(109,74,255,0.38);box-sizing:border-box}
 .su-glass b{font-family:'Playfair Display',Georgia,serif;font-size:17px;color:${DARK};letter-spacing:-.01em}
 .su-glass b span{color:#A87B45}
 .su-vbottom{position:absolute;z-index:2;left:40px;right:40px;bottom:36px;color:#fff}
@@ -104,7 +107,7 @@ const css = `
 .su-panel{flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
 .su-top{display:flex;align-items:center;justify-content:flex-end;gap:16px;padding:26px 40px 0}
 .su-top .brand{display:none;align-items:center;gap:9px;margin-right:auto;text-decoration:none}
-.su-top .brand img{width:34px;height:34px}
+.su-top .brand img{width:34px;height:34px;border-radius:10px;border:1px solid rgba(109,74,255,0.38);box-sizing:border-box}
 .su-top .brand b{font-family:'Playfair Display',Georgia,serif;font-size:19px;color:${DARK}}
 .su-top .brand b span{color:#A87B45}
 .su-login{font-size:14px;color:${MUTED}}
@@ -263,9 +266,9 @@ select.su-in{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w
 
 function BrandPill() {
   return (
-    <Link to="/" className="su-glass" aria-label="SoulConnect home">
+    <Link to="/" className="su-glass" aria-label="SameFeel home">
       <img src={LOTUS} alt="" width="34" height="34" />
-      <b>Soul<span>Connect</span></b>
+      <b>Same<span>Feel</span></b>
     </Link>
   );
 }
@@ -283,7 +286,7 @@ function Visual({ role }) {
             ? <h2>Share your gift.<br /><em>Help someone heal.</em></h2>
             : <h2>You are more than<br /><em>what you’re going through.</em></h2>}
           <p>{healer
-            ? 'Join the SoulConnect healer network and support people who are ready to take their next step.'
+            ? 'Join the SameFeel healer network and support people who are ready to take their next step.'
             : 'A safe space to share what you feel and connect with people who truly understand.'}</p>
           <div className="su-trust">
             {(healer
@@ -355,6 +358,9 @@ export default function Signup() {
   const [sending, setSending] = useState(false);
 
   const [ageOk, setAgeOk] = useState(false);
+  const [problems, setProblems] = useState([]);      // 1 or 2 struggle ids
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [pwBreached, setPwBreached] = useState('');
 
   // Healer only
   const [healerType, setHealerType] = useState('');
@@ -397,7 +403,11 @@ export default function Signup() {
       if (!name.trim()) return 'Please enter your name';
       if (!/^\S+@\S+\.\S+$/.test(email.trim())) return 'Enter a valid email address';
       if (digits.length !== 10) return 'Enter a valid 10 digit mobile number';
-      if (!password || password.length < 6) return 'Password must be at least 6 characters';
+      const pwErr = checkPassword(password, { name, email, phone: digits });
+      if (pwErr) return pwErr;
+      if (pwBreached) return pwBreached;
+      if (!isHealer && problems.length === 0) return 'Please pick at least one, so we can start you somewhere useful';
+      if (!captchaToken) return 'Please complete the security check';
       if (!ageOk) return 'Please confirm you are 13 or older';
     }
     if (step === 3 && isHealer) {
@@ -463,10 +473,11 @@ export default function Signup() {
         distance_preference: 10,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata',
         // TODO(backend): make primary_problem optional. Signup no longer asks
-        // what people are going through (the Soul Pond asks that instead), so
+        // what people are going through (the Feel Pond asks that instead), so
         // this is only a placeholder the current backend requires.
-        primary_problem: 'anxiety',
-        secondary_problems: [],
+        primary_problem: problems[0] || 'anxiety',
+        secondary_problems: problems.slice(1),
+        captcha_token: captchaToken,   // backend MUST verify this via /siteverify
         ...(isHealer && {
           healer_type: healerType,
           specializations,
@@ -482,7 +493,10 @@ export default function Signup() {
       navigate('/home');
     } catch (err) {
       const detail = err.response?.data?.detail;
-      if (Array.isArray(detail)) {
+      const status = err.response?.status;
+      if (status >= 500 && !detail) {
+        setError('We could not create your account just now. Please try again in a moment.');
+      } else if (Array.isArray(detail)) {
         setError(detail.map((e) => `${e.loc?.slice(-1)[0]}: ${e.msg}`).join(' | '));
       } else {
         setError(detail || err.message || 'Signup failed. Please try again.');
@@ -492,8 +506,15 @@ export default function Signup() {
     }
   };
 
-  const strength = strengthOf(password);
-  const strengthColor = ['#ECE6F5', '#E0A36B', '#9C86CC', P][strength];
+  // Breach check runs debounced, never blocks typing, and fails open.
+  useEffect(() => {
+    if (!password) { setPwBreached(''); return undefined; }
+    const t = setTimeout(() => { checkPasswordBreached(password).then(setPwBreached); }, 600);
+    return () => clearTimeout(t);
+  }, [password]);
+
+  const strength = passwordStrength(password);
+  const strengthColor = ['#ECE6F5', '#D9534F', '#E0A36B', '#9C86CC', P][strength];
   const Err = () => (error ? <p className="su-err" role="alert"><Info size={16} style={{ flexShrink: 0, marginTop: 1 }} />{error}</p> : null);
 
   const Shell = ({ children }) => (
@@ -502,9 +523,9 @@ export default function Signup() {
       <Visual role={role || 'user'} />
       <div className="su-panel">
         <header className="su-top">
-          <Link to="/" className="brand" aria-label="SoulConnect home">
+          <Link to="/" className="brand" aria-label="SameFeel home">
             <img src={LOTUS} alt="" width="34" height="34" />
-            <b>Soul<span>Connect</span></b>
+            <b>Same<span>Feel</span></b>
           </Link>
           <span className="su-login"><span>Already a member?</span><Link to="/login">Log in</Link></span>
         </header>
@@ -530,7 +551,7 @@ export default function Signup() {
             <p>You are more than <em>what you’re going through.</em></p>
           </div>
           <p className="su-kicker">Create your account</p>
-          <h1 className="su-h1">Welcome to SoulConnect</h1>
+          <h1 className="su-h1">Welcome to SameFeel</h1>
           <p className="su-lead">Tell us how you would like to join. You can always change this later.</p>
 
           <div className="su-roles" role="radiogroup" aria-label="How would you like to join?">
@@ -620,7 +641,7 @@ export default function Signup() {
               <p className="su-hint"><Smartphone size={12} />We will send a code to verify it. Never shared.</p>
             </div>
             <div className="su-f">
-              <label className="su-l" htmlFor="su-pass">Password <small>At least 6 characters</small></label>
+              <label className="su-l" htmlFor="su-pass">Password <small>At least {PASSWORD_MIN} characters</small></label>
               <div className="su-wrap">
                 <input id="su-pass" className="su-in" style={{ paddingRight: 52 }} type={showPassword ? 'text' : 'password'} autoComplete="new-password"
                   value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Create a password" />
@@ -629,11 +650,52 @@ export default function Signup() {
                 </button>
               </div>
               {password && (
-                <div className="su-strength" aria-hidden="true">
-                  {[1, 2, 3].map((n) => <i key={n} style={{ background: strength >= n ? strengthColor : undefined }} />)}
-                </div>
+                <>
+                  <div className="su-strength" aria-hidden="true">
+                    {[1, 2, 3, 4].map((n) => <i key={n} style={{ background: strength >= n ? strengthColor : undefined }} />)}
+                  </div>
+                  <p className="su-hint" style={{ color: pwBreached ? '#B4402C' : undefined }}>
+                    {pwBreached || `${STRENGTH_LABELS[strength] || 'Weak'} · a few ordinary words together is stronger than one tricky word`}
+                  </p>
+                </>
               )}
             </div>
+            {!isHealer && (
+              <div className="su-f">
+                <label className="su-l">
+                  What brings you here? <small>Pick one or two</small>
+                </label>
+                <p className="su-hint" style={{ marginBottom: 10 }}>
+                  <Info size={12} />This shapes your daily tiny wins and who you meet first. You can change it any time.
+                </p>
+                <div className="su-chips" role="group" aria-label="What brings you here">
+                  {STRUGGLES.filter(s => s.id !== 'other').map(({ id, label }) => {
+                    const on = problems.includes(id);
+                    const full = problems.length >= 2 && !on;
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        className={`su-chip${on ? ' on' : ''}`}
+                        aria-pressed={on}
+                        disabled={full}
+                        style={full ? { opacity: 0.45, cursor: 'not-allowed' } : undefined}
+                        onClick={() => {
+                          setError('');
+                          setProblems(prev => prev.includes(id)
+                            ? prev.filter(x => x !== id)
+                            : prev.length < 2 ? [...prev, id] : prev);
+                        }}
+                      >
+                        {label}
+                        {on && <span className="n">{problems.indexOf(id) + 1}</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            <Turnstile onVerify={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
             <label className="su-agree">
               <input type="checkbox" checked={ageOk} onChange={(e) => { setAgeOk(e.target.checked); setError(''); }} />
               <span>I am 13 or older and agree to the <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.</span>

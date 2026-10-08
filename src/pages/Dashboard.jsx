@@ -703,15 +703,16 @@ export default function Dashboard() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
               <img
                 src="/brand/logo/soulconnect-logo-primary.png"
-                alt="SoulConnect"
+                alt="SameFeel"
                 style={{
                   width: 36, height: 36, borderRadius: 10, flexShrink: 0,
                   objectFit: 'contain', display: 'block',
+                  border: '1px solid rgba(109,74,255,0.38)', boxSizing: 'border-box',
                   boxShadow: '0 0 14px rgba(124,58,237,0.5)',
                 }}
               />
               <div>
-                <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--sc-text)', letterSpacing: '-0.02em' }}>SoulConnect</div>
+                <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--sc-text)', letterSpacing: '-0.02em' }}>SameFeel</div>
                 <div style={{ fontSize: 9, color: 'var(--sc-muted)', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600 }}>
                   HEAL · CONNECT · GROW
                 </div>
@@ -958,7 +959,7 @@ export default function Dashboard() {
                 {/* Back button — visible on mobile only */}
                 <button
                   className="dc-back-btn"
-                  onClick={() => navigate('/messages')}
+                  onClick={() => navigate('/chat')}
                   style={{
                     display: 'none', /* shown via CSS on mobile */
                     width: 36, height: 36, borderRadius: 10,

@@ -446,38 +446,38 @@ export default function ExploreEmotionDetail() {
             </h2>
             <p style={{ fontSize: '16px', color: NAVY_SOFT, lineHeight: '1.8', margin: '0 0 24px 0' }}>
               {emotionSlug === 'self-doubt'
-                ? 'You don\'t have to face self-doubt alone. SoulConnect helps people build confidence, strengthen self-worth, and connect with supportive communities:'
+                ? 'You don\'t have to face self-doubt alone. SameFeel helps people build confidence, strengthen self-worth, and connect with supportive communities:'
                 : emotionSlug === 'relationship-issues'
-                ? 'You don\'t have to navigate relationship challenges alone. SoulConnect helps people improve communication, build healthier connections, and find support during difficult times:'
+                ? 'You don\'t have to navigate relationship challenges alone. SameFeel helps people improve communication, build healthier connections, and find support during difficult times:'
                 : emotionSlug === 'work-stress'
-                ? 'You don\'t have to carry work stress alone. SoulConnect helps people manage pressure, set healthier boundaries, and protect their mental well-being:'
+                ? 'You don\'t have to carry work stress alone. SameFeel helps people manage pressure, set healthier boundaries, and protect their mental well-being:'
                 : emotionSlug === 'financial-worry'
-                ? 'You don\'t have to navigate financial stress alone. SoulConnect helps people understand their finances, build confidence with money, and find support during tough times:'
+                ? 'You don\'t have to navigate financial stress alone. SameFeel helps people understand their finances, build confidence with money, and find support during tough times:'
                 : emotionSlug === 'sleep-issues'
-                ? 'You don\'t have to deal with sleep problems alone. SoulConnect helps people understand sleep challenges, reduce stress, and build healthier habits:'
+                ? 'You don\'t have to deal with sleep problems alone. SameFeel helps people understand sleep challenges, reduce stress, and build healthier habits:'
                 : emotionSlug === 'panic-attacks'
-                ? 'You don\'t have to face panic attacks alone. SoulConnect helps people understand panic, build coping skills, and find support during difficult moments:'
+                ? 'You don\'t have to face panic attacks alone. SameFeel helps people understand panic, build coping skills, and find support during difficult moments:'
                 : emotionSlug === 'social-anxiety'
-                ? 'You don\'t have to face social anxiety alone. SoulConnect helps people build confidence, practice social connection, and find support in a safe environment:'
+                ? 'You don\'t have to face social anxiety alone. SameFeel helps people build confidence, practice social connection, and find support in a safe environment:'
                 : emotionSlug === 'perfectionism'
-                ? 'You don\'t have to face perfectionism alone. SoulConnect helps people manage self-criticism, build confidence, and develop healthier expectations for themselves:'
+                ? 'You don\'t have to face perfectionism alone. SameFeel helps people manage self-criticism, build confidence, and develop healthier expectations for themselves:'
                 : emotionSlug === 'overwhelm'
-                ? 'You don\'t have to navigate overwhelm alone. SoulConnect helps people reduce stress, organize their thoughts, and find support during difficult periods:'
+                ? 'You don\'t have to navigate overwhelm alone. SameFeel helps people reduce stress, organize their thoughts, and find support during difficult periods:'
                 : emotionSlug === 'jealousy'
-                ? 'You don\'t have to navigate jealousy and insecurity alone. SoulConnect helps people strengthen relationships, build confidence, and find support during difficult moments:'
+                ? 'You don\'t have to navigate jealousy and insecurity alone. SameFeel helps people strengthen relationships, build confidence, and find support during difficult moments:'
                 : emotionSlug === 'guilt'
-                ? 'You don\'t have to carry guilt alone. SoulConnect helps people process difficult emotions, practice self-compassion, and move forward:'
+                ? 'You don\'t have to carry guilt alone. SameFeel helps people process difficult emotions, practice self-compassion, and move forward:'
                 : emotionSlug === 'shame'
-                ? 'You don\'t have to carry shame alone. SoulConnect helps people process difficult emotions, build self-compassion, and reconnect with others:'
+                ? 'You don\'t have to carry shame alone. SameFeel helps people process difficult emotions, build self-compassion, and reconnect with others:'
                 : emotionSlug === 'motivation'
-                ? 'You don\'t have to navigate low motivation alone. SoulConnect helps people reconnect with their goals, build healthy habits, and find support during difficult times:'
+                ? 'You don\'t have to navigate low motivation alone. SameFeel helps people reconnect with their goals, build healthy habits, and find support during difficult times:'
                 : emotionSlug === 'feeling-lost'
-                ? 'You don\'t have to navigate uncertainty alone. SoulConnect helps people explore change, reconnect with their values, and find support during difficult transitions:'
+                ? 'You don\'t have to navigate uncertainty alone. SameFeel helps people explore change, reconnect with their values, and find support during difficult transitions:'
                 : emotionSlug === 'emotional-exhaustion'
-                ? 'You don\'t have to navigate emotional exhaustion alone. SoulConnect helps people manage stress, set healthier boundaries, and reconnect with themselves:'
+                ? 'You don\'t have to navigate emotional exhaustion alone. SameFeel helps people manage stress, set healthier boundaries, and reconnect with themselves:'
                 : emotionSlug === 'overthinking'
-                ? 'You don\'t have to navigate overthinking alone. SoulConnect helps people manage racing thoughts, reduce stress, and build healthier coping strategies:'
-                : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SoulConnect helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
+                ? 'You don\'t have to navigate overthinking alone. SameFeel helps people manage racing thoughts, reduce stress, and build healthier coping strategies:'
+                : `You don't have to carry ${emotion.displayName.toLowerCase()} alone. SameFeel helps people manage ${emotion.displayName.toLowerCase()} and mental health challenges:`}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px', marginBottom: '24px' }}>
               <div style={{ padding: '18px', background: '#FFFFFF', border: `1px solid ${LILAC_LINE}`, borderRadius: '14px' }}>
@@ -542,7 +542,7 @@ export default function ExploreEmotionDetail() {
                   boxShadow: '0 2px 8px rgba(107,79,160,0.18)',
                 }}
               >
-                Join SoulConnect
+                Join SameFeel
               </button>
               <button
                 className="xd-btn-s"
@@ -693,7 +693,7 @@ export default function ExploreEmotionDetail() {
               Important
             </p>
             <p style={{ margin: 0 }}>
-              SoulConnect offers support, resources, and community, but it is not a substitute for professional medical advice. If you are in immediate danger or thinking about harming yourself, please contact emergency services or someone you trust immediately.
+              SameFeel offers support, resources, and community, but it is not a substitute for professional medical advice. If you are in immediate danger or thinking about harming yourself, please contact emergency services or someone you trust immediately.
             </p>
           </motion.div>
 
@@ -709,7 +709,7 @@ export default function ExploreEmotionDetail() {
               Medical and Editorial Review
             </p>
             <p style={{ margin: '0 0 8px 0' }}>
-              {emotion.trustSafety?.disclaimer || 'This content is educational and reviewed by the SoulConnect team. It is not a substitute for professional mental health advice, diagnosis, or treatment.'}
+              {emotion.trustSafety?.disclaimer || 'This content is educational and reviewed by the SameFeel team. It is not a substitute for professional mental health advice, diagnosis, or treatment.'}
             </p>
             <p style={{ margin: '12px 0 0 0', fontSize: '12.5px', color: MUTED }}>
               Last reviewed: {emotion.trustSafety?.lastReviewedDate || 'February 2025'}

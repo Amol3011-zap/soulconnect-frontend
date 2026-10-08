@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { userAPI, authAPI } from '../services/api';
 import AvatarPicker from '../components/AvatarPicker';
+import EditProfileSheet from '../components/EditProfileSheet';
 import { avatarSrc, currentAvatarId, currentMood } from '../data/avatars';
 import {
   ChevronRight, Search, LogOut, Trash2, UserRound, KeyRound, LifeBuoy,
   Phone, ShieldCheck, Eye, EyeOff, Check, Info, X,
 } from 'lucide-react';
 
-/* SoulConnect Dawn palette */
+/* SameFeel Dawn palette */
 const P = '#6B4FA0';
 const DARK = '#1E1833';
 const BODY = '#565070';
@@ -108,7 +109,7 @@ export default function Settings() {
   const { logout, user } = useAuthStore();
 
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -119,6 +120,9 @@ export default function Settings() {
   const [avatarId, setAvatarId] = useState(() => currentAvatarId(useAuthStore.getState().user));
   const [picking, setPicking] = useState(false);
   const [mood, setMood] = useState(() => currentMood(useAuthStore.getState().user));
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [editing, setEditing] = useState(() => searchParams.get('edit') === '1');
+  const closeEdit = () => { setEditing(false); if (searchParams.get('edit')) setSearchParams({}, { replace: true }); };
 
   useEffect(() => {
     fetchProfile();
@@ -130,8 +134,6 @@ export default function Settings() {
       setProfile(response.data);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -176,14 +178,14 @@ export default function Settings() {
   const me = profile || user || {};
   const displayName = me.name || 'Your account';
   const initial = (displayName.trim()[0] || 'S').toUpperCase();
-  const phoneLine = me.phone ? `+91 ${String(me.phone).replace(/(\d{5})(\d{5})$/, '$1 $2')}` : 'Manage your SoulConnect experience';
+  const phoneLine = me.phone ? `+91 ${String(me.phone).replace(/(\d{5})(\d{5})$/, '$1 $2')}` : 'Manage your SameFeel experience';
 
   return (
     <div className="st">
       <style>{css}</style>
       <div className="st-wrap">
         <h1 className="st-h1">Settings</h1>
-        <p className="st-sub">Manage your SoulConnect experience.</p>
+        <p className="st-sub">Manage your SameFeel experience.</p>
 
         <div className="st-search">
           <Search size={17} />
@@ -199,7 +201,7 @@ export default function Settings() {
               <b>{displayName}</b>
               <span>{phoneLine}</span>
             </div>
-            <button type="button" onClick={() => navigate('/account')}>Edit</button>
+            <button type="button" onClick={() => setEditing(true)}>Edit</button>
           </div>
         )}
 
@@ -207,7 +209,7 @@ export default function Settings() {
           <>
             <p className="st-label">Account</p>
             <div className="st-card">
-              <Row icon={UserRound} title="Edit profile" desc="Name, bio, avatar" onClick={() => navigate('/account')} />
+              <Row icon={UserRound} title="Edit profile" desc="Name, bio, avatar" onClick={() => setEditing(true)} />
               <Row icon={KeyRound} title="Change password" desc="Update your login password" open={showChangePassword}
                 onClick={() => { setShowChangePassword(!showChangePassword); setPwError(''); setPwSuccess(''); }} />
               <AnimatePresence initial={false}>
@@ -235,7 +237,7 @@ export default function Settings() {
           <>
             <p className="st-label">Help & support</p>
             <div className="st-card">
-              <Row icon={LifeBuoy} title="Help center" desc="FAQs and tutorials" onClick={() => navigate('/safety')} />
+              <Row icon={LifeBuoy} title="Help center" desc="FAQs and tutorials" onClick={() => navigate('/faq')} />
               <Row icon={Phone} tone="care" title="Crisis resources" desc="24/7 helplines and support" onClick={() => navigate('/crisis-support')} />
               <Row icon={ShieldCheck} title="Privacy policy" desc="How we protect your data" onClick={() => navigate('/privacy')} />
             </div>
@@ -247,7 +249,7 @@ export default function Settings() {
         <button type="button" className="st-out" onClick={() => { logout(); navigate('/'); }}>
           <LogOut size={18} /> Log out
         </button>
-        <p className="st-ver">SoulConnect · You are more than what you’re going through.</p>
+        <p className="st-ver">SameFeel · You are more than what you’re going through.</p>
       </div>
 
       <AnimatePresence>
@@ -267,6 +269,8 @@ export default function Settings() {
           </motion.div>
         )}
       </AnimatePresence>
+      <EditProfileSheet open={editing} profile={profile || user} avatarId={avatarId} mood={mood}
+        onClose={closeEdit} onChangeAvatar={() => setPicking(true)} onSaved={(p) => setProfile(p)} />
       <AvatarPicker open={picking} current={avatarId} currentMood={mood} onClose={() => setPicking(false)} onSaved={(id, m) => { setAvatarId(id); setMood(m); }} />
     </div>
   );

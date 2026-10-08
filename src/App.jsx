@@ -53,7 +53,6 @@ const PRIMARY_TAB_IMPORTS = [
   () => import('./pages/Home'),
   () => import('./pages/Stories'),
   () => import('./pages/Community'),
-  () => import('./pages/Messages'),
   () => import('./pages/Profile'),
   () => import('./pages/MoodTracker'),
   () => import('./pages/SoulPond'),
@@ -68,7 +67,6 @@ const SoulMatch     = lazy(() => import('./pages/SoulMatch')); // kept for easy 
 const SoulPond      = lazy(() => import('./pages/SoulPond'));
 const Stories       = lazy(() => import('./pages/Stories'));
 const Community     = lazy(() => import('./pages/Community'));
-const Messages      = lazy(() => import('./pages/Messages'));
 const MoodTracker   = lazy(() => import('./pages/MoodTracker'));
 // Journal removed for MVP — see FEATURE_FLAGS.js for v2 Reflection roadmap
 const Meditate      = lazy(() => import('./pages/Meditations'));
@@ -96,7 +94,6 @@ const Premium       = lazy(() => import('./pages/Premium'));
 const Account       = lazy(() => import('./pages/Account'));
 const Onboarding    = lazy(() => import('./pages/Onboarding'));
 const SoulJourney   = lazy(() => import('./pages/SoulJourney'));
-const Matches       = lazy(() => import('./pages/Matches'));
 
 import Navbar from './components/Navbar';
 import MobileBottomNav from './components/MobileBottomNav';
@@ -128,20 +125,9 @@ const DASHBOARD_PATHS = [
 ];
 
 function PageLoader() {
-  return (
-    <div style={{
-      minHeight: '100vh', background: '#0D0B1A',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
-      <div style={{
-        width: 32, height: 32, borderRadius: '50%',
-        border: '2px solid rgba(139,92,246,0.2)',
-        borderTopColor: '#8B5CF6',
-        animation: 'spin 0.7s linear infinite',
-      }} />
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
-  );
+  // Quiet placeholder: matches the page background so a lazy route never
+  // flashes a dark panel or a spinner before the real page paints.
+  return <div style={{ minHeight: '100vh', background: 'var(--sc-bg)' }} aria-busy="true" />;
 }
 
 const S = (C) => <Suspense fallback={<PageLoader />}><C /></Suspense>;
@@ -220,13 +206,14 @@ function AppInner() {
 
       {showOnboarding && <SafetyOnboarding onComplete={() => setOnboardingDone(true)} />}
 
-      {token && !hideNav && LAUNCH_READY && <Navbar />}
+      {/* Legacy dark top bar retired: info pages have their own Back link. */}
+      {false && token && !hideNav && LAUNCH_READY && <Navbar />}
 
       <AnimatePresence>
         {token && LAUNCH_READY && showModal && <EmotionWeatherModal />}
       </AnimatePresence>
 
-      <div style={{ paddingTop: token && !hideNav && LAUNCH_READY ? 80 : 0 }}>
+      <div style={{ paddingTop: 0 }}>
         <Routes>
           <Route path="/" element={<Landing />} />
           {safetyRoutes}
@@ -265,7 +252,7 @@ function AppInner() {
                 <Route path="/stories"       element={<Stories />} />
                 <Route path="/community"     element={<Community />} />
                 <Route path="/mood"          element={<MoodTracker />} />
-                <Route path="/messages"      element={<Messages />} />
+                <Route path="/messages"      element={<Navigate to="/home" replace />} />
                 <Route path="/meditate"      element={<Meditate />} />
                 <Route path="/professionals" element={<Professionals />} />
                 <Route path="/account"       element={<Settings />} />
@@ -284,7 +271,7 @@ function AppInner() {
                 <Route path="/meetups"       element={<Meetups />} />
                 <Route path="/premium"       element={<Premium />} />
                 <Route path="/journey"       element={<SoulJourney />} />
-                <Route path="/dashboard"     element={<Matches />} />
+                <Route path="/dashboard"     element={<Navigate to="/home" replace />} />
 
                 {/* Redirects from old / removed routes */}
                 <Route path="/journal"       element={<Navigate to="/home"          replace />} />
@@ -303,7 +290,8 @@ function AppInner() {
         </Routes>
       </div>
 
-      {token && !hideBottomNav && (
+      {/* Legacy dark tab bar retired: the app tab bar lives in DashboardLayout. */}
+      {false && token && !hideBottomNav && (
         <div className="sc-bottom-nav">
           <MobileBottomNav />
         </div>

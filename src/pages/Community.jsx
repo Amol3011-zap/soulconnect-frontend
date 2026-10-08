@@ -144,7 +144,7 @@ export default function Community() {
             key={community.id}
             initial={false}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.16 + i * 0.05 }}
+            transition={{ duration: 0.25 }}
             onClick={triggerToast}
             style={{
               background: CARD,
@@ -245,9 +245,9 @@ export default function Community() {
           {TRENDING.map((community, i) => (
             <motion.div
               key={community.id}
-              initial={{ opacity: 0, scale: 0.96 }}
+              initial={false}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.32 + i * 0.04 }}
+              transition={{ duration: 0.25 }}
               onClick={triggerToast}
               style={{
                 background: CARD,
@@ -358,9 +358,9 @@ export default function Community() {
 
       {/* Floating + Button */}
       <motion.button
-        initial={{ opacity: 0, scale: 0.8 }}
+        initial={false}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.55, type: 'spring', stiffness: 200 }}
+        transition={{ type: 'spring', stiffness: 200 }}
         onClick={triggerToast}
         style={{
           position: 'fixed',

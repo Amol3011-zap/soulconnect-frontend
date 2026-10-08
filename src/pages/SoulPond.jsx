@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Flower2, Users, Sparkles, MessageCircle, ShieldCheck, AlertTriangle,
-  X, Send, Flag, Wind, Phone, Clock, RefreshCw, Lock, MoreHorizontal, ChevronLeft,
+  X, Send, Flag, Wind, Plus, Smile, Image as ImageIcon, Mic, Trash2, Phone, Clock, RefreshCw, Lock, MoreHorizontal, ChevronLeft,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -13,9 +13,10 @@ import { getConnections } from '../components/soulmatch/soulmatchData';
 import {
   getLotuses, floatLotus, resonate, bloom, drift, givePetal,
   rankLotuses, suggestProblems, needsCrisisSupport,
-  getChats, rememberChat, saveMessage, markChat,
+  getChats, rememberChat, saveMessage, saveImage, saveAudio, markChat,
   FREE_CHAT_LIMIT, WINDOW_SIZE,
 } from '../components/soulpond/soulpondData';
+import SoulFriendProfile from '../components/soulpond/SoulFriendProfile';
 
 /* "Dawn" palette, same as the landing page */
 const P = '#6B4FA0';
@@ -94,6 +95,9 @@ const css = `
 .sp-count{text-align:right;font-size:11.5px;color:#9A93AE;margin-top:4px}
 .sp-sugg{margin-top:10px;padding:11px 13px;border-radius:14px;background:#F1ECF9;font-size:13px;color:#4E3680;line-height:1.5}
 .sp-sugg button{background:none;border:0;color:${P};font-weight:700;cursor:pointer;font-family:inherit;padding:0;margin-left:4px}
+.sp-talk.is-soon{cursor:default;opacity:.92}
+.sp-talk.is-soon>span:first-child{filter:saturate(.7)}
+.sp-soon{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;background:#EFE9F8;color:${P};font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
 .sp-talk{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;background:linear-gradient(160deg,#FBF1EC,#fff);border:1.5px solid #EEDFC4;margin-top:18px;width:100%;cursor:pointer;text-align:left;font-family:inherit}
 .sp-note{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:${MUTED};margin-top:12px;line-height:1.5}
 .sp-dev{display:flex;gap:6px;align-items:center;font-size:12px;color:#9A5A3A;margin-top:12px}
@@ -116,6 +120,11 @@ const css = `
 .sp-body{flex:1;overflow-y:auto;padding:14px 16px 10px;display:flex;flex-direction:column}
 .sp-quote{padding:12px 14px;border-radius:16px;background:#FCF8F0;border:1px solid #F1E3C8;font-size:13.5px;line-height:1.45;color:#3A3350;margin-bottom:12px}
 .sp-quote small{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.12em;color:${GOLD};margin-bottom:4px}
+.sp-safe{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,#F4EEFB,#EEF3FB);border:1px solid #DCD0F0;margin-bottom:12px}
+.sp-safe .ic{width:30px;height:30px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:${P};box-shadow:0 2px 6px rgba(107,79,160,.15)}
+.sp-safe b{display:block;font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:700;font-size:16px;line-height:1.3;color:#4E3680;margin-bottom:3px}
+.sp-safe p{margin:0;font-size:12.5px;line-height:1.5;color:#5A5470}
+.sp-safe p strong{color:#3A3350;font-weight:700}
 .sp-hello{margin:auto 0 12px;text-align:center;padding:10px 6px 0}
 .sp-hello img{width:54px;height:auto;opacity:.9;display:block;margin:0 auto}
 body.sp-chat-open .mobile-bottom-nav,body.sp-chat-open .app-topbar{visibility:hidden}
@@ -123,6 +132,35 @@ body.sp-chat-open .mobile-bottom-nav,body.sp-chat-open .app-topbar{visibility:hi
 .sp-hello span{display:block;font-size:13px;color:${MUTED};margin-top:4px;line-height:1.5}
 .sp-m{max-width:82%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.45;margin:0 0 8px;word-wrap:break-word}
 .sp-m.th{background:#fff;border:1px solid #EEE8F6;border-bottom-left-radius:6px;align-self:flex-start}
+.sp-m.has-img{padding:4px;max-width:72%}
+.sp-m.has-img img{display:block;width:100%;max-height:320px;object-fit:cover;border-radius:14px}
+.sp-m.has-img span{display:block;padding:7px 10px 5px}
+.sp-tray{margin-bottom:10px}
+.sp-sendbtn{width:44px;height:44px;border-radius:50%;border:0;background:${P};color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:0 6px 14px rgba(107,79,160,.28)}
+.sp-rec-pill{gap:8px;padding:0 14px;border-color:#F1C9C9!important}
+.sp-rec-pill b{font-size:14px;font-variant-numeric:tabular-nums;color:${DARK}}
+.sp-rec-pill span{font-size:12px;color:#8A8399;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.sp-rec-dot{width:10px;height:10px;border-radius:50%;background:#E5484D;flex-shrink:0;animation:spRecBlink 1.1s ease-in-out infinite}
+@keyframes spRecBlink{0%,100%{opacity:1}50%{opacity:.25}}
+.sp-voice{display:flex;align-items:center;gap:6px}
+.sp-voice audio{height:34px;width:200px;max-width:100%}
+.sp-voice small{font-size:11px;opacity:.85}
+.sp-tiles{display:flex;gap:18px;padding:6px 4px 2px}
+.sp-tile{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;font-family:inherit;font-size:12px;font-weight:600;color:#4A4560;cursor:pointer;width:72px;text-align:center}
+.sp-tile .ic{width:52px;height:52px;border-radius:18px;display:flex;align-items:center;justify-content:center}
+.sp-tile:disabled{cursor:default;opacity:.85}
+.sp-tray-tip{display:flex;align-items:center;gap:6px;margin:10px 2px 0;font-size:11.5px;color:#6E6787}
+.sp-photo{border:1px solid #E6DDF3;border-radius:18px;padding:10px;margin-bottom:10px;background:#FBFAFD}
+.sp-photo-img{position:relative;border-radius:12px;overflow:hidden;background:#EFE9F8}
+.sp-photo-img img{display:block;width:100%;max-height:220px;object-fit:contain}
+.sp-photo-img button{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(30,24,51,.6);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sp-photo-warn{display:flex;gap:8px;align-items:flex-start;margin:10px 2px;font-size:12px;line-height:1.45;color:#5A5470}
+.sp-photo-warn svg{flex-shrink:0;margin-top:2px;color:${P}}
+.sp-photo-warn b{font-family:'Playfair Display',Georgia,serif;font-style:italic;color:#4E3680}
+.sp-photo-row{display:flex;gap:8px;align-items:center}
+.sp-photo-row input{flex:1;min-width:0;height:42px;border:1px solid #E2DAEE;border-radius:21px;padding:0 14px;font-size:14px;font-family:inherit;color:${DARK};background:#fff;outline:none}
+.sp-photo-row input:focus{border-color:${P}}
+.sp-photo-send{width:42px;height:42px;border-radius:50%;border:0;background:${P};color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 .sp-m.mi{background:${P};color:#fff;border-bottom-right-radius:6px;align-self:flex-end;box-shadow:0 4px 10px rgba(107,79,160,.18)}
 .sp-starters{display:flex;gap:8px;overflow-x:auto;padding:2px 16px 10px;scrollbar-width:none}
 .sp-starters::-webkit-scrollbar{display:none}
@@ -133,11 +171,22 @@ body.sp-chat-open .mobile-bottom-nav,body.sp-chat-open .app-topbar{visibility:hi
 .sp-acts button{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border:0;border-radius:999px;font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap}
 .sp-acts button:disabled{cursor:default}
 .sp-acts .grow{flex:1}
-.sp-send{display:flex;gap:8px;align-items:center}
+.sp-send{display:flex;gap:8px;align-items:center;position:relative}
+.sp-plus{width:40px;height:40px;border-radius:50%;border:0;background:none;color:${DARK};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:transform .2s,background .2s}
+.sp-plus:hover{background:#F4EFFA}
+.sp-plus.is-open{transform:rotate(45deg);color:${P}}
+.sp-pill{flex:1;min-width:0;display:flex;align-items:center;height:44px;border:1px solid #E2DAEE;border-radius:22px;background:#fff;padding:0 6px 0 16px;transition:border-color .2s,box-shadow .2s}
+.sp-pill:focus-within{border-color:${P};box-shadow:0 0 0 3px rgba(107,79,160,.10)}
+.sp-pill input{flex:1;min-width:0;height:100%!important;border-radius:0!important;border:0!important;outline:none;background:none!important;box-shadow:none!important;padding:0!important;font-size:15px;font-family:inherit;color:${DARK};caret-color:${P}}
+.sp-pill .sp-emo-btn{width:34px;height:34px;border-radius:50%;border:0;background:none;color:#6E6787;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:none}
+.sp-pill .sp-emo-btn.is-on{color:${P};background:#F4EFFA}
+.sp-emos{position:absolute;bottom:calc(100% + 8px);left:44px;right:56px;display:flex;justify-content:space-between;gap:4px;padding:8px 10px;border-radius:18px;background:#fff;border:1px solid #E6DDF3;box-shadow:0 10px 26px rgba(34,27,58,.12);z-index:5}
+.sp-emos button{width:36px!important;height:36px!important;border-radius:10px!important;background:none!important;box-shadow:none!important;font-size:21px;line-height:1;cursor:pointer;color:inherit!important}
+.sp-emos button:hover{background:#F4EFFA!important}
 .sp-send input{flex:1;min-width:0;height:46px;border:1.5px solid #E6DDF3;border-radius:23px;padding:0 16px;font-weight:400;font-size:15px;font-family:inherit;color:${DARK};background:#FBFAFD;outline:none}
 .sp-send input:focus{border-color:${P};box-shadow:0 0 0 3px rgba(107,79,160,.12);background:#fff}
-.sp-send button{width:46px;height:46px;border-radius:50%;border:0;background:${P};color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:0 6px 14px rgba(107,79,160,.28)}
-.sp-send button:disabled{background:#D9D0EA;box-shadow:none}
+.sp-send>button[type=submit]{width:44px;height:44px;border-radius:50%;border:0;background:${P};color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:0 6px 14px rgba(107,79,160,.28)}
+.sp-send>button[type=submit]:disabled{background:#D9D0EA;box-shadow:none}
 .sp-dev{display:flex;gap:6px;align-items:center;font-size:11px;color:#9A7A5A;margin:8px 0 0}
 @media(max-width:640px){
   .sp-overlay{padding:0;align-items:stretch}
@@ -151,7 +200,9 @@ body.sp-chat-open .mobile-bottom-nav,body.sp-chat-open .app-topbar{visibility:hi
 .sp-state{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:#E7F1EC;color:#2F5A45;font-size:13px;line-height:1.5}
 .sp-crisis{margin-top:12px;padding:14px;border-radius:16px;background:#FDF2EC;border:1.5px solid #F3DACC;font-size:13.5px;color:#7A3E22;line-height:1.55}
 .sp-crisis a{display:inline-flex;align-items:center;gap:6px;margin:8px 8px 0 0;padding:8px 12px;border-radius:12px;background:#fff;border:1px solid #F3DACC;color:#9A4A30;font-weight:700;text-decoration:none}
-.sp-friend{display:flex;gap:12px;align-items:center;padding:14px;border-radius:18px;border:1.5px solid #E6DDF3;background:#fff}
+.sp-friend{display:flex;gap:12px;align-items:center;padding:14px;border-radius:18px;border:1.5px solid #E6DDF3;background:#fff;width:100%;text-align:left;font-family:inherit;color:inherit;cursor:pointer;transition:border-color .2s,transform .15s}
+.sp-friend:hover{border-color:#C9B8E8}
+.sp-friend:active{transform:scale(.99)}
 .sp-row{display:flex;gap:12px;align-items:center;padding:14px;border-radius:18px;border:1.5px solid #E6DDF3;background:#fff;cursor:pointer;width:100%;text-align:left;font-family:inherit}
 .sp-row:hover{border-color:#C9B8E8}
 .sp-badge{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:${P};color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-left:6px}
@@ -170,8 +221,9 @@ body.sp-chat-open .mobile-bottom-nav,body.sp-chat-open .app-topbar{visibility:hi
 /* Phone: a tall pond, lotuses staggered like they drift on water, not a grid */
 @media(max-width:640px){
   .sp-page{padding:22px 14px 90px}
-  .sp-tabs{display:flex;width:100%;overflow-x:auto;scrollbar-width:none}
-  .sp-tab{flex:1;justify-content:center;padding:9px 10px;font-size:13px;white-space:nowrap}
+  .sp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;box-sizing:border-box;overflow:hidden;gap:4px}
+  .sp-tab{position:relative;min-width:0;flex-direction:column;justify-content:center;gap:4px;padding:9px 4px;font-size:12px;line-height:1.2;white-space:nowrap}
+  .sp-tab .sp-badge{position:absolute;top:4px;right:calc(50% - 26px);margin-left:0;min-width:17px;height:17px;font-size:10px;padding:0 5px}
   .sp-card{padding:16px;min-width:0}
   .sp-pond{height:auto;margin-left:-6px;margin-right:-6px;padding:26px 10px 34px;display:grid;grid-template-columns:1fr 1fr;column-gap:10px;row-gap:26px;align-items:start;
     background:radial-gradient(ellipse 60% 22% at 30% 18%,rgba(255,255,255,.55),transparent 70%),radial-gradient(ellipse 55% 20% at 72% 62%,rgba(255,255,255,.45),transparent 70%),linear-gradient(170deg,#EDE6F8 0%,#DDD1F1 45%,#E6DCF6 70%,#F3EFF9 100%);
@@ -189,6 +241,35 @@ body.sp-chat-open .mobile-bottom-nav,body.sp-chat-open .app-topbar{visibility:hi
 }
 `;
 
+/* ── Photo helper: shrink + re-encode on the device.
+   Re-drawing through a canvas also drops EXIF, so GPS location never leaves the phone. */
+const MAX_PHOTO_MB = 10;
+const MAX_VOICE_SECS = 120;
+const fmtSecs = (n) => `${Math.floor(n / 60)}:${String(Math.floor(n % 60)).padStart(2, '0')}`;
+const blobToDataUrl = (blob) => new Promise((resolve, reject) => {
+  const r = new FileReader();
+  r.onload = () => resolve(r.result);
+  r.onerror = reject;
+  r.readAsDataURL(blob);
+});
+function compressImage(file, max = 960, quality = 0.72) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new window.Image();
+    img.onload = () => {
+      const scale = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * scale);
+      c.height = Math.round(img.height * scale);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('bad-image')); };
+    img.src = url;
+  });
+}
+
 /* ── Chat modal ─────────────────────────────────────────────── */
 const PREVIEW_NAMES = ['riya', 'aarav', 'meera', 'kabir', 'isha', 'dev', 'sana', 'arjun'];
 
@@ -196,6 +277,30 @@ function PondChat({ lotus, chatId, isMock, initial = [], initialBloomed = false,
   const navigate = useNavigate();
   const [msgs, setMsgs] = useState(initial);
   const [draft, setDraft] = useState('');
+  const [tray, setTray] = useState(false);
+  const [emo, setEmo] = useState(false);
+  const inputRef = useRef(null);
+  const fileRef = useRef(null);
+  const [pending, setPending] = useState(null); // { src } photo waiting for a final check
+  const [caption, setCaption] = useState('');
+  // Voice notes
+  const [recording, setRecording] = useState(false);
+  const [recSecs, setRecSecs] = useState(0);
+  const recRef = useRef(null);      // MediaRecorder
+  const streamRef = useRef(null);
+  const chunksRef = useRef([]);
+  const keepRef = useRef(false);    // send (true) or discard (false) when it stops
+  const startRef = useRef(0);
+  useEffect(() => {
+    if (!recording) return undefined;
+    const t = setInterval(() => {
+      const secs = (Date.now() - startRef.current) / 1000;
+      setRecSecs(secs);
+      if (secs >= MAX_VOICE_SECS) stopRecording(true);
+    }, 250);
+    return () => clearInterval(t);
+  }, [recording]);
+  useEffect(() => () => streamRef.current?.getTracks().forEach(t => t.stop()), []);
   const [bloomed, setBloomed] = useState(initialBloomed);
   const [connected, setConnected] = useState(initialConnected); // partner SoulID once BOTH chose Connect
   const [petal, setPetal] = useState(false);
@@ -209,6 +314,74 @@ function PondChat({ lotus, chatId, isMock, initial = [], initialBloomed = false,
     setMsgs(m => [...m, { id: Date.now(), me: true, text: t }]);
     setDraft('');
     saveMessage(chatId, t).then(() => onChange && onChange()).catch(() => onToast('Message not sent. Please try again.'));
+  };
+
+  const startRecording = async () => {
+    if (!navigator.mediaDevices?.getUserMedia || typeof window.MediaRecorder === 'undefined') {
+      onToast('Voice notes need a secure (https) connection. They will work once the app is live.');
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      const type = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm'].find(t => window.MediaRecorder.isTypeSupported?.(t));
+      const rec = new window.MediaRecorder(stream, { ...(type ? { mimeType: type } : {}), audioBitsPerSecond: 32000 });
+      chunksRef.current = [];
+      keepRef.current = false;
+      rec.ondataavailable = e => { if (e.data?.size) chunksRef.current.push(e.data); };
+      rec.onstop = async () => {
+        stream.getTracks().forEach(t => t.stop());
+        streamRef.current = null;
+        const duration = Math.round((Date.now() - startRef.current) / 1000);
+        if (!keepRef.current || duration < 1 || !chunksRef.current.length) return;
+        const audio = await blobToDataUrl(new Blob(chunksRef.current, { type: rec.mimeType || 'audio/webm' }));
+        setMsgs(m => [...m, { id: Date.now(), me: true, text: '', audio, duration }]);
+        saveAudio(chatId, audio, duration)
+          .then(() => onChange && onChange())
+          .catch(err => onToast(err?.message === 'storage-full' ? 'Preview storage is full. Clear old chats to keep voice notes.' : 'Voice note not sent. Please try again.'));
+      };
+      recRef.current = rec;
+      startRef.current = Date.now();
+      setRecSecs(0);
+      setTray(false);
+      rec.start();
+      setRecording(true);
+    } catch {
+      onToast('Microphone access was blocked. Allow it in your browser settings to send voice notes.');
+    }
+  };
+  function stopRecording(keep) {
+    keepRef.current = keep;
+    if (recRef.current && recRef.current.state !== 'inactive') recRef.current.stop();
+    recRef.current = null;
+    setRecording(false);
+  }
+
+  const pickPhoto = () => { setEmo(false); fileRef.current?.click(); };
+  const onPhoto = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { onToast('Only photos can be shared here.'); return; }
+    if (file.size > MAX_PHOTO_MB * 1024 * 1024) { onToast(`That photo is over ${MAX_PHOTO_MB} MB.`); return; }
+    try {
+      const src = await compressImage(file);
+      setTray(false);
+      setCaption('');
+      setPending({ src });
+    } catch {
+      onToast("Couldn't open that photo.");
+    }
+  };
+  const sendPhoto = () => {
+    if (!pending) return;
+    const text = caption.trim();
+    setMsgs(m => [...m, { id: Date.now(), me: true, text, image: pending.src }]);
+    setPending(null);
+    setCaption('');
+    saveImage(chatId, pending.src, text)
+      .then(() => onChange && onChange())
+      .catch(err => onToast(err?.message === 'storage-full' ? 'Preview storage is full. Clear old chats to keep photos.' : 'Photo not sent. Please try again.'));
   };
 
   const previewAccept = () => {
@@ -267,12 +440,19 @@ function PondChat({ lotus, chatId, isMock, initial = [], initialBloomed = false,
 
         <div className="sp-body">
           <div className="sp-quote"><small><Flower2 size={12} />FROM THEIR LOTUS</small>&ldquo;{lotus.text}&rdquo;</div>
+          <div className="sp-safe" role="note" aria-label="Safety reminder">
+            <span className="ic"><ShieldCheck size={17} /></span>
+            <div>
+              <b>Share your heart, not your details.</b>
+              <p>Feelings and struggles are welcome here. Keep your <strong>real name, phone, address, passwords, bank or UPI details</strong> to yourself. A real Soul will never ask for them.</p>
+            </div>
+          </div>
           {connected ? (
             <div className="sp-state sp-connected">
               <b>You are now Soul Friends with {connected}</b>
               You both chose to connect, so your SoulIDs are shared and this conversation is saved.
               <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
-                <button type="button" className="sp-btn" style={{ padding: '8px 12px', fontSize: 13 }} onClick={() => navigate('/messages')}>Message {connected}</button>
+                <button type="button" className="sp-btn" style={{ padding: '8px 12px', fontSize: 13 }} onClick={() => navigate('/chat')}>Message {connected}</button>
               </div>
             </div>
           ) : bloomed ? (
@@ -294,7 +474,19 @@ function PondChat({ lotus, chatId, isMock, initial = [], initialBloomed = false,
               <span>You are both anonymous here. Start with one of these, or write your own.</span>
             </div>
           ) : <div style={{ marginTop: 'auto' }} />}
-          {msgs.map(m => <div key={m.id} className={`sp-m ${m.me ? 'mi' : 'th'}`}>{m.text}</div>)}
+          {msgs.map(m => (
+            <div key={m.id} className={`sp-m ${m.me ? 'mi' : 'th'}${m.image ? ' has-img' : ''}`}>
+              {m.image && <img src={m.image} alt="Shared photo" loading="lazy" />}
+              {m.audio && (
+                <span className="sp-voice">
+                  <Mic size={15} />
+                  <audio controls preload="metadata" src={m.audio} />
+                  {m.duration ? <small>{fmtSecs(m.duration)}</small> : null}
+                </span>
+              )}
+              {m.text && <span>{m.text}</span>}
+            </div>
+          ))}
           <div ref={endRef} />
         </div>
 
@@ -305,18 +497,67 @@ function PondChat({ lotus, chatId, isMock, initial = [], initialBloomed = false,
         )}
 
         <div className="sp-chat-f">
-          <div className="sp-acts">
-            <button type="button" onClick={doBloom} disabled={bloomed || Boolean(connected)}
-              title="Share SoulIDs and become Soul Friends, only if you both choose it"
-              style={{ background: connected ? '#E8F4EE' : '#F6EFE2', color: connected ? '#2F6B4F' : GOLD }}>
-              <Flower2 size={16} />{connected ? 'Soul Friends' : bloomed ? 'Request sent' : 'Connect'}
-            </button>
-            <button type="button" onClick={doPetal} style={{ background: '#F1ECF9', color: P }}><Sparkles size={16} />{petal ? 'Petal given' : 'Give a petal'}</button>
-          </div>
+          <AnimatePresence initial={false}>
+          {tray && (
+          <motion.div className="sp-tray" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.18 }} style={{ overflow: 'hidden' }}>
+            <div className="sp-tiles">
+              <button type="button" className="sp-tile" onClick={pickPhoto}>
+                <span className="ic" style={{ background: '#EDE6FA', color: P }}><ImageIcon size={22} /></span>Photo
+              </button>
+              <button type="button" className="sp-tile" onClick={doBloom} disabled={bloomed || Boolean(connected)}>
+                <span className="ic" style={{ background: connected ? '#E8F4EE' : '#F6EFE2', color: connected ? '#2F6B4F' : GOLD }}><Flower2 size={22} /></span>
+                {connected ? 'Soul Friends' : bloomed ? 'Request sent' : 'Connect'}
+              </button>
+              <button type="button" className="sp-tile" onClick={doPetal}>
+                <span className="ic" style={{ background: '#F1ECF9', color: P }}><Sparkles size={22} /></span>
+                {petal ? 'Petal given' : 'Give a petal'}
+              </button>
+            </div>
+            <p className="sp-tray-tip"><ShieldCheck size={13} />Share moments, not identities. No faces, IDs, bank or UPI screens.</p>
+          </motion.div>
+          )}
+          </AnimatePresence>
+          <input ref={fileRef} type="file" accept="image/*" hidden onChange={onPhoto} />
+          <AnimatePresence>
+            {pending && (
+              <motion.div className="sp-photo" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} transition={{ duration: 0.18 }}>
+                <div className="sp-photo-img">
+                  <img src={pending.src} alt="Photo to share" />
+                  <button type="button" onClick={() => setPending(null)} aria-label="Remove photo"><X size={16} /></button>
+                </div>
+                <p className="sp-photo-warn"><ShieldCheck size={14} /><span><b>Quick check before it floats away.</b> No faces, names, documents, bank or UPI screens. Location data is removed automatically.</span></p>
+                <div className="sp-photo-row">
+                  <input value={caption} onChange={e => setCaption(e.target.value)} placeholder="Add a caption" maxLength={300} aria-label="Caption" />
+                  <button type="button" className="sp-photo-send" onClick={sendPhoto} aria-label="Send photo"><Send size={18} /></button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          {recording ? (
+            <div className="sp-send sp-rec" role="status" aria-live="polite">
+              <button type="button" className="sp-plus" onClick={() => stopRecording(false)} aria-label="Discard voice note"><Trash2 size={21} /></button>
+              <div className="sp-pill sp-rec-pill">
+                <i className="sp-rec-dot" />
+                <b>{fmtSecs(recSecs)}</b>
+                <span>Recording. Keep names and places out.</span>
+              </div>
+              <button type="button" className="sp-sendbtn" onClick={() => stopRecording(true)} aria-label="Send voice note"><Send size={18} /></button>
+            </div>
+          ) : (
           <form className="sp-send" onSubmit={e => { e.preventDefault(); send(); }}>
-            <input value={draft} onChange={e => setDraft(e.target.value)} placeholder="Type something kind…" aria-label="Message" maxLength={500} />
-            <button type="submit" aria-label="Send" disabled={!draft.trim()}><Send size={18} /></button>
+            <button type="button" className={`sp-plus${tray ? ' is-open' : ''}`} onClick={() => setTray(v => !v)}
+              aria-label={tray ? 'Hide options' : 'More options'} aria-expanded={tray}><Plus size={24} /></button>
+            <div className="sp-pill">
+              <input ref={inputRef} value={draft} onChange={e => setDraft(e.target.value)}
+                placeholder="Message" aria-label="Message" maxLength={500} />
+            </div>
+            {draft.trim() ? (
+              <button type="submit" className="sp-sendbtn" aria-label="Send"><Send size={18} /></button>
+            ) : (
+              <button type="button" className="sp-sendbtn" onClick={startRecording} aria-label="Record a voice note"><Mic size={20} /></button>
+            )}
           </form>
+          )}
           {isMock && (
             <p className="sp-dev"><AlertTriangle size={11} />Preview only: saved on this device, not sent to anyone yet.</p>
           )}
@@ -348,6 +589,9 @@ export default function SoulPond() {
   const [floating, setFloating] = useState(false);
 
   const [friends, setFriends] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [removedFriends, setRemovedFriends] = useState([]);
+  const closeProfile = useCallback(() => setProfile(null), []);
   const [chats, setChats] = useState([]);
   const [page, setPage] = useState(0);
   const [limitHit, setLimitHit] = useState(false);
@@ -374,12 +618,17 @@ export default function SoulPond() {
     try { localStorage.setItem('sc-pond-problems', JSON.stringify(mine)); } catch { /* private mode */ }
   }, [mine]);
 
+  // Only the very first fill shows "Filling the pond…". Later refetches (when
+  // someone changes their struggles) keep the current lotuses on screen until
+  // the new ones arrive, so the pond never blinks empty.
+  const loadedOnce = useRef(false);
   const load = useCallback(async () => {
-    setLoading(true);
+    if (!loadedOnce.current) setLoading(true);
     const r = await getLotuses(mine.filter(p => p !== 'other'));
     setLotuses(r.lotuses);
     setIsMock(r.isMock);
     setUnsupported(r.unsupported);
+    loadedOnce.current = true;
     setLoading(false);
   }, [mine]);
   useEffect(() => { load(); }, [load]);
@@ -459,7 +708,7 @@ export default function SoulPond() {
     <>
       <style>{css}</style>
       <main className="sp-page">
-        <span className="sp-eyebrow"><Flower2 size={14} /> Soul Pond</span>
+        <span className="sp-eyebrow"><Flower2 size={14} /> Feel Pond</span>
         <h1 className="sp-title">Feelings close to yours, right now.</h1>
         <p className="sp-sub">You don&apos;t pick people here. You respond to feelings. Tap a lotus that feels like yours, or float one of your own.</p>
 
@@ -521,7 +770,7 @@ export default function SoulPond() {
                         <img src={l.guide || l.mine ? LOTUS_GOLD : LOTUS_VIOLET} alt="" />
                         <span className="t">&ldquo;{l.text}&rdquo;</span>
                         <span className="k">
-                          {l.guide ? 'SoulConnect Guide' : l.mine ? 'Your lotus' : problemLabel(l)}
+                          {l.guide ? 'SameFeel Guide' : l.mine ? 'Your lotus' : problemLabel(l)}
                         </span>
                         {!l.guide && l.felt > 0 && <span className="f">♥ {l.felt} felt this</span>}
                         </span>
@@ -538,7 +787,7 @@ export default function SoulPond() {
                     {!selected.mine && !selected.guide && (
                       <button type="button" className="sp-btn" onClick={() => openLotus(selected)}>I feel this too</button>
                     )}
-                    {selected.guide && <span style={{ fontSize: 13, color: GOLD }}>A note from the SoulConnect team</span>}
+                    {selected.guide && <span style={{ fontSize: 13, color: GOLD }}>A note from the SameFeel team</span>}
                     {selected.mine && <span style={{ fontSize: 13, color: MUTED }}>This is your lotus. It floats for 3 days.</span>}
                   </>
                 ) : (
@@ -620,13 +869,13 @@ export default function SoulPond() {
                 <p className="sp-note"><Clock size={14} style={{ flexShrink: 0, marginTop: 2 }} />If nobody is around right now, we will send you a gentle note when someone feels this too.</p>
               </form>
 
-              <button type="button" className="sp-talk" onClick={() => setToast('Talk now is coming soon. Float a lotus meanwhile and we will notify you.')}>
+              <button type="button" className="sp-talk is-soon" aria-disabled="true" onClick={() => setToast('Talk now is on its way. Float a lotus meanwhile and we will let you know.')}>
                 <span style={{ width: 40, height: 40, borderRadius: 12, background: '#F6EFE2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><MessageCircle size={19} color={GOLD} /></span>
                 <span style={{ flex: 1 }}>
-                  <b style={{ display: 'block', fontSize: 14.5, color: DARK }}>Talk now</b>
+                  <b style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14.5, color: DARK }}>Talk now<span className="sp-soon">Coming soon</span></b>
                   <span style={{ fontSize: 12.5, color: MUTED }}>Pair with someone online who shares one of your problems</span>
                 </span>
-                <span style={{ fontWeight: 700, color: GOLD, whiteSpace: 'nowrap' }}>Go ›</span>
+
               </button>
             </aside>
           </div>
@@ -680,14 +929,19 @@ export default function SoulPond() {
             )}
             {pondFriends.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 12 }}>
-                {pondFriends.map(f => (
-                  <button key={f.id} type="button" className="sp-row" onClick={() => openChat(f.chat)}>
+                {pondFriends.filter(f => !removedFriends.includes(f.id)).map(f => (
+                  <button key={f.id} type="button" className="sp-row" onClick={() => setProfile({
+                    key: f.id, name: f.soulId.replace('@', '').replace(/soul$/, '').replace(/^./, c => c.toUpperCase()), soulId: f.soulId,
+                    tags: f.tags, connectedAt: f.chat?.updatedAt ? new Date(f.chat.updatedAt).toISOString() : null,
+                    metAt: f.chat?.createdAt ? new Date(f.chat.createdAt).toISOString() : null, metFrom: f.chat?.lotus?.text, lastActive: f.chat?.lastActive || null,
+                    onMessage: () => { setProfile(null); openChat(f.chat); },
+                  })}>
                     <div className="sp-av">{f.soulId.replace('@', '')[0].toUpperCase()}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 700, color: P }}>{f.soulId}</div>
                       <div style={{ fontSize: 12.5, color: MUTED }}>Connected from the pond · {f.tags.join(' · ')}</div>
                     </div>
-                    <span style={{ fontSize: 12.5, fontWeight: 700, color: P }}>Chat ›</span>
+                    <span style={{ fontSize: 12.5, fontWeight: 700, color: P }}>View ›</span>
                   </button>
                 ))}
               </div>
@@ -701,8 +955,14 @@ export default function SoulPond() {
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {friends.map(f => (
-                  <article key={f.id} className="sp-friend">
+                {friends.filter(f => !removedFriends.includes(f.id)).map(f => (
+                  <button key={f.id} type="button" className="sp-friend" onClick={() => setProfile({
+                    key: f.id, name: f.name, avatar: f.avatar_url,
+                    soulId: f.soulId || (f.name && f.name !== 'Anonymous' ? `@${f.name.toLowerCase().replace(/[^a-z0-9]/g, '')}soul` : null),
+                    tags: f.tags || [f.problem], connectedAt: f.connectedAt, metAt: f.metAt, metFrom: f.metFrom,
+                    bio: f.bio, mood: f.mood, supportNeed: f.supportNeed, streak: f.streak, petals: f.petals, stories: f.stories, lastActive: f.lastActive,
+                    onMessage: () => { setProfile(null); navigate('/chat'); },
+                  })}>
                     {f.avatar_url ? <img src={f.avatar_url} alt="" className="sp-av" /> : <div className="sp-av">{(f.name || 'S')[0]}</div>}
                     <div style={{ flex: 1 }}>
                       <div style={{ fontWeight: 700 }}>
@@ -714,7 +974,8 @@ export default function SoulPond() {
                         {f.connectedAt ? ` · since ${new Date(f.connectedAt).toLocaleDateString()}` : ''}
                       </div>
                     </div>
-                  </article>
+                    <ChevronLeft size={18} color={MUTED} style={{ transform: 'rotate(180deg)', flexShrink: 0 }} />
+                  </button>
                 ))}
               </div>
             )}
@@ -722,6 +983,14 @@ export default function SoulPond() {
         )}
       </main>
 
+      <SoulFriendProfile
+        friend={profile}
+        myStruggles={(mine || []).map(id => LABEL[id]).filter(Boolean)}
+        onClose={closeProfile}
+        onMessage={() => profile?.onMessage?.()}
+        onRemove={() => { setRemovedFriends(r => [...r, profile.key]); setProfile(null); setToast('Removed from your Soul Friends.'); }}
+        onToast={setToast}
+      />
       {createPortal(<AnimatePresence>
         {chat && (
           <PondChat key={chat.chatId} lotus={chat.lotus} chatId={chat.chatId} isMock={chat.isMock}

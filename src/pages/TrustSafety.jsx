@@ -32,7 +32,7 @@ const sections = [
     subsections: [
       {
         heading: 'Your personal information belongs to you.',
-        content: 'We are committed to protecting your privacy and giving you control over what you choose to share on SoulConnect.'
+        content: 'We are committed to protecting your privacy and giving you control over what you choose to share on SameFeel.'
       },
       {
         heading: 'You decide what information appears on your profile.',
@@ -45,7 +45,7 @@ const sections = [
     title: 'A Respectful Community',
     subsections: [
       {
-        heading: 'SoulConnect is built around empathy, kindness, and respect.',
+        heading: 'SameFeel is built around empathy, kindness, and respect.',
         content: 'Everyone is expected to:'
       },
       {
@@ -64,7 +64,7 @@ const sections = [
     title: 'Community Moderation',
     subsections: [
       {
-        heading: 'To help maintain a safe environment, SoulConnect uses moderation tools and reporting features.',
+        heading: 'To help maintain a safe environment, SameFeel uses moderation tools and reporting features.',
         content: 'Users can:'
       },
       {
@@ -92,7 +92,7 @@ const sections = [
     title: 'Peer Support, Not Emergency Care',
     subsections: [
       {
-        heading: 'SoulConnect provides peer support, wellness resources, and access to professionals where available.',
+        heading: 'SameFeel provides peer support, wellness resources, and access to professionals where available.',
         content: 'It is not an emergency service and should not be used as a substitute for urgent medical or psychiatric care.'
       },
       {
@@ -133,7 +133,7 @@ const sections = [
     subsections: [
       {
         heading: 'We encourage users to seek professional support whenever it is needed.',
-        content: 'SoulConnect is designed to complement—not replace—professional mental health care.'
+        content: 'SameFeel is designed to complement—not replace—professional mental health care.'
       }
     ]
   }
@@ -162,9 +162,9 @@ const css = `
 
 export default function TrustSafety() {
   useEffect(() => {
-    document.title = 'Trust & Safety | SoulConnect Community Standards';
+    document.title = 'Trust & Safety | SameFeel Community Standards';
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.content = 'Learn about SoulConnect\'s commitment to privacy, community safety, moderation, and your well-being. Verified professionals, transparent practices, and your control over your data.';
+    if (meta) meta.content = 'Learn about SameFeel\'s commitment to privacy, community safety, moderation, and your well-being. Verified professionals, transparent practices, and your control over your data.';
   }, []);
 
   return (

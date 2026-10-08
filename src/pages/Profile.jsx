@@ -27,30 +27,16 @@ export default function Profile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Initialize profile on mount
-  useEffect(() => {
-    const initializeProfile = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        setLoading(false);
-      } catch (err) {
-        console.error('Error loading profile:', err);
-        setError('Failed to load profile. Please try again.');
-        setLoading(false);
-      }
-    };
-    initializeProfile();
-  }, []);
+  // Profile data comes from the auth store, no async loading needed.
 
   const MENU_ITEMS = [
     { icon: '⚙️', label: 'Settings', action: () => navigate('/account') },
     { icon: '🛡️', label: 'Privacy & Safety', action: () => navigate('/privacy') },
-    { icon: '❓', label: 'Help & Support', action: () => navigate('/safety') },
+    { icon: '❓', label: 'Help & Support', action: () => navigate('/faq') },
   ];
 
   const handleEditProfile = useCallback(() => {
-    navigate('/account');
+    navigate('/account?edit=1');
   }, [navigate]);
 
   const handleViewMood = useCallback(() => {

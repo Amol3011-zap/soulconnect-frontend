@@ -256,7 +256,7 @@ export default function Onboarding() {
             {step === 9 && '🔔'}
           </div>
           <h1 style={{ fontSize: 32, fontWeight: 800, color: '#fff', margin: '0 0 8px' }}>
-            {step === 1 && 'Welcome to SoulConnect'}
+            {step === 1 && 'Welcome to SameFeel'}
             {step === 2 && 'What has been on your mind lately?'}
             {step === 3 && 'How intense does it feel today?'}
             {step === 4 && 'What are you hoping to find here?'}

@@ -2,7 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { Check, X } from 'lucide-react';
-import { AVATARS, MOODS, avatarSrc, saveAvatar } from '../data/avatars';
+import { AVATARS, MOODS, avatarSrc, saveAvatar, FELT_AVATAR_LIST, isFeltAvatar, feltAvatarSrc } from '../data/avatars';
+import feltAmazing from '../assets/mood/mood-amazing.png';
+import feltGood from '../assets/mood/mood-good.png';
+import feltOkay from '../assets/mood/mood-okay.png';
+import feltNotGood from '../assets/mood/mood-notgood.png';
+import feltAwful from '../assets/mood/mood-awful.png';
+
+// New felt-avatar faces for the mood row below (added alongside the
+// existing per-persona mood SVGs, which still render everywhere else:
+// the big hero preview and the "Choose your look" persona grid).
+const MOOD_TO_FELT = {
+  happy: feltAmazing,
+  calm: feltGood,
+  sad: feltNotGood,
+  lonely: feltNotGood,
+  stressed: feltAwful,
+  low: feltAwful,
+};
 
 const P = '#6B4FA0';
 
@@ -71,7 +88,10 @@ export default function AvatarPicker({ open, current, currentMood = 'calm', onCl
 
             <div className="ap-scroll">
               <div className="ap-hero">
-                <div className="big"><img src={avatarSrc(pick, mood)} alt="" /></div>
+                <div className="big" style={isFeltAvatar(pick) ? { borderRadius: '22%' } : {}}>
+                  <img src={isFeltAvatar(pick) ? feltAvatarSrc(pick) : avatarSrc(pick, mood)} alt=""
+                    style={isFeltAvatar(pick) ? { borderRadius: '22%' } : {}} />
+                </div>
                 <small>{moodInfo?.hint}</small>
               </div>
 
@@ -80,7 +100,7 @@ export default function AvatarPicker({ open, current, currentMood = 'calm', onCl
                 {MOODS.map((m) => (
                   <button key={m.id} type="button" role="radio" aria-checked={mood === m.id}
                     className={`ap-m${mood === m.id ? ' on' : ''}`} onClick={() => setMood(m.id)}>
-                    <img src={avatarSrc(pick, m.id)} alt="" loading="lazy" />{m.label}
+                    <img src={MOOD_TO_FELT[m.id] || avatarSrc(pick, m.id)} alt="" loading="lazy" />{m.label}
                   </button>
                 ))}
               </div>
@@ -91,6 +111,18 @@ export default function AvatarPicker({ open, current, currentMood = 'calm', onCl
                   <button key={a.id} type="button" role="radio" aria-checked={pick === a.id} aria-label={a.label}
                     className={`ap-o${pick === a.id ? ' on' : ''}`} onClick={() => setPick(a.id)}>
                     <img src={avatarSrc(a.id, mood)} alt="" loading="lazy" />
+                    {pick === a.id && <span className="ck"><Check size={12} strokeWidth={3} /></span>}
+                  </button>
+                ))}
+              </div>
+
+              <div className="ap-lbl">Cartoon characters</div>
+              <div className="ap-grid" role="radiogroup" aria-label="Cartoon look">
+                {FELT_AVATAR_LIST.map((a) => (
+                  <button key={a.id} type="button" role="radio" aria-checked={pick === a.id} aria-label={a.label}
+                    className={`ap-o${pick === a.id ? ' on' : ''}`} onClick={() => setPick(a.id)}
+                    style={{ borderRadius: '22%' }}>
+                    <img src={a.img} alt="" loading="lazy" style={{ borderRadius: '22%' }} />
                     {pick === a.id && <span className="ck"><Check size={12} strokeWidth={3} /></span>}
                   </button>
                 ))}

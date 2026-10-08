@@ -767,18 +767,9 @@ export default function Meetups() {
           {/* Logo row */}
           <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid rgba(109,74,255,0.08)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-              {/* Lotus SVG */}
-              <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-                <ellipse cx="13" cy="18" rx="5" ry="7" fill="#6D4AFF" opacity="0.85" transform="rotate(0,13,13)" />
-                <ellipse cx="13" cy="18" rx="5" ry="7" fill="#6D4AFF" opacity="0.7" transform="rotate(60,13,13)" />
-                <ellipse cx="13" cy="18" rx="5" ry="7" fill="#6D4AFF" opacity="0.7" transform="rotate(120,13,13)" />
-                <ellipse cx="13" cy="18" rx="5" ry="7" fill="#A78BFA" opacity="0.6" transform="rotate(180,13,13)" />
-                <ellipse cx="13" cy="18" rx="5" ry="7" fill="#A78BFA" opacity="0.6" transform="rotate(240,13,13)" />
-                <ellipse cx="13" cy="18" rx="5" ry="7" fill="#A78BFA" opacity="0.6" transform="rotate(300,13,13)" />
-                <circle cx="13" cy="13" r="4" fill="#F5B841" />
-              </svg>
+              <img src="/logo-icon.png" alt="SameFeel" style={{ width: 30, height: 30, borderRadius: 9, display: 'block', border: '1px solid rgba(109,74,255,0.38)', boxSizing: 'border-box' }} />
               <div>
-                <div style={{ fontWeight: 700, fontSize: 17, color: '#1A1333', lineHeight: 1 }}>SoulConnect</div>
+                <div style={{ fontWeight: 700, fontSize: 17, color: '#1A1333', lineHeight: 1 }}>SameFeel</div>
                 <div style={{ fontSize: 9, color: '#6B7280', letterSpacing: '0.15em', marginTop: 2 }}>Heal · Connect · Grow</div>
               </div>
             </div>

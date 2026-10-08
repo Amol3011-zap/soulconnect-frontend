@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 /* The simple public-page footer — same as the one on /about: lotus mark,
-   SoulConnect wordmark and the copyright line, in the "Dawn" palette. */
+   SameFeel wordmark and the copyright line, in the "Dawn" palette. */
 
 // The wordmark is set in Playfair Display. /about loads that font itself;
 // the other pages using this footer didn't, so the wordmark fell back to
@@ -44,8 +44,8 @@ export default function SimpleFooter() {
             marginBottom: 14,
           }}
         >
-          <img src="/brand/logo/soulconnect-lotus-mark.svg" alt="SoulConnect"
-            style={{ height: 30, width: 'auto', display: 'block' }} />
+          <img src="/logo-icon.png" alt="SameFeel"
+            style={{ height: 30, width: 30, borderRadius: 9, display: "block", border: "1px solid rgba(109,74,255,0.38)", boxSizing: "border-box" }} />
           <span
             style={{
               fontFamily: SF,
@@ -54,11 +54,11 @@ export default function SimpleFooter() {
               color: DARK,
             }}
           >
-            Soul<span style={{ color: P }}>Connect</span>
+            Same<span style={{ color: P }}>Feel</span>
           </span>
         </div>
         <p style={{ fontSize: 13, color: MUTED, margin: 0 }}>
-          © {new Date().getFullYear()} SoulConnect. Built with care for every soul navigating the hard parts of life.
+          © {new Date().getFullYear()} SameFeel. Your first step towards a better tomorrow.
         </p>
       </div>
     </footer>

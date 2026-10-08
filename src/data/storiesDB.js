@@ -1,4 +1,4 @@
-// ── SoulConnect Stories Mock Database ────────────────────────────────────────
+// ── SameFeel Stories Mock Database ────────────────────────────────────────
 // 30 users, 15 story templates, generates 90 stories, 40 replies
 
 /* ─── Users ──────────────────────────────────────────────────────────────────── */

@@ -2,6 +2,12 @@ import { useState, useCallback } from 'react';
 import { journeyAPI } from '../services/api';
 import { useAuthStore } from '../store/auth';
 
+import moodAwful from '../assets/mood/mood-awful.png';
+import moodNotGood from '../assets/mood/mood-notgood.png';
+import moodOkay from '../assets/mood/mood-okay.png';
+import moodGood from '../assets/mood/mood-good.png';
+import moodAmazing from '../assets/mood/mood-amazing.png';
+
 // Mood data is stored per account ("sc_journal_v2:<userId>") so another
 // account on the same device never reads it. The old shared key is dropped
 // (pre-launch test data only; there is no owner to hand it to safely).
@@ -13,11 +19,11 @@ function storageKey() {
 }
 
 export const MOODS_5 = [
-  { score: 1, emoji: '😭', label: 'Awful',      color: '#EF4444' },
-  { score: 3, emoji: '😔', label: 'Not Good',   color: '#F97316' },
-  { score: 5, emoji: '😐', label: 'Okay',       color: '#F59E0B' },
-  { score: 7, emoji: '🙂', label: 'Good',       color: '#10B981' },
-  { score: 9, emoji: '😁', label: 'Amazing',    color: '#6D4AFF' },
+  { score: 1, emoji: '😭', image: moodAwful,   label: 'Awful',      color: '#EF4444' },
+  { score: 3, emoji: '😔', image: moodNotGood, label: 'Not Good',   color: '#F97316' },
+  { score: 5, emoji: '😐', image: moodOkay,    label: 'Okay',       color: '#F59E0B' },
+  { score: 7, emoji: '🙂', image: moodGood,    label: 'Good',       color: '#10B981' },
+  { score: 9, emoji: '😁', image: moodAmazing, label: 'Amazing',    color: '#6D4AFF' },
 ];
 
 export const TRIGGERS = [

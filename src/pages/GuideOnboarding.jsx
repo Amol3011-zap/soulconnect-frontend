@@ -202,7 +202,7 @@ function Step1({ onNext }) {
         Thank you for helping people on their healing journeys.
       </p>
       <p style={{ color:'rgba(255,255,255,0.45)', fontSize:14, lineHeight:1.8, margin:'0 0 28px', maxWidth:380, marginLeft:'auto', marginRight:'auto' }}>
-        SoulConnect exists to create safe spaces for connection, support, wellness, and personal growth. Before accepting bookings, please review your responsibilities and platform guidelines.
+        SameFeel exists to create safe spaces for connection, support, wellness, and personal growth. Before accepting bookings, please review your responsibilities and platform guidelines.
       </p>
       <div style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:8, marginBottom:28 }}>
         {['🧘 Wellness Coaches','🌿 Healers','🎵 Sound Healers','⭕ Circle Hosts','🧬 Reiki Practitioners','🕉️ Meditation Teachers'].map(t => (
@@ -244,7 +244,7 @@ function Step2({ onNext }) {
       <Checkbox
         checked={checked}
         onChange={() => setChecked(v => !v)}
-        label="I understand my role and its limitations on SoulConnect."
+        label="I understand my role and its limitations on SameFeel."
       />
       <div style={{ marginTop:16 }}>
         <PrimaryBtn onClick={onNext} disabled={!checked}>I Understand →</PrimaryBtn>
@@ -258,11 +258,11 @@ function Step3({ onNext }) {
   return (
     <div>
       <SectionTitle>Independent Practitioner Agreement</SectionTitle>
-      <SectionSub>Guides operate independently — not as SoulConnect employees.</SectionSub>
+      <SectionSub>Guides operate independently — not as SameFeel employees.</SectionSub>
 
       <div style={{ background:'rgba(109,74,255,0.1)', border:'1px solid rgba(167,139,250,0.25)', borderRadius:16, padding:'18px 20px', marginBottom:16 }}>
         <p style={{ color:'rgba(255,255,255,0.7)', fontSize:14, lineHeight:1.8, margin:0 }}>
-          As a guide on SoulConnect, you operate as an independent practitioner. SoulConnect does not supervise, direct, or control your professional services. You are solely responsible for delivering your own sessions.
+          As a guide on SameFeel, you operate as an independent practitioner. SameFeel does not supervise, direct, or control your professional services. You are solely responsible for delivering your own sessions.
         </p>
       </div>
 
@@ -285,7 +285,7 @@ function Step3({ onNext }) {
       <Checkbox
         checked={checked}
         onChange={() => setChecked(v => !v)}
-        label="I understand I am an independent practitioner and not an employee of SoulConnect."
+        label="I understand I am an independent practitioner and not an employee of SameFeel."
       />
       <div style={{ marginTop:16 }}>
         <PrimaryBtn onClick={onNext} disabled={!checked}>Continue →</PrimaryBtn>
@@ -370,8 +370,8 @@ function Step5({ onNext }) {
         {[
           { n:1, text:'Stay calm and non-judgmental' },
           { n:2, text:'Encourage the user to contact emergency services immediately' },
-          { n:3, text:'Direct them to SoulConnect Crisis Resources (/crisis-support)' },
-          { n:4, text:'Use the SoulConnect Safety Escalation button on your dashboard' },
+          { n:3, text:'Direct them to SameFeel Crisis Resources (/crisis-support)' },
+          { n:4, text:'Use the SameFeel Safety Escalation button on your dashboard' },
           { n:5, text:'End the session if necessary to protect both parties' },
         ].map(a => (
           <div key={a.n} style={{ display:'flex', gap:12, alignItems:'flex-start', background:'rgba(255,255,255,0.04)', borderRadius:10, padding:'10px 14px' }}>
@@ -411,7 +411,7 @@ function Step6({ onNext }) {
   return (
     <div>
       <SectionTitle>Professional Conduct</SectionTitle>
-      <SectionSub>The standard of care every guide on SoulConnect maintains.</SectionSub>
+      <SectionSub>The standard of care every guide on SameFeel maintains.</SectionSub>
 
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:20 }}>
         <div>
@@ -441,7 +441,7 @@ function Step6({ onNext }) {
       <Checkbox
         checked={checked}
         onChange={() => setChecked(v => !v)}
-        label="I agree to follow SoulConnect's professional conduct standards."
+        label="I agree to follow SameFeel's professional conduct standards."
       />
       <div style={{ marginTop:16 }}>
         <PrimaryBtn onClick={onNext} disabled={!checked}>Continue →</PrimaryBtn>
@@ -459,10 +459,10 @@ function Step7({ onNext }) {
 
       <div style={{ background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:16, padding:'20px', marginBottom:20 }}>
         <p style={{ color:'rgba(255,255,255,0.65)', fontSize:14, lineHeight:1.8, margin:0 }}>
-          If you are currently employed elsewhere, you are solely responsible for ensuring your activities on SoulConnect comply with your employer's policies, non-compete agreements, and applicable local regulations.
+          If you are currently employed elsewhere, you are solely responsible for ensuring your activities on SameFeel comply with your employer's policies, non-compete agreements, and applicable local regulations.
         </p>
         <p style={{ color:'rgba(255,255,255,0.4)', fontSize:13, lineHeight:1.7, margin:'12px 0 0' }}>
-          SoulConnect does not determine whether outside work is permitted by your employer. It is your obligation to verify this independently before listing your services.
+          SameFeel does not determine whether outside work is permitted by your employer. It is your obligation to verify this independently before listing your services.
         </p>
       </div>
 
@@ -471,7 +471,7 @@ function Step7({ onNext }) {
           { icon:'⚖️', text:'Check your employment contract for outside work clauses' },
           { icon:'💼', text:'Ensure your practice complies with local professional regulations' },
           { icon:'🏛️', text:'Obtain any required licences or permits for your practice' },
-          { icon:'💰', text:'Declare income from SoulConnect to relevant tax authorities' },
+          { icon:'💰', text:'Declare income from SameFeel to relevant tax authorities' },
         ].map(item => (
           <div key={item.text} style={{ display:'flex', alignItems:'center', gap:10, background:'rgba(255,255,255,0.04)', borderRadius:10, padding:'10px 14px', border:'1px solid rgba(255,255,255,0.07)' }}>
             <span style={{ fontSize:16 }}>{item.icon}</span>
@@ -598,12 +598,12 @@ function Step8({ onNext }) {
 
 function Step9({ onComplete }) {
   const ITEMS = [
-    'I understand my scope of practice as a guide on SoulConnect.',
+    'I understand my scope of practice as a guide on SameFeel.',
     'I understand I am not an emergency responder and will direct users in crisis to professional services.',
     'I agree to protect user privacy and maintain confidentiality.',
-    'I agree to follow SoulConnect\'s community standards and conduct guidelines.',
+    'I agree to follow SameFeel\'s community standards and conduct guidelines.',
     'I understand the crisis escalation procedures and will follow them.',
-    'I understand I am an independent practitioner and not an employee of SoulConnect.',
+    'I understand I am an independent practitioner and not an employee of SameFeel.',
   ];
   const [checks, setChecks] = useState(Array(ITEMS.length).fill(false));
   const allDone = checks.every(Boolean);
@@ -645,7 +645,7 @@ function Step9({ onComplete }) {
       {/* Signature */}
       <div style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:14, padding:'14px 18px', marginBottom:18, textAlign:'center' }}>
         <p style={{ margin:0, color:'rgba(255,255,255,0.35)', fontSize:12, lineHeight:1.7 }}>
-          By continuing, you acknowledge and agree to the SoulConnect{' '}
+          By continuing, you acknowledge and agree to the SameFeel{' '}
           <button className="go-link-btn" onClick={() => window.open('/guide-terms','_blank')}>Guide Agreement</button>,{' '}
           <button className="go-link-btn" onClick={() => window.open('/community-rules','_blank')}>Community Guidelines</button>,{' '}
           <button className="go-link-btn" onClick={() => window.open('/terms','_blank')}>Privacy Policy</button>, and{' '}
@@ -671,7 +671,7 @@ function CompletedScreen({ name, onEnter }) {
         </div>
         <h2 style={{ color:'#fff', fontSize:24, fontWeight:800, margin:'0 0 8px' }}>You're All Set! 💜</h2>
         <p style={{ color:'rgba(255,255,255,0.55)', fontSize:15, lineHeight:1.7, margin:'0 0 8px' }}>
-          Welcome to the SoulConnect guide community, <strong style={{ color:'#C4B5FD' }}>{name}</strong>.
+          Welcome to the SameFeel guide community, <strong style={{ color:'#C4B5FD' }}>{name}</strong>.
         </p>
         <p style={{ color:'rgba(255,255,255,0.4)', fontSize:13, lineHeight:1.6, margin:'0 0 24px' }}>
           Your profile is now active. You can start reviewing booking requests from users who need your support.
@@ -777,8 +777,8 @@ export default function GuideOnboarding({ onComplete }) {
       <div style={{ position:'relative', zIndex:1, width:'100%', maxWidth:560 }}>
         {/* Logo */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:10, marginBottom:24 }}>
-          <img src="/logo-icon.png" alt="SoulConnect" style={{ width:36, height:36, borderRadius:10, boxShadow:'0 4px 16px rgba(109,74,255,0.4)', display:'block' }} />
-          <span style={{ fontSize:16, fontWeight:800, color:'#fff' }}>Soul<span style={{ color:'#A78BFA' }}>Connect</span></span>
+          <img src="/logo-icon.png" alt="SameFeel" style={{ width:36, height:36, borderRadius:10, boxShadow:'0 4px 16px rgba(109,74,255,0.4)', display:'block', border:'1px solid rgba(109,74,255,0.38)', boxSizing:'border-box' }} />
+          <span style={{ fontSize:16, fontWeight:800, color:'#fff' }}>Same<span style={{ color:'#A78BFA' }}>Feel</span></span>
           <span style={{ background:'rgba(109,74,255,0.25)', color:'#C4B5FD', fontSize:10, fontWeight:700, padding:'3px 8px', borderRadius:99, border:'1px solid rgba(167,139,250,0.3)' }}>Guide Portal</span>
         </div>
 

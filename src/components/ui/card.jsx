@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-// Default SoulConnect card: white, 1px #E7E3EF border, 20px radius, a
+// Default SameFeel card: white, 1px #E7E3EF border, 20px radius, a
 // barely-there shadow, 16-20px padding (via CardHeader / CardContent).
 const Card = React.forwardRef(({ className, ...props }, ref) => (
   <div

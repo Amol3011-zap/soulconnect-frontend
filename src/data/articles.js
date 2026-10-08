@@ -9,7 +9,7 @@ export const ARTICLES = [
     slug: 'anxiety-management-tips',
     title: 'Understanding Anxiety: Causes, Symptoms & Management Strategies',
     description: 'Learn evidence-based strategies for managing anxiety disorders, recognizing triggers, and building healthy coping mechanisms.',
-    author: 'SoulConnect Wellness Team',
+    author: 'SameFeel Wellness Team',
     publishedDate: '2026-06-01',
     updatedDate: '2026-06-30',
     category: 'Mental Health',
@@ -72,7 +72,7 @@ Consider speaking with a mental health professional if:
 
 ## Finding Support
 
-You don't have to manage anxiety alone. SoulConnect connects you with peers who understand anxiety and professional therapists who specialize in anxiety disorders.
+You don't have to manage anxiety alone. SameFeel connects you with peers who understand anxiety and professional therapists who specialize in anxiety disorders.
 
 **Remember:** Anxiety is treatable. With the right strategies and support, you can regain control and build a fulfilling life.
     `.trim(),
@@ -84,7 +84,7 @@ You don't have to manage anxiety alone. SoulConnect connects you with peers who 
     slug: 'depression-treatment-support',
     title: 'Depression: Symptoms, Impact & Paths to Healing',
     description: 'Understand depression, recognize warning signs, and explore evidence-based treatments and support options.',
-    author: 'SoulConnect Wellness Team',
+    author: 'SameFeel Wellness Team',
     publishedDate: '2026-06-05',
     updatedDate: '2026-06-30',
     category: 'Mental Health',
@@ -165,7 +165,7 @@ Depression is treatable. Many people recover fully with proper treatment and sup
     slug: 'grief-support-healing',
     title: 'Understanding Grief: Processing Loss & Finding Healing',
     description: 'A compassionate guide to navigating grief, honoring your loss, and finding meaning in difficult times.',
-    author: 'SoulConnect Wellness Team',
+    author: 'SameFeel Wellness Team',
     publishedDate: '2026-06-10',
     updatedDate: '2026-06-30',
     category: 'Mental Health',
@@ -233,7 +233,7 @@ Many find that over time, grief transforms. Pain may soften, and you may find wa
 
 ## Finding Support
 
-You don't grieve alone. SoulConnect connects you with understanding peers and professional grief counselors who specialize in loss.
+You don't grieve alone. SameFeel connects you with understanding peers and professional grief counselors who specialize in loss.
 
 **Remember:** Your grief is your love with nowhere to go. That love can be channeled into meaningful connections and living in ways that honor the person or life you lost.
     `.trim(),
@@ -245,7 +245,7 @@ You don't grieve alone. SoulConnect connects you with understanding peers and pr
     slug: 'overcoming-loneliness',
     title: 'Loneliness: Causes, Impact & Building Meaningful Connection',
     description: 'Understand loneliness, its mental health impact, and practical ways to build genuine human connection.',
-    author: 'SoulConnect Wellness Team',
+    author: 'SameFeel Wellness Team',
     publishedDate: '2026-06-15',
     updatedDate: '2026-06-30',
     category: 'Mental Health',
@@ -318,7 +318,7 @@ Loneliness improves through consistent connection-building. Start small — join
     slug: 'burnout-recovery-strategies',
     title: 'Recognizing & Recovering From Burnout: A Path to Balance',
     description: 'Identify burnout symptoms and implement evidence-based strategies for recovery and prevention.',
-    author: 'SoulConnect Wellness Team',
+    author: 'SameFeel Wellness Team',
     publishedDate: '2026-06-20',
     updatedDate: '2026-06-30',
     category: 'Mental Health',
@@ -404,7 +404,7 @@ Recovery from burnout takes time. Be patient with yourself. Many find that burno
     slug: 'panic-attacks-understanding',
     title: 'Panic Attacks: What They Are & How to Manage Them',
     description: 'Learn what causes panic attacks and effective techniques to manage symptoms when they occur.',
-    author: 'SoulConnect Wellness Team',
+    author: 'SameFeel Wellness Team',
     publishedDate: '2026-06-22',
     updatedDate: '2026-06-30',
     category: 'Mental Health',
@@ -492,7 +492,7 @@ See a mental health professional if:
     slug: 'breakup-recovery-healing',
     title: 'Navigating Breakups: Healing & Moving Forward',
     description: 'A compassionate guide to processing breakup pain, honoring your relationship, and rebuilding after loss.',
-    author: 'SoulConnect Wellness Team',
+    author: 'SameFeel Wellness Team',
     publishedDate: '2026-06-25',
     updatedDate: '2026-06-30',
     category: 'Relationships',
@@ -585,7 +585,7 @@ Many people find that breakups, while painful, catalyze positive life changes, d
     slug: 'meditation-mindfulness-guide',
     title: 'Meditation & Mindfulness: A Beginner\'s Guide to Inner Peace',
     description: 'Learn meditation fundamentals and how mindfulness practices can transform your mental health and wellbeing.',
-    author: 'SoulConnect Wellness Team',
+    author: 'SameFeel Wellness Team',
     publishedDate: '2026-06-28',
     updatedDate: '2026-06-30',
     category: 'Wellness',
@@ -674,7 +674,7 @@ Repeat a word or phrase to anchor your mind.
 
 ## Meditation Apps and Resources
 
-- SoulConnect offers guided meditations
+- SameFeel offers guided meditations
 - Apps: Insight Timer, Calm, Headspace (free and paid options)
 - YouTube has free guided meditations
 

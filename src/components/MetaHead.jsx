@@ -23,7 +23,7 @@ export default function MetaHead() {
       if (article) {
         const imageUrl = article.image || 'https://soulconnect.health/og-image.png';
         meta = {
-          title: `${article.title} | SoulConnect Blog`,
+          title: `${article.title} | SameFeel Blog`,
           description: article.description,
           canonical: `https://soulconnect.health/blog/${article.slug}`,
           keywords: article.keywords.join(', '),
@@ -138,11 +138,11 @@ function addArticleSchema(emotionSlug) {
     'dateModified': emotion.lastReviewedDate || '2026-07-17',
     'author': {
       '@type': 'Organization',
-      'name': 'SoulConnect'
+      'name': 'SameFeel'
     },
     'publisher': {
       '@type': 'Organization',
-      'name': 'SoulConnect',
+      'name': 'SameFeel',
       'logo': {
         '@type': 'ImageObject',
         'url': 'https://soulconnect.health/logo-icon-512.png'

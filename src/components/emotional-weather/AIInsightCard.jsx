@@ -177,7 +177,7 @@ export default function AIInsightCard({ history }) {
       }}>
         <span style={{ fontSize: 12 }} aria-hidden="true">⚡</span>
         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>
-          Powered by SoulConnect AI
+          Powered by SameFeel AI
         </span>
       </div>
     </motion.div>

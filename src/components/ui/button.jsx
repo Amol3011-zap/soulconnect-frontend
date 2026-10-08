@@ -3,7 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-// SoulConnect button on shadcn/ui. Sizes keep a >=48px touch target except
+// SameFeel button on shadcn/ui. Sizes keep a >=48px touch target except
 // `sm` (40px, for dense secondary actions inside cards); press feedback is a
 // subtle 0.98 scale.
 const buttonVariants = cva(

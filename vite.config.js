@@ -12,6 +12,10 @@ export default defineConfig({
     port: 5173,
     host: true,
     strictPort: true,
+    // Lets the Cloudflare quick-tunnel (cloudflared, *.trycloudflare.com)
+    // reach this dev server -- Vite otherwise blocks unrecognized Host
+    // headers. Dev-only; remove if the tunnel is no longer needed.
+    allowedHosts: ['.trycloudflare.com'],
     proxy: {
       // Dev only. The browser calls same-origin /api and Vite forwards it
       // to the Railway backend, so CORS never applies -- this is what lets

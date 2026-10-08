@@ -87,7 +87,7 @@ export default function TinyWinCard({ challenge, onComplete, isCompleted }) {
           fontSize: 11,
           color: 'var(--sc-text-2)',
         }}>
-          ⏱ {challenge.time < 1 ? Math.round(challenge.time * 60) + 's' : challenge.time + ' min'}
+          ⏱ {(() => { const t = Number(challenge.time ?? challenge.minutes ?? challenge.duration); if (!Number.isFinite(t) || t <= 0) return 'Quick'; return t < 1 ? Math.round(t * 60) + 's' : t + ' min'; })()}
         </span>
         <span style={{
           display: 'inline-flex',

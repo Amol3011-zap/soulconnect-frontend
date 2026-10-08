@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * SoulMatch page styles — SoulConnect light theme. Authored mobile-first
+ * SoulMatch page styles — SameFeel light theme. Authored mobile-first
  * (base rules target 393px), with min-width media queries for tablet and
  * desktop. Same class names as before; only the visual layer changed.
  *

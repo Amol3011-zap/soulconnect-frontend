@@ -4,7 +4,7 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-// SoulConnect adaptation of shadcn Dialog (added via `npx shadcn@2.3.0 add dialog`):
+// SameFeel adaptation of shadcn Dialog (added via `npx shadcn@2.3.0 add dialog`):
 // - `sc-portal` so the light tokens reach the portal on <body> (outside .sc-app)
 // - z-[1000]+ so it sits above the fixed bottom nav (z 999)
 // - light scrim, 24px radius, white card, 44px close target, scrolls on short phones

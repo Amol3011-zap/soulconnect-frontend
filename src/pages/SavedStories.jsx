@@ -7,19 +7,19 @@ import { STORIES_DB } from '../data/storiesDB';
 import { GradientAvatar } from './Stories';
 
 /* ─── Design tokens ──────────────────────────────────────────────────────────── */
-const BG       = '#080812';
-const CARD     = 'rgba(34,18,73,0.72)';
-const PURPLE   = '#8B5CF6';
-const GOLD     = '#F4C542';
-const TEXT_DIM = '#8A84B6';
-const TEXT_MID = '#B8B4D8';
+const BG       = 'var(--sc-bg)';
+const CARD     = 'var(--sc-card)';
+const PURPLE   = '#8066D5';
+const GOLD     = 'var(--sc-gold-text)';
+const TEXT_DIM = 'var(--sc-text-2)';
+const TEXT_MID = 'var(--sc-text-3)';
 
 /* ─── Empty State ────────────────────────────────────────────────────────────── */
 function EmptyState() {
   const navigate = useNavigate();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       style={{ textAlign: 'center', padding: '80px 20px', maxWidth: 380, margin: '0 auto' }}
     >
@@ -28,18 +28,18 @@ function EmptyState() {
         <svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true">
           <defs>
             <radialGradient id="saveEmptyGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="rgba(139,92,246,0.25)" />
+              <stop offset="0%" stopColor="var(--sc-tint)" />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
           </defs>
           <circle cx="60" cy="60" r="54" fill="url(#saveEmptyGlow)" />
-          <rect x="30" y="22" width="60" height="76" rx="10" fill="rgba(34,18,73,0.9)" stroke="rgba(139,92,246,0.3)" strokeWidth="1.5" />
-          <rect x="38" y="34" width="44" height="5" rx="2.5" fill="rgba(139,92,246,0.35)" />
-          <rect x="38" y="45" width="36" height="4" rx="2" fill="rgba(255,255,255,0.1)" />
-          <rect x="38" y="54" width="40" height="4" rx="2" fill="rgba(255,255,255,0.1)" />
-          <rect x="38" y="63" width="30" height="4" rx="2" fill="rgba(255,255,255,0.08)" />
+          <rect x="30" y="22" width="60" height="76" rx="10" fill="rgba(34,18,73,0.9)" stroke="var(--sc-tint)" strokeWidth="1.5" />
+          <rect x="38" y="34" width="44" height="5" rx="2.5" fill="var(--sc-tint)" />
+          <rect x="38" y="45" width="36" height="4" rx="2" fill="rgba(107,79,160,0.16)" />
+          <rect x="38" y="54" width="40" height="4" rx="2" fill="rgba(107,79,160,0.16)" />
+          <rect x="38" y="63" width="30" height="4" rx="2" fill="rgba(107,79,160,0.12)" />
           {/* Bookmark icon in the center bottom */}
-          <path d="M52 78 L52 98 L60 93 L68 98 L68 78 Z" fill="rgba(139,92,246,0.5)" stroke="rgba(168,85,247,0.6)" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M52 78 L52 98 L60 93 L68 98 L68 78 Z" fill="var(--sc-tint)" stroke="rgba(168,85,247,0.6)" strokeWidth="1.5" strokeLinejoin="round" />
           {/* Stars */}
           <circle cx="22" cy="30" r="2" fill="#F4C542" opacity="0.7" />
           <circle cx="98" cy="45" r="1.5" fill="#A78BFA" opacity="0.6" />
@@ -48,7 +48,7 @@ function EmptyState() {
         </svg>
       </div>
 
-      <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '0 0 10px', letterSpacing: '-0.02em' }}>
+      <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--sc-text)', margin: '0 0 10px', letterSpacing: '-0.02em' }}>
         No saved stories yet
       </h2>
       <p style={{ fontSize: 14, color: TEXT_DIM, margin: '0 0 28px', lineHeight: 1.65 }}>
@@ -59,11 +59,11 @@ function EmptyState() {
         whileHover={{ scale: 1.02 }}
         onClick={() => useNavigate()('/stories')}
         style={{
-          background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-          border: 'none', borderRadius: 16, color: '#fff', fontWeight: 700, fontSize: 15,
+          background: 'var(--sc-purple-fill)',
+          border: 'none', borderRadius: 16, color: 'var(--sc-text)', fontWeight: 700, fontSize: 15,
           padding: '14px 28px', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          boxShadow: '0 4px 20px rgba(124,58,237,0.5)',
+          boxShadow: 'none',
         }}
       >
         <BookOpen size={16} /> Browse Stories
@@ -76,7 +76,7 @@ function EmptyStateWithNav() {
   const navigate = useNavigate();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       style={{ textAlign: 'center', padding: '80px 20px', maxWidth: 380, margin: '0 auto' }}
     >
@@ -84,17 +84,17 @@ function EmptyStateWithNav() {
         <svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true">
           <defs>
             <radialGradient id="saveEmptyGlow2" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="rgba(139,92,246,0.25)" />
+              <stop offset="0%" stopColor="var(--sc-tint)" />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
           </defs>
           <circle cx="60" cy="60" r="54" fill="url(#saveEmptyGlow2)" />
-          <rect x="30" y="22" width="60" height="76" rx="10" fill="rgba(34,18,73,0.9)" stroke="rgba(139,92,246,0.3)" strokeWidth="1.5" />
-          <rect x="38" y="34" width="44" height="5" rx="2.5" fill="rgba(139,92,246,0.35)" />
-          <rect x="38" y="45" width="36" height="4" rx="2" fill="rgba(255,255,255,0.1)" />
-          <rect x="38" y="54" width="40" height="4" rx="2" fill="rgba(255,255,255,0.1)" />
-          <rect x="38" y="63" width="30" height="4" rx="2" fill="rgba(255,255,255,0.08)" />
-          <path d="M52 78 L52 98 L60 93 L68 98 L68 78 Z" fill="rgba(139,92,246,0.5)" stroke="rgba(168,85,247,0.6)" strokeWidth="1.5" strokeLinejoin="round" />
+          <rect x="30" y="22" width="60" height="76" rx="10" fill="rgba(34,18,73,0.9)" stroke="var(--sc-tint)" strokeWidth="1.5" />
+          <rect x="38" y="34" width="44" height="5" rx="2.5" fill="var(--sc-tint)" />
+          <rect x="38" y="45" width="36" height="4" rx="2" fill="rgba(107,79,160,0.16)" />
+          <rect x="38" y="54" width="40" height="4" rx="2" fill="rgba(107,79,160,0.16)" />
+          <rect x="38" y="63" width="30" height="4" rx="2" fill="rgba(107,79,160,0.12)" />
+          <path d="M52 78 L52 98 L60 93 L68 98 L68 78 Z" fill="var(--sc-tint)" stroke="rgba(168,85,247,0.6)" strokeWidth="1.5" strokeLinejoin="round" />
           <circle cx="22" cy="30" r="2" fill="#F4C542" opacity="0.7" />
           <circle cx="98" cy="45" r="1.5" fill="#A78BFA" opacity="0.6" />
           <circle cx="18" cy="78" r="1.5" fill="#F4C542" opacity="0.5" />
@@ -102,7 +102,7 @@ function EmptyStateWithNav() {
         </svg>
       </div>
 
-      <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '0 0 10px', letterSpacing: '-0.02em' }}>
+      <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--sc-text)', margin: '0 0 10px', letterSpacing: '-0.02em' }}>
         No saved stories yet
       </h2>
       <p style={{ fontSize: 14, color: TEXT_DIM, margin: '0 0 28px', lineHeight: 1.65 }}>
@@ -113,11 +113,11 @@ function EmptyStateWithNav() {
         whileHover={{ scale: 1.02 }}
         onClick={() => navigate('/stories')}
         style={{
-          background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
-          border: 'none', borderRadius: 16, color: '#fff', fontWeight: 700, fontSize: 15,
+          background: 'var(--sc-purple-fill)',
+          border: 'none', borderRadius: 16, color: 'var(--sc-text)', fontWeight: 700, fontSize: 15,
           padding: '14px 28px', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          boxShadow: '0 4px 20px rgba(124,58,237,0.5)',
+          boxShadow: 'none',
         }}
       >
         <BookOpen size={16} /> Browse Stories →
@@ -133,29 +133,29 @@ function SavedStoryCard({ story, index }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -20, scale: 0.97 }}
-      transition={{ delay: index * 0.05, duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+      transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
       style={{
-        background: CARD, backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(255,255,255,0.08)', borderRadius: 22,
+        background: CARD, backdropFilter: 'none', WebkitBackdropFilter: 'none',
+        border: '1px solid var(--sc-border)', borderRadius: 22,
         padding: '16px 16px 14px', marginBottom: 10,
         position: 'relative', overflow: 'hidden',
-        boxShadow: '0 6px 24px rgba(0,0,0,0.35)',
+        boxShadow: '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
       }}
-      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(0,0,0,0.45)'; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 6px 24px rgba(0,0,0,0.35)'; }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 2px rgba(23,22,66,0.04), 0 4px 16px rgba(23,22,66,0.04)'; }}
     >
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)' }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'transparent' }} />
 
       {/* Author + Unsave */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <GradientAvatar name={story.authorName} isAnon={story.isAnon} size={36} />
           <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{story.authorName}</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--sc-text)' }}>{story.authorName}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
               <span style={{ fontSize: 11, color: TEXT_DIM }}>{story.time}</span>
               <span style={{ fontSize: 11, color: TEXT_DIM }}>·</span>
@@ -183,7 +183,7 @@ function SavedStoryCard({ story, index }) {
           {story.category}
         </span>
         <span style={{
-          background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+          background: 'var(--sc-bg)', border: '1px solid var(--sc-border)',
           color: TEXT_MID, fontSize: 11, borderRadius: 20, padding: '2px 10px',
         }}>
           {story.moodEmoji} {story.mood}
@@ -191,7 +191,7 @@ function SavedStoryCard({ story, index }) {
       </div>
 
       {/* Title + Preview */}
-      <h3 style={{ fontSize: 15, fontWeight: 700, color: '#fff', margin: '0 0 7px', lineHeight: 1.35, letterSpacing: '-0.01em' }}>
+      <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--sc-text)', margin: '0 0 7px', lineHeight: 1.35, letterSpacing: '-0.01em' }}>
         {story.title}
       </h3>
       <p style={{
@@ -207,13 +207,13 @@ function SavedStoryCard({ story, index }) {
         onClick={() => navigate(`/story/${story.id}`)}
         style={{
           display: 'flex', alignItems: 'center', gap: 6,
-          background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)',
+          background: 'var(--sc-tint)', border: '1px solid var(--sc-tint)',
           borderRadius: 12, padding: '8px 16px', cursor: 'pointer',
-          fontFamily: 'Inter, sans-serif', fontSize: 13, fontWeight: 600, color: '#C4B5FD',
+          fontFamily: 'Inter, sans-serif', fontSize: 13, fontWeight: 600, color: 'var(--sc-purple-text)',
           transition: 'all 0.2s',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(139,92,246,0.25)'; }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'rgba(139,92,246,0.15)'; }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'var(--sc-tint)'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'var(--sc-tint)'; }}
       >
         Read Full Story <ArrowRight size={14} />
       </motion.button>
@@ -250,7 +250,7 @@ export default function SavedStories() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         {/* ── Header ── */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           style={{ marginBottom: 24 }}
         >
@@ -258,14 +258,14 @@ export default function SavedStories() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{
                 width: 42, height: 42, borderRadius: 14,
-                background: 'linear-gradient(135deg, #7C3AED, #A855F7)',
+                background: 'var(--sc-purple-fill)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 4px 16px rgba(124,58,237,0.4)',
+                boxShadow: 'none',
               }}>
                 <Bookmark size={20} color="#fff" fill="#fff" />
               </div>
               <div>
-                <h1 style={{ fontSize: 26, fontWeight: 800, color: '#fff', margin: 0, letterSpacing: '-0.02em' }}>
+                <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--sc-text)', margin: 0, letterSpacing: '-0.02em' }}>
                   Saved Stories
                 </h1>
                 <p style={{ fontSize: 13, color: TEXT_DIM, margin: '2px 0 0' }}>
@@ -281,7 +281,7 @@ export default function SavedStories() {
               onClick={() => navigate('/stories')}
               style={{
                 display: 'flex', alignItems: 'center', gap: 6,
-                background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)',
+                background: 'var(--sc-bg)', border: '1px solid var(--sc-border)',
                 borderRadius: 12, padding: '9px 16px',
                 color: '#E2DEFF', cursor: 'pointer', fontFamily: 'Inter, sans-serif',
                 fontSize: 13, fontWeight: 600,
@@ -293,7 +293,7 @@ export default function SavedStories() {
 
           {savedStories.length > 0 && (
             <div style={{
-              background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.15)',
+              background: 'var(--sc-tint)', border: '1px solid var(--sc-tint)',
               borderRadius: 16, padding: '12px 16px', marginTop: 16,
               display: 'flex', alignItems: 'center', gap: 10,
             }}>

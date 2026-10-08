@@ -43,7 +43,17 @@ function MoodSelector({ mood, onMoodSelect, todayMoodMeta, onAddDetails }) {
                 on ? 'border-primary bg-secondary' : 'border-border bg-card hover:bg-muted'
               )}
             >
-              <span className="text-[26px] leading-none" aria-hidden="true">{m.emoji}</span>
+              {m.image ? (
+                <img
+                  src={m.image}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-9 w-9 object-contain"
+                  draggable={false}
+                />
+              ) : (
+                <span className="text-[26px] leading-none" aria-hidden="true">{m.emoji}</span>
+              )}
               {/* wraps instead of truncating ("Not Good" → 2 lines on a 393px phone) */}
               <span className={cn('w-full text-center text-[11.5px] font-medium leading-tight', on ? 'text-[color:var(--sc-purple-deep)]' : 'text-foreground')}>
                 {m.label}

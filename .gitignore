@@ -1,7 +1,21 @@
 .env
+.env.*
+!.env.example
 node_modules/
 dist/
 .DS_Store
 *.local
 
 .vercel
+
+# Local backups and logs (not for the repo)
+_old/
+_to_delete/
+src/pages/_old/
+public/avatars/_old/
+public/brand/archive/
+*.bak
+*.bak_*
+*.bak_before_*
+backend/*.log
+audit-report.html

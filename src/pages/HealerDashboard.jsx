@@ -291,10 +291,10 @@ export default function HealerDashboard() {
         }}>
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
-              style={{ background: 'linear-gradient(135deg, #0891b2, #2563eb)' }}>🧘</div>
+            <img src="/logo-icon.png" alt="SameFeel" className="w-9 h-9 rounded-xl block"
+              style={{ border: '1px solid rgba(109,74,255,0.38)', boxSizing: 'border-box' }} />
             <div>
-              <span className="font-bold text-sm" style={{ color: 'var(--text)' }}>SoulConnect</span>
+              <span className="font-bold text-sm" style={{ color: 'var(--text)' }}>SameFeel</span>
               <p className="text-xs leading-none mt-0.5" style={{ color: 'var(--text-muted)' }}>Healer Portal</p>
             </div>
           </div>

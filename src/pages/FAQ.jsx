@@ -1,3 +1,4 @@
+import BackLink from '../components/BackLink';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, MessageCircleQuestion } from 'lucide-react';
@@ -26,23 +27,23 @@ const TINTS = [
 const faqs = [
   {
     id: 1,
-    question: 'What is SoulConnect?',
-    answer: 'SoulConnect is a mental wellness platform where people can find emotional support through community, guided wellness activities, and connections with mental health professionals when needed. Whether you\'re feeling anxious, lonely, overwhelmed, grieving, or simply need someone to talk to, SoulConnect is designed to help you feel less alone in a safe and supportive environment. While professional support is available through verified practitioners, SoulConnect is not a replacement for emergency medical care or crisis intervention.'
+    question: 'What is SameFeel?',
+    answer: 'SameFeel is a mental wellness platform where people can find emotional support through community, guided wellness activities, and connections with mental health professionals when needed. Whether you\'re feeling anxious, lonely, overwhelmed, grieving, or simply need someone to talk to, SameFeel is designed to help you feel less alone in a safe and supportive environment. While professional support is available through verified practitioners, SameFeel is not a replacement for emergency medical care or crisis intervention.'
   },
   {
     id: 2,
-    question: 'Who is SoulConnect for?',
-    answer: 'SoulConnect is for anyone looking for emotional support, meaningful connection, or tools to improve their mental well-being. Whether you\'re experiencing stress, anxiety, loneliness, burnout, relationship challenges, grief, or simply want to build healthier habits, the platform is designed to support your journey. If you\'re experiencing a mental health emergency or are at immediate risk of harm, please contact your local emergency services or a crisis helpline immediately.'
+    question: 'Who is SameFeel for?',
+    answer: 'SameFeel is for anyone looking for emotional support, meaningful connection, or tools to improve their mental well-being. Whether you\'re experiencing stress, anxiety, loneliness, burnout, relationship challenges, grief, or simply want to build healthier habits, the platform is designed to support your journey. If you\'re experiencing a mental health emergency or are at immediate risk of harm, please contact your local emergency services or a crisis helpline immediately.'
   },
   {
     id: 3,
-    question: 'Is SoulConnect free to use?',
-    answer: 'Yes. Many core features of SoulConnect are available free of charge, including exploring the platform, joining the community, participating in wellness challenges, and accessing educational mental health resources. Some optional services offered by independent mental health professionals or healers may require payment. Any paid services will always display pricing clearly before you book.'
+    question: 'Is SameFeel free to use?',
+    answer: 'Yes. Many core features of SameFeel are available free of charge, including exploring the platform, joining the community, participating in wellness challenges, and accessing educational mental health resources. Some optional services offered by independent mental health professionals or healers may require payment. Any paid services will always display pricing clearly before you book.'
   },
   {
     id: 4,
     question: 'Are therapy sessions or professional consultations paid?',
-    answer: 'Professional consultations, therapy sessions, or healing sessions offered through independent practitioners may have their own fees. Pricing varies depending on the professional and the type of session. SoulConnect itself does not charge hidden fees, and you will always be able to review pricing before confirming a booking.'
+    answer: 'Professional consultations, therapy sessions, or healing sessions offered through independent practitioners may have their own fees. Pricing varies depending on the professional and the type of session. SameFeel itself does not charge hidden fees, and you will always be able to review pricing before confirming a booking.'
   },
   {
     id: 5,
@@ -52,27 +53,27 @@ const faqs = [
   {
     id: 6,
     question: 'How do I get started?',
-    answer: 'Getting started is simple. Create your account, complete your profile, and explore the different areas of SoulConnect. You can browse community spaces, participate in wellness activities, read educational resources, or connect with professionals if you choose. The platform is designed so you can begin at your own pace based on your individual needs.'
+    answer: 'Getting started is simple. Create your account, complete your profile, and explore the different areas of SameFeel. You can browse community spaces, participate in wellness activities, read educational resources, or connect with professionals if you choose. The platform is designed so you can begin at your own pace based on your individual needs.'
   },
   {
     id: 7,
-    question: 'Does SoulConnect replace therapy or medical treatment?',
-    answer: 'No. SoulConnect is designed to complement—not replace—professional mental health care. The platform provides community support, wellness resources, and access to professionals where available. If you are experiencing severe symptoms, suicidal thoughts, or a mental health emergency, you should immediately contact emergency services or a qualified mental health professional.'
+    question: 'Does SameFeel replace therapy or medical treatment?',
+    answer: 'No. SameFeel is designed to complement—not replace—professional mental health care. The platform provides community support, wellness resources, and access to professionals where available. If you are experiencing severe symptoms, suicidal thoughts, or a mental health emergency, you should immediately contact emergency services or a qualified mental health professional.'
   },
   {
     id: 8,
-    question: 'What mental health topics does SoulConnect support?',
-    answer: 'SoulConnect provides resources and community support for a wide range of emotional well-being topics, including anxiety, stress, loneliness, burnout, grief, relationships, emotional wellness, mindfulness, meditation, self-care, and personal growth. The platform continues to expand its educational content and wellness programs to support different mental health journeys.'
+    question: 'What mental health topics does SameFeel support?',
+    answer: 'SameFeel provides resources and community support for a wide range of emotional well-being topics, including anxiety, stress, loneliness, burnout, grief, relationships, emotional wellness, mindfulness, meditation, self-care, and personal growth. The platform continues to expand its educational content and wellness programs to support different mental health journeys.'
   },
   {
     id: 9,
     question: 'How are professionals verified?',
-    answer: 'Professionals listed on SoulConnect go through a verification process before appearing on the platform. Verification requirements may vary depending on the type of practitioner and applicable regulations. We encourage users to review each professional\'s profile, qualifications, and experience before booking a session. Verification does not replace your own judgment when choosing a provider.'
+    answer: 'Professionals listed on SameFeel go through a verification process before appearing on the platform. Verification requirements may vary depending on the type of practitioner and applicable regulations. We encourage users to review each professional\'s profile, qualifications, and experience before booking a session. Verification does not replace your own judgment when choosing a provider.'
   },
   {
     id: 10,
     question: 'What should I do if I\'m in crisis or need immediate help?',
-    answer: 'If you believe you or someone else is in immediate danger, call your local emergency services immediately. If you are in India and need urgent emotional support, you can contact Tele-MANAS (14416) or the Vandrevala Foundation (+91 9999 666 555) for confidential mental health support. SoulConnect is not an emergency or crisis response service and should not be used as a substitute for immediate medical assistance.'
+    answer: 'If you believe you or someone else is in immediate danger, call your local emergency services immediately. If you are in India and need urgent emotional support, you can contact Tele-MANAS (14416) or the Vandrevala Foundation (+91 9999 666 555) for confidential mental health support. SameFeel is not an emergency or crisis response service and should not be used as a substitute for immediate medical assistance.'
   },
 ];
 
@@ -102,10 +103,10 @@ export default function FAQ() {
     <div style={{ minHeight: '100vh', background: BG, fontFamily: F, color: DARK }}>
       <style>{css}</style>
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '56px 24px 80px' }}>
-        <Link to="/" className="fq-back" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
+        <BackLink className="fq-back" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 40 }}>
           <ArrowLeft size={16} strokeWidth={1.9} />
           Back to Home
-        </Link>
+        </BackLink>
 
         {/* Header */}
         <div style={{ marginBottom: 44 }}>
@@ -124,7 +125,7 @@ export default function FAQ() {
             Frequently Asked Questions
           </h1>
           <p style={{ fontSize: 17, color: NAVY_SOFT, lineHeight: 1.65, margin: 0, maxWidth: 640 }}>
-            Find answers to common questions about SoulConnect, our services, privacy, and mental health support.
+            Find answers to common questions about SameFeel, our services, privacy, and mental health support.
           </p>
         </div>
 

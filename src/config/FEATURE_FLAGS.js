@@ -1,5 +1,5 @@
 /**
- * SoulConnect Feature Flags
+ * SameFeel Feature Flags
  *
  * Controls which features are active in the current build.
  * Toggle flags here — do NOT expose disabled features in the UI.

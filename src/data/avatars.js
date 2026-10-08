@@ -1,5 +1,5 @@
 /**
- * SoulConnect avatars with moods.
+ * SameFeel avatars with moods.
  *
  * Every avatar has 6 expressions. The person chooses the look once and can
  * change the mood any time, so their avatar shows how they feel today.
@@ -10,6 +10,16 @@
  */
 import { useAuthStore } from '../store/auth';
 import { userAPI } from '../services/api';
+
+/* ── Felt cartoon avatars (single image each, no mood variants) ── */
+import feltAmazing from '../assets/felt-avatars/felt-amazing.png';
+import feltExcited from '../assets/felt-avatars/felt-excited.png';
+import feltGood from '../assets/felt-avatars/felt-good.png';
+import feltOkay from '../assets/felt-avatars/felt-okay.png';
+import feltNotGood from '../assets/felt-avatars/felt-notgood.png';
+import feltAwful from '../assets/felt-avatars/felt-awful.png';
+import feltCurious from '../assets/felt-avatars/felt-curious.png';
+import feltPeaceful from '../assets/felt-avatars/felt-peaceful.png';
 
 export const MOODS = [
   { id: 'happy', label: 'Happy', hint: 'Feeling good today' },
@@ -35,18 +45,47 @@ export const AVATARS = [
   { id: 'a12', label: 'Short hair and glasses' },
 ];
 
+/** Felt cartoon characters (no mood variants, one image each). */
+export const FELT_AVATARS = {
+  'f01': { label: 'Sunny',   img: feltAmazing },
+  'f02': { label: 'Sparky',  img: feltExcited },
+  'f03': { label: 'Clover',  img: feltGood },
+  'f04': { label: 'Mellow',  img: feltOkay },
+  'f05': { label: 'Misty',   img: feltNotGood },
+  'f06': { label: 'Grumble', img: feltAwful },
+  'f07': { label: 'Boo',     img: feltCurious },
+  'f08': { label: 'Dreamy',  img: feltPeaceful },
+};
+export const FELT_AVATAR_LIST = Object.entries(FELT_AVATARS).map(([id, v]) => ({ id, ...v }));
+export const isFeltAvatar = (id) => id in FELT_AVATARS;
+export const feltAvatarSrc = (id) => FELT_AVATARS[id]?.img || null;
+
+/** Combined list: illustrated personas + felt characters. */
+export const ALL_AVATARS = [...AVATARS, ...FELT_AVATAR_LIST];
+
+/** Soul Climate check-in (weather) to avatar mood, so the Home card and profile match. */
+export const WEATHER_TO_MOOD = {
+  'clear-sky': 'happy',
+  hope: 'calm',
+  blooming: 'happy',
+  fog: 'low',
+  'heavy-rain': 'sad',
+  storm: 'stressed',
+};
+
 const KEY = 'sc-avatar-id';
 const MOOD_KEY = 'sc-avatar-mood';
 const isMood = (m) => MOODS.some((x) => x.id === m);
 
 export function avatarSrc(id, mood = 'calm') {
+  if (isFeltAvatar(id)) return feltAvatarSrc(id);
   if (!AVATARS.some((a) => a.id === id)) return null;
   return `/avatars/soul-${id}-${isMood(mood) ? mood : 'calm'}.svg`;
 }
 
 export function currentAvatarId(user) {
-  if (user?.avatar_id && AVATARS.some((a) => a.id === user.avatar_id)) return user.avatar_id;
-  try { const id = localStorage.getItem(KEY); if (AVATARS.some((a) => a.id === id)) return id; } catch { /* private mode */ }
+  if (user?.avatar_id && ALL_AVATARS.some((a) => a.id === user.avatar_id)) return user.avatar_id;
+  try { const id = localStorage.getItem(KEY); if (ALL_AVATARS.some((a) => a.id === id)) return id; } catch { /* private mode */ }
   return null;
 }
 

@@ -8,6 +8,56 @@
  */
 
 const SESSION_ID_KEY = 'sc-visitor-session-id';
+const INTERNAL_FLAG_KEY = 'sc_internal';
+
+// Only these hosts are "real" production traffic. Dev servers (localhost,
+// the Vite LAN host used for phone testing) and anything else must never
+// reach visitor_analytics.
+const TRACKED_HOSTNAMES = ['soulconnect.health', 'www.soulconnect.health'];
+
+// Known non-human user agents. Not exhaustive — this is a cheap first
+// filter, not a bot-detection system; the backend Origin check is the
+// real boundary.
+const BOT_UA_PATTERN = /bot|crawl|spider|slurp|headless|lighthouse|pagespeed|phantom|puppeteer|playwright|selenium|preview|facebookexternalhit|slackbot|discordbot|whatsapp|telegrambot|vercel-screenshot/i;
+
+/**
+ * Marks this browser as an internal/team visit (soulconnect.health/?internal=1).
+ * Persists in localStorage so the flag survives across the session without
+ * needing the query param on every page.
+ */
+export function initInternalFlag() {
+  try {
+    if (new URLSearchParams(window.location.search).get('internal') === '1') {
+      localStorage.setItem(INTERNAL_FLAG_KEY, '1');
+    }
+  } catch {
+    // storage blocked — fall through, isInternalVisitor() will just read false
+  }
+}
+
+function isInternalVisitor() {
+  try {
+    return localStorage.getItem(INTERNAL_FLAG_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function isLikelyBot() {
+  if (navigator.webdriver) return true;
+  return BOT_UA_PATTERN.test(navigator.userAgent || '');
+}
+
+/**
+ * Whether this page view should ever be sent to visitor_analytics.
+ * Call before starting a session and before every flush.
+ */
+export function shouldTrack() {
+  if (!TRACKED_HOSTNAMES.includes(window.location.hostname)) return false;
+  if (isInternalVisitor()) return false;
+  if (isLikelyBot()) return false;
+  return true;
+}
 
 function getOrCreateSessionId() {
   try {
@@ -61,9 +111,18 @@ function getUtmParams() {
   };
 }
 
-export function buildSessionStartPayload() {
+/**
+ * Builds the session/start payload for a specific session_id. Callers
+ * resolve the id once (getSessionId()) and pass it in here, rather than
+ * each of start/update calling getOrCreateSessionId() independently — if
+ * sessionStorage is blocked, two independent calls would each mint a
+ * different random id and the backend could never match an update to its
+ * session.
+ */
+export function buildSessionStartPayloadFor(sessionId) {
   return {
-    session_id: getOrCreateSessionId(),
+    session_id: sessionId,
+    hostname: window.location.hostname,
     device_type: detectDeviceType(),
     browser: detectBrowser(),
     os: detectOS(),

@@ -184,13 +184,13 @@ export default function Footer() {
           {/* ── COLUMN 1: Brand ──────────────────────────────────────── */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-              <img src="/favicon-192.png?v=2" alt="SoulConnect" style={{
+              <img src="/logo-icon.png" alt="SameFeel" style={{
                 width: 44, height: 44, borderRadius: 14, flexShrink: 0, display: 'block',
                 border: `1px solid ${LILAC_LINE}`,
               }} />
               <div>
                 <div style={{ fontSize: 19, fontWeight: 800, color: DARK, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                  Soul<span style={{ color: P }}>Connect</span>
+                  Same<span style={{ color: P }}>Feel</span>
                 </div>
                 <div style={{ fontSize: 10, color: GOLD_TXT, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: 3 }}>
                   Heal • Connect • Grow
@@ -261,7 +261,7 @@ export default function Footer() {
               borderRadius: 12, padding: '12px 14px',
             }}>
               <p style={{ margin: 0, color: MUTED, fontSize: 12, lineHeight: 1.6 }}>
-                SoulConnect is a peer wellness platform. It is not a medical provider, crisis service, or emergency responder. For emergencies, call 112 / 911 / 999.
+                SameFeel is a peer wellness platform. It is not a medical provider, crisis service, or emergency responder. For emergencies, call 112 / 911 / 999.
               </p>
             </div>
           </div>
@@ -275,7 +275,7 @@ export default function Footer() {
           flexWrap: 'wrap', gap: 10,
         }}>
           <p style={{ margin: 0, color: MUTED, fontSize: 12.5 }}>
-            © 2026 SoulConnect Health Technologies. All Rights Reserved.
+            © 2026 SameFeel Health Technologies. All Rights Reserved.
           </p>
           <p style={{ margin: 0, color: NAVY_SOFT, fontSize: 12.5, fontStyle: 'italic', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
             Made with <Heart size={13} strokeWidth={2} color={P} fill="#DCD0F0" /> for healing, connection, and growth.

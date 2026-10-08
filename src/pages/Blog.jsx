@@ -8,7 +8,7 @@ const BG = 'linear-gradient(155deg,#06011A 0%,#130530 40%,#1E0848 70%,#06011A 10
 
 export default function Blog() {
   useEffect(() => {
-    document.title = 'Mental Health & Wellness Articles | SoulConnect Blog';
+    document.title = 'Mental Health & Wellness Articles | SameFeel Blog';
     const meta = document.querySelector('meta[name="description"]');
     if (meta) meta.content = 'Read expert articles on anxiety, depression, grief, relationships, mindfulness and mental health. Science-backed guidance for your wellbeing journey.';
   }, []);
@@ -161,7 +161,7 @@ export default function Blog() {
               { icon: '🧠', title: 'Evidence-Based Guidance', desc: 'Articles grounded in psychological research and best practices' },
               { icon: '💙', title: 'Normalize Your Experience', desc: 'Learn you\'re not alone in what you\'re going through' },
               { icon: '🛠️', title: 'Practical Strategies', desc: 'Actionable techniques you can implement immediately' },
-              { icon: '🤝', title: 'Peer Community', desc: 'Connect with others on similar journeys through SoulConnect' },
+              { icon: '🤝', title: 'Peer Community', desc: 'Connect with others on similar journeys through SameFeel' },
             ].map((item, i) => (
               <div key={i} style={{
                 background: 'rgba(109,74,255,0.05)',
@@ -182,7 +182,7 @@ export default function Blog() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Blog',
-            name: 'SoulConnect Mental Health & Wellness Blog',
+            name: 'SameFeel Mental Health & Wellness Blog',
             description: 'Expert articles on anxiety, depression, grief, relationships, mindfulness and mental health support',
             url: 'https://soulconnect.health/blog',
             blogPost: ARTICLES.map(article => ({

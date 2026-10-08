@@ -225,9 +225,9 @@ export const MoodScene = React.memo(function MoodScene({ mood, dark = false }) {
         <linearGradient id={`${g}sky`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={sc.sky[0]} /><stop offset="1" stopColor={sc.sky[1]} /></linearGradient>
         <linearGradient id={`${g}hill`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={sc.hill[0]} /><stop offset="1" stopColor={sc.hill[1]} /></linearGradient>
       </defs>
-      <rect width="200" height="150" fill={`url(#${g}sky)`} opacity={dark ? 0.16 : 1} />
+      <rect width="200" height="150" fill={`url(#${g}sky)`} opacity={dark ? 0.38 : 1} />
       {sc.deco()}
-      <path d="M0 118 Q50 100 100 110 Q150 120 200 104 V150 H0Z" fill={`url(#${g}hill)`} opacity={dark ? 0.35 : 1} />
+      <path d="M0 118 Q50 100 100 110 Q150 120 200 104 V150 H0Z" fill={`url(#${g}hill)`} opacity={dark ? 0.52 : 1} />
       <g transform="translate(42 30) scale(1.16)"><C g={`${g}c`} /></g>
     </svg>
   );

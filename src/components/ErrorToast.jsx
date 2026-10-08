@@ -4,7 +4,7 @@ import { AlertCircle, X, RotateCcw } from 'lucide-react';
 
 /**
  * ErrorToast: User-friendly error notification
- * Matches SoulConnect's glassmorphic dark theme
+ * Matches SameFeel's glassmorphic dark theme
  * Auto-dismisses after 6 seconds or via close button
  */
 export default function ErrorToast({

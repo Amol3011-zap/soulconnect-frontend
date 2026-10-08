@@ -37,27 +37,10 @@ export default function Messages() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [hoveredId, setHoveredId] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [conversations, setConversations] = useState(CONVERSATIONS);
 
-  // Simulate loading conversations (in real app, would fetch from API)
-  useEffect(() => {
-    const loadConversations = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setConversations(CONVERSATIONS);
-      } catch (err) {
-        setError('Failed to load messages. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadConversations();
-  }, []);
 
   const filtered = conversations.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())

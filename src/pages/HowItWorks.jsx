@@ -31,7 +31,7 @@ const steps = [
     Icon: UserPlus,
     title: 'Join the Community',
     description: 'Create your free account in just a few minutes.',
-    details: 'Whether you\'re looking for support, connection, or personal growth, SoulConnect is designed to help you take the first step in a safe and welcoming environment.',
+    details: 'Whether you\'re looking for support, connection, or personal growth, SameFeel is designed to help you take the first step in a safe and welcoming environment.',
   },
   {
     number: 2,
@@ -66,13 +66,13 @@ const steps = [
     Icon: Lock,
     title: 'Protect Your Privacy',
     description: 'Your privacy matters.',
-    details: 'SoulConnect is designed to help you control what you share. You can choose how much personal information you make visible, and we encourage everyone to respect the privacy of others within the community.',
+    details: 'SameFeel is designed to help you control what you share. You can choose how much personal information you make visible, and we encourage everyone to respect the privacy of others within the community.',
   },
   {
     number: 7,
     Icon: ShieldCheck,
     title: 'Stay Safe',
-    description: 'SoulConnect is built around respectful, supportive conversations.',
+    description: 'SameFeel is built around respectful, supportive conversations.',
     details: 'Community guidelines, moderation tools, and reporting features help create a positive environment for everyone. If you\'re experiencing a mental health emergency, please contact your local emergency services or a crisis helpline immediately.',
   },
 ];
@@ -93,9 +93,9 @@ const css = `
 
 export default function HowItWorks() {
   useEffect(() => {
-    document.title = 'How SoulConnect Works | Step-by-Step Guide';
+    document.title = 'How SameFeel Works | Step-by-Step Guide';
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.content = 'Learn how to use SoulConnect in 7 simple steps. Join a supportive community, find wellness resources, and connect with professionals.';
+    if (meta) meta.content = 'Learn how to use SameFeel in 7 simple steps. Join a supportive community, find wellness resources, and connect with professionals.';
   }, []);
 
   return (
@@ -121,7 +121,7 @@ export default function HowItWorks() {
             lineHeight: 1.12,
             margin: '0 0 14px',
           }}>
-            How SoulConnect Works
+            How SameFeel Works
           </h1>
           <p style={{ fontSize: 17, color: NAVY_SOFT, lineHeight: 1.65, margin: 0 }}>
             A 7-step guide to finding support, connection, and personal growth
@@ -202,7 +202,7 @@ export default function HowItWorks() {
             Ready to Start Your Journey?
           </h2>
           <p style={{ fontSize: 16, color: NAVY_SOFT, margin: '0 0 22px', lineHeight: 1.6 }}>
-            Join SoulConnect today and connect with a supportive community
+            Join SameFeel today and connect with a supportive community
           </p>
           <Link to="/" className="hw-btn" style={{
             display: 'inline-block',

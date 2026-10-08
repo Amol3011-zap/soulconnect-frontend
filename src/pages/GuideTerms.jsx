@@ -77,7 +77,7 @@ export default function GuideTerms() {
           <div style={{ fontSize: 44, marginBottom: 14 }}>🧘</div>
           <h1 style={{ color: '#fff', fontSize: 36, fontWeight: 800, margin: '0 0 10px', lineHeight: 1.2 }}>Guide & Healer Agreement</h1>
           <p style={{ color: 'rgba(255,255,255,0.82)', fontSize: 16, margin: 0, maxWidth: 560, lineHeight: 1.7 }}>
-            Guides and healers on SoulConnect are independent wellness practitioners. This agreement outlines your responsibilities, the scope of your practice, and our shared commitment to keeping the community safe.
+            Guides and healers on SameFeel are independent wellness practitioners. This agreement outlines your responsibilities, the scope of your practice, and our shared commitment to keeping the community safe.
           </p>
         </div>
       </div>
@@ -94,14 +94,14 @@ export default function GuideTerms() {
         }}>
           <span style={{ fontSize: 20, flexShrink: 0, marginTop: 2 }}>ℹ️</span>
           <p style={{ margin: 0, color: '#4C1D95', fontSize: 14, fontWeight: 500, lineHeight: 1.6 }}>
-            <strong>Guides are independent practitioners.</strong> They are not employees, contractors, or agents of SoulConnect. SoulConnect is a platform that facilitates connection between guides and users.
+            <strong>Guides are independent practitioners.</strong> They are not employees, contractors, or agents of SameFeel. SameFeel is a platform that facilitates connection between guides and users.
           </p>
         </div>
 
         {/* Scope of Practice */}
         <Section icon="✅" title="Scope of Practice — What Guides May Provide" delay={60} accentBg="#DCFCE7">
           <p style={{ color: '#6B7280', fontSize: 14, marginBottom: 14, lineHeight: 1.6 }}>
-            As a guide or healer on SoulConnect, you may offer the following types of support:
+            As a guide or healer on SameFeel, you may offer the following types of support:
           </p>
           <GreenList items={[
             'Wellness coaching and personal development support',
@@ -157,7 +157,7 @@ export default function GuideTerms() {
           ]} />
           <div style={{ marginTop: 18, background: '#FEE2E2', borderRadius: 10, padding: '14px 16px', border: '1px solid #FCA5A5' }}>
             <p style={{ margin: 0, color: '#B91C1C', fontSize: 13, fontWeight: 600, lineHeight: 1.6 }}>
-              If a user expresses thoughts of self-harm or suicide, you must direct them to <strong>emergency services</strong> or the <strong>SoulConnect crisis resources</strong> page immediately. Do not attempt to manage this yourself.
+              If a user expresses thoughts of self-harm or suicide, you must direct them to <strong>emergency services</strong> or the <strong>SameFeel crisis resources</strong> page immediately. Do not attempt to manage this yourself.
             </p>
             <button onClick={() => window.open('/crisis-support', '_blank')} style={{
               marginTop: 10, background: '#DC2626', color: '#fff', border: 'none',
@@ -169,15 +169,15 @@ export default function GuideTerms() {
         {/* Independent Practitioner Agreement */}
         <Section icon="📋" title="Independent Practitioner Agreement" delay={240} accentBg="#EDE9FE">
           <p style={{ color: '#6B7280', fontSize: 14, lineHeight: 1.7, marginBottom: 16 }}>
-            By operating as a guide on SoulConnect, you acknowledge and agree:
+            By operating as a guide on SameFeel, you acknowledge and agree:
           </p>
           <GreenList items={[
-            'You operate as an independent practitioner, not an employee of SoulConnect',
-            'SoulConnect does not supervise, direct, or control your clinical or healing decisions',
+            'You operate as an independent practitioner, not an employee of SameFeel',
+            'SameFeel does not supervise, direct, or control your clinical or healing decisions',
             'You are responsible for maintaining your own qualifications, certifications, and credentials',
             'You assume all responsibility for the services you provide to users',
             'You carry your own professional liability insurance where applicable',
-            'SoulConnect reserves the right to remove guides who violate these terms',
+            'SameFeel reserves the right to remove guides who violate these terms',
           ]} />
         </Section>
 
@@ -213,7 +213,7 @@ export default function GuideTerms() {
           <div style={{ position:'absolute',top:-30,right:-30,width:100,height:100,borderRadius:'50%',background:'rgba(255,255,255,0.07)',pointerEvents:'none' }} />
           <h3 style={{ color: '#fff', fontSize: 18, fontWeight: 700, margin: '0 0 10px' }}>Guide Acknowledgement</h3>
           <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, lineHeight: 1.7, marginBottom: 18 }}>
-            By continuing to offer services on SoulConnect, you confirm that you have read, understood, and agree to these terms. You commit to practising safely, ethically, and within your scope.
+            By continuing to offer services on SameFeel, you confirm that you have read, understood, and agree to these terms. You commit to practising safely, ethically, and within your scope.
           </p>
           <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
             <input

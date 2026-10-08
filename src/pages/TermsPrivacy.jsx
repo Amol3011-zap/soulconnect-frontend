@@ -1,4 +1,5 @@
 import React from 'react';
+import BackLink from '../components/BackLink';
 import { Link } from 'react-router-dom';
 import SimpleFooter from '../components/SimpleFooter';
 
@@ -26,23 +27,23 @@ const liStyle = { fontSize: 15, color: NAVY_SOFT, lineHeight: 1.85, marginBottom
 
 const sections = [
   {
-    title: '1. About SoulConnect',
+    title: '1. About SameFeel',
     body: [
-      'SoulConnect is an early-stage community platform currently in development.',
+      'SameFeel is an early-stage community platform currently in development.',
       'Our mission is to help people connect with others experiencing similar life challenges, share experiences, participate in guided wellness activities, and build meaningful support networks.',
-      'At this stage, SoulConnect primarily operates as a waitlist and informational platform while future features are being developed.',
+      'At this stage, SameFeel primarily operates as a waitlist and informational platform while future features are being developed.',
     ],
   },
   {
     title: '2. Eligibility',
     body: [
-      'You must be at least 18 years old to use SoulConnect or join the waitlist.',
+      'You must be at least 18 years old to use SameFeel or join the waitlist.',
       'By using the website, you confirm that you meet this requirement.',
     ],
   },
   {
     title: '3. Waitlist Participation',
-    body: ['Joining the SoulConnect waitlist does not guarantee:'],
+    body: ['Joining the SameFeel waitlist does not guarantee:'],
     list: [
       'Access to future platform features',
       'Membership approval',
@@ -50,7 +51,7 @@ const sections = [
       'Pricing or subscription terms',
       'Availability in all locations',
     ],
-    footer: 'SoulConnect may modify, delay, or discontinue features at any time.',
+    footer: 'SameFeel may modify, delay, or discontinue features at any time.',
   },
   {
     title: '4. Acceptable Use',
@@ -67,7 +68,7 @@ const sections = [
   {
     title: '5. Wellness Information Disclaimer',
     body: [
-      'Content provided on SoulConnect is intended for informational, educational, and community-support purposes only.',
+      'Content provided on SameFeel is intended for informational, educational, and community-support purposes only.',
       'Nothing on this website should be considered:',
     ],
     list: [
@@ -82,7 +83,7 @@ const sections = [
   },
   {
     title: '6. Emergency Situations',
-    body: ['SoulConnect is not an emergency service.', 'If you are experiencing:'],
+    body: ['SameFeel is not an emergency service.', 'If you are experiencing:'],
     list: [
       'Suicidal thoughts',
       'Thoughts of self-harm',
@@ -94,7 +95,7 @@ const sections = [
   {
     title: '7. Intellectual Property',
     body: [
-      'All SoulConnect content, branding, logos, graphics, text, designs, and website materials are owned by SoulConnect and protected by applicable intellectual property laws.',
+      'All SameFeel content, branding, logos, graphics, text, designs, and website materials are owned by SameFeel and protected by applicable intellectual property laws.',
       'You may not reproduce, distribute, modify, or commercially exploit any content without prior written permission.',
     ],
   },
@@ -102,13 +103,13 @@ const sections = [
     title: '8. Privacy',
     body: [
       'Information submitted through the website, including waitlist registrations, is handled in accordance with our Privacy Policy.',
-      'By joining the waitlist, you consent to receiving communications related to SoulConnect updates, announcements, and launch information.',
+      'By joining the waitlist, you consent to receiving communications related to SameFeel updates, announcements, and launch information.',
       'You may unsubscribe from communications at any time.',
     ],
   },
   {
     title: '9. No Guarantees',
-    body: ['SoulConnect makes no guarantees regarding:'],
+    body: ['SameFeel makes no guarantees regarding:'],
     list: [
       'Future platform availability',
       'Specific features',
@@ -120,7 +121,7 @@ const sections = [
   },
   {
     title: '10. Limitation of Liability',
-    body: ['To the maximum extent permitted by law, SoulConnect shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from:'],
+    body: ['To the maximum extent permitted by law, SameFeel shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from:'],
     list: [
       'Use of the website',
       'Reliance on website content',
@@ -128,19 +129,19 @@ const sections = [
       'Technical errors',
       'Future platform participation',
     ],
-    footer: 'Your use of SoulConnect is at your own risk.',
+    footer: 'Your use of SameFeel is at your own risk.',
   },
   {
     title: '11. Changes to These Terms',
     body: [
-      'SoulConnect may update these Terms & Conditions from time to time.',
+      'SameFeel may update these Terms & Conditions from time to time.',
       'Any updates will be posted on this page with a revised effective date.',
       'Continued use of the website constitutes acceptance of the updated Terms.',
     ],
   },
   {
     title: '12. Governing Law',
-    body: ['These Terms shall be governed and interpreted in accordance with the laws applicable in the jurisdiction where SoulConnect operates.'],
+    body: ['These Terms shall be governed and interpreted in accordance with the laws applicable in the jurisdiction where SameFeel operates.'],
   },
 ];
 
@@ -149,9 +150,9 @@ export default function TermsPrivacy() {
     <div style={{ minHeight: '100vh', background: BG, color: DARK, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
       <div style={{ maxWidth: 800, margin: '0 auto', padding: 'clamp(32px,6vw,64px) clamp(16px,4vw,24px)' }}>
 
-        <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 28 }}>
+        <BackLink style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: P, fontWeight: 600, fontSize: 14, textDecoration: 'none', marginBottom: 28 }}>
           ← Back to Home
-        </Link>
+        </BackLink>
 
         <div style={CARD}>
 
@@ -162,7 +163,7 @@ export default function TermsPrivacy() {
           </h1>
           <p style={{ fontSize: 13, fontWeight: 600, color: GOLD_TXT, letterSpacing: '0.04em', marginBottom: 20 }}>Effective Date: June 2026</p>
           <p style={pStyle}>
-            Welcome to SoulConnect. By accessing our website, joining the waitlist, or interacting with our platform, you agree to these Terms &amp; Conditions. If you do not agree with these Terms, please do not use the website.
+            Welcome to SameFeel. By accessing our website, joining the waitlist, or interacting with our platform, you agree to these Terms &amp; Conditions. If you do not agree with these Terms, please do not use the website.
           </p>
         </div>
 
@@ -190,7 +191,7 @@ export default function TermsPrivacy() {
             </a>
           </p>
           <p style={{ ...pStyle, marginBottom: 0 }}>
-            We appreciate your interest in SoulConnect and thank you for being part of our early community.
+            We appreciate your interest in SameFeel and thank you for being part of our early community.
           </p>
         </div>
         </div>
